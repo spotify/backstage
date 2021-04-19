@@ -58,6 +58,44 @@ export interface Config {
        * @visibility secret
        */
       appPassword?: string;
+      /**
+       * Bitbucket workspaces
+       * @visibility frontend
+       */
+      workspaces?: Array<{
+        /**
+         * The name of workspace
+         * @visibility frontend
+         */
+        name: string;
+        /**
+         * The description for a workspace
+         * @visibility frontend
+         */
+        description?: string;
+        /**
+         * Bitbucket projects in the the workspace
+         * @visibility frontend
+         */
+        projects?: Array<{
+          /**
+           * The name of the project in bitbucket
+           * @visibility frontend
+           */
+          name: string;
+          /**
+           * The key for the project in bitbucket
+           * @visibility frontend
+           */
+          key: string;
+          /**
+           * The description for the project in bitbucket
+           * @visibility frontend
+           */
+          description?: string;
+        }>;
+      }>;
+
     }>;
 
     /** Integration configuration for GitHub */

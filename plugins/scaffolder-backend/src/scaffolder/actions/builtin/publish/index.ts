@@ -19,4 +19,5 @@ export { createPublishGithubPullRequestAction } from './githubPullRequest';
 export { createPublishAzureAction } from './azure';
 export { createPublishGitlabAction } from './gitlab';
 export { createPublishBitbucketAction } from './bitbucket';
+export { createPublishBitbucketCloudAction } from './bitbucketCloud';
 export { createPublishFileAction } from './file';

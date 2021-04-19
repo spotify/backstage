@@ -22,6 +22,7 @@ import { createFetchCookiecutterAction, createFetchPlainAction } from './fetch';
 import {
   createPublishAzureAction,
   createPublishBitbucketAction,
+  createPublishBitbucketCloudAction,
   createPublishGithubAction,
   createPublishGithubPullRequestAction,
   createPublishGitlabAction,
@@ -65,6 +66,9 @@ export const createBuiltinActions = (options: {
       integrations,
     }),
     createPublishBitbucketAction({
+      integrations,
+    }),
+    createPublishBitbucketCloudAction({
       integrations,
     }),
     createPublishAzureAction({

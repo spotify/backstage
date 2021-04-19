@@ -59,3 +59,42 @@ export const parseRepoUrl = (repoUrl: string) => {
 
   return { host, owner, repo, organization };
 };
+
+export const parseRepoUrlForBitbucket = (repoUrl: string) => {
+  let parsed;
+  try {
+    parsed = new URL(`https://${repoUrl}`);
+  } catch (error) {
+    throw new InputError(
+      `Invalid repo URL passed to publisher, got ${repoUrl}, ${error}`,
+    );
+  }
+  const host = parsed.host;
+
+    const workspace = parsed.searchParams.get('workspace');
+
+    if (!workspace) {
+      throw new InputError(
+        `Invalid repo URL passed to publisher: ${repoUrl}, missing workspace`,
+      );
+    }
+
+    const project = parsed.searchParams.get('project');
+    if (!project) {
+      throw new InputError(
+        `Invalid repo URL passed to publisher: ${repoUrl}, missing project`,
+      );
+    }
+
+    const repo = parsed.searchParams.get('repo');
+    if (!repo) {
+      throw new InputError(
+        `Invalid repo URL passed to publisher: ${repoUrl}, missing repo`,
+      );
+    }
+
+    const organization = parsed.searchParams.get('organization');
+
+    return { host, workspace, project, repo, organization };
+
+};

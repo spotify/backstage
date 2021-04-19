@@ -60,7 +60,28 @@ export type BitbucketIntegrationConfig = {
    * See https://support.atlassian.com/bitbucket-cloud/docs/app-passwords/
    */
   appPassword?: string;
+
+  /**
+   * Bitbucket workspaces, can be organization or user
+   */
+  workspaces?: BitbucketWorkspace[];
+
 };
+
+export type BitbucketWorkspace = {
+  name: string;
+  description?: string;
+  /**
+   * Bitbucket projects in the organization to add repos to
+   */
+  projects?: BitbucketProject[];
+}
+
+export type BitbucketProject = {
+  name: string;
+  key: string;
+  description?: string;
+}
 
 /**
  * Reads a single Bitbucket integration config.
@@ -75,6 +96,15 @@ export function readBitbucketIntegrationConfig(
   const token = config.getOptionalString('token');
   const username = config.getOptionalString('username');
   const appPassword = config.getOptionalString('appPassword');
+  const workspaces = config.getOptionalConfigArray('workspaces')?.map(w => ({
+    name: w.getString('name'),
+    description: w.getOptionalString('description'),
+    projects : w.getOptionalConfigArray('projects')?.map(p => ({
+      name: p.getString('name'),
+      key: p.getString('key'),
+      description: p.getOptionalString('description'),
+    })),
+  }));
 
   if (!isValidHost(host)) {
     throw new Error(
@@ -94,6 +124,7 @@ export function readBitbucketIntegrationConfig(
     token,
     username,
     appPassword,
+    workspaces
   };
 }
 
