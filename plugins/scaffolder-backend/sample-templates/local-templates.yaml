@@ -11,4 +11,4 @@ spec:
     - ./springboot-grpc-template/template.yaml
     - ./v1beta2-demo/template.yaml
     - ./pull-request/template.yaml
-    - ./bitbucket-cloud-demo/template.yaml
+    - ./bitbucket-demo/template.yaml

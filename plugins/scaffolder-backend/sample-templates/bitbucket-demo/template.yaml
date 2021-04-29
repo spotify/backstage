@@ -1,9 +1,9 @@
 apiVersion: backstage.io/v1beta2
 kind: Template
 metadata:
-  name: bitbucket-cloud
-  title: Test Bitbucket Cloud RepoUrlPicker template
-  description: scaffolder v1beta2 template demo publishing to bitbucket cloud
+  name: bitbucket-demo
+  title: Test Bitbucket RepoUrlPicker template
+  description: scaffolder v1beta2 template demo publishing to bitbucket
 spec:
   owner: backstage/techdocs-core
   type: service
@@ -16,7 +16,12 @@ spec:
         repoUrl:
           title: Repository Location
           type: string
-          ui:field: RepoUrlPickerBitbucketCloud
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+              - bitbucket.org
+              - server.bitbucket.com
     - title: Fill in some steps
       required:
         - name
@@ -57,7 +62,7 @@ spec:
 
     - id: publish
       name: Publish
-      action: publish:bitbucketcloud
+      action: publish:bitbucket
       input:
         allowedHosts: ['bitbucket.org']
         description: 'This is {{ parameters.name }}'

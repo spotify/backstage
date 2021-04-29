@@ -37,7 +37,6 @@ const scaffolderApiMock: jest.Mocked<ScaffolderApi> = {
   scaffold: jest.fn(),
   getTemplateParameterSchema: jest.fn(),
   getIntegrationsList: jest.fn(),
-  getIntegration: jest.fn(),
   getTask: jest.fn(),
   streamLogs: jest.fn(),
   listActions: jest.fn(),
@@ -144,19 +143,38 @@ describe('createValidator', () => {
     });
 
     const errors = { foo: { bar: { addError: jest.fn() } } };
-    validator({ foo: { bar: 'github.com?owner=a' } }, errors as any);
+    validator({ foo: { bar: 'github.com?type=github&owner=a' } }, errors as any);
     expect(errors.foo.bar.addError).toHaveBeenCalledWith(
       'Incomplete repository location provided',
     );
     jest.resetAllMocks();
 
-    validator({ foo: { bar: 'github.com?repo=b' } }, errors as any);
+    validator({ foo: { bar: 'github.com?type=github&repo=b' } }, errors as any);
     expect(errors.foo.bar.addError).toHaveBeenCalledWith(
       'Incomplete repository location provided',
     );
     jest.resetAllMocks();
 
-    validator({ foo: { bar: 'github.com?owner=a&repo=b' } }, errors as any);
+    validator({ foo: { bar: 'github.com?type=github&owner=a&repo=b' } }, errors as any);
     expect(errors.foo.bar.addError).not.toHaveBeenCalled();
+
+    validator({ foo: { bar: 'bitbucket.org?type=bitbucket' } }, errors as any);
+    expect(errors.foo.bar.addError).toHaveBeenCalledWith(
+      'Incomplete repository location provided, workspace, project and repo required',
+    );
+    jest.resetAllMocks();
+
+    validator({ foo: { bar: 'bitbucket.org?type=bitbucket&workspace=workspace' } }, errors as any);
+    expect(errors.foo.bar.addError).toHaveBeenCalledWith(
+      'Incomplete repository location provided, workspace, project and repo required',
+    );
+    jest.resetAllMocks();
+
+    validator({ foo: { bar: 'bitbucket.org?type=bitbucket&workspace=workspace&project=project' } }, errors as any);
+    expect(errors.foo.bar.addError).toHaveBeenCalledWith(
+      'Incomplete repository location provided, workspace, project and repo required',
+    );
+    jest.resetAllMocks();
+
   });
 });

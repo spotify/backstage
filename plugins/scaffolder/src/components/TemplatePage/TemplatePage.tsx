@@ -33,7 +33,7 @@ import { useAsync } from 'react-use';
 import { scaffolderApiRef } from '../../api';
 import { rootRouteRef } from '../../routes';
 import { MultistepJsonForm } from '../MultistepJsonForm';
-import { RepoUrlPicker, RepoUrlPickerBitbucketCloud, OwnerPicker } from '../fields';
+import { RepoUrlPicker, OwnerPicker } from '../fields';
 import { JsonObject } from '@backstage/config';
 
 const useTemplateParameterSchema = (templateName: string) => {
@@ -78,27 +78,20 @@ export const createValidator = (rootSchema: JsonObject) => {
           );
         }
       } else {
-          const propSchema = schemaProps[key];
-          if (isObject(propSchema)) {
-            if (propSchema['ui:field'] === 'RepoUrlPicker') {
-              try {
-                const { host, searchParams } = new URL(`https://${propData}`);
-                if (
-                  !host ||
-                  !searchParams.get('owner') ||
-                  !searchParams.get('repo')
-                ) {
-                  propErrors.addError('Incomplete repository location provided');
-                }
-              } catch {
-                propErrors.addError('Unable to parse the Repository URL');
-              }
-          } else if (propSchema['ui:field'] === 'RepoUrlPickerBitbucketCloud') {
-            try {
-              const { host, searchParams } = new URL(`https://${propData}`);
-              if (!host) {
-                propErrors.addError('Incomplete repository location provided, host required');
-              }
+        const propSchema = schemaProps[key];
+        if (
+          isObject(propSchema) &&
+          propSchema['ui:field'] === 'RepoUrlPicker'
+        ) {
+          try {
+            const { host, searchParams } = new URL(`https://${propData}`);
+            const type = searchParams.get('type');
+            if (!host || !type) {
+              propErrors.addError('Incomplete repository location provided, host required');
+            }
+            if (type === 'bitbucket') {
+              // Bitbucket cloud needs workspace variable
+              if (host === 'bitbucket.org') {
                 if (
                   !searchParams.get('workspace') ||
                   !searchParams.get('project') ||
@@ -106,9 +99,27 @@ export const createValidator = (rootSchema: JsonObject) => {
                 ) {
                   propErrors.addError('Incomplete repository location provided, workspace, project and repo required');
                 }
-            } catch {
-              propErrors.addError('Unable to parse the Repository URL');
+              }
+              // Bitbucket server does not need workspace variable
+              else {
+                if (
+                  !searchParams.get('project') ||
+                  !searchParams.get('repo')
+                ) {
+                  propErrors.addError('Incomplete repository location provided, project and repo required');
+                }
+              }
             }
+            else {
+              if (
+                !searchParams.get('owner') ||
+                !searchParams.get('repo')
+              ) {
+                propErrors.addError('Incomplete repository location provided');
+              }
+            }
+          } catch {
+            propErrors.addError('Unable to parse the Repository URL');
           }
         }
       }
@@ -205,7 +216,7 @@ export const TemplatePage = () => {
           <InfoCard title={schema.title} noPadding>
             <MultistepJsonForm
               formData={formState}
-              fields={{ RepoUrlPicker, RepoUrlPickerBitbucketCloud, OwnerPicker }}
+              fields={{ RepoUrlPicker, OwnerPicker }}
               onChange={handleChange}
               onReset={handleFormReset}
               onFinish={handleCreate}

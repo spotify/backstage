@@ -146,28 +146,12 @@ integrations:
         $env: BITBUCKET_USERNAME
       appPassword:
         $env: BITBUCKET_APP_PASSWORD
-      workspaces:
-        - name: workspace1
-          description: Some workspace 1
-          projects:
-            - name: ProjectA
-              key: PRA
-              description: PRA - Project A
-            - name: ProjectB
-              key: PRB
-              description: PRA - PROJECT B
-        - name: workspace2
-          description: Some workspace 2
-          projects:
-            - name: ProjectA
-              key: PRA
-              description: PRA - Project A
-            - name: ProjectB
-              key: PRB
-              description: PRB - Project B
-            - name: ProjectC
-              key: PRC
-              description: PRC - Project C
+    - host: server.bitbucket.com
+      apiBaseUrl: server.bitbucket.com
+      username:
+        $env: BITBUCKET_SERVER_USERNAME
+      appPassword:
+        $env: BITBUCKET_SERVER_APP_PASSWORD
   azure:
     - host: dev.azure.com
       token:

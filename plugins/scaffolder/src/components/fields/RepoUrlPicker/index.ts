@@ -14,4 +14,3 @@
  * limitations under the License.
  */
 export { RepoUrlPicker } from './RepoUrlPicker';
-export { RepoUrlPickerBitbucketCloud } from './RepoUrlPickerBitbucketCloud';

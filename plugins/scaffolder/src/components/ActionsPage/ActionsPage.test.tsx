@@ -24,7 +24,6 @@ const scaffolderApiMock: jest.Mocked<ScaffolderApi> = {
   scaffold: jest.fn(),
   getTemplateParameterSchema: jest.fn(),
   getIntegrationsList: jest.fn(),
-  getIntegration: jest.fn(),
   getTask: jest.fn(),
   streamLogs: jest.fn(),
   listActions: jest.fn(),
