@@ -1,0 +1,69 @@
+{
+  "metadata": {
+    "namespace": "default",
+    "annotations": {
+      "backstage.io/managed-by-location": "file:../catalog-model/examples/acme/team-a-group.yaml",
+      "backstage.io/managed-by-origin-location": "bootstrap:bootstrap"
+    },
+    "name": "guest",
+    "uid": "88074c2a-9d6b-4cd9-9d61-6901da330cac",
+    "etag": "YzE2NjMxN2YtOGNhNy00NWRkLTlhOTItNjFmYmIzZjM5ZDI4",
+    "generation": 1
+  },
+  "apiVersion": "backstage.io/v1alpha1",
+  "kind": "User",
+  "spec": {
+    "profile": {
+      "displayName": "Guest User",
+      "email": "guest@example.com",
+      "picture": "https://avatars.dicebear.com/api/avataaars/guest@example.com.svg?background=%23fff"
+    },
+    "memberOf": ["team-a"]
+  },
+  "relations": [
+    {
+      "target": { "kind": "group", "namespace": "default", "name": "team-a" },
+      "type": "memberOf"
+    },
+    {
+      "target": {
+        "kind": "component",
+        "namespace": "default",
+        "name": "backstage"
+      },
+      "type": "ownerOf"
+    },
+    {
+      "target": {
+        "kind": "component",
+        "namespace": "default",
+        "name": "documented-component"
+      },
+      "type": "ownerOf"
+    },
+    {
+      "target": {
+        "kind": "component",
+        "namespace": "default",
+        "name": "playback-order"
+      },
+      "type": "ownerOf"
+    },
+    {
+      "target": {
+        "kind": "component",
+        "namespace": "default",
+        "name": "searcher"
+      },
+      "type": "ownerOf"
+    },
+    {
+      "target": {
+        "kind": "component",
+        "namespace": "default",
+        "name": "shuffle-api"
+      },
+      "type": "ownerOf"
+    }
+  ]
+}

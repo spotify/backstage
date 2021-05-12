@@ -17,3 +17,62 @@ Cypress.Commands.add('enterAsGuest', () => {
   cy.visit('/');
   cy.get('button').contains('Enter').click();
 });
+
+Cypress.Commands.add('login', () => {
+  window.localStorage.setItem('@backstage/core:SignInPage:provider', 'guest');
+});
+
+Cypress.Commands.add('mockTechDocs', () => {
+  cy.intercept(
+    'GET',
+    '**/techdocs/metadata/entity/default/Component/backstage',
+    {
+      fixture: 'techdocs/metadata-entity.json',
+    },
+  );
+
+  cy.intercept(
+    'GET',
+    '**/techdocs/metadata/techdocs/default/Component/backstage',
+    {
+      fixture: 'techdocs/metadata-techdocs.json',
+    },
+  );
+
+  cy.intercept('GET', '**/techdocs/sync/default/Component/backstage', {
+    fixture: 'techdocs/sync.json',
+  });
+
+  // HTML
+  cy.intercept(
+    'GET',
+    '**/techdocs/static/docs/default/Component/backstage/overview/roadmap/index.html',
+    {
+      fixture: 'techdocs/components/roadmap.html',
+    },
+  );
+
+  cy.intercept(
+    'GET',
+    '**/techdocs/static/docs/default/Component/backstage/index.html',
+    {
+      fixture: 'techdocs/components/default.html',
+    },
+  );
+
+  // CSS
+  cy.intercept(
+    'GET',
+    '**/techdocs/static/docs/default/Component/backstage/assets/stylesheets/main.fe0cca5b.min.css',
+    {
+      fixture: 'techdocs/components/style.css',
+    },
+  );
+  cy.intercept(
+    'GET',
+    '**/techdocs/static/docs/default/Component/assets/stylesheets/main.fe0cca5b.min.css',
+    {
+      fixture: 'techdocs/components/style.css',
+    },
+  );
+});
