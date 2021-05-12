@@ -36,6 +36,7 @@
     "@backstage/plugin-tech-radar": "^0.3.10",
     "@backstage/plugin-techdocs": "^0.9.1",
     "@backstage/plugin-todo": "^0.1.0",
+    "@backstage/plugin-uptimerobot": "^0.1.0",
     "@backstage/plugin-user-settings": "^0.2.8",
     "@backstage/theme": "^0.2.7",
     "@material-ui/core": "^4.11.0",

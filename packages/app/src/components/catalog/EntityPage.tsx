@@ -103,6 +103,10 @@ import {
   isTravisciAvailable,
 } from '@roadiehq/backstage-plugin-travis-ci';
 import { EntityCodeCoverageContent } from '@backstage/plugin-code-coverage';
+import {
+  EntityUptimerobotOverviewCard,
+  isUptimerobotAvailable,
+} from '@backstage/plugin-uptimerobot';
 
 const EntityLayoutWrapper = (props: { children?: ReactNode }) => {
   const [badgesDialogOpen, setBadgesDialogOpen] = useState(false);
@@ -260,6 +264,14 @@ const overviewContent = (
     <Grid item md={6}>
       <EntityHasSubcomponentsCard variant="gridItem" />
     </Grid>
+
+    <EntitySwitch>
+      <EntitySwitch.Case if={isUptimerobotAvailable}>
+        <Grid item md={6}>
+          <EntityUptimerobotOverviewCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
   </Grid>
 );
 

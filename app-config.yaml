@@ -213,7 +213,7 @@ catalog:
     # Backstage example components
     - type: file
       target: ../catalog-model/examples/all-components.yaml
-    # Example component for github-actions and TechDocs
+    # Example component for github-actions, TechDocs and UptimeRobot
     - type: file
       target: ../../plugins/github-actions/examples/sample.yaml
     # Example component for TechDocs

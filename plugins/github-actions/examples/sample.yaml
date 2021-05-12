@@ -6,6 +6,7 @@ metadata:
   annotations:
     github.com/project-slug: 'backstage/backstage'
     backstage.io/techdocs-ref: url:https://github.com/backstage/backstage
+    uptimerobot.com/monitors: 'teamA/787965292'
 spec:
   type: website
   lifecycle: production

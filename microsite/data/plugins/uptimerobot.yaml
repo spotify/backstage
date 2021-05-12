@@ -1,0 +1,11 @@
+---
+title: UptimeRobot
+author: '@simonknittel'
+authorUrl: https://github.com/simonknittel
+category: Monitoring
+description: View the status of your UptimeRobot monitors in Backstage.
+documentation: https://github.com/backstage/backstage/tree/master/plugins/uptimerobot
+iconUrl: img/uptimerobot-logo.svg
+npmPackageName: '@backstage/plugin-uptimerobot'
+tags:
+  - monitoring

@@ -16,6 +16,8 @@
 /plugins/search-*                           @backstage/techdocs-core
 /plugins/techdocs                           @backstage/techdocs-core
 /plugins/techdocs-backend                   @backstage/techdocs-core
+/plugins/uptimerobot                        @simonknittel
+/plugins/uptimerobot-backend                @simonknittel
 /packages/search-common                     @backstage/techdocs-core
 /packages/techdocs-common                   @backstage/techdocs-core
 /.changeset/cost-insights-*                 @backstage/silver-lining
