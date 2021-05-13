@@ -380,7 +380,11 @@
                                       </li>
 
                                       <li class="md-nav__item">
-                                        <a href="#plugins" class="md-nav__link">
+                                        <a
+                                          href="#plugins"
+                                          class="md-nav__link"
+                                          data-testid="md-nav-plugins"
+                                        >
                                           Plugins
                                         </a>
                                       </li>
@@ -2242,30 +2246,52 @@
                   </label>
                   <ul class="md-nav__list" data-md-scrollfix>
                     <li class="md-nav__item">
-                      <a href="#current-status" class="md-nav__link">
+                      <a
+                        data-testid="md-nav-current-status"
+                        href="#current-status"
+                        class="md-nav__link"
+                      >
                         Current status
                       </a>
                     </li>
 
                     <li class="md-nav__item">
-                      <a href="#phases" class="md-nav__link"> Phases </a>
+                      <a
+                        data-testid="md-nav-phases"
+                        href="#phases"
+                        class="md-nav__link"
+                      >
+                        Phases
+                      </a>
                     </li>
 
                     <li class="md-nav__item">
-                      <a href="#detailed-roadmap" class="md-nav__link">
+                      <a
+                        data-testid="md-nav-detailed-roadmap"
+                        href="#detailed-roadmap"
+                        class="md-nav__link"
+                      >
                         Detailed roadmap
                       </a>
 
                       <nav class="md-nav" aria-label="Detailed roadmap">
                         <ul class="md-nav__list">
                           <li class="md-nav__item">
-                            <a href="#ongoing-work" class="md-nav__link">
+                            <a
+                              data-testid="md-nav-ongoing-work"
+                              href="#ongoing-work"
+                              class="md-nav__link"
+                            >
                               Ongoing work 🚧
                             </a>
                           </li>
 
                           <li class="md-nav__item">
-                            <a href="#future-work" class="md-nav__link">
+                            <a
+                              data-testid="md-nav-future-work"
+                              href="#future-work"
+                              class="md-nav__link"
+                            >
                               Future work 🔮
                             </a>
                           </li>
@@ -2280,6 +2306,7 @@
                             <a
                               href="#community-initiatives-coming-soon"
                               class="md-nav__link"
+                              data-testid="md-nav-community"
                             >
                               Community Initiatives 🧑‍🤝‍🧑 (Coming soon)
                             </a>
@@ -2289,6 +2316,7 @@
                             <a
                               href="#completed-milestones"
                               class="md-nav__link"
+                              data-testid="md-nav-milestones"
                             >
                               Completed milestones ✅
                             </a>
@@ -2674,6 +2702,12 @@
                   >,
                   <a href="https://github.com/backstage/backstage/pull/1990"
                     >AWS</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="/docs/default/Component/backstage/overview/roadmap/#phases"
+                    >Link to Phases</a
                   >
                 </li>
               </ul>

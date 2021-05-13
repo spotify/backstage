@@ -22,6 +22,10 @@ Cypress.Commands.add('login', () => {
   window.localStorage.setItem('@backstage/core:SignInPage:provider', 'guest');
 });
 
+Cypress.Commands.add('getTechDocsShadowRoot', () => {
+  cy.get('[data-testid="techdocs-content-shadowroot"]').shadow();
+});
+
 Cypress.Commands.add('mockTechDocs', () => {
   cy.intercept(
     'GET',
@@ -61,18 +65,7 @@ Cypress.Commands.add('mockTechDocs', () => {
   );
 
   // CSS
-  cy.intercept(
-    'GET',
-    '**/techdocs/static/docs/default/Component/backstage/assets/stylesheets/main.fe0cca5b.min.css',
-    {
-      fixture: 'techdocs/components/style.css',
-    },
-  );
-  cy.intercept(
-    'GET',
-    '**/techdocs/static/docs/default/Component/assets/stylesheets/main.fe0cca5b.min.css',
-    {
-      fixture: 'techdocs/components/style.css',
-    },
-  );
+  cy.intercept('GET', '**/assets/stylesheets/main.fe0cca5b.min.css', {
+    fixture: 'techdocs/components/style.css',
+  });
 });
