@@ -81,6 +81,8 @@ describe('TechDocs', () => {
     it('should navigate to a specific TechDocs fragment from a URL', () => {
       cy.visit('/docs/default/Component/backstage/overview/roadmap');
 
+      cy.window().its('scrollY').should('equal', 0);
+
       cy.getTechDocsShadowRoot().within(() => {
         cy.contains('Phases');
         cy.contains('Detailed roadmap');
@@ -92,7 +94,21 @@ describe('TechDocs', () => {
         '/docs/default/Component/backstage/overview/roadmap/#future-work',
       );
 
-      cy.window().its('scrollY').should('equal', 1422);
+      return cy.getTechDocsShadowRoot().within(() => {
+        return cy.get('#future-work').then($el => {
+          cy.window()
+            .its('scrollY')
+            .should($scrollY => {
+              expect($scrollY).to.be.closeTo($el[0].offsetTop, 200);
+            });
+        });
+      });
+    });
+
+    it('should navigate to a wrong TechDocs component page from a URL', () => {
+      cy.visit('/docs/default/Component/wrong-component');
+
+      cy.get('[data-testid=error]').should('be.visible');
     });
   });
 
@@ -108,6 +124,7 @@ describe('TechDocs', () => {
 
       cy.mockTechDocs();
     });
+
     it('should navigate to the TechDocs page via the navigation bar', () => {
       cy.visit('/docs/default/Component/backstage');
 
@@ -123,12 +140,14 @@ describe('TechDocs', () => {
     it('should navigate to the TechDocs page via the table of contents - Level 1', () => {
       cy.visit('/docs/default/Component/backstage/overview/roadmap');
 
-      return cy.window().then($win => {
-        cy.getTechDocsShadowRoot().within(() => {
-          cy.get('[data-testid="md-nav-phases"]', { timeout: 5000 })
-            .click()
-            .should(() => {
-              expect($win.scrollY).to.be.closeTo(407, 100);
+      return cy.getTechDocsShadowRoot().within(() => {
+        cy.get('[data-testid="md-nav-phases"]').click();
+
+        cy.get('#phases').then($el => {
+          cy.window()
+            .its('scrollY')
+            .should($scrollY => {
+              expect($scrollY).to.be.closeTo($el[0].offsetTop, 200);
             });
         });
       });
@@ -137,12 +156,14 @@ describe('TechDocs', () => {
     it('should navigate to the TechDocs page via the table of contents - Level 2', () => {
       cy.visit('/docs/default/Component/backstage/overview/roadmap');
 
-      return cy.window().then($win => {
-        cy.getTechDocsShadowRoot().within(() => {
-          cy.get('[data-testid="md-nav-future-work"]', { timeout: 5000 })
-            .click()
-            .should(() => {
-              expect($win.scrollY).to.be.closeTo(1422, 200);
+      return cy.getTechDocsShadowRoot().within(() => {
+        cy.get('[data-testid="md-nav-future-work"]').click();
+
+        cy.get('#future-work').then($el => {
+          cy.window()
+            .its('scrollY')
+            .should($scrollY => {
+              expect($scrollY).to.be.closeTo($el[0].offsetTop, 200);
             });
         });
       });
@@ -151,9 +172,17 @@ describe('TechDocs', () => {
     it('should navigate to a specific fragment within a TechDocs page', () => {
       cy.visit('/docs/default/Component/backstage/overview/roadmap');
       cy.scrollTo('bottom');
-      cy.getTechDocsShadowRoot().within(() => {
+
+      return cy.getTechDocsShadowRoot().within(() => {
         cy.contains('Link to Phases').click();
-        cy.window().its('scrollY').should('equal', 407);
+
+        cy.get('#phases').then($el => {
+          cy.window()
+            .its('scrollY')
+            .should($scrollY => {
+              expect($scrollY).to.be.closeTo($el[0].offsetTop, 200);
+            });
+        });
       });
     });
 
@@ -172,20 +201,6 @@ describe('TechDocs', () => {
     });
 
     it('should navigate to the previous page within a TechDocs page', () => {
-      cy.visit('/docs/default/Component/backstage/overview/roadmap');
-      cy.scrollTo('bottom');
-      cy.getTechDocsShadowRoot().within(() => {
-        cy.get('.md-footer-nav__link.md-footer-nav__link--prev').click();
-
-        cy.location().should(loc => {
-          expect(loc.pathname).to.eq(
-            '/docs/default/Component/backstage/overview/architecture-overview/',
-          );
-        });
-      });
-    });
-
-    it('should navigate to an external site', () => {
       cy.visit('/docs/default/Component/backstage/overview/roadmap');
       cy.scrollTo('bottom');
       cy.getTechDocsShadowRoot().within(() => {

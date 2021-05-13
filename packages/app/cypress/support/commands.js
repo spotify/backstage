@@ -47,7 +47,7 @@ Cypress.Commands.add('mockTechDocs', () => {
     fixture: 'techdocs/sync.json',
   });
 
-  // HTML
+  // Backstage Roadmap - TechDocs HTML
   cy.intercept(
     'GET',
     '**/techdocs/static/docs/default/Component/backstage/overview/roadmap/index.html',
@@ -56,6 +56,7 @@ Cypress.Commands.add('mockTechDocs', () => {
     },
   );
 
+  // Backstage Home - TechDocs HTML
   cy.intercept(
     'GET',
     '**/techdocs/static/docs/default/Component/backstage/index.html',
