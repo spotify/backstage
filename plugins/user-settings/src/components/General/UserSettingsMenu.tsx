@@ -39,11 +39,15 @@ export const UserSettingsMenu = () => {
 
   return (
     <>
-      <IconButton aria-label="more" onClick={handleOpen}>
+      <IconButton
+        data-testid="user-settings-menu"
+        aria-label="more"
+        onClick={handleOpen}
+      >
         <MoreVertIcon />
       </IconButton>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <MenuItem onClick={() => identityApi.signOut()}>
+        <MenuItem data-testid="sign-out" onClick={() => identityApi.signOut()}>
           <ListItemIcon>
             <SignOutIcon />
           </ListItemIcon>

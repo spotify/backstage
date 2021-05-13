@@ -51,6 +51,7 @@ export const DocsCardGrid = ({
                     name: entity.metadata.name,
                   })}
                   color="primary"
+                  data-testid="read_docs"
                 >
                   Read Docs
                 </Button>
