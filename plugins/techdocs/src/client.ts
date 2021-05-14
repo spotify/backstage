@@ -98,6 +98,10 @@ export class TechDocsClient implements TechDocsApi {
     });
     const res = await request.json();
 
+    if (request.status === 404) {
+      throw new NotFoundError('Entity not found.');
+    }
+
     return res;
   }
 }
