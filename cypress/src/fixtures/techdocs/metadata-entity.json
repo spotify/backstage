@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "namespace": "default",
+    "annotations": {
+      "backstage.io/managed-by-location": "file:../../plugins/github-actions/examples/sample.yaml",
+      "backstage.io/managed-by-origin-location": "bootstrap:bootstrap",
+      "github.com/project-slug": "backstage/backstage",
+      "backstage.io/techdocs-ref": "url:https://github.com/backstage/backstage"
+    },
+    "name": "backstage",
+    "description": "backstage.io",
+    "uid": "b3bae9fa-c34f-47d0-ae14-547c1d77c147",
+    "etag": "MDU1MzdiYWYtYjFjZC00OGQ4LThhMmEtN2Q5NjA3ZGVhM2Rl",
+    "generation": 1
+  },
+  "apiVersion": "backstage.io/v1alpha1",
+  "kind": "Component",
+  "spec": {
+    "type": "website",
+    "lifecycle": "production",
+    "owner": "user:guest"
+  },
+  "relations": [
+    {
+      "target": { "kind": "user", "namespace": "default", "name": "guest" },
+      "type": "ownedBy"
+    }
+  ],
+  "locationMetadata": {
+    "type": "url",
+    "target": "https://github.com/backstage/backstage"
+  }
+}

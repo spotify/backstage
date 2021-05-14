@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 The Backstage Authors
+ * Copyright 2020 Spotify AB
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,28 @@
  * limitations under the License.
  */
 /// <reference types="cypress" />
-import './commands';
+import 'os';
+
+describe('Login', () => {
+  beforeEach(() => {
+    cy.intercept('GET', '**/catalog/entities**', {
+      fixture: 'entities.json',
+    });
+
+    cy.intercept('GET', '**/guest', {
+      fixture: 'guest.json',
+    });
+  });
+
+  it('should render the login page', () => {
+    cy.visit('/');
+    cy.contains('Backstage Example App');
+  });
+
+  it('should be able to login', () => {
+    cy.get('button').contains('Enter').click();
+    cy.url().should('include', '/catalog');
+
+    cy.contains('artist-lookup');
+  });
+});

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 The Backstage Authors
+ * Copyright 2020 Spotify AB
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare module 'zombie';
-declare module 'pgtools';
-declare namespace Cypress {
-  interface Chainable {
-    /**
-     * Login as guest
-     * @example cy.loginAsGuests
-     */
-    loginAsGuest(): Chainable<Element>;
-    /**
-     * Get the TechDocs shadow root element
-     * @example cy.getTechDocsShadowRoot
-     */
-    getTechDocsShadowRoot(): Chainable<Element>;
-    /**
-     * Mock TechDocs backend API
-     * @example cy.mockTechDocs
-     */
-    mockTechDocs(): void;
-  }
-}
+/// <reference types="cypress" />
+import 'os';
+
+describe('Logout', () => {
+  before(() => {
+    cy.loginAsGuest();
+  });
+  it('should be able to logout', () => {
+    cy.visit('/settings');
+    cy.get('[data-testid="user-settings-menu"]').click();
+    return cy
+      .get('[data-testid="sign-out"]')
+      .click()
+      .then(() => {
+        return expect(
+          localStorage.getItem('@backstage/core:SignInPage:provider'),
+        ).to.be.null;
+      });
+  });
+});
