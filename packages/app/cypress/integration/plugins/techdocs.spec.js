@@ -94,8 +94,12 @@ describe('TechDocs', () => {
         '/docs/default/Component/backstage/overview/roadmap/#future-work',
       );
 
+      // This is used to test the post-render behavior of the techdocs Reader
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(500);
+
       return cy.getTechDocsShadowRoot().within(() => {
-        return cy.get('#future-work').then($el => {
+        cy.get('#future-work').then($el => {
           cy.window()
             .its('scrollY')
             .should($scrollY => {
