@@ -65,7 +65,7 @@ Cypress.Commands.add('mockTechDocs', () => {
     },
   );
 
-  // CSS
+  // TechDocs CSS
   cy.intercept('GET', '**/assets/stylesheets/main.fe0cca5b.min.css', {
     fixture: 'techdocs/components/style.css',
   });
