@@ -15,13 +15,14 @@
  */
 /// <reference types="cypress" />
 import 'os';
+import { API_BASE_URL } from '../settings';
 
 describe('Integrations', () => {
   describe('ReadTree', () => {
     it('should work for github', () => {
       cy.loginAsGuest();
 
-      cy.request('POST', '/api/catalog/locations', {
+      cy.request('POST', `${API_BASE_URL}/api/catalog/locations`, {
         target:
           'https://github.com/backstage-verification/test-repo/blob/main/**/*',
         type: 'url',
@@ -48,7 +49,7 @@ describe('Integrations', () => {
     it('should work for gitlab', () => {
       cy.loginAsGuest();
 
-      cy.request('POST', '/api/catalog/locations', {
+      cy.request('POST', `${API_BASE_URL}/api/catalog/locations`, {
         target:
           'https://gitlab.com/backstage-verification/test-repo/-/tree/master/**/*',
         type: 'url',
@@ -65,7 +66,7 @@ describe('Integrations', () => {
     it('should work for bitbucket', () => {
       cy.loginAsGuest();
 
-      cy.request('POST', '/api/catalog/locations', {
+      cy.request('POST', `${API_BASE_URL}/api/catalog/locations`, {
         target:
           'https://bitbucket.org/backstage-verification/test-repo/src/master/**/*',
         type: 'url',
