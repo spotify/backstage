@@ -17,14 +17,5 @@
         "bundledDependencies": true
       }
     ]
-  },
-  "overrides": [
-    {
-      "files": ["*.spec.js"],
-      "rules": {
-        "jest/valid-expect": 0,
-        "jest/expect-expect": 0
-      }
-    }
-  ]
+  }
 }
