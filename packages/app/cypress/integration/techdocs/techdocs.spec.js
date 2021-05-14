@@ -78,7 +78,7 @@ describe('TechDocs', () => {
       );
     });
 
-    it('should navigate to a specific TechDocs fragment from a URL', () => {
+    it('should navigate to a specific TechDocs section from a URL', () => {
       cy.visit('/docs/default/Component/backstage/overview/roadmap');
 
       cy.window().its('scrollY').should('equal', 0);
@@ -89,7 +89,7 @@ describe('TechDocs', () => {
       });
     });
 
-    it('should navigate to a specific TechDocs hash from a URL', () => {
+    it('should navigate to a specific TechDocs fragment from a URL', () => {
       cy.visit(
         '/docs/default/Component/backstage/overview/roadmap/#future-work',
       );
