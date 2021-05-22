@@ -24,47 +24,66 @@ Cypress.Commands.add('getTechDocsShadowRoot', () => {
   cy.get('[data-testid="techdocs-content-shadowroot"]').shadow();
 });
 
-Cypress.Commands.add('mockTechDocs', () => {
+Cypress.Commands.add('getTechDocsTableOfContents', () => {
+  cy.get('[data-md-component="toc"]');
+});
+
+Cypress.Commands.add('getTechDocsNavigation', () => {
+  cy.get('[data-md-component="navigation"]');
+});
+
+Cypress.Commands.add('mockTechDocsCSS', () => {
+  cy.intercept('GET', '**/assets/stylesheets/main.fe0cca5b.min.css', {
+    fixture: 'techdocs/style.css',
+  });
+});
+
+Cypress.Commands.add('mockSockJSNode', () => {
+  cy.intercept('GET', '**/sockjs-node/info**', {
+    body: {
+      websocket: true,
+      origins: ['*:*'],
+      cookie_needed: false,
+      entropy: 2882389500,
+    },
+  });
+});
+
+Cypress.Commands.add('interceptTechDocsAPICalls', () => {
   cy.intercept(
     'GET',
     '**/techdocs/metadata/entity/default/Component/backstage',
-    {
-      fixture: 'techdocs/metadata-entity.json',
-    },
-  );
+  ).as('entityMetadata');
 
   cy.intercept(
     'GET',
     '**/techdocs/metadata/techdocs/default/Component/backstage',
-    {
-      fixture: 'techdocs/metadata-techdocs.json',
-    },
+  ).as('techdocsMetadata');
+
+  cy.intercept('GET', '**/techdocs/sync/default/Component/backstage').as(
+    'syncEntity',
   );
 
-  cy.intercept('GET', '**/techdocs/sync/default/Component/backstage', {
-    fixture: 'techdocs/sync.json',
-  });
-
-  // Backstage Roadmap - TechDocs HTML
   cy.intercept(
     'GET',
     '**/techdocs/static/docs/default/Component/backstage/overview/roadmap/index.html',
-    {
-      fixture: 'techdocs/components/roadmap.html',
-    },
-  );
+  ).as('roadmapHTML');
 
-  // Backstage Home - TechDocs HTML
   cy.intercept(
     'GET',
     '**/techdocs/static/docs/default/Component/backstage/index.html',
-    {
-      fixture: 'techdocs/components/default.html',
-    },
-  );
+  ).as('homeHTML');
+});
 
-  // TechDocs CSS
-  cy.intercept('GET', '**/assets/stylesheets/main.fe0cca5b.min.css', {
-    fixture: 'techdocs/components/style.css',
-  });
+Cypress.Commands.add('waitRoadmapPage', () => {
+  cy.wait([
+    '@entityMetadata',
+    '@syncEntity',
+    '@techdocsMetadata',
+    '@roadmapHTML',
+  ]);
+});
+
+Cypress.Commands.add('waitHomePage', () => {
+  cy.wait(['@entityMetadata', '@syncEntity', '@techdocsMetadata', '@homeHTML']);
 });

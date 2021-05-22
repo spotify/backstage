@@ -19,22 +19,13 @@ import 'os';
 describe('TechDocs', () => {
   beforeEach(() => {
     cy.loginAsGuest();
+    cy.mockTechDocsCSS();
+    cy.mockSockJSNode();
+    cy.interceptTechDocsAPICalls();
   });
 
   describe('Navigating to TechDocs', () => {
-    beforeEach(() => {
-      cy.intercept('GET', '**/catalog/entities**', {
-        fixture: 'entities.json',
-      });
-
-      cy.intercept('GET', '**/guest', {
-        fixture: 'guest.json',
-      });
-
-      cy.mockTechDocs();
-    });
-
-    it('should navigate to the TechDocs page via the primary navigation bar', () => {
+    it('should navigate to the TechDocs home page via the primary navigation bar', () => {
       cy.visit('/');
       cy.get('[data-testid="sidebar-root"]')
         .get('div')
@@ -44,7 +35,12 @@ describe('TechDocs', () => {
       cy.contains('Documentation');
     });
 
-    it('should navigate to the TechDocs home page from the "Overview" tab', () => {
+    it('should navigate to the TechDocs home page from the URL', () => {
+      cy.visit('/docs');
+      cy.contains('Documentation');
+    });
+
+    it('should navigate to a specific TechDocs entity from the "Overview" tab', () => {
       cy.visit('/docs');
       cy.get('[data-testid="read_docs"]').eq(0).click();
 
@@ -53,7 +49,7 @@ describe('TechDocs', () => {
       });
     });
 
-    it('should navigate to the TechDocs home page from the "Owned documents" tab', () => {
+    it('should navigate to a specific TechDocs entity from the "Owned documents" tab', () => {
       cy.visit('/docs');
       cy.get('[data-testid="header-tab-1"]').click();
       cy.get('[value="backstage"] > div > a').click();
@@ -63,13 +59,9 @@ describe('TechDocs', () => {
       });
     });
 
-    it('should navigate to a specific TechDocs project page', () => {
-      cy.visit('/docs');
-      cy.contains('Documentation');
-    });
-
     it('should navigate to a specific TechDocs entity page from a URL', () => {
       cy.visit('/docs/default/Component/backstage');
+      cy.waitHomePage();
 
       cy.contains('Backstage');
       cy.contains(
@@ -82,6 +74,7 @@ describe('TechDocs', () => {
 
     it('should navigate to a specific TechDocs section from a URL', () => {
       cy.visit('/docs/default/Component/backstage/overview/roadmap');
+      cy.waitRoadmapPage();
 
       cy.window().its('scrollY').should('equal', 0);
 
@@ -95,6 +88,7 @@ describe('TechDocs', () => {
       cy.visit(
         '/docs/default/Component/backstage/overview/roadmap/#future-work',
       );
+      cy.waitRoadmapPage();
 
       // This is used to test the post-render behavior of the techdocs Reader
       cy.wait(500);
@@ -118,103 +112,108 @@ describe('TechDocs', () => {
   });
 
   describe('Navigating within TechDocs', () => {
-    beforeEach(() => {
-      cy.intercept('GET', '**/catalog/entities**', {
-        fixture: 'entities.json',
-      });
-
-      cy.intercept('GET', '**/guest', {
-        fixture: 'guest.json',
-      });
-
-      cy.mockTechDocs();
-    });
-
-    it('should navigate to the TechDocs page via the navigation bar', () => {
+    it('should navigate to a specific TechDocs page via the navigation bar', () => {
       cy.visit('/docs/default/Component/backstage');
+      cy.waitHomePage();
 
       cy.getTechDocsShadowRoot().within(() => {
-        cy.get('[data-testid="md-nav-overview"]').click();
-        cy.get('[data-testid="md-nav-roadmap"]').click();
-
+        const overviewNavigation = cy
+          .getTechDocsNavigation()
+          .find('> div > div > [data-md-level="0"] > ul > li:nth-child(1)');
+        overviewNavigation.within(() => {
+          // Overview
+          cy.get('> input').click({ force: true });
+        });
+        overviewNavigation.within(() => {
+          // Project Roadmap
+          cy.get('> [data-md-level="1"] > ul > li:nth-child(3) > a').click();
+        });
         cy.contains('Phases');
         cy.contains('Detailed roadmap');
       });
     });
 
-    it('should navigate to the TechDocs page via the table of contents - Level 1', () => {
-      cy.visit('/docs/default/Component/backstage/overview/roadmap');
+    describe('Navigating within a TechDocs page', () => {
+      beforeEach(() => {
+        cy.visit('/docs/default/Component/backstage/overview/roadmap');
+        cy.waitRoadmapPage();
+      });
+      it('should navigate to a specific fragment within the page via the table of contents - Level 1', () => {
+        return cy.getTechDocsShadowRoot().within(() => {
+          // Phases
+          cy.getTechDocsTableOfContents().within(() => {
+            cy.get('> div > div > nav > ul > li:nth-child(2) > a').click();
+          });
 
-      return cy.getTechDocsShadowRoot().within(() => {
-        cy.get('[data-testid="md-nav-phases"]').click();
-
-        cy.get('#phases').then($el => {
-          cy.window()
-            .its('scrollY')
-            .should($scrollY => {
-              expect($scrollY).to.be.closeTo($el[0].offsetTop, 200);
-            });
+          cy.get('#phases').then($el => {
+            cy.window()
+              .its('scrollY')
+              .should($scrollY => {
+                expect($scrollY).to.be.closeTo($el[0].offsetTop, 200);
+              });
+          });
         });
       });
-    });
 
-    it('should navigate to the TechDocs page via the table of contents - Level 2', () => {
-      cy.visit('/docs/default/Component/backstage/overview/roadmap');
+      it('should navigate to a specific fragment within the page via the table of contents - Level 2', () => {
+        return cy.getTechDocsShadowRoot().within(() => {
+          // Future work
+          cy.getTechDocsTableOfContents()
+            .find(
+              '> div > div > nav > ul > li:nth-child(3) > nav > ul > li:nth-child(2) > a',
+            )
+            .click();
 
-      return cy.getTechDocsShadowRoot().within(() => {
-        cy.get('[data-testid="md-nav-future-work"]').click();
-
-        cy.get('#future-work').then($el => {
-          cy.window()
-            .its('scrollY')
-            .should($scrollY => {
-              expect($scrollY).to.be.closeTo($el[0].offsetTop, 200);
-            });
+          cy.get('#future-work').then($el => {
+            cy.window()
+              .its('scrollY')
+              .should($scrollY => {
+                expect($scrollY).to.be.closeTo($el[0].offsetTop, 200);
+              });
+          });
         });
       });
-    });
 
-    it('should navigate to a specific fragment within a TechDocs page', () => {
-      cy.visit('/docs/default/Component/backstage/overview/roadmap');
-      cy.scrollTo('bottom');
+      it('should navigate to a specific TechDocs page fragment from a link', () => {
+        return cy.getTechDocsShadowRoot().within(() => {
+          cy.get('.md-content > article')
+            .contains('upgrade their installation')
+            .click();
 
-      return cy.getTechDocsShadowRoot().within(() => {
-        cy.contains('Link to Phases').click();
-
-        cy.get('#phases').then($el => {
-          cy.window()
-            .its('scrollY')
-            .should($scrollY => {
-              expect($scrollY).to.be.closeTo($el[0].offsetTop, 200);
-            });
+          cy.location().should(loc => {
+            expect(loc.pathname).to.eq(
+              '/docs/default/Component/backstage/cli/commands/',
+            );
+            expect(loc.hash).to.eq('#versionsbump');
+          });
         });
       });
-    });
 
-    it('should navigate to the next page within a TechDocs page', () => {
-      cy.visit('/docs/default/Component/backstage/overview/roadmap');
-      cy.scrollTo('bottom');
-      cy.getTechDocsShadowRoot().within(() => {
-        cy.get('.md-footer-nav__link.md-footer-nav__link--next').click();
+      it('should navigate to the next page within a TechDocs entity', () => {
+        cy.scrollTo('bottom');
 
-        cy.location().should(loc => {
-          expect(loc.pathname).to.eq(
-            '/docs/default/Component/backstage/overview/vision/',
-          );
+        return cy.getTechDocsShadowRoot().within(() => {
+          cy.get('.md-footer-nav__link--next').click();
+
+          cy.location().should(loc => {
+            expect(loc.pathname).to.eq(
+              '/docs/default/Component/backstage/overview/vision/',
+            );
+          });
         });
       });
-    });
 
-    it('should navigate to the previous page within a TechDocs page', () => {
-      cy.visit('/docs/default/Component/backstage/overview/roadmap');
-      cy.scrollTo('bottom');
-      cy.getTechDocsShadowRoot().within(() => {
-        cy.get('.md-footer-nav__link.md-footer-nav__link--prev').click();
+      it('should navigate to the previous page within a TechDocs entity', () => {
+        cy.scrollTo('bottom');
 
-        cy.location().should(loc => {
-          expect(loc.pathname).to.eq(
-            '/docs/default/Component/backstage/overview/architecture-overview/',
-          );
+        return cy.getTechDocsShadowRoot().within(() => {
+          cy.get('.md-footer-nav__link--prev').click();
+
+          cy.location().should(loc => {
+            expect(loc.pathname).to.eq(
+              '/docs/default/Component/backstage/overview/architecture-overview/',
+            );
+          });
         });
       });
     });

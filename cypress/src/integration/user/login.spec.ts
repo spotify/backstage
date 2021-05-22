@@ -17,16 +17,6 @@
 import 'os';
 
 describe('Login', () => {
-  beforeEach(() => {
-    cy.intercept('GET', '**/catalog/entities**', {
-      fixture: 'entities.json',
-    });
-
-    cy.intercept('GET', '**/guest', {
-      fixture: 'guest.json',
-    });
-  });
-
   it('should render the login page', () => {
     cy.visit('/');
     cy.contains('Backstage Example App');

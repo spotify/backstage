@@ -32,5 +32,40 @@ declare namespace Cypress {
      * @example cy.mockTechDocs
      */
     mockTechDocs(): void;
+    /**
+     * Get the TechDocs table of contents element
+     * @example cy.getTechDocsShadowRoot
+     */
+    getTechDocsTableOfContents(): Chainable<Element>;
+    /**
+     * Get the TechDocs navigation element
+     * @example cy.getTechDocsShadowRoot
+     */
+    getTechDocsNavigation(): Chainable<Element>;
+    /**
+     * Mock Techdocs CSS
+     * @example cy.getTechDocsShadowRoot
+     */
+    mockTechDocsCSS(): Chainable<Element>;
+    /**
+     * Intercept the TechDocs API calls
+     * @example cy.getTechDocsShadowRoot
+     */
+    interceptTechDocsAPICalls(): Chainable<Element>;
+    /**
+     * Mock SockJS-Node call
+     * @example cy.getTechDocsShadowRoot
+     */
+    mockSockJSNode(): Chainable<Element>;
+    /**
+     * Wait TechDocs API response for Backstage home page
+     * @example cy.getTechDocsShadowRoot
+     */
+    waitHomePage(): Chainable<Element>;
+    /**
+     * Wait TechDocs API response for Backstage rodmap page
+     * @example cy.getTechDocsShadowRoot
+     */
+    waitRoadmapPage(): Chainable<Element>;
   }
 }
