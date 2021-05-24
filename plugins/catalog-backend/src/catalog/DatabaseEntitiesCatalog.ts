@@ -26,14 +26,22 @@ import { ConflictError } from '@backstage/errors';
 import { chunk, groupBy } from 'lodash';
 import limiterFactory from 'p-limit';
 import { Logger } from 'winston';
-import type { Database, DbEntityResponse, Transaction } from '../database';
+import {
+  Database,
+  DbEntityResponse,
+  generateAttachmentEtag,
+  Transaction,
+} from '../database';
 import { DbEntitiesRequest } from '../database/types';
 import { basicEntityFilter } from '../service/request';
 import { durationText } from '../util/timing';
-import type {
+import {
   EntitiesCatalog,
   EntitiesRequest,
   EntitiesResponse,
+  EntityAttachment,
+  EntityAttachmentFilter,
+  EntityAttachmentUpsertRequest,
   EntityUpsertRequest,
   EntityUpsertResponse,
 } from './types';
@@ -81,6 +89,32 @@ export class DatabaseEntitiesCatalog implements EntitiesCatalog {
       entities,
       pageInfo: dbResponse.pageInfo,
     };
+  }
+
+  async attachment(
+    uid: string,
+    key: string,
+    filter?: EntityAttachmentFilter,
+  ): Promise<EntityAttachment | undefined> {
+    return await this.database.transaction(async tx => {
+      const response = await this.database.attachmentByUidAndKey(
+        tx,
+        uid,
+        key,
+        filter,
+      );
+
+      if (!response) {
+        return undefined;
+      }
+
+      return {
+        key: response.key,
+        data: response.data,
+        contentType: response.contentType,
+        etag: response.etag,
+      };
+    });
   }
 
   async removeEntityByUid(uid: string): Promise<void> {
@@ -264,7 +298,10 @@ export class DatabaseEntitiesCatalog implements EntitiesCatalog {
           )} from ${newLocation} because entity existed from ${oldLocation}`,
         );
         toIgnore.push(request);
-      } else if (entityHasChanges(oldEntity, newEntity)) {
+      } else if (
+        entityHasChanges(oldEntity, newEntity) ||
+        (await this.attachmentsHaveChanges(tx, oldEntity, request.attachments))
+      ) {
         // TODO(freben): This currently uses addOrUpdateEntity under the hood,
         // but should probably calculate the end result entity right here
         // instead and call a dedicated batch update database method
@@ -284,6 +321,45 @@ export class DatabaseEntitiesCatalog implements EntitiesCatalog {
     return { toAdd, toUpdate, toIgnore };
   }
 
+  private async attachmentsHaveChanges(
+    tx: Transaction,
+    oldEntity: Entity,
+    attachmentRequests: EntityAttachmentUpsertRequest[],
+  ): Promise<boolean> {
+    // TODO: This is a workaround, as it's not that easy to check whether an
+    // entity has changed or not. The current implementation assumes that
+    // attachments are part of the entity. So if they change, the entities
+    // change too and vise versa.
+    // But an attachment can change in the future, even if the entity definition
+    // itself has not changed, because it comes from a different source. It
+    // would be better if the ingestion process already stops updates if there
+    // are no changes, so that a check like attachmentRequests.some(a => a.content)
+    // is sufficient.
+    // This implementation is expensive.
+    const oldAttachments = await this.database.attachmentsByUid(
+      tx,
+      oldEntity?.metadata.uid!,
+    );
+
+    if (oldAttachments.length !== attachmentRequests.length) {
+      return true;
+    } else if (attachmentRequests.every(r => !r.content)) {
+      return false;
+    }
+
+    return attachmentRequests
+      .filter(r => r.content)
+      .some(({ key, content }) => {
+        const oldAttachment = oldAttachments.find(a => a.key === key);
+
+        return (
+          !oldAttachment ||
+          generateAttachmentEtag(content!.data, content!.contentType) !==
+            oldAttachment.etag
+        );
+      });
+  }
+
   // Efficiently adds the given entities to storage, under the assumption that
   // they do not conflict with any existing entities
   private async batchAdd(
@@ -295,10 +371,14 @@ export class DatabaseEntitiesCatalog implements EntitiesCatalog {
 
     const res = await this.database.addEntities(
       tx,
-      requests.map(({ entity, relations }) => ({
+      requests.map(({ entity, relations, attachments }) => ({
         locationId,
         entity,
         relations,
+        attachments: attachments.map(({ key, content }) => ({
+          key,
+          content,
+        })),
       })),
     );
 
@@ -340,7 +420,7 @@ export class DatabaseEntitiesCatalog implements EntitiesCatalog {
   // TODO(freben): Incorporate this into batchUpdate which is the only caller
   private async addOrUpdateEntity(
     tx: Transaction,
-    { entity, relations }: EntityUpsertRequest,
+    { entity, relations, attachments }: EntityUpsertRequest,
     locationId?: string,
   ): Promise<Entity> {
     // Find a matching (by uid, or by compound name, depending on the given
@@ -356,13 +436,29 @@ export class DatabaseEntitiesCatalog implements EntitiesCatalog {
       const updated = generateUpdatedEntity(existing.entity, entity);
       response = await this.database.updateEntity(
         tx,
-        { locationId, entity: updated, relations },
+        {
+          locationId,
+          entity: updated,
+          relations,
+          attachments: attachments.map(({ key, content }) => ({
+            key,
+            content,
+          })),
+        },
         existing.entity.metadata.etag,
         existing.entity.metadata.generation,
       );
     } else {
       const added = await this.database.addEntities(tx, [
-        { locationId, entity, relations },
+        {
+          locationId,
+          entity,
+          relations,
+          attachments: attachments.map(({ key, content }) => ({
+            key,
+            content,
+          })),
+        },
       ]);
       response = added[0];
     }

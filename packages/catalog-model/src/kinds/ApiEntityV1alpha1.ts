@@ -31,7 +31,10 @@ export interface ApiEntityV1alpha1 extends Entity {
     type: string;
     lifecycle: string;
     owner: string;
-    definition: string;
+    // TODO: We need to adjust tests and documentation for this change.
+    // TODO: Think about a migration strategy!
+    definition?: string;
+    definitionLocation: string;
     system?: string;
   };
 }

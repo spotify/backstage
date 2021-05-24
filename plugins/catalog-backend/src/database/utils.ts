@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2021 Spotify AB
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { createHash } from 'crypto';
 
-export { CommonDatabase } from './CommonDatabase';
-export { DatabaseManager } from './DatabaseManager';
-export type {
-  Database,
-  DbAttachmentMetadataResponse,
-  DbAttachmentRequest,
-  DbAttachmentRequestContent,
-  DbAttachmentResponse,
-  DbEntityRequest,
-  DbEntityResponse,
-  EntitiesSearchFilter,
-  EntityFilter,
-  EntityPagination,
-  Transaction,
-} from './types';
-export { generateAttachmentEtag } from './utils';
+export function generateAttachmentEtag(
+  data: Buffer,
+  contentType: string,
+): string {
+  return createHash('sha256')
+    .update(data)
+    .update(contentType, 'utf8')
+    .digest('base64');
+}

@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-import { Entity, EntityName, Location } from '@backstage/catalog-model';
 import {
   AddLocationRequest,
   AddLocationResponse,
   CatalogApi,
+  CatalogAttachmentResponse,
+  CatalogClient,
   CatalogEntitiesRequest,
   CatalogListResponse,
-  CatalogClient,
 } from '@backstage/catalog-client';
+import { Entity, EntityName, Location } from '@backstage/catalog-model';
 import { IdentityApi } from '@backstage/core';
 
 type CatalogRequestOptions = {
@@ -64,6 +65,16 @@ export class CatalogClientWrapper implements CatalogApi {
     options?: CatalogRequestOptions,
   ): Promise<Entity | undefined> {
     return await this.client.getEntityByName(compoundName, {
+      token: options?.token ?? (await this.identityApi.getIdToken()),
+    });
+  }
+
+  async getAttachment(
+    name: EntityName,
+    key: string,
+    options?: CatalogRequestOptions,
+  ): Promise<CatalogAttachmentResponse> {
+    return await this.client.getAttachment(name, key, {
       token: options?.token ?? (await this.identityApi.getIdToken()),
     });
   }

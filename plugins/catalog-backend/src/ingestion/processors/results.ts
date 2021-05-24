@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import { InputError, NotFoundError } from '@backstage/errors';
 import {
   Entity,
   EntityRelationSpec,
   LocationSpec,
 } from '@backstage/catalog-model';
-import { CatalogProcessorResult } from './types';
+import { InputError, NotFoundError } from '@backstage/errors';
+import {
+  CatalogProcessorAttachmentContentResult,
+  CatalogProcessorResult,
+} from './types';
 
 export function notFoundError(
   atLocation: LocationSpec,
@@ -67,4 +70,18 @@ export function entity(
 
 export function relation(spec: EntityRelationSpec): CatalogProcessorResult {
   return { type: 'relation', relation: spec };
+}
+
+/**
+ * Emits a entity attachment.
+ * @param key Required key for the attachment, has to be unqiue inside an
+ *            entity.
+ * @param content Optional content of the attachment. Content can be omitted, if
+ *                the previous content should be kept.
+ */
+export function attachment(
+  key: string,
+  content?: CatalogProcessorAttachmentContentResult,
+): CatalogProcessorResult {
+  return { type: 'attachment', key, content };
 }

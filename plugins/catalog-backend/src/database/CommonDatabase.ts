@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { ConflictError, InputError, NotFoundError } from '@backstage/errors';
 import {
   Entity,
   EntityName,
@@ -26,6 +25,7 @@ import {
   Location,
   parseEntityName,
 } from '@backstage/catalog-model';
+import { ConflictError, InputError, NotFoundError } from '@backstage/errors';
 import { Knex } from 'knex';
 import lodash from 'lodash';
 import type { Logger } from 'winston';
@@ -34,6 +34,12 @@ import {
   Database,
   DatabaseLocationUpdateLogEvent,
   DatabaseLocationUpdateLogStatus,
+  DbAttachmentFilter,
+  DbAttachmentMetadataResponse,
+  DbAttachmentMetadataRow,
+  DbAttachmentRequest,
+  DbAttachmentResponse,
+  DbAttachmentRow,
   DbEntitiesRelationsRow,
   DbEntitiesRequest,
   DbEntitiesResponse,
@@ -47,6 +53,7 @@ import {
   EntityPagination,
   Transaction,
 } from './types';
+import { generateAttachmentEtag } from './utils';
 
 // The number of items that are sent per batch to the database layer, when
 // doing .batchInsert calls to knex. This needs to be low enough to not cause
@@ -99,13 +106,13 @@ export class CommonDatabase implements Database {
     request: DbEntityRequest[],
   ): Promise<DbEntityResponse[]> {
     const tx = txOpaque as Knex.Transaction;
-
     const result: DbEntityResponse[] = [];
     const entityRows: DbEntitiesRow[] = [];
     const relationRows: DbEntitiesRelationsRow[] = [];
     const searchRows: DbEntitiesSearchRow[] = [];
+    const attachmentRows: DbAttachmentRow[] = [];
 
-    for (const { entity, relations, locationId } of request) {
+    for (const { entity, relations, locationId, attachments } of request) {
       if (entity.metadata.uid !== undefined) {
         throw new InputError('May not specify uid for new entities');
       } else if (entity.metadata.etag !== undefined) {
@@ -133,11 +140,13 @@ export class CommonDatabase implements Database {
       entityRows.push(this.toEntityRow(locationId, newEntity));
       relationRows.push(...this.toRelationRows(uid, relations));
       searchRows.push(...buildEntitySearch(uid, newEntity));
+      attachmentRows.push(...this.toAttachmentRows(uid, attachments));
     }
 
     await tx.batchInsert('entities', entityRows, BATCH_SIZE);
     await tx.batchInsert('entities_relations', relationRows, BATCH_SIZE);
     await tx.batchInsert('entities_search', searchRows, BATCH_SIZE);
+    await tx.batchInsert('entities_attachments', attachmentRows, BATCH_SIZE);
 
     return result;
   }
@@ -193,6 +202,20 @@ export class CommonDatabase implements Database {
       .where({ originating_entity_id: uid })
       .del();
     await tx.batchInsert('entities_relations', relationRows, BATCH_SIZE);
+
+    // Only keep attachments that are still emitted and we don't want to update
+    const attachmentKeys = request.attachments
+      .filter(({ content }) => !content)
+      .map(({ key }) => key);
+    await tx<DbEntitiesRelationsRow>('entities_attachments')
+      .where({ originating_entity_id: uid })
+      .whereNotIn('key', attachmentKeys)
+      .del();
+    const attachmentRows = this.toAttachmentRows(
+      uid,
+      request.attachments.filter(({ content }) => content),
+    );
+    await tx.batchInsert('entities_attachments', attachmentRows, BATCH_SIZE);
 
     try {
       const entries = buildEntitySearch(uid, request.entity);
@@ -334,6 +357,66 @@ export class CommonDatabase implements Database {
       .where({ originating_entity_id: originatingEntityId })
       .del();
     await tx.batchInsert('entities_relations', relationRows, BATCH_SIZE);
+  }
+
+  async attachmentsByUid(
+    txOpaque: Transaction,
+    entityUid: string,
+  ): Promise<DbAttachmentMetadataResponse[]> {
+    const tx = txOpaque as Knex.Transaction;
+
+    const results = await tx<DbAttachmentMetadataRow>('entities_attachments')
+      .where({ originating_entity_id: entityUid })
+      // Make sure, not to include the data column, as we try to avoid loading
+      // the potentially large data here.
+      .select('originating_entity_id', 'key', 'etag', 'content_type');
+
+    return results.map(
+      ({ key, originating_entity_id, content_type, etag }) => ({
+        key,
+        entityUid: originating_entity_id,
+        contentType: content_type,
+        etag,
+      }),
+    );
+  }
+
+  async attachmentByUidAndKey(
+    txOpaque: Transaction,
+    entityUid: string,
+    key: string,
+    filter?: DbAttachmentFilter,
+  ): Promise<DbAttachmentResponse | undefined> {
+    const tx = txOpaque as Knex.Transaction;
+    const ifNotMatchEtag = filter && filter.ifNotMatchEtag;
+
+    const [result] = await tx<DbAttachmentRow>('entities_attachments')
+      .where({ originating_entity_id: entityUid, key })
+      .select(
+        'originating_entity_id',
+        'key',
+        'etag',
+        'content_type',
+        ifNotMatchEtag
+          ? tx.raw(
+              'CASE WHEN etag = ? THEN NULL ELSE data END AS dataOrNull',
+              ifNotMatchEtag,
+            )
+          : 'data AS dataOrNull',
+      );
+
+    if (!result) {
+      return undefined;
+    }
+
+    return {
+      key: result.key,
+      entityUid: result.originating_entity_id,
+      contentType: result.content_type,
+      // knex returns null, make sure we use undefined instead
+      data: result.dataOrNull ?? undefined,
+      etag: result.etag,
+    };
   }
 
   async addLocation(
@@ -488,6 +571,27 @@ export class CommonDatabase implements Database {
     }));
 
     return deduplicateRelations(rows);
+  }
+
+  private toAttachmentRows(
+    originatingEntityId: string,
+    attachments: DbAttachmentRequest[],
+  ): DbAttachmentRow[] {
+    const rows = attachments.map(({ key, content }) => {
+      if (!content) {
+        throw new InputError('Require attachment content for store operations');
+      }
+
+      return {
+        originating_entity_id: originatingEntityId,
+        key,
+        data: content.data,
+        content_type: content.contentType,
+        etag: generateAttachmentEtag(content.data, content.contentType),
+      };
+    });
+
+    return rows;
   }
 
   private async toEntityResponses(

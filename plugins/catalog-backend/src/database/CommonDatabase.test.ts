@@ -15,7 +15,7 @@
  */
 
 import { Entity, Location, parseEntityRef } from '@backstage/catalog-model';
-import { ConflictError } from '@backstage/errors';
+import { ConflictError, InputError } from '@backstage/errors';
 import { basicEntityFilter } from '../service/request';
 import { DatabaseManager } from './DatabaseManager';
 import type {
@@ -37,6 +37,7 @@ const bootstrapLocation = {
 describe('CommonDatabase', () => {
   let db: Database;
   let entityRequest: DbEntityRequest;
+  let entityRequestWithAttachments: DbEntityRequest;
   let entityResponse: DbEntityResponse;
 
   beforeEach(async () => {
@@ -55,6 +56,32 @@ describe('CommonDatabase', () => {
         spec: { i: 'j' },
       },
       relations: [],
+      attachments: [],
+    };
+
+    entityRequestWithAttachments = {
+      entity: {
+        apiVersion: 'av1',
+        kind: 'k1',
+        metadata: { name: 'n1', namespace: 'ns1' },
+      },
+      relations: [],
+      attachments: [
+        {
+          key: 'backstage.io/test-1',
+          content: {
+            contentType: 'text/plain',
+            data: Buffer.from('Hello World'),
+          },
+        },
+        {
+          key: 'backstage.io/test-2',
+          content: {
+            contentType: 'text/plain',
+            data: Buffer.from('Hello Backstage'),
+          },
+        },
+      ],
     };
 
     entityResponse = {
@@ -170,6 +197,7 @@ describe('CommonDatabase', () => {
             metadata: { name: 'n1', namespace: 'ns1' },
           },
           relations: [],
+          attachments: [],
         },
         {
           entity: {
@@ -178,6 +206,7 @@ describe('CommonDatabase', () => {
             metadata: { name: 'n1', namespace: 'ns1' },
           },
           relations: [],
+          attachments: [],
         },
       ];
       await expect(
@@ -194,6 +223,7 @@ describe('CommonDatabase', () => {
             metadata: { name: 'n1', namespace: 'ns1' },
           },
           relations: [],
+          attachments: [],
         },
         {
           entity: {
@@ -202,6 +232,7 @@ describe('CommonDatabase', () => {
             metadata: { name: 'n1', namespace: 'nS1' },
           },
           relations: [],
+          attachments: [],
         },
       ];
       await expect(
@@ -218,6 +249,7 @@ describe('CommonDatabase', () => {
             metadata: { name: 'n1', namespace: 'ns1' },
           },
           relations: [],
+          attachments: [],
         },
         {
           entity: {
@@ -226,6 +258,7 @@ describe('CommonDatabase', () => {
             metadata: { name: 'n1', namespace: 'ns2' },
           },
           relations: [],
+          attachments: [],
         },
       ];
       await expect(
@@ -252,6 +285,62 @@ describe('CommonDatabase', () => {
           }),
         },
       ]);
+    });
+
+    it('add entity with attachment', async () => {
+      const req: DbEntityRequest = {
+        entity: {
+          apiVersion: 'av1',
+          kind: 'k1',
+          metadata: { name: 'n1', namespace: 'ns1' },
+        },
+        relations: [],
+        attachments: [
+          {
+            key: 'backstage.io/test',
+            content: {
+              contentType: 'text/plain',
+              data: Buffer.from('Hello World'),
+            },
+          },
+        ],
+      };
+      const [result] = await db.transaction(tx => db.addEntities(tx, [req]));
+      const attachment = await db.transaction(tx =>
+        db.attachmentByUidAndKey(
+          tx,
+          result.entity.metadata.uid!,
+          'backstage.io/test',
+        ),
+      );
+
+      expect(attachment).toEqual({
+        entityUid: result.entity.metadata.uid,
+        etag: 'EAT0d0ctWMREHR8j9pp7TjTWNh7/UilaEjqh8cNWMcs=',
+        key: 'backstage.io/test',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello World'),
+      });
+    });
+
+    it('rejects to add entity with attachment but without content', async () => {
+      const req: DbEntityRequest = {
+        entity: {
+          apiVersion: 'av1',
+          kind: 'k1',
+          metadata: { name: 'n1', namespace: 'ns1' },
+        },
+        relations: [],
+        attachments: [
+          {
+            key: 'backstage.io/test',
+          },
+        ],
+      };
+
+      await expect(
+        db.transaction(tx => db.addEntities(tx, [req])),
+      ).rejects.toBeInstanceOf(InputError);
     });
   });
 
@@ -308,7 +397,11 @@ describe('CommonDatabase', () => {
         db.addEntities(tx, [entityRequest]),
       );
       const updated = await db.transaction(tx =>
-        db.updateEntity(tx, { entity: added.entity, relations: [] }),
+        db.updateEntity(tx, {
+          entity: added.entity,
+          relations: [],
+          attachments: [],
+        }),
       );
       expect(updated.entity.apiVersion).toEqual(added.entity.apiVersion);
       expect(updated.entity.kind).toEqual(added.entity.kind);
@@ -328,7 +421,11 @@ describe('CommonDatabase', () => {
       );
       added.entity.metadata.name! = 'new!';
       const updated = await db.transaction(tx =>
-        db.updateEntity(tx, { entity: added.entity, relations: [] }),
+        db.updateEntity(tx, {
+          entity: added.entity,
+          relations: [],
+          attachments: [],
+        }),
       );
       expect(updated.entity.metadata.name).toEqual('new!');
     });
@@ -341,7 +438,7 @@ describe('CommonDatabase', () => {
         db.transaction(tx =>
           db.updateEntity(
             tx,
-            { entity: added.entity, relations: [] },
+            { entity: added.entity, relations: [], attachments: [] },
             'garbage',
           ),
         ),
@@ -356,12 +453,118 @@ describe('CommonDatabase', () => {
         db.transaction(tx =>
           db.updateEntity(
             tx,
-            { entity: added.entity, relations: [] },
+            { entity: added.entity, relations: [], attachments: [] },
             undefined,
             1e20,
           ),
         ),
       ).rejects.toThrow(ConflictError);
+    });
+
+    it('can update an attachment', async () => {
+      const [added] = await db.transaction(tx =>
+        db.addEntities(tx, [entityRequestWithAttachments]),
+      );
+      const updated = await db.transaction(tx =>
+        db.updateEntity(tx, {
+          entity: added.entity,
+          relations: [],
+          attachments: [
+            {
+              key: 'backstage.io/test-1',
+              content: {
+                contentType: 'text/plain',
+                data: Buffer.from('Hello Community'),
+              },
+            },
+            {
+              key: 'backstage.io/test-2',
+            },
+          ],
+        }),
+      );
+
+      const attachment = await db.transaction(tx =>
+        db.attachmentByUidAndKey(
+          tx,
+          updated.entity.metadata.uid!,
+          'backstage.io/test-1',
+        ),
+      );
+
+      expect(attachment).toEqual({
+        entityUid: added.entity.metadata.uid,
+        etag: 'AC2Sm7VocW7lmPNDyHBoEICRtn8PewU3P0Ui3X8oeZM=',
+        key: 'backstage.io/test-1',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello Community'),
+      });
+    });
+
+    it('can add an attachment', async () => {
+      const [added] = await db.transaction(tx =>
+        db.addEntities(tx, [entityRequestWithAttachments]),
+      );
+      const updated = await db.transaction(tx =>
+        db.updateEntity(tx, {
+          entity: added.entity,
+          relations: [],
+          attachments: [
+            {
+              key: 'backstage.io/test-1',
+            },
+            {
+              key: 'backstage.io/test-2',
+            },
+            {
+              key: 'backstage.io/test-3',
+              content: {
+                contentType: 'text/plain',
+                data: Buffer.from('Hello Backstage'),
+              },
+            },
+          ],
+        }),
+      );
+
+      const attachment = await db.transaction(tx =>
+        db.attachmentByUidAndKey(
+          tx,
+          updated.entity.metadata.uid!,
+          'backstage.io/test-3',
+        ),
+      );
+
+      expect(attachment).toEqual({
+        entityUid: added.entity.metadata.uid,
+        etag: 'ubwswPKz+QzKdMGmxK9F0kTYaROP3dS7u7WR+oLqlKU=',
+        key: 'backstage.io/test-3',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello Backstage'),
+      });
+    });
+
+    it('can remove attachments', async () => {
+      const [added] = await db.transaction(tx =>
+        db.addEntities(tx, [entityRequestWithAttachments]),
+      );
+      const updated = await db.transaction(tx =>
+        db.updateEntity(tx, {
+          entity: added.entity,
+          relations: [],
+          attachments: [],
+        }),
+      );
+
+      const attachment = await db.transaction(tx =>
+        db.attachmentByUidAndKey(
+          tx,
+          updated.entity.metadata.uid!,
+          'backstage.io/test-1',
+        ),
+      );
+
+      expect(attachment).toBeUndefined();
     });
   });
 
@@ -380,8 +583,8 @@ describe('CommonDatabase', () => {
       };
       await db.transaction(async tx => {
         await db.addEntities(tx, [
-          { entity: e1, relations: [] },
-          { entity: e2, relations: [] },
+          { entity: e1, relations: [], attachments: [] },
+          { entity: e2, relations: [], attachments: [] },
         ]);
       });
       const result = await db.transaction(async tx => db.entities(tx));
@@ -420,7 +623,7 @@ describe('CommonDatabase', () => {
       await db.transaction(async tx => {
         await db.addEntities(
           tx,
-          entities.map(entity => ({ entity, relations: [] })),
+          entities.map(entity => ({ entity, relations: [], attachments: [] })),
         );
       });
 
@@ -463,7 +666,7 @@ describe('CommonDatabase', () => {
       await db.transaction(async tx => {
         await db.addEntities(
           tx,
-          entities.map(entity => ({ entity, relations: [] })),
+          entities.map(entity => ({ entity, relations: [], attachments: [] })),
         );
       });
 
@@ -603,8 +806,8 @@ describe('CommonDatabase', () => {
 
       const { id2: secondEntityId } = await db.transaction(async tx => {
         const [{ entity: e1 }, { entity: e2 }] = await db.addEntities(tx, [
-          { entity: entity1, relations: [] },
-          { entity: entity2, relations: [] },
+          { entity: entity1, relations: [], attachments: [] },
+          { entity: entity2, relations: [], attachments: [] },
         ]);
         const id1 = e1?.metadata?.uid!;
         const id2 = e2?.metadata?.uid!;
@@ -702,7 +905,7 @@ describe('CommonDatabase', () => {
       await db.transaction(async tx => {
         await db.addEntities(
           tx,
-          entities.map(entity => ({ entity, relations: [] })),
+          entities.map(entity => ({ entity, relations: [], attachments: [] })),
         );
       });
 
@@ -718,6 +921,127 @@ describe('CommonDatabase', () => {
         db.entityByName(tx, { kind: 'unknown', namespace: 'nS', name: 'n' }),
       );
       expect(e3).toBeUndefined();
+    });
+  });
+
+  describe('attachmentsByUid', () => {
+    it('can get attachments for entity', async () => {
+      const [added] = await db.transaction(tx =>
+        db.addEntities(tx, [entityRequestWithAttachments]),
+      );
+
+      const attachments = await db.transaction(tx =>
+        db.attachmentsByUid(tx, added.entity.metadata.uid!),
+      );
+
+      expect(attachments).toEqual([
+        {
+          entityUid: added.entity.metadata.uid,
+          etag: expect.any(String),
+          key: 'backstage.io/test-1',
+          contentType: 'text/plain',
+        },
+        {
+          entityUid: added.entity.metadata.uid,
+          etag: expect.any(String),
+          key: 'backstage.io/test-2',
+          contentType: 'text/plain',
+        },
+      ]);
+    });
+
+    it('can get attachments for missing entity', async () => {
+      const attachments = await db.transaction(tx =>
+        db.attachmentsByUid(tx, 'missing'),
+      );
+
+      expect(attachments).toHaveLength(0);
+    });
+  });
+
+  describe('attachmentByUidAndKey', () => {
+    it('can get attachment', async () => {
+      const [added] = await db.transaction(tx =>
+        db.addEntities(tx, [entityRequestWithAttachments]),
+      );
+
+      const attachment = await db.transaction(tx =>
+        db.attachmentByUidAndKey(
+          tx,
+          added.entity.metadata.uid!,
+          'backstage.io/test-1',
+        ),
+      );
+
+      expect(attachment).toEqual({
+        entityUid: added.entity.metadata.uid,
+        etag: 'EAT0d0ctWMREHR8j9pp7TjTWNh7/UilaEjqh8cNWMcs=',
+        key: 'backstage.io/test-1',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello World'),
+      });
+    });
+
+    it('returns undefined if attachment is missing', async () => {
+      const [added] = await db.transaction(tx =>
+        db.addEntities(tx, [entityRequestWithAttachments]),
+      );
+
+      const attachment = await db.transaction(tx =>
+        db.attachmentByUidAndKey(
+          tx,
+          added.entity.metadata.uid!,
+          'backstage.io/test-3',
+        ),
+      );
+
+      expect(attachment).toBeUndefined();
+    });
+
+    it("can get attachment with data if etag doesn't match", async () => {
+      const [added] = await db.transaction(tx =>
+        db.addEntities(tx, [entityRequestWithAttachments]),
+      );
+
+      const attachment = await db.transaction(tx =>
+        db.attachmentByUidAndKey(
+          tx,
+          added.entity.metadata.uid!,
+          'backstage.io/test-1',
+          { ifNotMatchEtag: 'no-match' },
+        ),
+      );
+
+      expect(attachment).toEqual({
+        entityUid: added.entity.metadata.uid,
+        etag: 'EAT0d0ctWMREHR8j9pp7TjTWNh7/UilaEjqh8cNWMcs=',
+        key: 'backstage.io/test-1',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello World'),
+      });
+    });
+
+    it('can get attachment without data if etag match', async () => {
+      const [added] = await db.transaction(tx =>
+        db.addEntities(tx, [entityRequestWithAttachments]),
+      );
+
+      const attachment = await db.transaction(tx =>
+        db.attachmentByUidAndKey(
+          tx,
+          added.entity.metadata.uid!,
+          'backstage.io/test-1',
+          { ifNotMatchEtag: 'EAT0d0ctWMREHR8j9pp7TjTWNh7/UilaEjqh8cNWMcs=' },
+        ),
+      );
+
+      expect(attachment).toEqual({
+        entityUid: added.entity.metadata.uid,
+        etag: 'EAT0d0ctWMREHR8j9pp7TjTWNh7/UilaEjqh8cNWMcs=',
+        key: 'backstage.io/test-1',
+        contentType: 'text/plain',
+        data: undefined,
+      });
     });
   });
 });

@@ -33,6 +33,7 @@ describe('HigherOrderOperations', () => {
       entities: jest.fn(),
       removeEntityByUid: jest.fn(),
       batchAddOrUpdateEntities: jest.fn(),
+      attachment: jest.fn(),
     };
     locationsCatalog = {
       addLocation: jest.fn(),
@@ -120,6 +121,7 @@ describe('HigherOrderOperations', () => {
             location,
             entity,
             relations: [],
+            attachments: [],
           },
         ],
         errors: [],
@@ -201,7 +203,7 @@ describe('HigherOrderOperations', () => {
 
       locationsCatalog.locations.mockResolvedValue([]);
       locationReader.read.mockResolvedValue({
-        entities: [{ entity, location, relations: [] }],
+        entities: [{ entity, location, relations: [], attachments: [] }],
         errors: [{ error: new Error('abcd'), location }],
       });
 
@@ -238,6 +240,7 @@ describe('HigherOrderOperations', () => {
             location,
             entity,
             relations: [],
+            attachments: [],
           },
         ],
         errors: [],
@@ -304,7 +307,7 @@ describe('HigherOrderOperations', () => {
         { currentStatus: locationStatus, data: location },
       ]);
       locationReader.read.mockResolvedValue({
-        entities: [{ entity: desc, location, relations: [] }],
+        entities: [{ entity: desc, location, relations: [], attachments: [] }],
         errors: [],
       });
       entitiesCatalog.batchAddOrUpdateEntities.mockResolvedValue([
@@ -357,7 +360,7 @@ describe('HigherOrderOperations', () => {
         { currentStatus: locationStatus, data: location },
       ]);
       locationReader.read.mockResolvedValue({
-        entities: [{ entity: desc, location, relations: [] }],
+        entities: [{ entity: desc, location, relations: [], attachments: [] }],
         errors: [],
       });
       entitiesCatalog.entities.mockResolvedValue({

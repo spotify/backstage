@@ -32,6 +32,12 @@ export type CatalogRequestOptions = {
   token?: string;
 };
 
+export type CatalogAttachmentResponse = {
+  blob(): Promise<Blob | undefined>;
+  text(): Promise<string | undefined>;
+  url(): Promise<string>;
+};
+
 export interface CatalogApi {
   // Entities
   getEntities(
@@ -46,6 +52,13 @@ export interface CatalogApi {
     uid: string,
     options?: CatalogRequestOptions,
   ): Promise<void>;
+
+  // Attachments
+  getAttachment(
+    name: EntityName,
+    key: string,
+    options?: CatalogRequestOptions,
+  ): Promise<CatalogAttachmentResponse>;
 
   // Locations
   getLocationById(

@@ -33,6 +33,7 @@ describe('<DomainExplorerContent />', () => {
     removeLocationById: jest.fn(),
     removeEntityByUid: jest.fn(),
     getEntityByName: jest.fn(),
+    getAttachment: jest.fn(),
   };
 
   const Wrapper = ({ children }: { children?: React.ReactNode }) => (

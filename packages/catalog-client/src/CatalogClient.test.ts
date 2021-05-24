@@ -198,4 +198,142 @@ describe('CatalogClient', () => {
       await client.getLocationById('42');
     });
   });
+
+  describe('getAttachment', () => {
+    it('should load attachment as blob, includes token in request', async () => {
+      server.use(
+        rest.get(
+          `${mockBaseUrl}/entities/by-name/my-kind/my-namespace/my-name/attachments/backstage.io%2Fattachment-key`,
+          (req, res, ctx) => {
+            expect(req.headers.get('authorization')).toBe(`Bearer ${token}`);
+            return res(ctx.text('Hello World'));
+          },
+        ),
+      );
+
+      const attachment = await client.getAttachment(
+        { kind: 'my-kind', name: 'my-name', namespace: 'my-namespace' },
+        'backstage.io/attachment-key',
+        { token },
+      );
+      const blob = await attachment.blob();
+
+      expect(blob).toBeDefined();
+      expect(blob!.type).toBe('text/plain');
+      expect(await blob!.text()).toBe('Hello World');
+    });
+
+    it('should load attachment as blob, without token', async () => {
+      server.use(
+        rest.get(
+          `${mockBaseUrl}/entities/by-name/my-kind/my-namespace/my-name/attachments/backstage.io%2Fattachment-key`,
+          (req, res, ctx) => {
+            expect(req.headers.get('authorization')).toBeNull();
+            return res(ctx.text('Hello World'));
+          },
+        ),
+      );
+
+      const attachment = await client.getAttachment(
+        { kind: 'my-kind', name: 'my-name', namespace: 'my-namespace' },
+        'backstage.io/attachment-key',
+      );
+      const blob = await attachment.blob();
+
+      expect(blob).toBeDefined();
+      expect(blob!.type).toBe('text/plain');
+      expect(await blob!.text()).toBe('Hello World');
+    });
+
+    it('should load attachment as blob, return undefined if attachment does not exist', async () => {
+      server.use(
+        rest.get(
+          `${mockBaseUrl}/entities/by-name/my-kind/my-namespace/my-name/attachments/backstage.io%2Fattachment-key`,
+          (_, res, ctx) => {
+            return res(ctx.status(404));
+          },
+        ),
+      );
+
+      const attachment = await client.getAttachment(
+        { kind: 'my-kind', name: 'my-name', namespace: 'my-namespace' },
+        'backstage.io/attachment-key',
+      );
+      const blob = await attachment.blob();
+
+      expect(blob).toBeUndefined();
+    });
+
+    it('should load attachment as text', async () => {
+      server.use(
+        rest.get(
+          `${mockBaseUrl}/entities/by-name/my-kind/my-namespace/my-name/attachments/backstage.io%2Fattachment-key`,
+          (_, res, ctx) => res(ctx.text('Hello World')),
+        ),
+      );
+
+      const attachment = await client.getAttachment(
+        { kind: 'my-kind', name: 'my-name', namespace: 'my-namespace' },
+        'backstage.io/attachment-key',
+        { token },
+      );
+      const text = await attachment.text();
+
+      expect(text).toBe('Hello World');
+    });
+
+    it('should load attachment as text, return undefined if attachment does not exist', async () => {
+      server.use(
+        rest.get(
+          `${mockBaseUrl}/entities/by-name/my-kind/my-namespace/my-name/attachments/backstage.io%2Fattachment-key`,
+          (_, res, ctx) => res(ctx.status(404)),
+        ),
+      );
+
+      const attachment = await client.getAttachment(
+        { kind: 'my-kind', name: 'my-name', namespace: 'my-namespace' },
+        'backstage.io/attachment-key',
+        { token },
+      );
+      const text = await attachment.text();
+
+      expect(text).toBeUndefined();
+    });
+
+    // TODO: This test doesn't work as the Blob return from fetch doesn't seem
+    // to be compatible with the one from jsdom, so that FileReader fails with:
+    // TypeError: Failed to execute 'readAsDataURL' on 'FileReader': parameter 1
+    // is not of type 'Blob'.
+    it.skip('should generate attachment url, builds data: uri if token is included', async () => {
+      server.use(
+        rest.get(
+          `${mockBaseUrl}/entities/by-name/my-kind/my-namespace/my-name/attachments/backstage.io%2Fattachment-key`,
+          (req, res, ctx) => {
+            expect(req.headers.get('authorization')).toBe(`Bearer ${token}`);
+            return res(ctx.text('Hello World'));
+          },
+        ),
+      );
+
+      const attachment = await client.getAttachment(
+        { kind: 'my-kind', name: 'my-name', namespace: 'my-namespace' },
+        'backstage.io/attachment-key',
+        { token },
+      );
+      const url = await attachment.url();
+      expect(url).toEqual('data:text/plain;base64,SGVsbG8gV29ybGQ=');
+    });
+
+    it('should generate attachment url, without token', async () => {
+      const attachment = await client.getAttachment(
+        { kind: 'my-kind', name: 'my-name', namespace: 'my-namespace' },
+        'backstage.io/attachment-key',
+      );
+      const url = await attachment.url();
+
+      expect(url).toEqual(
+        'http://backstage:9191/i-am-a-mock-base/entities/by-name/my-kind/my-namespace/my-name/attachments/backstage.io%2Fattachment-key',
+      );
+    });
+  });
 });

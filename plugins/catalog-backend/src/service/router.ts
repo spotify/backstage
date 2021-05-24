@@ -15,11 +15,13 @@
  */
 
 import { errorHandler } from '@backstage/backend-common';
-import type { Entity } from '@backstage/catalog-model';
 import {
+  Entity,
+  stringifyEntityRef,
   analyzeLocationSchema,
   locationSpecSchema,
 } from '@backstage/catalog-model';
+
 import { Config } from '@backstage/config';
 import { NotFoundError } from '@backstage/errors';
 import express from 'express';
@@ -105,7 +107,7 @@ export async function createRouter(
 
         const body = await requireRequestBody(req);
         const [result] = await entitiesCatalog.batchAddOrUpdateEntities([
-          { entity: body as Entity, relations: [] },
+          { entity: body as Entity, relations: [], attachments: [] },
         ]);
         const response = await entitiesCatalog.entities({
           filter: basicEntityFilter({ 'metadata.uid': result.entityId }),
@@ -138,11 +140,89 @@ export async function createRouter(
         });
         if (!entities.length) {
           throw new NotFoundError(
-            `No entity named '${name}' found, with kind '${kind}' in namespace '${namespace}'`,
+            `No entity named '${stringifyEntityRef({
+              kind,
+              namespace,
+              name,
+            })}' found`,
           );
         }
         res.status(200).json(entities[0]);
-      });
+      })
+      .get('/entities/by-uid/:uid/attachments/:key', async (req, res) => {
+        const { uid, key } = req.params;
+        const attachment = await entitiesCatalog.attachment(uid, key, {
+          ifNotMatchEtag: req.header('if-none-match'),
+        });
+
+        if (!attachment) {
+          throw new NotFoundError(
+            `No attachment with key '${key}' found for entity with uid ${uid}'`,
+          );
+        }
+
+        res.header('ETag', attachment.etag);
+
+        if (!attachment.data) {
+          res.status(304).send();
+          return;
+        }
+
+        res
+          .status(200)
+          .contentType(attachment.contentType)
+          .send(attachment.data);
+      })
+      .get(
+        '/entities/by-name/:kind/:namespace/:name/attachments/:key',
+        async (req, res) => {
+          const { kind, namespace, name, key } = req.params;
+          const { entities } = await entitiesCatalog.entities({
+            filter: basicEntityFilter({
+              kind: kind,
+              'metadata.namespace': namespace,
+              'metadata.name': name,
+            }),
+          });
+          if (!entities.length) {
+            throw new NotFoundError(
+              `No entity named '${stringifyEntityRef({
+                kind,
+                namespace,
+                name,
+              })}' found`,
+            );
+          }
+
+          const attachment = await entitiesCatalog.attachment(
+            entities[0].metadata.uid!,
+            key,
+            {
+              ifNotMatchEtag: req.header('if-none-match'),
+            },
+          );
+
+          if (!attachment) {
+            throw new NotFoundError(
+              `No attachment with key '${key}' found for entity named '${stringifyEntityRef(
+                { kind, namespace, name },
+              )}'`,
+            );
+          }
+
+          res.header('ETag', attachment.etag);
+
+          if (!attachment.data) {
+            res.status(304).send();
+            return;
+          }
+
+          res
+            .status(200)
+            .contentType(attachment.contentType)
+            .send(attachment.data);
+        },
+      );
   }
 
   if (higherOrderOperation) {

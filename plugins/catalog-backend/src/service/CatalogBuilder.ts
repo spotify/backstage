@@ -299,7 +299,7 @@ export class CatalogBuilder {
     const processors: CatalogProcessor[] = [
       StaticLocationProcessor.fromConfig(config),
       new PlaceholderProcessor({ resolvers: placeholderResolvers, reader }),
-      new BuiltinKindsEntityProcessor(),
+      new BuiltinKindsEntityProcessor({ reader }),
     ];
 
     // These are only added unless the user replaced them all

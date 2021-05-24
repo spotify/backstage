@@ -41,6 +41,8 @@ describe('DatabaseEntitiesCatalog', () => {
       locations: jest.fn(),
       locationHistory: jest.fn(),
       addLocationUpdateLogEvent: jest.fn(),
+      attachmentByUidAndKey: jest.fn(),
+      attachmentsByUid: jest.fn(),
     };
     transaction = {
       rollback: jest.fn(),
@@ -73,7 +75,19 @@ describe('DatabaseEntitiesCatalog', () => {
 
       const catalog = new DatabaseEntitiesCatalog(db, getVoidLogger());
       const result = await catalog.batchAddOrUpdateEntities([
-        { entity, relations: [] },
+        {
+          entity,
+          relations: [],
+          attachments: [
+            {
+              key: 'a',
+              content: {
+                contentType: 'text/plain',
+                data: Buffer.from('Hello World'),
+              },
+            },
+          ],
+        },
       ]);
 
       expect(db.entities).toHaveBeenCalledTimes(1);
@@ -86,7 +100,19 @@ describe('DatabaseEntitiesCatalog', () => {
       });
       expect(db.addEntities).toHaveBeenCalledTimes(1);
       expect(db.addEntities).toHaveBeenCalledWith(expect.anything(), [
-        { entity: expect.anything(), relations: [] },
+        {
+          entity: expect.anything(),
+          relations: [],
+          attachments: [
+            {
+              key: 'a',
+              content: {
+                contentType: 'text/plain',
+                data: Buffer.from('Hello World'),
+              },
+            },
+          ],
+        },
       ]);
       expect(result).toEqual([{ entityId: 'u' }]);
     });
@@ -110,7 +136,7 @@ describe('DatabaseEntitiesCatalog', () => {
 
       const catalog = new DatabaseEntitiesCatalog(db, getVoidLogger());
       const result = await catalog.batchAddOrUpdateEntities(
-        [{ entity, relations: [] }],
+        [{ entity, relations: [], attachments: [] }],
         { dryRun: true },
       );
 
@@ -124,7 +150,7 @@ describe('DatabaseEntitiesCatalog', () => {
       });
       expect(db.addEntities).toHaveBeenCalledTimes(1);
       expect(db.addEntities).toHaveBeenCalledWith(expect.anything(), [
-        { entity: expect.anything(), relations: [] },
+        { entity: expect.anything(), relations: [], attachments: [] },
       ]);
       expect(transaction.rollback).toBeCalledTimes(1);
       expect(result).toEqual([{ entityId: 'u' }]);
@@ -165,7 +191,7 @@ describe('DatabaseEntitiesCatalog', () => {
 
       const catalog = new DatabaseEntitiesCatalog(db, getVoidLogger());
       const result = await catalog.batchAddOrUpdateEntities(
-        [{ entity, relations: [] }],
+        [{ entity, relations: [], attachments: [] }],
         { outputEntities: true },
       );
 
@@ -218,7 +244,7 @@ describe('DatabaseEntitiesCatalog', () => {
 
       const catalog = new DatabaseEntitiesCatalog(db, getVoidLogger());
       const result = await catalog.batchAddOrUpdateEntities([
-        { entity, relations: [] },
+        { entity, relations: [], attachments: [] },
       ]);
 
       expect(db.entities).toHaveBeenCalledTimes(1);
@@ -251,6 +277,7 @@ describe('DatabaseEntitiesCatalog', () => {
             },
           },
           relations: [],
+          attachments: [],
         },
         'e',
         1,
@@ -296,7 +323,7 @@ describe('DatabaseEntitiesCatalog', () => {
 
       const catalog = new DatabaseEntitiesCatalog(db, getVoidLogger());
       const result = await catalog.batchAddOrUpdateEntities([
-        { entity: added, relations: [] },
+        { entity: added, relations: [], attachments: [] },
       ]);
 
       expect(db.entities).toHaveBeenCalledTimes(1);
@@ -332,6 +359,7 @@ describe('DatabaseEntitiesCatalog', () => {
             },
           },
           relations: [],
+          attachments: [],
         },
         'e',
         1,
@@ -359,10 +387,11 @@ describe('DatabaseEntitiesCatalog', () => {
       });
       db.entityByUid.mockResolvedValue({ entity });
       db.updateEntity.mockResolvedValue({ entity });
+      db.attachmentsByUid.mockResolvedValue([]);
 
       const catalog = new DatabaseEntitiesCatalog(db, getVoidLogger());
       const result = await catalog.batchAddOrUpdateEntities([
-        { entity, relations: [] },
+        { entity, relations: [], attachments: [] },
       ]);
 
       expect(db.entities).toHaveBeenCalledTimes(1);
@@ -381,6 +410,103 @@ describe('DatabaseEntitiesCatalog', () => {
       expect(result).toEqual([{ entityId: 'u' }]);
     });
 
+    it('should update if attachments are changed', async () => {
+      const entity: Entity = {
+        apiVersion: 'a',
+        kind: 'b',
+        metadata: {
+          uid: 'u',
+          etag: 'e',
+          generation: 1,
+          name: 'c',
+          namespace: 'd',
+        },
+        spec: {
+          x: 'a',
+        },
+      };
+
+      db.entities.mockResolvedValue({
+        entities: [{ entity }],
+        pageInfo: { hasNextPage: false },
+      });
+      db.entityByUid.mockResolvedValue({ entity });
+      db.updateEntity.mockResolvedValue({ entity });
+      db.attachmentsByUid.mockResolvedValue([
+        {
+          key: 'a',
+          entityUid: 'u',
+          contentType: 'text/plain',
+          etag: 'tttt',
+        },
+      ]);
+
+      const catalog = new DatabaseEntitiesCatalog(db, getVoidLogger());
+      const result = await catalog.batchAddOrUpdateEntities([
+        {
+          entity,
+          relations: [],
+          attachments: [
+            {
+              key: 'a',
+              content: {
+                contentType: 'text/plain',
+                data: Buffer.from('Hello World'),
+              },
+            },
+          ],
+        },
+      ]);
+
+      expect(db.attachmentsByUid).toHaveBeenCalledTimes(1);
+      expect(db.attachmentsByUid).toHaveBeenCalledWith(expect.anything(), 'u');
+      expect(db.entities).toHaveBeenCalledTimes(1);
+      expect(db.entities).toHaveBeenCalledWith(expect.anything(), {
+        filter: basicEntityFilter({
+          kind: 'b',
+          'metadata.namespace': 'd',
+          'metadata.name': 'c',
+        }),
+      });
+      expect(db.entityByName).not.toHaveBeenCalled();
+      expect(db.entityByUid).toHaveBeenCalledTimes(1);
+      expect(db.entityByUid).toHaveBeenCalledWith(transaction, 'u');
+      expect(db.updateEntity).toHaveBeenCalledTimes(1);
+      expect(db.updateEntity).toHaveBeenCalledWith(
+        transaction,
+        {
+          entity: {
+            apiVersion: 'a',
+            kind: 'b',
+            metadata: {
+              uid: 'u',
+              etag: expect.any(String),
+              // TODO: Do we want to increase the entity generation if attachments change? What about the etag?
+              generation: 1,
+              name: 'c',
+              namespace: 'd',
+            },
+            spec: {
+              x: 'a',
+            },
+          },
+          relations: [],
+          attachments: [
+            {
+              key: 'a',
+              content: {
+                contentType: 'text/plain',
+                data: Buffer.from('Hello World'),
+              },
+            },
+          ],
+        },
+        'e',
+        1,
+      );
+      expect(result).toEqual([{ entityId: 'u' }]);
+    });
+
     it('both adds and updates', async () => {
       const catalog = new DatabaseEntitiesCatalog(
         await DatabaseManager.createTestDatabase(),
@@ -395,6 +521,7 @@ describe('DatabaseEntitiesCatalog', () => {
             metadata: { name: `n${i}` },
           },
           relations: [],
+          attachments: [],
         });
       }
 
@@ -410,6 +537,7 @@ describe('DatabaseEntitiesCatalog', () => {
           metadata: { name: `n300`, op: 'added' },
         },
         relations: [],
+        attachments: [],
       });
 
       await catalog.batchAddOrUpdateEntities(entities);
@@ -422,5 +550,65 @@ describe('DatabaseEntitiesCatalog', () => {
         afterSecond.entities.find(e => e.metadata.op === 'added'),
       ).toBeDefined();
     }, 10000);
+  });
+
+  describe('attachment', () => {
+    it('fetches attachment', async () => {
+      db.attachmentByUidAndKey.mockResolvedValue({
+        entityUid: 'zzz',
+        key: 'a',
+        etag: 'tttt',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello World'),
+      });
+
+      const catalog = new DatabaseEntitiesCatalog(db, getVoidLogger());
+      const attachment = await catalog.attachment('zzz', 'a');
+
+      expect(db.attachmentByUidAndKey).toHaveBeenCalledTimes(1);
+      expect(db.attachmentByUidAndKey).toHaveBeenCalledWith(
+        expect.anything(),
+        'zzz',
+        'a',
+        undefined,
+      );
+      expect(attachment).toEqual({
+        key: 'a',
+        etag: 'tttt',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello World'),
+      });
+    });
+
+    it('fetches attachment with filter', async () => {
+      db.attachmentByUidAndKey.mockResolvedValue({
+        entityUid: 'zzz',
+        key: 'a',
+        etag: 'tttt',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello World'),
+      });
+
+      const catalog = new DatabaseEntitiesCatalog(db, getVoidLogger());
+      const attachment = await catalog.attachment('zzz', 'a', {
+        ifNotMatchEtag: 'tttt',
+      });
+
+      expect(db.attachmentByUidAndKey).toHaveBeenCalledTimes(1);
+      expect(db.attachmentByUidAndKey).toHaveBeenCalledWith(
+        expect.anything(),
+        'zzz',
+        'a',
+        {
+          ifNotMatchEtag: 'tttt',
+        },
+      );
+      expect(attachment).toEqual({
+        key: 'a',
+        etag: 'tttt',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello World'),
+      });
+    });
   });
 });

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import express from 'express';
-import request from 'supertest';
 import {
   PluginEndpointDiscovery,
   SingleHostDiscovery,
@@ -23,8 +21,10 @@ import {
 import { CatalogApi } from '@backstage/catalog-client';
 import type { Entity } from '@backstage/catalog-model';
 import { Config, ConfigReader } from '@backstage/config';
-import { createRouter } from './router';
+import express from 'express';
+import request from 'supertest';
 import { BadgeBuilder } from '../lib';
+import { createRouter } from './router';
 
 describe('createRouter', () => {
   let app: express.Express;
@@ -66,6 +66,7 @@ describe('createRouter', () => {
       getLocationById: jest.fn(),
       removeLocationById: jest.fn(),
       removeEntityByUid: jest.fn(),
+      getAttachment: jest.fn(),
     };
 
     config = new ConfigReader({

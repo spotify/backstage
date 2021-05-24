@@ -44,11 +44,51 @@ export type EntitiesResponse = {
 export type EntityUpsertRequest = {
   entity: Entity;
   relations: EntityRelationSpec[];
+  attachments: EntityAttachmentUpsertRequest[];
 };
 
 export type EntityUpsertResponse = {
   entityId: string;
   entity?: Entity;
+};
+
+export type EntityAttachment = {
+  /** Key of the entity attachment, has to be unique inside an entity. */
+  key: string;
+  /**
+   * An opaque string that changes for each update operation to the content of
+   * the attachment.
+   */
+  etag: string;
+  /** Mime type of the data. */
+  contentType: string;
+  /**
+   * Data that is stored in the attachment. Might be empty, if it matches the
+   * requested etag.
+   */
+  data?: Buffer;
+};
+
+export type EntityAttachmentContent = {
+  /** Mime type of the data. */
+  contentType: string;
+  /** Data to be stored in the attachment. */
+  data: Buffer;
+};
+
+export type EntityAttachmentUpsertRequest = {
+  /** Key of the entity attachment, has to be unique inside an entity. */
+  key: string;
+  /**
+   * Optional content of the attachment, including data and content type. If no
+   * content is provided, the current content is kept.
+   */
+  content?: EntityAttachmentContent;
+};
+
+export type EntityAttachmentFilter = {
+  /** Return data in the attachment only if the provided etag doesn't match. */
+  ifNotMatchEtag?: string;
 };
 
 export type EntitiesCatalog = {
@@ -58,6 +98,20 @@ export type EntitiesCatalog = {
    * @param request Request options
    */
   entities(request?: EntitiesRequest): Promise<EntitiesResponse>;
+
+  /**
+   * Get a single entity attachment including the data if not requested
+   * otherwise.
+   *
+   * @param entityUid The unqiue id of the entity.
+   * @param key The key of the attachment.
+   * @param filter Filter to apply on the requested attachment.
+   */
+  attachment(
+    entityUid: string,
+    key: string,
+    filter?: EntityAttachmentFilter,
+  ): Promise<EntityAttachment | undefined>;
 
   /**
    * Removes a single entity.

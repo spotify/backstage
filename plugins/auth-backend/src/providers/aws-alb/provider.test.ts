@@ -16,9 +16,8 @@
 import { getVoidLogger } from '@backstage/backend-common';
 import express from 'express';
 import { JWT } from 'jose';
-
-import { AwsAlbAuthProvider } from './provider';
 import { AuthResponse } from '../types';
+import { AwsAlbAuthProvider } from './provider';
 
 const jwtMock = JWT as jest.Mocked<any>;
 
@@ -77,6 +76,7 @@ describe('AwsALBAuthProvider', () => {
     getLocationById: jest.fn(),
     removeEntityByUid: jest.fn(),
     getEntityByName: jest.fn(),
+    getAttachment: jest.fn(),
   };
 
   const mockRequest = ({

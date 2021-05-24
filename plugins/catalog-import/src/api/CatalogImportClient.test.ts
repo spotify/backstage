@@ -101,6 +101,7 @@ describe('CatalogImportClient', () => {
     getLocationByEntity: jest.fn(),
     getLocationById: jest.fn(),
     removeEntityByUid: jest.fn(),
+    getAttachment: jest.fn(),
   };
 
   let catalogImportClient: CatalogImportClient;

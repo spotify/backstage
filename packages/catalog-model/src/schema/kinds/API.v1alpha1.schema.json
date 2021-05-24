@@ -41,7 +41,7 @@
         },
         "spec": {
           "type": "object",
-          "required": ["type", "lifecycle", "owner", "definition"],
+          "required": ["type", "lifecycle", "owner"],
           "properties": {
             "type": {
               "type": "string",
@@ -69,6 +69,11 @@
             "definition": {
               "type": "string",
               "description": "The definition of the API, based on the format defined by the type.",
+              "minLength": 1
+            },
+            "definitionLocation": {
+              "type": "string",
+              "description": "The location reference to the definition of the API.",
               "minLength": 1
             }
           }

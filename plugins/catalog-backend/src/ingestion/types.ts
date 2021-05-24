@@ -54,6 +54,17 @@ export type LocationReader = {
   read(location: LocationSpec): Promise<ReadLocationResult>;
 };
 
+// TODO: Is this a candidate for the catalog model? I don't think so because it contains both metadata (but not all metadata) and the content itself!
+export type EntityAttachmentContent = {
+  data: Buffer;
+  contentType: string;
+};
+
+export type EntityAttachment = {
+  key: string;
+  content?: EntityAttachmentContent;
+};
+
 export type ReadLocationResult = {
   entities: ReadLocationEntity[];
   errors: ReadLocationError[];
@@ -63,6 +74,7 @@ export type ReadLocationEntity = {
   location: LocationSpec;
   entity: Entity;
   relations: EntityRelationSpec[];
+  attachments: EntityAttachment[];
 };
 
 export type ReadLocationError = {

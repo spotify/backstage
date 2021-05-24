@@ -41,6 +41,7 @@ describe('<StepPrepareCreatePullRequest />', () => {
     getLocationById: jest.fn(),
     removeLocationById: jest.fn(),
     removeEntityByUid: jest.fn(),
+    getAttachment: jest.fn(),
   };
 
   const Wrapper = ({ children }: { children?: React.ReactNode }) => (

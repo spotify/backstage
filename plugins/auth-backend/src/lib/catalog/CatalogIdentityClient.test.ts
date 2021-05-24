@@ -28,6 +28,7 @@ describe('CatalogIdentityClient', () => {
     getOriginLocationByEntity: jest.fn(),
     getLocationByEntity: jest.fn(),
     removeEntityByUid: jest.fn(),
+    getAttachment: jest.fn(),
   };
 
   afterEach(() => jest.resetAllMocks());

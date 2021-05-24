@@ -37,7 +37,7 @@ import {
   CatalogProcessorParser,
   CatalogProcessorResult,
 } from './processors/types';
-import { LocationReader, ReadLocationResult } from './types';
+import { EntityAttachment, LocationReader, ReadLocationResult } from './types';
 
 // The max amount of nesting depth of generated work items
 const MAX_DEPTH = 10;
@@ -81,12 +81,19 @@ export class LocationReaders implements LocationReader {
         } else if (item.type === 'entity') {
           if (rulesEnforcer.isAllowed(item.entity, item.location)) {
             const relations = Array<EntityRelationSpec>();
+            const attachments = Array<EntityAttachment>();
 
             const entity = await this.handleEntity(
               item,
               emitResult => {
                 if (emitResult.type === 'relation') {
                   relations.push(emitResult.relation);
+                  return;
+                } else if (emitResult.type === 'attachment') {
+                  attachments.push({
+                    key: emitResult.key,
+                    content: emitResult.content,
+                  });
                   return;
                 }
                 emit(emitResult);
@@ -99,6 +106,7 @@ export class LocationReaders implements LocationReader {
                 entity,
                 location: item.location,
                 relations,
+                attachments,
               });
             }
           } else {

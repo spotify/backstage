@@ -37,6 +37,7 @@ describe('createRouter readonly disabled', () => {
       entities: jest.fn(),
       removeEntityByUid: jest.fn(),
       batchAddOrUpdateEntities: jest.fn(),
+      attachment: jest.fn(),
     };
     locationsCatalog = {
       addLocation: jest.fn(),
@@ -237,7 +238,7 @@ describe('createRouter readonly disabled', () => {
 
       expect(entitiesCatalog.batchAddOrUpdateEntities).toHaveBeenCalledTimes(1);
       expect(entitiesCatalog.batchAddOrUpdateEntities).toHaveBeenCalledWith([
-        { entity, relations: [] },
+        { entity, relations: [], attachments: [] },
       ]);
       expect(entitiesCatalog.entities).toHaveBeenCalledTimes(1);
       expect(entitiesCatalog.entities).toHaveBeenCalledWith({
@@ -245,6 +246,274 @@ describe('createRouter readonly disabled', () => {
       });
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(entity);
+    });
+  });
+
+  describe('GET /entities/by-uid/:uid/attachments/:key', () => {
+    it('can fetch attachment', async () => {
+      entitiesCatalog.attachment.mockResolvedValue({
+        key: 'a',
+        etag: 'tttt',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello World'),
+      });
+
+      const response = await request(app).get(
+        '/entities/by-uid/zzz/attachments/a',
+      );
+
+      expect(entitiesCatalog.attachment).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.attachment).toHaveBeenCalledWith('zzz', 'a', {
+        ifNotMatchEtag: undefined,
+      });
+      expect(response.status).toEqual(200);
+      expect(response.header['content-type']).toContain('text/plain');
+      expect(response.header.etag).toContain('tttt');
+      expect(response.text).toMatch('Hello World');
+    });
+
+    it('responds with content if etag does not match', async () => {
+      entitiesCatalog.attachment.mockResolvedValue({
+        key: 'a',
+        etag: 'tttt',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello World'),
+      });
+
+      const response = await request(app)
+        .get('/entities/by-uid/zzz/attachments/a')
+        .set('if-None-Match', 'rrrr');
+
+      expect(entitiesCatalog.attachment).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.attachment).toHaveBeenCalledWith('zzz', 'a', {
+        ifNotMatchEtag: 'rrrr',
+      });
+      expect(response.status).toEqual(200);
+      expect(response.header['content-type']).toContain('text/plain');
+      expect(response.header.etag).toContain('tttt');
+      expect(response.text).toMatch('Hello World');
+    });
+
+    it('responds with a 304 if etag does match', async () => {
+      entitiesCatalog.attachment.mockResolvedValue({
+        key: 'a',
+        etag: 'tttt',
+        contentType: 'text/plain',
+      });
+
+      const response = await request(app)
+        .get('/entities/by-uid/zzz/attachments/a')
+        .set('if-None-Match', 'tttt');
+
+      expect(entitiesCatalog.attachment).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.attachment).toHaveBeenCalledWith('zzz', 'a', {
+        ifNotMatchEtag: 'tttt',
+      });
+      expect(response.status).toEqual(304);
+      expect(response.header.etag).toContain('tttt');
+      expect(response.text).toEqual('');
+    });
+
+    it('responds with a 404 for missing attachment', async () => {
+      const response = await request(app).get(
+        '/entities/by-uid/zzz/attachments/a',
+      );
+
+      expect(entitiesCatalog.attachment).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.attachment).toHaveBeenCalledWith('zzz', 'a', {
+        ifNotMatchEtag: undefined,
+      });
+      expect(response.status).toEqual(404);
+      expect(response.text).toMatch(/uid/);
+    });
+  });
+
+  describe('GET /entities/by-name/:kind/:namespace/:name/attachments/:key', () => {
+    it('can fetch attachment', async () => {
+      const entity: Entity = {
+        apiVersion: 'a',
+        kind: 'k',
+        metadata: {
+          uid: 'zzz',
+          name: 'n',
+          namespace: 'ns',
+        },
+      };
+      entitiesCatalog.entities.mockResolvedValue({
+        entities: [entity],
+        pageInfo: { hasNextPage: false },
+      });
+
+      entitiesCatalog.attachment.mockResolvedValue({
+        key: 'a',
+        etag: 'tttt',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello World'),
+      });
+
+      const response = await request(app).get(
+        '/entities/by-name/b/d/c/attachments/a',
+      );
+
+      expect(entitiesCatalog.entities).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.entities).toHaveBeenCalledWith({
+        filter: basicEntityFilter({
+          kind: 'b',
+          'metadata.namespace': 'd',
+          'metadata.name': 'c',
+        }),
+      });
+      expect(entitiesCatalog.attachment).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.attachment).toHaveBeenCalledWith('zzz', 'a', {
+        ifNotMatchEtag: undefined,
+      });
+      expect(response.status).toEqual(200);
+      expect(response.header['content-type']).toContain('text/plain');
+      expect(response.header.etag).toContain('tttt');
+      expect(response.text).toMatch('Hello World');
+    });
+
+    it('responds with content if etag does not match', async () => {
+      const entity: Entity = {
+        apiVersion: 'a',
+        kind: 'k',
+        metadata: {
+          uid: 'zzz',
+          name: 'n',
+          namespace: 'ns',
+        },
+      };
+      entitiesCatalog.entities.mockResolvedValue({
+        entities: [entity],
+        pageInfo: { hasNextPage: false },
+      });
+
+      entitiesCatalog.attachment.mockResolvedValue({
+        key: 'a',
+        etag: 'tttt',
+        contentType: 'text/plain',
+        data: Buffer.from('Hello World'),
+      });
+
+      const response = await request(app)
+        .get('/entities/by-name/b/d/c/attachments/a')
+        .set('if-None-Match', 'rrrr');
+
+      expect(entitiesCatalog.entities).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.entities).toHaveBeenCalledWith({
+        filter: basicEntityFilter({
+          kind: 'b',
+          'metadata.namespace': 'd',
+          'metadata.name': 'c',
+        }),
+      });
+      expect(entitiesCatalog.attachment).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.attachment).toHaveBeenCalledWith('zzz', 'a', {
+        ifNotMatchEtag: 'rrrr',
+      });
+      expect(response.status).toEqual(200);
+      expect(response.header['content-type']).toContain('text/plain');
+      expect(response.header.etag).toContain('tttt');
+      expect(response.text).toMatch('Hello World');
+    });
+
+    it('responds with a 304 if etag does match', async () => {
+      const entity: Entity = {
+        apiVersion: 'a',
+        kind: 'k',
+        metadata: {
+          uid: 'zzz',
+          name: 'n',
+          namespace: 'ns',
+        },
+      };
+      entitiesCatalog.entities.mockResolvedValue({
+        entities: [entity],
+        pageInfo: { hasNextPage: false },
+      });
+
+      entitiesCatalog.attachment.mockResolvedValue({
+        key: 'a',
+        etag: 'tttt',
+        contentType: 'text/plain',
+      });
+
+      const response = await request(app)
+        .get('/entities/by-name/b/d/c/attachments/a')
+        .set('if-None-Match', 'tttt');
+
+      expect(entitiesCatalog.entities).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.entities).toHaveBeenCalledWith({
+        filter: basicEntityFilter({
+          kind: 'b',
+          'metadata.namespace': 'd',
+          'metadata.name': 'c',
+        }),
+      });
+      expect(entitiesCatalog.attachment).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.attachment).toHaveBeenCalledWith('zzz', 'a', {
+        ifNotMatchEtag: 'tttt',
+      });
+      expect(response.status).toEqual(304);
+      expect(response.header.etag).toContain('tttt');
+      expect(response.text).toEqual('');
+    });
+
+    it('responds with a 404 for missing entity', async () => {
+      entitiesCatalog.entities.mockResolvedValue({
+        entities: [],
+        pageInfo: { hasNextPage: false },
+      });
+
+      const response = await request(app).get(
+        '/entities/by-name/b/d/c/attachments/a',
+      );
+
+      expect(entitiesCatalog.entities).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.entities).toHaveBeenCalledWith({
+        filter: basicEntityFilter({
+          kind: 'b',
+          'metadata.namespace': 'd',
+          'metadata.name': 'c',
+        }),
+      });
+      expect(response.status).toEqual(404);
+      expect(response.text).toMatch(/name/);
+    });
+
+    it('responds with a 404 for missing attachment', async () => {
+      const entity: Entity = {
+        apiVersion: 'a',
+        kind: 'k',
+        metadata: {
+          uid: 'zzz',
+          name: 'n',
+          namespace: 'ns',
+        },
+      };
+      entitiesCatalog.entities.mockResolvedValue({
+        entities: [entity],
+        pageInfo: { hasNextPage: false },
+      });
+
+      const response = await request(app).get(
+        '/entities/by-name/b/d/c/attachments/a',
+      );
+
+      expect(entitiesCatalog.entities).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.entities).toHaveBeenCalledWith({
+        filter: basicEntityFilter({
+          kind: 'b',
+          'metadata.namespace': 'd',
+          'metadata.name': 'c',
+        }),
+      });
+      expect(entitiesCatalog.attachment).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.attachment).toHaveBeenCalledWith('zzz', 'a', {
+        ifNotMatchEtag: undefined,
+      });
+      expect(response.status).toEqual(404);
+      expect(response.text).toMatch(/name/);
     });
   });
 
@@ -367,6 +636,7 @@ describe('createRouter readonly enabled', () => {
       entities: jest.fn(),
       removeEntityByUid: jest.fn(),
       batchAddOrUpdateEntities: jest.fn(),
+      attachment: jest.fn(),
     };
     locationsCatalog = {
       addLocation: jest.fn(),

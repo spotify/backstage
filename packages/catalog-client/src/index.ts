@@ -19,6 +19,7 @@ export type {
   AddLocationRequest,
   AddLocationResponse,
   CatalogApi,
+  CatalogAttachmentResponse,
   CatalogEntitiesRequest,
   CatalogListResponse,
 } from './types';

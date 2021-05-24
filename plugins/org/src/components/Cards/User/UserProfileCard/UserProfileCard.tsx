@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { RELATION_MEMBER_OF, UserEntity } from '@backstage/catalog-model';
-import { Avatar, InfoCard, InfoCardVariants } from '@backstage/core';
 import {
+  getEntityName,
+  RELATION_MEMBER_OF,
+  UserEntity,
+} from '@backstage/catalog-model';
+import { Avatar, InfoCard, InfoCardVariants, useApi } from '@backstage/core';
+import {
+  catalogApiRef,
   EntityRefLinks,
   getEntityRelations,
   useEntity,
@@ -35,6 +40,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import PersonIcon from '@material-ui/icons/Person';
 import Alert from '@material-ui/lab/Alert';
 import React from 'react';
+import { useAsync } from 'react-use';
 
 const CardTitle = ({ title }: { title?: string }) =>
   title ? (
@@ -44,6 +50,9 @@ const CardTitle = ({ title }: { title?: string }) =>
     </Box>
   ) : null;
 
+// TODO: Move to catalog model
+const ATTACHMENT_PROFILE_PICTURE = 'backstage.io/profile-picture';
+
 export const UserProfileCard = ({
   variant,
 }: {
@@ -52,6 +61,19 @@ export const UserProfileCard = ({
   variant?: InfoCardVariants;
 }) => {
   const { entity: user } = useEntity<UserEntity>();
+  const catalogApi = useApi(catalogApiRef);
+  const { value: picture, loading } = useAsync(async () => {
+    if (user) {
+      const attachment = await catalogApi.getAttachment(
+        getEntityName(user),
+        ATTACHMENT_PROFILE_PICTURE,
+      );
+      return attachment.url();
+    }
+
+    return undefined;
+  }, [catalogApi, user]);
+
   if (!user) {
     return <Alert severity="error">User not found</Alert>;
   }
@@ -70,7 +92,10 @@ export const UserProfileCard = ({
     <InfoCard title={<CardTitle title={displayName} />} variant={variant}>
       <Grid container spacing={3} alignItems="flex-start">
         <Grid item xs={12} sm={2} xl={1}>
-          <Avatar displayName={displayName} picture={profile?.picture} />
+          <Avatar
+            displayName={displayName}
+            picture={!loading ? picture : undefined}
+          />
         </Grid>
 
         <Grid item md={10} xl={11}>

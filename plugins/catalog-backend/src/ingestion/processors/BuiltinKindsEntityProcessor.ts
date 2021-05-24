@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { UrlReader } from '@backstage/backend-common';
 import {
   ApiEntity,
   apiEntityV1alpha1Validator,
@@ -28,6 +29,7 @@ import {
   locationEntityV1alpha1Validator,
   LocationSpec,
   parseEntityRef,
+  parseLocationReference,
   RELATION_API_CONSUMED_BY,
   RELATION_API_PROVIDED_BY,
   RELATION_CHILD_OF,
@@ -44,6 +46,7 @@ import {
   RELATION_PROVIDES_API,
   ResourceEntity,
   resourceEntityV1alpha1Validator,
+  stringifyLocationReference,
   SystemEntity,
   systemEntityV1alpha1Validator,
   TemplateEntity,
@@ -52,10 +55,12 @@ import {
   UserEntity,
   userEntityV1alpha1Validator,
 } from '@backstage/catalog-model';
+import fetch from 'cross-fetch';
 import * as result from './results';
 import { CatalogProcessor, CatalogProcessorEmit } from './types';
 
 export class BuiltinKindsEntityProcessor implements CatalogProcessor {
+  private readonly reader: UrlReader;
   private readonly validators = [
     apiEntityV1alpha1Validator,
     componentEntityV1alpha1Validator,
@@ -68,6 +73,10 @@ export class BuiltinKindsEntityProcessor implements CatalogProcessor {
     systemEntityV1alpha1Validator,
     domainEntityV1alpha1Validator,
   ];
+
+  constructor({ reader }: { reader: UrlReader }) {
+    this.reader = reader;
+  }
 
   async validateEntityKind(entity: Entity): Promise<boolean> {
     for (const validator of this.validators) {
@@ -190,7 +199,7 @@ export class BuiltinKindsEntityProcessor implements CatalogProcessor {
     }
 
     /*
-     * Emit relations for the API kind
+     * Emit relations and attachments for the API kind
      */
 
     if (entity.kind === 'API') {
@@ -207,6 +216,46 @@ export class BuiltinKindsEntityProcessor implements CatalogProcessor {
         RELATION_PART_OF,
         RELATION_HAS_PART,
       );
+
+      // TODO: Move to catalog model
+      const ATTACHMENT_API_DEFINITION = 'backstage.io/api-definition';
+      // TODO: Actually a hard question, depends either on the use case or data,
+      // but for api definitions plain should be a fine choice.
+      const contentType = 'text/plain';
+
+      if (api.spec.definition) {
+        const data = Buffer.from(api.spec.definition!, 'utf8');
+
+        emit(
+          result.attachment(ATTACHMENT_API_DEFINITION, { data, contentType }),
+        );
+
+        // TODO: How to migrate from "definition" to "definition?", it's a breaking change?
+        delete api.spec.definition;
+        api.spec.definitionLocation = stringifyLocationReference({
+          type: 'attachment',
+          target: ATTACHMENT_API_DEFINITION,
+        });
+      } else if (api.spec.definitionLocation) {
+        const { type, target } = parseLocationReference(
+          api.spec.definitionLocation,
+        );
+
+        if (type === 'url') {
+          const data = await this.reader.read(target);
+
+          emit(
+            result.attachment(ATTACHMENT_API_DEFINITION, { data, contentType }),
+          );
+
+          api.spec.definitionLocation = stringifyLocationReference({
+            type: 'attachment',
+            target: ATTACHMENT_API_DEFINITION,
+          });
+        } else {
+          throw new Error(`Unsupported location type ${type}`);
+        }
+      }
     }
 
     /*
@@ -247,6 +296,31 @@ export class BuiltinKindsEntityProcessor implements CatalogProcessor {
         RELATION_MEMBER_OF,
         RELATION_HAS_MEMBER,
       );
+
+      // TODO: Create an attachment for the photo by downloading the URL.
+
+      // TODO: Property name could be better... like pictureLocation...
+
+      if (user.spec.profile?.picture) {
+        // TODO: This should use UrlReader instead, but UrlReader provides no
+        // access to the content type of the response.
+        const response = await fetch(user.spec.profile?.picture);
+        const buffer = await response.arrayBuffer();
+        const data = Buffer.from(buffer);
+        const contentType =
+          response.headers.get('content-type') ?? 'text/plain';
+        // TODO: Move to catalog model
+        const ATTACHMENT_PROFILE_PICTURE = 'backstage.io/profile-picture';
+
+        emit(
+          result.attachment(ATTACHMENT_PROFILE_PICTURE, { data, contentType }),
+        );
+
+        user.spec.profile.picture = stringifyLocationReference({
+          type: 'attachment',
+          target: ATTACHMENT_PROFILE_PICTURE,
+        });
+      }
     }
 
     /*
@@ -273,6 +347,8 @@ export class BuiltinKindsEntityProcessor implements CatalogProcessor {
         RELATION_HAS_MEMBER,
         RELATION_MEMBER_OF,
       );
+
+      // TODO: Create an attachment for the photo by downloading the URL.
     }
 
     /*

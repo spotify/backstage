@@ -19,74 +19,57 @@ import { DiscoveryApi, IdentityApi } from '@backstage/core';
 import { CatalogClientWrapper } from './CatalogClientWrapper';
 
 jest.mock('@backstage/catalog-client');
-const MockedCatalogClient = CatalogClient as jest.Mock<CatalogClient>;
-
-const mockBaseUrl = 'http://backstage:9191/i-am-a-mock-base';
-const discoveryApi: DiscoveryApi = {
-  async getBaseUrl(_pluginId) {
-    return mockBaseUrl;
-  },
-};
-const identityApi: IdentityApi = {
-  getUserId() {
-    return 'jane-fonda';
-  },
-  getProfile() {
-    return { email: 'jane-fonda@spotify.com' };
-  },
-  async getIdToken() {
-    return Promise.resolve('fake-id-token');
-  },
-  async signOut() {
-    return Promise.resolve();
-  },
-};
-const guestIdentityApi: IdentityApi = {
-  getUserId() {
-    return 'guest';
-  },
-  getProfile() {
-    return {};
-  },
-  async getIdToken() {
-    return Promise.resolve(undefined);
-  },
-  async signOut() {
-    return Promise.resolve();
-  },
-};
+jest.mock('@backstage/core');
 
 describe('CatalogClientWrapper', () => {
+  let catalogClient: jest.Mocked<CatalogClient>;
+  let identityApi: jest.Mocked<IdentityApi>;
+  let client: CatalogClientWrapper;
+
   beforeEach(() => {
-    MockedCatalogClient.mockClear();
+    jest.resetAllMocks();
+
+    const discoveryApi: jest.Mocked<DiscoveryApi> = {
+      getBaseUrl: jest.fn(),
+    };
+    catalogClient = (new CatalogClient({
+      discoveryApi,
+    }) as unknown) as jest.Mocked<CatalogClient>;
+    identityApi = {
+      getUserId: jest.fn(),
+      getProfile: jest.fn(),
+      getIdToken: jest.fn(),
+      signOut: jest.fn(),
+    };
+    identityApi.getUserId.mockReturnValue('jane-fonda');
+    identityApi.getProfile.mockReturnValue({ email: 'jane-fonda@spotify.com' });
+    identityApi.getIdToken.mockResolvedValue('fake-id-token');
+
+    client = new CatalogClientWrapper({
+      client: catalogClient,
+      identityApi,
+    });
   });
 
   describe('getEntities', () => {
     it('injects authorization token', async () => {
-      const client = new CatalogClientWrapper({
-        client: new MockedCatalogClient({ discoveryApi }),
-        identityApi,
-      });
       await client.getEntities();
-      const getEntities = MockedCatalogClient.mock.instances[0].getEntities;
-      expect(getEntities).toHaveBeenCalledWith(undefined, {
+      expect(catalogClient.getEntities).toHaveBeenCalledWith(undefined, {
         token: 'fake-id-token',
       });
-      expect(getEntities).toHaveBeenCalledTimes(1);
+      expect(catalogClient.getEntities).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('getLocationById', () => {
     it('omits authorization token when guest', async () => {
-      const client = new CatalogClientWrapper({
-        client: new MockedCatalogClient({ discoveryApi }),
-        identityApi: guestIdentityApi,
-      });
+      identityApi.getUserId.mockReturnValue('guest');
+      identityApi.getProfile.mockReturnValue({});
+      identityApi.getIdToken.mockResolvedValue(undefined);
+
       await client.getLocationById('42');
-      const getLocationById =
-        MockedCatalogClient.mock.instances[0].getLocationById;
-      expect(getLocationById).toHaveBeenCalledWith('42', {});
-      expect(getLocationById).toHaveBeenCalledTimes(1);
+      expect(catalogClient.getLocationById).toHaveBeenCalledWith('42', {});
+      expect(catalogClient.getLocationById).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -96,34 +79,25 @@ describe('CatalogClientWrapper', () => {
       namespace: 'namespace',
       name: 'name',
     };
+
     it('injects authorization token', async () => {
-      const client = new CatalogClientWrapper({
-        client: new MockedCatalogClient({ discoveryApi }),
-        identityApi,
-      });
       await client.getEntityByName(name);
-      const getEntityByName =
-        MockedCatalogClient.mock.instances[0].getEntityByName;
-      expect(getEntityByName).toHaveBeenCalledWith(name, {
+      expect(catalogClient.getEntityByName).toHaveBeenCalledWith(name, {
         token: 'fake-id-token',
       });
-      expect(getEntityByName).toHaveBeenCalledTimes(1);
+      expect(catalogClient.getEntityByName).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('addLocation', () => {
     const location = { target: 'target' };
+
     it('injects authorization token', async () => {
-      const client = new CatalogClientWrapper({
-        client: new MockedCatalogClient({ discoveryApi }),
-        identityApi,
-      });
       await client.addLocation(location);
-      const addLocation = MockedCatalogClient.mock.instances[0].addLocation;
-      expect(addLocation).toHaveBeenCalledWith(location, {
+      expect(catalogClient.addLocation).toHaveBeenCalledWith(location, {
         token: 'fake-id-token',
       });
-      expect(addLocation).toHaveBeenCalledTimes(1);
+      expect(catalogClient.addLocation).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -135,35 +109,41 @@ describe('CatalogClientWrapper', () => {
         name: 'name',
       },
     };
+
     it('injects authorization token', async () => {
-      const client = new CatalogClientWrapper({
-        client: new MockedCatalogClient({ discoveryApi }),
-        identityApi,
-      });
       await client.getLocationByEntity(entity);
-      const getLocationByEntity =
-        MockedCatalogClient.mock.instances[0].getLocationByEntity;
-      expect(getLocationByEntity).toHaveBeenCalledWith(entity, {
+      expect(catalogClient.getLocationByEntity).toHaveBeenCalledWith(entity, {
         token: 'fake-id-token',
       });
-      expect(getLocationByEntity).toHaveBeenCalledTimes(1);
+      expect(catalogClient.getLocationByEntity).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('removeEntityByUid', () => {
     it('injects authorization token', async () => {
-      const uid = 'uid';
-      const client = new CatalogClientWrapper({
-        client: new MockedCatalogClient({ discoveryApi }),
-        identityApi,
-      });
-      await client.removeEntityByUid(uid);
-      const removeEntityByUid =
-        MockedCatalogClient.mock.instances[0].removeEntityByUid;
-      expect(removeEntityByUid).toHaveBeenCalledWith(uid, {
+      await client.removeEntityByUid('uid');
+      expect(catalogClient.removeEntityByUid).toHaveBeenCalledWith('uid', {
         token: 'fake-id-token',
       });
-      expect(removeEntityByUid).toHaveBeenCalledTimes(1);
+      expect(catalogClient.removeEntityByUid).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getAttachment', () => {
+    const name = {
+      kind: 'kind',
+      namespace: 'namespace',
+      name: 'name',
+    };
+    const key = 'backstage.io/attachment-key';
+
+    it('injects authorization token', async () => {
+      await client.getAttachment(name, key);
+
+      expect(catalogClient.getAttachment).toHaveBeenCalledWith(name, key, {
+        token: 'fake-id-token',
+      });
+      expect(catalogClient.getAttachment).toHaveBeenCalledTimes(1);
     });
   });
 });
