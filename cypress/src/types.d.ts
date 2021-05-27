@@ -58,14 +58,14 @@ declare namespace Cypress {
      */
     mockSockJSNode(): Chainable<Element>;
     /**
-     * Wait TechDocs API response for Backstage home page
+     * Wait TechDocs API response for home page
      * @example cy.waitHomePage
      */
     waitHomePage(): Chainable<Element>;
     /**
-     * Wait TechDocs API response for Backstage rodmap page
+     * Wait TechDocs API response for Section 2 page
      * @example cy.waitRoadmapPage
      */
-    waitRoadmapPage(): Chainable<Element>;
+    waitSectionTwoPage(): Chainable<Element>;
   }
 }

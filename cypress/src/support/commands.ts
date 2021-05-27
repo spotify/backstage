@@ -52,35 +52,36 @@ Cypress.Commands.add('mockSockJSNode', () => {
 Cypress.Commands.add('interceptTechDocsAPICalls', () => {
   cy.intercept(
     'GET',
-    '**/techdocs/metadata/entity/default/Component/backstage',
+    '**/techdocs/metadata/entity/default/Component/techdocs-e2e-fixture',
   ).as('entityMetadata');
 
   cy.intercept(
     'GET',
-    '**/techdocs/metadata/techdocs/default/Component/backstage',
+    '**/techdocs/metadata/techdocs/default/Component/techdocs-e2e-fixture',
   ).as('techdocsMetadata');
 
-  cy.intercept('GET', '**/techdocs/sync/default/Component/backstage').as(
-    'syncEntity',
-  );
+  cy.intercept(
+    'GET',
+    '**/techdocs/sync/default/Component/techdocs-e2e-fixture',
+  ).as('syncEntity');
 
   cy.intercept(
     'GET',
-    '**/techdocs/static/docs/default/Component/backstage/overview/roadmap/index.html',
-  ).as('roadmapHTML');
+    '**/techdocs/static/docs/default/Component/techdocs-e2e-fixture/sub-page-two/index.html',
+  ).as('sectionTwoHTML');
 
   cy.intercept(
     'GET',
-    '**/techdocs/static/docs/default/Component/backstage/index.html',
+    '**/techdocs/static/docs/default/Component/techdocs-e2e-fixture/index.html',
   ).as('homeHTML');
 });
 
-Cypress.Commands.add('waitRoadmapPage', () => {
+Cypress.Commands.add('waitSectionTwoPage', () => {
   cy.wait([
     '@entityMetadata',
     '@syncEntity',
     '@techdocsMetadata',
-    '@roadmapHTML',
+    '@sectionTwoHTML',
   ]);
 });
 

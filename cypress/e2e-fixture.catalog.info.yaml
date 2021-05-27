@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: techdocs-e2e-fixture
+  description: Used for end-to-end tests of TechDocs in Backstage.
+  annotations:
+    backstage.io/techdocs-ref: dir:./fixtures
+spec:
+  type: service
+  lifecycle: experimental
+  owner: user:guest
