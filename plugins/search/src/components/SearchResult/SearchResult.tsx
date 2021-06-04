@@ -23,11 +23,13 @@ import {
 } from '@backstage/core';
 import { Divider, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+
 import React, { useEffect, useState } from 'react';
 import { useAsync } from 'react-use';
 import { Result, SearchResults, searchApiRef } from '../../apis';
 
 import { Filters, FiltersButton, FiltersState } from '../Filters';
+import { SearchExport } from '../SearchExport';
 
 const useStyles = makeStyles(theme => ({
   searchQuery: {
@@ -43,6 +45,9 @@ const useStyles = makeStyles(theme => ({
     width: '1px',
     margin: theme.spacing(0, 2),
     padding: theme.spacing(2, 0),
+  },
+  tableContainer: {
+    position: 'relative',
   },
 }));
 
@@ -116,6 +121,7 @@ const TableHeader = ({
 };
 
 export const SearchResult = ({ searchQuery }: SearchResultProps) => {
+  const classes = useStyles();
   const searchApi = useApi(searchApiRef);
 
   const [showFilters, toggleFilters] = useState(false);
@@ -129,7 +135,14 @@ export const SearchResult = ({ searchQuery }: SearchResultProps) => {
   const { loading, error, value: results } = useAsync(() => {
     return searchApi.getSearchResult();
   }, []);
-
+  const csvHeaders = [
+    'name',
+    'description',
+    'owner',
+    'kind',
+    'lifecycle',
+    'url',
+  ];
   useEffect(() => {
     if (results) {
       let withFilters = results;
@@ -242,7 +255,8 @@ export const SearchResult = ({ searchQuery }: SearchResultProps) => {
             />
           </Grid>
         )}
-        <Grid item xs={showFilters ? 9 : 12}>
+        <Grid item xs={showFilters ? 9 : 12} className={classes.tableContainer}>
+          <SearchExport results={filteredResults} headers={csvHeaders} />
           <Table
             options={{ paging: true, pageSize: 20, search: false }}
             data={filteredResults}
