@@ -21,15 +21,24 @@ import {
   ScmIntegrations,
 } from '@backstage/integration';
 import { LocationSpec } from '@backstage/catalog-model';
-import { BitbucketClient, paginated } from './bitbucket';
+import {
+  BitbucketRepositoryParser,
+  BitbucketClient,
+  defaultRepositoryParser,
+  paginated,
+  BitbucketRepository,
+} from './bitbucket';
 import { CatalogProcessor, CatalogProcessorEmit } from './types';
-import { results } from './index';
 
 export class BitbucketDiscoveryProcessor implements CatalogProcessor {
   private readonly integrations: ScmIntegrationRegistry;
+  private readonly parser: BitbucketRepositoryParser;
   private readonly logger: Logger;
 
-  static fromConfig(config: Config, options: { logger: Logger }) {
+  static fromConfig(
+    config: Config,
+    options: { parser?: BitbucketRepositoryParser; logger: Logger },
+  ) {
     const integrations = ScmIntegrations.fromConfig(config);
 
     return new BitbucketDiscoveryProcessor({
@@ -40,9 +49,11 @@ export class BitbucketDiscoveryProcessor implements CatalogProcessor {
 
   constructor(options: {
     integrations: ScmIntegrationRegistry;
+    parser?: BitbucketRepositoryParser;
     logger: Logger;
   }) {
     this.integrations = options.integrations;
+    this.parser = options.parser || defaultRepositoryParser;
     this.logger = options.logger;
   }
 
@@ -55,36 +66,35 @@ export class BitbucketDiscoveryProcessor implements CatalogProcessor {
       return false;
     }
 
-    const bitbucketConfig = this.integrations.bitbucket.byUrl(location.target)
-      ?.config;
-    if (!bitbucketConfig) {
+    const integration = this.integrations.bitbucket.byUrl(location.target);
+    if (!integration) {
       throw new Error(
         `There is no Bitbucket integration that matches ${location.target}. Please add a configuration entry for it under integrations.bitbucket`,
       );
-    } else if (bitbucketConfig.host === 'bitbucket.org') {
+    } else if (integration.config.host === 'bitbucket.org') {
       throw new Error(
         `Component discovery for Bitbucket Cloud is not yet supported`,
       );
     }
 
     const client = new BitbucketClient({
-      config: bitbucketConfig,
+      config: integration.config,
     });
     const startTimestamp = Date.now();
     this.logger.info(`Reading Bitbucket repositories from ${location.target}`);
 
+    const { catalogPath } = parseUrl(location.target);
+
     const result = await readBitbucketOrg(client, location.target);
 
     for (const repository of result.matches) {
-      emit(
-        results.location(
-          repository,
-          // Not all locations may actually exist, since the user defined them as a wildcard pattern.
-          // Thus, we emit them as optional and let the downstream processor find them while not outputting
-          // an error if it couldn't.
-          true,
-        ),
-      );
+      for await (const entity of this.parser({
+        integration: integration,
+        target: `${repository.links.self[0].href}${catalogPath}`,
+        logger: this.logger,
+      })) {
+        emit(entity);
+      }
     }
 
     const duration = ((Date.now() - startTimestamp) / 1000).toFixed(1);
@@ -100,7 +110,7 @@ export async function readBitbucketOrg(
   client: BitbucketClient,
   target: string,
 ): Promise<Result> {
-  const { projectSearchPath, repoSearchPath, catalogPath } = parseUrl(target);
+  const { projectSearchPath, repoSearchPath } = parseUrl(target);
   const projects = paginated(options => client.listProjects(options));
   const result: Result = {
     scanned: 0,
@@ -116,12 +126,8 @@ export async function readBitbucketOrg(
     );
     for await (const repository of repositories) {
       result.scanned++;
-
       if (repoSearchPath.test(repository.slug)) {
-        result.matches.push({
-          type: 'url',
-          target: `${repository.links.self[0].href}${catalogPath}`,
-        });
+        result.matches.push(repository);
       }
     }
   }
@@ -152,5 +158,5 @@ function escapeRegExp(str: string): RegExp {
 
 type Result = {
   scanned: number;
-  matches: LocationSpec[];
+  matches: BitbucketRepository[];
 };

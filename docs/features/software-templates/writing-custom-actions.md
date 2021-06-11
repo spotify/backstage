@@ -106,7 +106,6 @@ return await createRouter({
   publishers,
   logger,
   config,
-  dockerClient,
   database,
   catalogClient,
   reader,
@@ -124,7 +123,6 @@ return await createRouter({
   publishers,
   logger,
   config,
-  dockerClient,
   database,
   catalogClient,
   reader,
@@ -136,11 +134,9 @@ return await createRouter({
 want to have those as well as your new one, you'll need to do the following:
 
 ```ts
-
-import { createBuiltinActions } from '@backstage/plugin-scaffolder-backend`;
+import { createBuiltinActions } from '@backstage/plugin-scaffolder-backend';
 
 const builtInActions = createBuiltinActions({
-  dockerClient,
   integrations,
   catalogClient,
   templaters,
@@ -155,7 +151,6 @@ return await createRouter({
   publishers,
   logger,
   config,
-  dockerClient,
   database,
   catalogClient,
   reader,

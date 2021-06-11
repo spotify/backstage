@@ -32,6 +32,10 @@ type Waiter = {
 
 const nullObservable = {
   subscribe: () => ({ unsubscribe: () => {}, closed: true }),
+
+  [Symbol.observable]() {
+    return this;
+  },
 };
 
 export class MockErrorApi implements ErrorApi {

@@ -43,7 +43,7 @@ export async function serveBundle(options: ServeOptions) {
   const compiler = webpack(config);
 
   const server = new WebpackDevServer(compiler, {
-    hot: true,
+    hot: !process.env.CI,
     contentBase: paths.targetPublic,
     contentBasePublicPath: config.output?.publicPath,
     publicPath: config.output?.publicPath,

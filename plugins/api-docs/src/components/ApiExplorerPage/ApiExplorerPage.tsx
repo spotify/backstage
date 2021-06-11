@@ -34,7 +34,19 @@ export const ApiExplorerPage = () => {
   const createComponentLink = useRouteRef(createComponentRouteRef);
   const catalogApi = useApi(catalogApiRef);
   const { loading, error, value: catalogResponse } = useAsync(() => {
-    return catalogApi.getEntities({ filter: { kind: 'API' } });
+    return catalogApi.getEntities({
+      filter: { kind: 'API' },
+      fields: [
+        'apiVersion',
+        'kind',
+        'metadata',
+        'relations',
+        'spec.lifecycle',
+        'spec.owner',
+        'spec.type',
+        'spec.system',
+      ],
+    });
   }, [catalogApi]);
 
   return (

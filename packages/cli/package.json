@@ -1,7 +1,7 @@
 {
   "name": "@backstage/cli",
   "description": "CLI for developing Backstage plugins and apps",
-  "version": "0.6.7",
+  "version": "0.6.14",
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -31,8 +31,8 @@
     "@babel/core": "^7.4.4",
     "@babel/plugin-transform-modules-commonjs": "^7.4.4",
     "@backstage/cli-common": "^0.1.1",
-    "@backstage/config": "^0.1.4",
-    "@backstage/config-loader": "^0.6.0",
+    "@backstage/config": "^0.1.5",
+    "@backstage/config-loader": "^0.6.3",
     "@hot-loader/react-dom": "^16.13.0",
     "@lerna/package-graph": "^4.0.0",
     "@lerna/project": "^4.0.0",
@@ -42,7 +42,7 @@
     "@rollup/plugin-node-resolve": "^11.2.0",
     "@rollup/plugin-yaml": "^2.1.1",
     "@spotify/eslint-config-base": "^9.0.0",
-    "@spotify/eslint-config-react": "^9.0.0",
+    "@spotify/eslint-config-react": "^10.0.0",
     "@spotify/eslint-config-typescript": "^9.0.0",
     "@sucrase/webpack-loader": "^2.0.0",
     "@svgr/plugin-jsx": "5.5.x",
@@ -62,10 +62,10 @@
     "commander": "^6.1.0",
     "css-loader": "^3.5.3",
     "dashify": "^2.0.0",
-    "diff": "^4.0.2",
+    "diff": "^5.0.0",
     "esbuild": "^0.8.56",
     "eslint": "^7.1.0",
-    "eslint-config-prettier": "^6.0.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-formatter-friendly": "^7.0.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-jest": "^24.1.0",
@@ -75,17 +75,18 @@
     "eslint-plugin-react-hooks": "^4.0.0",
     "express": "^4.17.1",
     "file-loader": "^6.2.0",
-    "fork-ts-checker-webpack-plugin": "^4.0.5",
+    "fork-ts-checker-webpack-plugin": "^6.2.9",
     "fs-extra": "^9.0.0",
     "handlebars": "^4.7.3",
     "html-webpack-plugin": "^4.3.0",
     "inquirer": "^7.0.4",
     "jest": "^26.0.1",
     "jest-css-modules": "^2.1.0",
-    "json-schema": "^0.2.5",
+    "json-schema": "^0.3.0",
     "lodash": "^4.17.19",
     "mini-css-extract-plugin": "^0.9.0",
     "ora": "^5.3.0",
+    "postcss": "^8.1.0",
     "raw-loader": "^4.0.1",
     "react": "^16.0.0",
     "react-dev-utils": "^11.0.4",
@@ -110,18 +111,19 @@
     "url-loader": "^4.1.0",
     "webpack": "^4.41.6",
     "webpack-dev-server": "3.11.0",
-    "webpack-node-externals": "^2.5.0",
+    "webpack-node-externals": "^3.0.0",
     "yaml": "^1.10.0",
+    "yaml-jest": "^1.0.5",
     "yml-loader": "^2.1.0",
     "yn": "^4.0.0"
   },
   "devDependencies": {
-    "@backstage/backend-common": "^0.6.2",
-    "@backstage/config": "^0.1.4",
-    "@backstage/core": "^0.7.4",
-    "@backstage/dev-utils": "^0.1.13",
-    "@backstage/test-utils": "^0.1.10",
-    "@backstage/theme": "^0.2.5",
+    "@backstage/backend-common": "^0.8.1",
+    "@backstage/config": "^0.1.5",
+    "@backstage/core": "^0.7.12",
+    "@backstage/dev-utils": "^0.1.17",
+    "@backstage/test-utils": "^0.1.13",
+    "@backstage/theme": "^0.2.8",
     "@types/diff": "^5.0.0",
     "@types/express": "^4.17.6",
     "@types/fs-extra": "^9.0.1",
@@ -142,7 +144,7 @@
     "del": "^5.1.0",
     "mock-fs": "^4.13.0",
     "nodemon": "^2.0.2",
-    "ts-node": "^8.6.2"
+    "ts-node": "^9.1.1"
   },
   "files": [
     "asset-types",
@@ -178,6 +180,36 @@
             "description": "Tracking ID for Google Analytics",
             "examples": [
               "UA-000000-0"
+            ]
+          },
+          "datadogRum": {
+            "type": "object",
+            "description": "Datadog RUM events configuration",
+            "properties": {
+              "env": {
+                "type": "string",
+                "visibility": "frontend",
+                "description": "Environment for Datadog RUM events"
+              },
+              "clientToken": {
+                "type": "string",
+                "visibility": "frontend",
+                "description": "clientToken for Datadog RUM events"
+              },
+              "applicationId": {
+                "type": "string",
+                "visibility": "frontend",
+                "description": "applicationId for Datadog RUM events"
+              },
+              "site": {
+                "type": "string",
+                "visibility": "frontend",
+                "description": "site for Datadog RUM events"
+              }
+            },
+            "required": [
+              "clientToken",
+              "applicationId"
             ]
           },
           "listen": {

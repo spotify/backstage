@@ -16,7 +16,7 @@
 
 import { OAuthApi } from '@backstage/core';
 import { KubernetesAuthProvider } from './types';
-import { KubernetesRequestBody } from '@backstage/plugin-kubernetes-backend';
+import { KubernetesRequestBody } from '@backstage/plugin-kubernetes-common';
 
 export class GoogleKubernetesAuthProvider implements KubernetesAuthProvider {
   authProvider: OAuthApi;

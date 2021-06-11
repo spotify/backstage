@@ -3,13 +3,14 @@
 # Declare variables to be passed into your templates.
 
 frontend:
-  enabled: true
+  enabled: false
   replicaCount: 1
   image:
     repository: martinaif/backstage-k8s-demo-frontend
     tag: test1
     pullPolicy: IfNotPresent
   containerPort: 80
+  serviceType: ClusterIP
   resources:
     requests:
       memory: 128Mi
@@ -23,9 +24,11 @@ backend:
   replicaCount: 1
   image:
     repository: martinaif/backstage-k8s-demo-backend
-    tag: test1
+    tag: 20210423T1550
     pullPolicy: IfNotPresent
   containerPort: 7000
+  serviceType: ClusterIP
+  postgresCertMountEnabled: true
   resources:
     requests:
       memory: 512Mi
@@ -40,6 +43,8 @@ lighthouse:
     tag: latest
     pullPolicy: IfNotPresent
   containerPort: 3003
+  serviceType: ClusterIP
+  postgresCertMountEnabled: true
   resources:
     requests:
       memory: 128Mi
@@ -127,68 +132,47 @@ appConfig:
         development:
           appOrigin: 'http://localhost:3000/'
           secure: false
-          clientId:
-            $env: AUTH_GOOGLE_CLIENT_ID
-          clientSecret:
-            $env: AUTH_GOOGLE_CLIENT_SECRET
+          clientId: ${AUTH_GOOGLE_CLIENT_ID}
+          clientSecret: ${AUTH_GOOGLE_CLIENT_SECRET}
       github:
         development:
           appOrigin: 'http://localhost:3000/'
           secure: false
-          clientId:
-            $env: AUTH_GITHUB_CLIENT_ID
-          clientSecret:
-            $env: AUTH_GITHUB_CLIENT_SECRET
-          enterpriseInstanceUrl:
-            $env: AUTH_GITHUB_ENTERPRISE_INSTANCE_URL
+          clientId: ${AUTH_GITHUB_CLIENT_ID}
+          clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+          enterpriseInstanceUrl: ${AUTH_GITHUB_ENTERPRISE_INSTANCE_URL}
       gitlab:
         development:
           appOrigin: 'http://localhost:3000/'
           secure: false
-          clientId:
-            $env: AUTH_GITLAB_CLIENT_ID
-          clientSecret:
-            $env: AUTH_GITLAB_CLIENT_SECRET
-          audience:
-            $env: GITLAB_BASE_URL
+          clientId: ${AUTH_GITLAB_CLIENT_ID}
+          clientSecret: ${AUTH_GITLAB_CLIENT_SECRET}
+          audience: ${GITLAB_BASE_URL}
       okta:
         development:
           appOrigin: 'http://localhost:3000/'
           secure: false
-          clientId:
-            $env: AUTH_OKTA_CLIENT_ID
-          clientSecret:
-            $env: AUTH_OKTA_CLIENT_SECRET
-          audience:
-            $env: AUTH_OKTA_AUDIENCE
+          clientId: ${AUTH_OKTA_CLIENT_ID}
+          clientSecret: ${AUTH_OKTA_CLIENT_SECRET}
+          audience: ${AUTH_OKTA_AUDIENCE}
       oauth2:
         development:
           appOrigin: 'http://localhost:3000/'
           secure: false
-          clientId:
-            $env: AUTH_OAUTH2_CLIENT_ID
-          clientSecret:
-            $env: AUTH_OAUTH2_CLIENT_SECRET
-          authorizationURL:
-            $env: AUTH_OAUTH2_AUTH_URL
-          tokenURL:
-            $env: AUTH_OAUTH2_TOKEN_URL
+          clientId: ${AUTH_OAUTH2_CLIENT_ID}
+          clientSecret: ${AUTH_OAUTH2_CLIENT_SECRET}
+          authorizationURL: ${AUTH_OAUTH2_AUTH_URL}
+          tokenURL: ${AUTH_OAUTH2_TOKEN_URL}
       auth0:
         development:
-          clientId:
-            $env: AUTH_AUTH0_CLIENT_ID
-          clientSecret:
-            $env: AUTH_AUTH0_CLIENT_SECRET
-          domain:
-            $env: AUTH_AUTH0_DOMAIN
+          clientId: ${AUTH_AUTH0_CLIENT_ID}
+          clientSecret: ${AUTH_AUTH0_CLIENT_SECRET}
+          domain: ${AUTH_AUTH0_DOMAIN}
       microsoft:
         development:
-          clientId:
-            $env: AUTH_MICROSOFT_CLIENT_ID
-          clientSecret:
-            $env: AUTH_MICROSOFT_CLIENT_SECRET
-          tenantId:
-            $env: AUTH_MICROSOFT_TENANT_ID
+          clientId: ${AUTH_MICROSOFT_CLIENT_ID}
+          clientSecret: ${AUTH_MICROSOFT_CLIENT_SECRET}
+          tenantId: ${AUTH_MICROSOFT_TENANT_ID}
 
 auth:
   google:

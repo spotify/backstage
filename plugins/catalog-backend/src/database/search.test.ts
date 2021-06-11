@@ -101,6 +101,12 @@ describe('search', () => {
       expect(output).toEqual([{ entity_id: 'eid', key: 'foo', value: 'bar' }]);
     });
 
+    it('skips very large keys', () => {
+      const input = [{ key: 'a'.repeat(10000), value: 'foo' }];
+      const output = mapToRows(input, 'eid');
+      expect(output).toEqual([]);
+    });
+
     it('skips very large values', () => {
       const input = [{ key: 'foo', value: 'a'.repeat(10000) }];
       const output = mapToRows(input, 'eid');

@@ -5,4 +5,4 @@ metadata:
 spec:
   type: website
   lifecycle: experimental
-  owner: guest
+  owner: user:guest

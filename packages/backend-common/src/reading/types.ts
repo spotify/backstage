@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { Readable } from 'stream';
 import { Logger } from 'winston';
 import { Config } from '@backstage/config';
-import { ReadTreeResponseFactory } from './tree';
 
 /**
  * A generic interface for fetching plain data from URLs.
@@ -104,6 +104,23 @@ export type ReadTreeResponseFile = {
   path: string;
   content(): Promise<Buffer>;
 };
+
+export type FromArchiveOptions = {
+  // A binary stream of a tar archive.
+  stream: Readable;
+  // If unset, the files at the root of the tree will be read.
+  // subpath must not contain the name of the top level directory.
+  subpath?: string;
+  // etag of the blob
+  etag: string;
+  // Filter passed on from the ReadTreeOptions
+  filter?: (path: string) => boolean;
+};
+
+export interface ReadTreeResponseFactory {
+  fromTarArchive(options: FromArchiveOptions): Promise<ReadTreeResponse>;
+  fromZipArchive(options: FromArchiveOptions): Promise<ReadTreeResponse>;
+}
 
 /**
  * An options object for search operations.

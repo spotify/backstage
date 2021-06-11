@@ -8,52 +8,36 @@ The Kubernetes feature is a plugin to Backstage, and it is exposed as a tab when
 viewing entities in the software catalog.
 
 If you haven't setup Backstage already, read the
-[Getting Started](../../getting-started/index.md).
+[Getting Started](../../getting-started/index.md) guide.
 
 ## Adding the Kubernetes frontend plugin
 
-The first step is to add the frontend Kubernetes plugin to your Backstage
-application. Navigate to your new Backstage application directory. And then to
+The first step is to add the Kubernetes frontend plugin to your Backstage
+application. Navigate to your new Backstage application directory, and then to
 your `packages/app` directory, and install the `@backstage/plugin-kubernetes`
 package.
 
 ```bash
-cd my-backstage-app/
+# From your Backstage root directory
 cd packages/app
 yarn add @backstage/plugin-kubernetes
 ```
 
-Once the package has been installed, you need to import the plugin in your app.
-Add the following to `packages/app/src/plugins.ts`:
-
-`plugins.ts`:
-
-```typescript
-export { plugin as Kubernetes } from '@backstage/plugin-kubernetes';
-```
-
-Now, add the "Kubernetes" tab to the catalog entity page. In
-`packages/app/src/components/catalog/EntityPage.tsx`, you'll add a router to get
-to the tab, and add the tab itself.
-
-`EntityPage.tsx`:
+Once the package has been installed, you need to import the plugin in your app
+by adding the "Kubernetes" tab to the respective catalog pages.
 
 ```tsx
-import { Router as KubernetesRouter } from '@backstage/plugin-kubernetes';
+// In packages/app/src/components/catalog/EntityPage.tsx
+import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
 
-// ...
-
-const ServiceEntityPage = ({ entity }: { entity: Entity }) => (
-  <EntityPageLayout>
-    // ...
-    <EntityPageLayout.Content
-      path="/kubernetes/*"
-      title="Kubernetes"
-      element={<KubernetesRouter entity={entity} />}
-    />
-    // ...
-  </EntityPageLayout>
-);
+// You can add the tab to any number of pages, the service page is shown as an
+// example here
+const serviceEntityPage = (
+  <EntityLayout>
+    {/* other tabs... */}
+    <EntityLayout.Route path="/kubernetes" title="Kubernetes">
+      <EntityKubernetesContent />
+    </EntityLayout.Route>
 ```
 
 That's it! But now, we need the Kubernetes Backend plugin for the frontend to
@@ -65,17 +49,16 @@ Navigate to `packages/backend` of your Backstage app, and install the
 `@backstage/plugin-kubernetes-backend` package.
 
 ```bash
-cd my-backstage-app/
+# From your Backstage root directory
 cd packages/backend
 yarn add @backstage/plugin-kubernetes-backend
 ```
 
 Create a file called `kubernetes.ts` inside `packages/backend/src/plugins/` and
-add the following
-
-`kubernetes.ts`:
+add the following:
 
 ```typescript
+// In packages/backend/src/plugins/kubernetes.ts
 import { createRouter } from '@backstage/plugin-kubernetes-backend';
 import { PluginEnvironment } from '../types';
 
@@ -91,18 +74,15 @@ And import the plugin to `packages/backend/src/index.ts`. There are three lines
 of code you'll need to add, and they should be added near similar code in your
 existing Backstage backend.
 
-`index.ts`:
-
 ```typescript
+// In packages/backend/src/index.ts
 import kubernetes from './plugins/kubernetes';
-
 // ...
-
-const kubernetesEnv = useHotMemoize(module, () => createEnv('kubernetes'));
-
-// ...
-
-apiRouter.use('/kubernetes', await kubernetes(kubernetesEnv));
+async function main() {
+  // ...
+  const kubernetesEnv = useHotMemoize(module, () => createEnv('kubernetes'));
+  // ...
+  apiRouter.use('/kubernetes', await kubernetes(kubernetesEnv));
 ```
 
 That's it! The Kubernetes frontend and backend have now been added to your

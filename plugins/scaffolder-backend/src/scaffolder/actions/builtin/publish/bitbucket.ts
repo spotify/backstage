@@ -32,7 +32,14 @@ const createBitbucketCloudRepository = async (opts: {
   repoVisibility: 'private' | 'public';
   authorization: string;
 }) => {
-  const { workspace, project, repo, description, repoVisibility, authorization } = opts;
+  const {
+    workspace,
+    project,
+    repo,
+    description,
+    repoVisibility,
+    authorization,
+  } = opts;
 
   const options: RequestInit = {
     method: 'POST',
@@ -186,13 +193,13 @@ export function createPublishBitbucketAction(options: {
             type: 'string',
           },
           repoVisibility: {
-            title: 'Repository Visiblity',
+            title: 'Repository Visibility',
             type: 'string',
             enum: ['private', 'public'],
           },
           sourcePath: {
             title:
-              'Path within the workspace that will be used as the repository root. If omitted, the entire workspace will be published as the respository.',
+              'Path within the workspace that will be used as the repository root. If omitted, the entire workspace will be published as the repository.',
             type: 'string',
           },
         },
@@ -219,10 +226,10 @@ export function createPublishBitbucketAction(options: {
       // Workspace is only required for bitbucket cloud
       if (host === 'bitbucket.org') {
         if (!workspace) {
-            throw new InputError(
-              `Invalid URL provider was included in the repo URL to create ${ctx.input.repoUrl}, missing workspace`,
-            );
-          }
+          throw new InputError(
+            `Invalid URL provider was included in the repo URL to create ${ctx.input.repoUrl}, missing workspace`,
+          );
+        }
       }
 
       // Project is required for both bitbucket cloud and bitbucket server
@@ -243,9 +250,9 @@ export function createPublishBitbucketAction(options: {
       const authorization = getAuthorizationHeader(integrationConfig.config);
 
       const createMethod =
-      host === 'bitbucket.org'
-        ? createBitbucketCloudRepository
-        : createBitbucketServerRepository;
+        host === 'bitbucket.org'
+          ? createBitbucketCloudRepository
+          : createBitbucketServerRepository;
 
       const { remoteUrl, repoContentsUrl } = await createMethod({
         authorization,

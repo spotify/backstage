@@ -24,7 +24,7 @@ import os from 'os';
 import path from 'path';
 import { getVoidLogger } from '../logging';
 import { GitlabUrlReader } from './GitlabUrlReader';
-import { ReadTreeResponseFactory } from './tree';
+import { DefaultReadTreeResponseFactory } from './tree';
 import { NotModifiedError, NotFoundError } from '@backstage/errors';
 import {
   GitLabIntegration,
@@ -33,7 +33,7 @@ import {
 
 const logger = getVoidLogger();
 
-const treeResponseFactory = ReadTreeResponseFactory.create({
+const treeResponseFactory = DefaultReadTreeResponseFactory.create({
   config: new ConfigReader({}),
 });
 
@@ -190,11 +190,17 @@ describe('GitlabUrlReader', () => {
       default_branch: 'main',
     };
 
-    const branchGitlabApiResponse = {
-      commit: {
+    const commitsGitlabApiResponse = [
+      {
         id: 'sha123abc',
       },
-    };
+    ];
+
+    const specificPathCommitsGitlabApiResponse = [
+      {
+        id: 'sha456def',
+      },
+    ];
 
     beforeEach(() => {
       worker.use(
@@ -221,17 +227,29 @@ describe('GitlabUrlReader', () => {
             ),
         ),
         rest.get(
-          'https://gitlab.com/api/v4/projects/backstage%2Fmock/repository/branches/main',
-          (_, res, ctx) =>
-            res(
-              ctx.status(200),
-              ctx.set('Content-Type', 'application/json'),
-              ctx.json(branchGitlabApiResponse),
-            ),
-        ),
-        rest.get(
-          'https://gitlab.com/api/v4/projects/backstage%2Fmock/repository/branches/branchDoesNotExist',
-          (_, res, ctx) => res(ctx.status(404)),
+          'https://gitlab.com/api/v4/projects/backstage%2Fmock/repository/commits',
+          (req, res, ctx) => {
+            const refName = req.url.searchParams.get('ref_name');
+            if (refName === 'main') {
+              const filepath = req.url.searchParams.get('path');
+              if (filepath === 'testFilepath') {
+                return res(
+                  ctx.status(200),
+                  ctx.set('Content-Type', 'application/json'),
+                  ctx.json(specificPathCommitsGitlabApiResponse),
+                );
+              }
+              return res(
+                ctx.status(200),
+                ctx.set('Content-Type', 'application/json'),
+                ctx.json(commitsGitlabApiResponse),
+              );
+            }
+            if (refName === 'branchDoesNotExist') {
+              return res(ctx.status(404));
+            }
+            return res();
+          },
         ),
         rest.get(
           'https://gitlab.mycompany.com/api/v4/projects/backstage%2Fmock',
@@ -243,13 +261,26 @@ describe('GitlabUrlReader', () => {
             ),
         ),
         rest.get(
-          'https://gitlab.mycompany.com/api/v4/projects/backstage%2Fmock/repository/branches/main',
-          (_, res, ctx) =>
-            res(
-              ctx.status(200),
-              ctx.set('Content-Type', 'application/json'),
-              ctx.json(branchGitlabApiResponse),
-            ),
+          'https://gitlab.mycompany.com/api/v4/projects/backstage%2Fmock/repository/commits',
+          (req, res, ctx) => {
+            const refName = req.url.searchParams.get('ref_name');
+            if (refName === 'main') {
+              const filepath = req.url.searchParams.get('path');
+              if (filepath === 'testFilepath') {
+                return res(
+                  ctx.status(200),
+                  ctx.set('Content-Type', 'application/json'),
+                  ctx.json(specificPathCommitsGitlabApiResponse),
+                );
+              }
+              return res(
+                ctx.status(200),
+                ctx.set('Content-Type', 'application/json'),
+                ctx.json(commitsGitlabApiResponse),
+              );
+            }
+            return res();
+          },
         ),
         rest.get(
           'https://gitlab.mycompany.com/api/v4/projects/backstage%2Fmock/repository/archive.zip?sha=main',
@@ -351,7 +382,7 @@ describe('GitlabUrlReader', () => {
       ).resolves.toBe('# Test\n');
     });
 
-    it('throws a NotModifiedError when given a etag in options', async () => {
+    it('throws a NotModifiedError when given a etag in options matching last commit', async () => {
       const fnGitlab = async () => {
         await gitlabProcessor.readTree('https://gitlab.com/backstage/mock', {
           etag: 'sha123abc',
@@ -363,6 +394,29 @@ describe('GitlabUrlReader', () => {
           'https://gitlab.mycompany.com/backstage/mock',
           {
             etag: 'sha123abc',
+          },
+        );
+      };
+
+      await expect(fnGitlab).rejects.toThrow(NotModifiedError);
+      await expect(fnHostedGitlab).rejects.toThrow(NotModifiedError);
+    });
+
+    it('throws a NotModifiedError when given a etag in options matching last commit affecting specified filepath', async () => {
+      const fnGitlab = async () => {
+        await gitlabProcessor.readTree(
+          'https://gitlab.com/backstage/mock/blob/main/testFilepath',
+          {
+            etag: 'sha456def',
+          },
+        );
+      };
+
+      const fnHostedGitlab = async () => {
+        await hostedGitlabProcessor.readTree(
+          'https://gitlab.mycompany.com/backstage/mock/blob/main/testFilepath',
+          {
+            etag: 'sha456def',
           },
         );
       };
@@ -389,12 +443,12 @@ describe('GitlabUrlReader', () => {
     });
 
     it('should throw error on missing branch', async () => {
-      const fnGithub = async () => {
+      const fnGitlab = async () => {
         await gitlabProcessor.readTree(
           'https://gitlab.com/backstage/mock/tree/branchDoesNotExist',
         );
       };
-      await expect(fnGithub).rejects.toThrow(NotFoundError);
+      await expect(fnGitlab).rejects.toThrow(NotFoundError);
     });
   });
 
@@ -408,11 +462,11 @@ describe('GitlabUrlReader', () => {
       default_branch: 'main',
     };
 
-    const branchGitlabApiResponse = {
-      commit: {
+    const commitsGitlabApiResponse = [
+      {
         id: 'sha123abc',
       },
-    };
+    ];
 
     beforeEach(() => {
       worker.use(
@@ -439,13 +493,18 @@ describe('GitlabUrlReader', () => {
             ),
         ),
         rest.get(
-          'https://gitlab.com/api/v4/projects/backstage%2Fmock/repository/branches/main',
-          (_, res, ctx) =>
-            res(
-              ctx.status(200),
-              ctx.set('Content-Type', 'application/json'),
-              ctx.json(branchGitlabApiResponse),
-            ),
+          'https://gitlab.com/api/v4/projects/backstage%2Fmock/repository/commits',
+          (req, res, ctx) => {
+            const refName = req.url.searchParams.get('ref_name');
+            if (refName === 'main') {
+              return res(
+                ctx.status(200),
+                ctx.set('Content-Type', 'application/json'),
+                ctx.json(commitsGitlabApiResponse),
+              );
+            }
+            return res();
+          },
         ),
       );
     });

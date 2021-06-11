@@ -14,4 +14,3 @@
  * limitations under the License.
  */
 export { WorkflowRunsTable, WorkflowRunsTableView } from './WorkflowRunsTable';
-export type { WorkflowRun } from './WorkflowRunsTable';

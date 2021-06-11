@@ -28,8 +28,10 @@ import {
   PublisherBase,
   PublishRequest,
   PublishResponse,
+  ReadinessResponse,
   TechDocsMetadata,
 } from './types';
+import { getHeadersForFileExtension } from './helpers';
 
 // TODO: Use a more persistent storage than node_modules or /tmp directory.
 // Make it configurable with techdocs.publisher.local.publishDirectory
@@ -63,6 +65,12 @@ export class LocalPublish implements PublisherBase {
     this.config = config;
     this.logger = logger;
     this.discovery = discovery;
+  }
+
+  async getReadiness(): Promise<ReadinessResponse> {
+    return {
+      isAvailable: true,
+    };
   }
 
   publish({ entity, directory }: PublishRequest): Promise<PublishResponse> {
@@ -125,7 +133,16 @@ export class LocalPublish implements PublisherBase {
   }
 
   docsRouter(): express.Handler {
-    return express.static(staticDocsDir);
+    return express.static(staticDocsDir, {
+      // Handle content-type header the same as all other publishers.
+      setHeaders: (res, filePath) => {
+        const fileExtension = path.extname(filePath);
+        const headers = getHeadersForFileExtension(fileExtension);
+        for (const [header, value] of Object.entries(headers)) {
+          res.setHeader(header, value);
+        }
+      },
+    });
   }
 
   async hasDocsBeenGenerated(entity: Entity): Promise<boolean> {

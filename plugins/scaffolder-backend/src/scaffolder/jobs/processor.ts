@@ -19,19 +19,11 @@ import fs from 'fs-extra';
 import { Processor, Job, StageContext, StageInput } from './types';
 import { TemplateEntityV1alpha1 } from '@backstage/catalog-model';
 import * as uuid from 'uuid';
-import Docker from 'dockerode';
 import path from 'path';
-import { TemplaterValues, TemplaterBase } from '../stages/templater';
-import { PreparerBuilder } from '../stages/prepare';
+import { TemplaterValues } from '../stages/templater';
 import { makeLogStream } from './logger';
 import { Logger } from 'winston';
 import { Config } from '@backstage/config';
-
-export type JobProcessorArguments = {
-  preparers: PreparerBuilder;
-  templater: TemplaterBase;
-  dockerClient: Docker;
-};
 
 export type JobAndDirectoryTuple = {
   job: Job;

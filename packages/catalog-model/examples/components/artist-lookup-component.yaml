@@ -33,3 +33,4 @@ spec:
   lifecycle: experimental
   owner: team-a
   system: artist-engagement-portal
+  dependsOn: ['resource:artists-db']

@@ -8,6 +8,8 @@ error handling and similar.
 Add the library to your backend package:
 
 ```sh
+# From your Backstage root directory
+cd packages/backend
 yarn add @backstage/backend-common
 ```
 

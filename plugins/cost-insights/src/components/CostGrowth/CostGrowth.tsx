@@ -29,6 +29,7 @@ import { useCostGrowthStyles as useStyles } from '../../utils/styles';
 import { formatPercent, formatCurrency } from '../../utils/formatters';
 import { indefiniteArticleOf } from '../../utils/grammar';
 import { useConfig, useCurrency } from '../../hooks';
+import { notEmpty } from '../../utils/assert';
 
 export type CostGrowthProps = {
   change: ChangeStatistic;
@@ -42,31 +43,65 @@ export const CostGrowth = ({ change, duration }: CostGrowthProps) => {
 
   // Only display costs in absolute values
   const amount = Math.abs(change.amount);
-  const ratio = Math.abs(change.ratio);
+  const ratio = Math.abs(change.ratio ?? NaN);
 
   const rate = rateOf(engineerCost, duration);
   const engineers = amount / rate;
   const converted = amount / (currency.rate ?? rate);
 
+  // If a ratio cannot be calculated, don't format.
+  const growth = notEmpty(change.ratio)
+    ? growthOf({ ratio: change.ratio, amount: engineers })
+    : null;
   // Determine if growth is significant enough to highlight
-  const growth = growthOf(change.ratio, engineers);
   const classes = classnames({
     [styles.excess]: growth === GrowthType.Excess,
     [styles.savings]: growth === GrowthType.Savings,
   });
 
-  const percent = formatPercent(ratio);
-
-  let cost = `${percent} or ~${formatCurrency(converted, currency.unit)}`;
-  // Always display the converted value but use the cost in engineers
-  // to determine negligibility, as costs should be time-period aware
   if (engineers < EngineerThreshold) {
-    cost = 'Negligible';
-  } else if (currency.kind === CurrencyType.USD) {
-    cost = `${percent} or ~${currency.prefix}${formatCurrency(converted)}`;
-  } else if (amount < 1) {
-    cost = `less than ${indefiniteArticleOf(['a', 'an'], currency.unit)}`;
+    return <span className={classes}>Negligible</span>;
   }
 
-  return <span className={classes}>{cost}</span>;
+  if (currency.kind === CurrencyType.USD) {
+    // Do not display percentage if ratio cannot be calculated
+    if (isNaN(ratio)) {
+      return (
+        <span className={classes}>
+          ~{currency.prefix}
+          {formatCurrency(converted)}
+        </span>
+      );
+    }
+
+    return (
+      <span className={classes}>
+        {formatPercent(ratio)} or ~{currency.prefix}
+        {formatCurrency(converted)}
+      </span>
+    );
+  }
+
+  if (amount < 1) {
+    return (
+      <span className={classes}>
+        less than {indefiniteArticleOf(['a', 'an'], currency.unit)}
+      </span>
+    );
+  }
+
+  // Do not display percentage if ratio cannot be calculated
+  if (isNaN(ratio)) {
+    return (
+      <span className={classes}>
+        ~{formatCurrency(converted, currency.unit)}
+      </span>
+    );
+  }
+
+  return (
+    <span className={classes}>
+      {formatPercent(ratio)} or ~{formatCurrency(converted, currency.unit)}
+    </span>
+  );
 };

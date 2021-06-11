@@ -32,23 +32,23 @@ const GrowthMap = {
 
 describe.each`
   ratio                           | amount                     | expected
-  ${0.0}                          | ${undefined}               | ${GrowthType.Negligible}
+  ${undefined}                    | ${0}                       | ${GrowthType.Negligible}
+  ${0.0}                          | ${0}                       | ${GrowthType.Negligible}
   ${0.0}                          | ${EngineerThreshold}       | ${GrowthType.Negligible}
   ${ChangeThreshold.lower}        | ${0}                       | ${GrowthType.Negligible}
-  ${ChangeThreshold.lower + 0.01} | ${undefined}               | ${GrowthType.Negligible}
+  ${ChangeThreshold.lower + 0.01} | ${0}                       | ${GrowthType.Negligible}
   ${ChangeThreshold.lower + 0.01} | ${EngineerThreshold}       | ${GrowthType.Negligible}
   ${ChangeThreshold.lower + 0.01} | ${EngineerThreshold + 0.1} | ${GrowthType.Negligible}
   ${ChangeThreshold.lower - 0.01} | ${EngineerThreshold - 0.1} | ${GrowthType.Negligible}
-  ${ChangeThreshold.upper - 0.01} | ${undefined}               | ${GrowthType.Negligible}
+  ${ChangeThreshold.lower - 0.01} | ${0}                       | ${GrowthType.Negligible}
+  ${ChangeThreshold.upper}        | ${0}                       | ${GrowthType.Negligible}
+  ${ChangeThreshold.upper - 0.01} | ${0}                       | ${GrowthType.Negligible}
   ${ChangeThreshold.upper + 0.01} | ${EngineerThreshold - 0.1} | ${GrowthType.Negligible}
-  ${ChangeThreshold.lower}        | ${undefined}               | ${GrowthType.Savings}
+  ${ChangeThreshold.upper + 0.01} | ${0}                       | ${GrowthType.Negligible}
   ${ChangeThreshold.lower}        | ${EngineerThreshold}       | ${GrowthType.Savings}
-  ${ChangeThreshold.lower - 0.01} | ${undefined}               | ${GrowthType.Savings}
   ${ChangeThreshold.lower - 0.01} | ${EngineerThreshold}       | ${GrowthType.Savings}
   ${ChangeThreshold.lower - 0.01} | ${EngineerThreshold + 0.1} | ${GrowthType.Savings}
-  ${ChangeThreshold.upper}        | ${undefined}               | ${GrowthType.Excess}
   ${ChangeThreshold.upper}        | ${EngineerThreshold}       | ${GrowthType.Excess}
-  ${ChangeThreshold.upper + 0.01} | ${undefined}               | ${GrowthType.Excess}
   ${ChangeThreshold.upper + 0.01} | ${EngineerThreshold}       | ${GrowthType.Excess}
   ${ChangeThreshold.upper + 0.01} | ${EngineerThreshold + 0.1} | ${GrowthType.Excess}
 `(
@@ -63,7 +63,7 @@ describe.each`
     expected: GrowthType;
   }) => {
     it(`should display ${GrowthMap[expected]}`, () => {
-      expect(growthOf(ratio, amount)).toBe(expected);
+      expect(growthOf({ ratio, amount })).toBe(expected);
     });
   },
 );

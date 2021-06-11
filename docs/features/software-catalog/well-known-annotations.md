@@ -92,12 +92,14 @@ view and edit links need changing.
 # Example:
 metadata:
   annotations:
-    backstage.io/source-location: github:https://github.com/my-org/my-service
+    backstage.io/source-location: url:https://github.com/my-org/my-service/
 ```
 
 A `Location` reference that points to the source code of the entity (typically a
 `Component`). Useful when catalog files do not get ingested from the source code
-repository itself.
+repository itself. If the URL points to a folder, it is important that it is
+suffixed with a `'/'` in order for relative path resolution to work
+consistently.
 
 ### jenkins.io/github-folder
 
@@ -270,6 +272,20 @@ project within your organization.
 
 Specifying this annotation may enable SonarQube related features in Backstage
 for that entity.
+
+### backstage.io/code-coverage
+
+```yaml
+# Example:
+metadata:
+  annotations:
+    backstage.io/code-coverage: scm-only
+```
+
+The value of this annotation controls the code-coverage backstage plugin. If set
+to `scm-only`, the plugin will only take into account files stored in source
+control (e.g. ignoring generated code). If set to `enabled`, all files covered
+by a coverage report will be taken into account.
 
 ## Deprecated Annotations
 

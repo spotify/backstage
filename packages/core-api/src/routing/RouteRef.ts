@@ -23,7 +23,7 @@ import {
   ParamKeys,
   OptionalParams,
 } from './types';
-import { IconComponent } from '../icons';
+import { IconComponent } from '../icons/types';
 
 // TODO(Rugvip): Remove this in the next breaking release, it's exported but unused
 export type RouteRefConfig<Params extends AnyParams> = {

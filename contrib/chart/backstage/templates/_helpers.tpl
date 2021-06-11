@@ -214,7 +214,7 @@ Postgres port for the backend
 {{- .Values.postgresql.service.port }}
 {{- else if .Values.appConfig.backend.database.connection.port -}}
 {{- .Values.appConfig.backend.database.connection.port }}
-{{ else }}
+{{- else -}}
 5432
 {{- end -}}
 {{- end -}}

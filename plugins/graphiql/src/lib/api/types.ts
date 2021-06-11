@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createApiRef } from '@backstage/core';
+import { createApiRef } from '@backstage/core-plugin-api';
 
 export type GraphQLEndpoint = {
   // Will be used as unique key for storing history and query data
@@ -35,5 +35,4 @@ export type GraphQLBrowseApi = {
 
 export const graphQlBrowseApiRef = createApiRef<GraphQLBrowseApi>({
   id: 'plugin.graphiql.browse',
-  description: 'Used to supply GraphQL endpoints for browsing',
 });

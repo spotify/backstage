@@ -8,12 +8,17 @@
 /docs/features/techdocs                     @backstage/techdocs-core
 /docs/features/search                       @backstage/techdocs-core
 /docs/assets/search                         @backstage/techdocs-core
+/plugins/code-coverage                      @alde @nissayeva
+/plugins/code-coverage-backend              @alde @nissayeva
 /plugins/cost-insights                      @backstage/silver-lining
 /plugins/cloudbuild                         @trivago/ebarrios
 /plugins/search                             @backstage/techdocs-core
 /plugins/search-*                           @backstage/techdocs-core
 /plugins/techdocs                           @backstage/techdocs-core
 /plugins/techdocs-backend                   @backstage/techdocs-core
+/plugins/ilert                              @yacut
+/packages/search-common                     @backstage/techdocs-core
 /packages/techdocs-common                   @backstage/techdocs-core
 /.changeset/cost-insights-*                 @backstage/silver-lining
+/.changeset/search-*                        @backstage/techdocs-core
 /.changeset/techdocs-*                      @backstage/techdocs-core

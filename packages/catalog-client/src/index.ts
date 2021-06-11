@@ -15,10 +15,4 @@
  */
 
 export { CatalogClient } from './CatalogClient';
-export type {
-  AddLocationRequest,
-  AddLocationResponse,
-  CatalogApi,
-  CatalogEntitiesRequest,
-  CatalogListResponse,
-} from './types';
+export * from './types';

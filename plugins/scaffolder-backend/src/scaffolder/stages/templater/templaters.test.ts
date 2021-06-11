@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
+import { ContainerRunner } from '@backstage/backend-common';
 import { CookieCutter } from './cookiecutter';
 import { Templaters } from './templaters';
 
 describe('Templaters', () => {
+  const containerRunner: jest.Mocked<ContainerRunner> = {
+    runContainer: jest.fn(),
+  };
+
   it('should throw an error when the templater is not registered', () => {
     const templaters = new Templaters();
 
@@ -29,7 +34,7 @@ describe('Templaters', () => {
   });
   it('should return the correct templater when the templater matches', () => {
     const templaters = new Templaters();
-    const templater = new CookieCutter();
+    const templater = new CookieCutter({ containerRunner });
 
     templaters.register('cookiecutter', templater);
 

@@ -14,79 +14,29 @@
  * limitations under the License.
  */
 
-import { ComponentEntity, RELATION_HAS_PART } from '@backstage/catalog-model';
-import {
-  CodeSnippet,
-  InfoCard,
-  Link,
-  Progress,
-  WarningPanel,
-} from '@backstage/core';
-import { Typography } from '@material-ui/core';
-import {
-  EntityTable,
-  useEntity,
-  useRelatedEntities,
-} from '@backstage/plugin-catalog-react';
+import { RELATION_HAS_PART } from '@backstage/catalog-model';
 import React from 'react';
+import {
+  asComponentEntities,
+  componentEntityColumns,
+  RelatedEntitiesCard,
+} from '../RelatedEntitiesCard';
 
 type Props = {
   variant?: 'gridItem';
 };
 
-const columns = [
-  EntityTable.columns.createEntityRefColumn({ defaultKind: 'component' }),
-  EntityTable.columns.createOwnerColumn(),
-  EntityTable.columns.createSpecTypeColumn(),
-  EntityTable.columns.createSpecLifecycleColumn(),
-  EntityTable.columns.createMetadataDescriptionColumn(),
-];
-
 export const HasSubcomponentsCard = ({ variant = 'gridItem' }: Props) => {
-  const { entity } = useEntity();
-  const { entities, loading, error } = useRelatedEntities(entity, {
-    type: RELATION_HAS_PART,
-    kind: 'Component',
-  });
-
-  if (loading) {
-    return (
-      <InfoCard variant={variant} title="Subcomponents">
-        <Progress />
-      </InfoCard>
-    );
-  }
-
-  if (error || !entities) {
-    return (
-      <InfoCard variant={variant} title="Subcomponents">
-        <WarningPanel
-          severity="error"
-          title="Could not load subcomponents"
-          message={<CodeSnippet text={`${error}`} language="text" />}
-        />
-      </InfoCard>
-    );
-  }
-
   return (
-    <EntityTable
-      title="Subcomponents"
+    <RelatedEntitiesCard
       variant={variant}
-      emptyContent={
-        <div style={{ textAlign: 'center' }}>
-          <Typography variant="body1">
-            No subcomponent is part of this component.
-          </Typography>
-          <Typography variant="body2">
-            <Link to="https://backstage.io/docs/features/software-catalog/descriptor-format#specsubcomponentof-optional">
-              Learn how to change this.
-            </Link>
-          </Typography>
-        </div>
-      }
-      columns={columns}
-      entities={entities as ComponentEntity[]}
+      title="Subcomponents"
+      entityKind="Component"
+      relationType={RELATION_HAS_PART}
+      columns={componentEntityColumns}
+      asRenderableEntities={asComponentEntities}
+      emptyMessage="No subcomponent is part of this component"
+      emptyHelpLink="https://backstage.io/docs/features/software-catalog/descriptor-format#specsubcomponentof-optional"
     />
   );
 };

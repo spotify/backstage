@@ -1247,7 +1247,7 @@
       "required": ["accountToken"],
       "properties": {
         "accountToken": {
-          "description": "The autentication token for accessing the Rollbar API",
+          "description": "The authentication token for accessing the Rollbar API",
           "type": "string"
         },
         "organization": {
@@ -1320,7 +1320,7 @@
             "type": "string"
           },
           "properties": {
-            "visiblity": {
+            "visibility": {
               "description": "The visibility to set on created repositories.",
               "enum": ["internal", "private", "public"],
               "type": "string"
@@ -1337,7 +1337,7 @@
                 "type": "string"
               }
             },
-            "visiblity": {
+            "visibility": {
               "description": "The visibility to set on created repositories.",
               "enum": ["internal", "private", "public"],
               "type": "string"
@@ -1369,7 +1369,7 @@
                 "type": "string"
               }
             },
-            "visiblity": {
+            "visibility": {
               "description": "The visibility to set on created repositories.",
               "enum": ["private", "public"],
               "type": "string"

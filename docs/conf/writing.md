@@ -6,8 +6,9 @@ description: Documentation on Writing Backstage Configuration Files
 
 ## File Format
 
-Configuration is stored in YAML format in `app-config.yaml` files, looking
-something like this:
+Configuration is stored in YAML format in `app-config.yaml` files. This
+configuration is shared between the frontend and backend and it looks something
+like this:
 
 ```yaml
 app:
@@ -31,6 +32,15 @@ proxy:
 
 Configuration files are typically checked in and stored in the repo that houses
 the rest of the Backstage application.
+
+The particular configuration that is available to each Backstage app depends on
+what plugins and packages are installed. To view the configuration reference for
+your own project, including what configuration keys available and whether they
+are needed by the frontend, use the following command:
+
+```sh
+yarn backstage-cli config:docs
+```
 
 ## Environment Variable Overrides
 
@@ -128,6 +138,9 @@ variable.
 ```yaml
 $env: MY_SECRET
 ```
+
+Note however, that it's often more convenient to use
+[environment variable substitution](#environment-variable-substitution) instead.
 
 ### File Includes
 

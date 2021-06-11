@@ -27,9 +27,9 @@ import parseGitUrl from 'git-url-parse';
 import { Minimatch } from 'minimatch';
 import { Readable } from 'stream';
 import { NotFoundError, NotModifiedError } from '@backstage/errors';
-import { ReadTreeResponseFactory } from './tree';
 import { stripFirstDirectoryFromPath } from './tree/util';
 import {
+  ReadTreeResponseFactory,
   ReaderFactory,
   ReadTreeOptions,
   ReadTreeResponse,

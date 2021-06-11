@@ -118,8 +118,16 @@ describe('GithubDiscoveryProcessor', () => {
       };
       mockGetOrganizationRepositories.mockResolvedValueOnce({
         repositories: [
-          { name: 'backstage', url: 'https://github.com/backstage/backstage' },
-          { name: 'demo', url: 'https://github.com/backstage/demo' },
+          {
+            name: 'backstage',
+            url: 'https://github.com/backstage/backstage',
+            isArchived: false,
+          },
+          {
+            name: 'demo',
+            url: 'https://github.com/backstage/demo',
+            isArchived: false,
+          },
         ],
       });
       const emitter = jest.fn();
@@ -153,14 +161,20 @@ describe('GithubDiscoveryProcessor', () => {
       };
       mockGetOrganizationRepositories.mockResolvedValueOnce({
         repositories: [
-          { name: 'backstage', url: 'https://github.com/backstage/backstage' },
+          {
+            name: 'backstage',
+            url: 'https://github.com/backstage/backstage',
+            isArchived: false,
+          },
           {
             name: 'techdocs-cli',
             url: 'https://github.com/backstage/techdocs-cli',
+            isArchived: false,
           },
           {
             name: 'techdocs-container',
             url: 'https://github.com/backstage/techdocs-container',
+            isArchived: false,
           },
         ],
       });
@@ -187,21 +201,32 @@ describe('GithubDiscoveryProcessor', () => {
         optional: true,
       });
     });
-    it('filter unrelated repositories', async () => {
+    it('filter unrelated and archived repositories', async () => {
       const location: LocationSpec = {
         type: 'github-discovery',
         target: 'https://github.com/backstage/test/blob/master/catalog.yaml',
       };
       mockGetOrganizationRepositories.mockResolvedValueOnce({
         repositories: [
-          { name: 'abstest', url: 'https://github.com/backstage/abctest' },
+          {
+            name: 'abstest',
+            url: 'https://github.com/backstage/abctest',
+            isArchived: false,
+          },
           {
             name: 'test',
             url: 'https://github.com/backstage/test',
+            isArchived: false,
+          },
+          {
+            name: 'test-archived',
+            url: 'https://github.com/backstage/test',
+            isArchived: true,
           },
           {
             name: 'testxyz',
             url: 'https://github.com/backstage/testxyz',
+            isArchived: false,
           },
         ],
       });

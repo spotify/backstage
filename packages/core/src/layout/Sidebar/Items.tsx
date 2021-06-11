@@ -32,7 +32,7 @@ import React, {
   useContext,
   useState,
 } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, NavLinkProps } from 'react-router-dom';
 import { sidebarConfig, SidebarContext } from './config';
 
 const useStyles = makeStyles<BackstageTheme>(theme => {
@@ -138,7 +138,7 @@ type SidebarItemButtonProps = SidebarItemBaseProps & {
 type SidebarItemLinkProps = SidebarItemBaseProps & {
   to: string;
   onClick?: (ev: React.MouseEvent) => void;
-};
+} & NavLinkProps;
 
 type SidebarItemProps = SidebarItemButtonProps | SidebarItemLinkProps;
 
@@ -156,6 +156,7 @@ export const SidebarItem = forwardRef<any, SidebarItemProps>((props, ref) => {
     onClick,
     children,
     className,
+    ...navLinkProps
   } = props;
   const classes = useStyles();
   // XXX (@koroeskohr): unsure this is optimal. But I just really didn't want to have the item component
@@ -216,6 +217,7 @@ export const SidebarItem = forwardRef<any, SidebarItemProps>((props, ref) => {
       activeClassName={classes.selected}
       to={props.to}
       ref={ref}
+      {...navLinkProps}
     >
       {content}
     </NavLink>

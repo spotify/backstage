@@ -15,6 +15,7 @@
  */
 
 import { Command } from 'commander';
+import { yellow } from 'chalk';
 import fs from 'fs-extra';
 import { join as joinPath, relative as relativePath } from 'path';
 import { createDistWorkspace } from '../../lib/packager';
@@ -30,6 +31,15 @@ export default async (cmd: Command) => {
     await run('docker', ['image', 'build', '--help']);
     return;
   }
+
+  console.warn(
+    yellow(`
+The backend:build-image command is deprecated and will be removed in the future.
+Please use the backend:bundle command instead along with your own Docker setup.
+
+  https://backstage.io/docs/deployment/docker
+`),
+  );
 
   const pkgPath = paths.resolveTarget(PKG_PATH);
   const pkg = await fs.readJson(pkgPath);

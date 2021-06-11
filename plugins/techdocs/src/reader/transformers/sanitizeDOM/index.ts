@@ -16,7 +16,7 @@
 
 // @ts-ignore
 import sanitizeHtml from 'sanitize-html';
-import type { Transformer } from '../index';
+import type { Transformer } from '../transformer';
 import { TECHDOCS_ALLOWED_TAGS } from './tags';
 import { TECHDOCS_ALLOWED_ATTRIBUTES } from './attributes';
 

@@ -17,6 +17,7 @@
 import React from 'react';
 import pluralize from 'pluralize';
 import { KubernetesMigrationAlertCard } from '../components';
+import { Lifecycle } from '@backstage/core';
 import { CostInsightsApi } from '../../api';
 import {
   Alert,
@@ -87,11 +88,13 @@ export class KubernetesMigrationAlert implements KubernetesMigrationApi {
   }
 
   get title() {
-    return `Consider migrating ${pluralize(
-      'service',
-      this.data.services.length,
-      true,
-    )} to Kubernetes.`;
+    return (
+      <span>
+        Consider migrating{' '}
+        {pluralize('service', this.data.services.length, true)} to Kubernetes{' '}
+        <Lifecycle shorthand />
+      </span>
+    );
   }
 
   get element() {

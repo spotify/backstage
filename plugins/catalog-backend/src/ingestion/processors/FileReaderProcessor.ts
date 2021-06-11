@@ -16,11 +16,12 @@
 
 import { LocationSpec } from '@backstage/catalog-model';
 import fs from 'fs-extra';
+import g from 'glob';
+import path from 'path';
+import { promisify } from 'util';
 import * as result from './results';
 import { CatalogProcessor, CatalogProcessorEmit } from './types';
 import { parseEntityYaml } from './util/parse';
-import { promisify } from 'util';
-import g from 'glob';
 
 const glob = promisify(g);
 
@@ -41,7 +42,12 @@ export class FileReaderProcessor implements CatalogProcessor {
         for (const fileMatch of fileMatches) {
           const data = await fs.readFile(fileMatch);
 
-          for (const parseResult of parseEntityYaml(data, location)) {
+          // The normalize converts to native slashes; the glob library returns
+          // forward slashes even on windows
+          for (const parseResult of parseEntityYaml(data, {
+            type: 'file',
+            target: path.normalize(fileMatch),
+          })) {
             emit(parseResult);
           }
         }

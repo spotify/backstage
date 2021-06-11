@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Entity } from '@backstage/catalog-model';
-import { errorApiRef, useApi } from '@backstage/core';
+import { errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { createContext, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useAsync } from 'react-use';

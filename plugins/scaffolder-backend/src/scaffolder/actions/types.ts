@@ -32,6 +32,10 @@ export type ActionContext<Input extends InputBase> = {
   logger: Logger;
   logStream: Writable;
 
+  /**
+   * User token forwarded from initial request, for use in subsequent api requests
+   */
+  token?: string | undefined;
   workspacePath: string;
   input: Input;
   output(name: string, value: JsonValue): void;

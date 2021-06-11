@@ -16,7 +16,7 @@
 
 import { ConfigReader, JsonObject } from '@backstage/config';
 import { getVoidLogger } from '../logging';
-import { ReadTreeResponseFactory } from './tree';
+import { DefaultReadTreeResponseFactory } from './tree';
 import { GoogleGcsUrlReader } from './GoogleGcsUrlReader';
 import { UrlReaderPredicateTuple } from './types';
 
@@ -25,7 +25,7 @@ describe('GcsUrlReader', () => {
     return GoogleGcsUrlReader.factory({
       config: new ConfigReader(config),
       logger: getVoidLogger(),
-      treeResponseFactory: ReadTreeResponseFactory.create({
+      treeResponseFactory: DefaultReadTreeResponseFactory.create({
         config: new ConfigReader({}),
       }),
     });

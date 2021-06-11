@@ -2,7 +2,11 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: {{cookiecutter.name | jsonify}}
+  github.com/project-slug: {{cookiecutter.destination.owner + "/" + cookiecutter.destination.repo}}
 spec:
   type: website
   lifecycle: experimental
   owner: {{cookiecutter.owner | jsonify}}
+{%- if cookiecutter.backstage_system != "" %}
+  system: {{ cookiecutter.system | jsonify }}
+{%- endif %}

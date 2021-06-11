@@ -14,13 +14,24 @@
  * limitations under the License.
  */
 
-import { createComponentExtension } from '@backstage/core';
+import {
+  createComponentExtension,
+  createRoutableExtension,
+} from '@backstage/core';
 import { fossaPlugin } from './plugin';
+import { rootRoute } from './routes';
 
 export const EntityFossaCard = fossaPlugin.provide(
   createComponentExtension({
     component: {
       lazy: () => import('./components/FossaCard').then(m => m.FossaCard),
     },
+  }),
+);
+
+export const FossaPage = fossaPlugin.provide(
+  createRoutableExtension({
+    component: () => import('./components/FossaPage').then(m => m.FossaPage),
+    mountPoint: rootRoute,
   }),
 );

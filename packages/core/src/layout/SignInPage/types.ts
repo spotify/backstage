@@ -25,17 +25,17 @@ import {
   SessionApi,
 } from '@backstage/core-api';
 
-export type SignInConfig = {
+export type SignInProviderConfig = {
   id: string;
   title: string;
   message: string;
   apiRef: ApiRef<ProfileInfoApi & BackstageIdentityApi & SessionApi>;
 };
 
-export type IdentityProviders = ('guest' | 'custom' | SignInConfig)[];
+export type IdentityProviders = ('guest' | 'custom' | SignInProviderConfig)[];
 
 export type ProviderComponent = ComponentType<
-  SignInPageProps & { config: SignInConfig }
+  SignInPageProps & { config: SignInProviderConfig }
 >;
 
 export type ProviderLoader = (

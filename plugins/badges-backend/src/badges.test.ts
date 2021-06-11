@@ -65,4 +65,28 @@ describe('BadgeFactories', () => {
       expect(badge.kind).toEqual('entity');
     }
   });
+
+  it('returns valid link for entity', () => {
+    const entity: Entity = {
+      apiVersion: 'v1',
+      kind: 'service',
+      metadata: {
+        name: 'test',
+      },
+    };
+
+    const context: BadgeContext = {
+      badgeUrl: '/dummy/url',
+      config,
+      entity,
+    };
+
+    expect.assertions(Object.keys(badgeFactories).length);
+    for (const badgeFactory of Object.values(badgeFactories)) {
+      const badge = badgeFactory.createBadge(context);
+      expect(badge.link).toContain(
+        'http://localhost/catalog/default/service/test',
+      );
+    }
+  });
 });

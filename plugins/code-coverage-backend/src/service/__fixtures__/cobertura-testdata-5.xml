@@ -1,0 +1,441 @@
+<?xml version="1.0" ?>
+<coverage branch-rate="0.7602339181286549" branches-covered="130" branches-valid="171" complexity="0" line-rate="0.8738738738738738" lines-covered="582" lines-valid="666" timestamp="1575668573" version="2.0.3">
+	<sources>
+		<source>.</source>
+	</sources>
+	<packages>
+		<package branch-rate="0.75" complexity="0" line-rate="0.9672131147540983" name="src.graphql">
+			<classes>
+				<class branch-rate="0.0" complexity="0" filename="src/graphql/queries.ts" line-rate="1.0" name="src.graphql.queries.ts">
+					<methods/>
+					<lines>
+						<line branch="false" hits="3" number="1"/>
+						<line branch="false" hits="3" number="3"/>
+						<line branch="false" hits="3" number="50"/>
+						<line branch="false" hits="3" number="65"/>
+						<line branch="false" hits="3" number="80"/>
+						<line branch="false" hits="3" number="92"/>
+						<line branch="false" hits="3" number="138"/>
+					</lines>
+				</class>
+				<class branch-rate="0.8" complexity="0" filename="src/graphql/resolvers.ts" line-rate="0.974025974025974" name="src.graphql.resolvers.ts">
+					<methods>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_12)" signature="">
+							<lines>
+								<line branch="false" hits="17" number="22"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_13)" signature="">
+							<lines>
+								<line branch="false" hits="10" number="28"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_14)" signature="">
+							<lines>
+								<line branch="false" hits="12" number="36"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_15)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="27"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_16)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="35"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_17)" signature="">
+							<lines>
+								<line branch="false" hits="9" number="43"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_18)" signature="">
+							<lines>
+								<line branch="false" hits="11" number="51"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_19)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="56"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_20)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="61"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_21)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="50"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_22)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="55"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_23)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="60"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_24)" signature="">
+							<lines>
+								<line branch="false" hits="7" number="128"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_25)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="139"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_26)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="145"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_28)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="160"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_30)" signature="">
+							<lines>
+								<line branch="false" hits="3" number="177"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_31)" signature="">
+							<lines>
+								<line branch="false" hits="9" number="185"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_32)" signature="">
+							<lines>
+								<line branch="false" hits="8" number="70"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_33)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="78"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_34)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="81"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_35)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="84"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_36)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="97"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_37)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="97"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_38)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="103"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_39)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="114"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_40)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="144"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_41)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="159"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_42)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="176"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_43)" signature="">
+							<lines>
+								<line branch="false" hits="4" number="184"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line branch="false" hits="4" number="1"/>
+						<line branch="false" hits="4" number="2"/>
+						<line branch="false" hits="4" number="3"/>
+						<line branch="false" hits="4" number="5"/>
+						<line branch="false" hits="4" number="6"/>
+						<line branch="false" hits="4" number="7"/>
+						<line branch="false" hits="4" number="8"/>
+						<line branch="false" hits="4" number="9"/>
+						<line branch="false" hits="4" number="10"/>
+						<line branch="false" hits="4" number="14"/>
+						<line branch="false" hits="4" number="21"/>
+						<line branch="false" hits="17" number="24"/>
+						<line branch="false" hits="4" number="27"/>
+						<line branch="false" hits="4" number="28"/>
+						<line branch="false" hits="10" number="32"/>
+						<line branch="false" hits="4" number="35"/>
+						<line branch="false" hits="4" number="36"/>
+						<line branch="false" hits="12" number="37"/>
+						<line branch="false" hits="4" number="42"/>
+						<line branch="false" hits="9" number="45"/>
+						<line branch="false" hits="9" number="47"/>
+						<line branch="false" hits="4" number="50"/>
+						<line branch="false" hits="4" number="51"/>
+						<line branch="false" hits="11" number="52"/>
+						<line branch="false" hits="4" number="55"/>
+						<line branch="false" hits="4" number="56"/>
+						<line branch="false" hits="4" number="57"/>
+						<line branch="false" hits="4" number="60"/>
+						<line branch="false" hits="4" number="61"/>
+						<line branch="false" hits="4" number="62"/>
+						<line branch="false" hits="4" number="67"/>
+						<line branch="false" hits="4" number="70"/>
+						<line branch="false" hits="8" number="73"/>
+						<line branch="false" hits="4" number="78"/>
+						<line branch="false" hits="4" number="81"/>
+						<line branch="false" hits="4" number="83"/>
+						<line branch="false" hits="4" number="85"/>
+						<line branch="true" condition-coverage="100% (2/2)" hits="4" number="86"/>
+						<line branch="false" hits="4" number="87"/>
+						<line branch="false" hits="4" number="88"/>
+						<line branch="false" hits="4" number="94"/>
+						<line branch="false" hits="4" number="95"/>
+						<line branch="false" hits="4" number="97"/>
+						<line branch="false" hits="4" number="98"/>
+						<line branch="false" hits="4" number="103"/>
+						<line branch="false" hits="4" number="104"/>
+						<line branch="false" hits="4" number="107"/>
+						<line branch="false" hits="4" number="114"/>
+						<line branch="false" hits="4" number="115"/>
+						<line branch="false" hits="4" number="118"/>
+						<line branch="true" condition-coverage="50% (1/2)" hits="4" number="119"/>
+						<line branch="false" hits="0" number="120"/>
+						<line branch="false" hits="4" number="124"/>
+						<line branch="false" hits="7" number="130"/>
+						<line branch="false" hits="7" number="132"/>
+						<line branch="false" hits="7" number="134"/>
+						<line branch="false" hits="7" number="136"/>
+						<line branch="false" hits="4" number="140"/>
+						<line branch="false" hits="4" number="144"/>
+						<line branch="false" hits="4" number="145"/>
+						<line branch="false" hits="4" number="151"/>
+						<line branch="false" hits="4" number="159"/>
+						<line branch="false" hits="4" number="160"/>
+						<line branch="false" hits="4" number="165"/>
+						<line branch="true" condition-coverage="100% (2/2)" hits="4" number="166"/>
+						<line branch="true" condition-coverage="100% (2/2)" hits="4" number="167"/>
+						<line branch="false" hits="1" number="168"/>
+						<line branch="false" hits="4" number="169"/>
+						<line branch="false" hits="4" number="176"/>
+						<line branch="false" hits="4" number="177"/>
+						<line branch="false" hits="3" number="178"/>
+						<line branch="false" hits="4" number="184"/>
+						<line branch="false" hits="4" number="185"/>
+						<line branch="false" hits="9" number="186"/>
+						<line branch="false" hits="9" number="187"/>
+						<line branch="true" condition-coverage="50% (1/2)" hits="2" number="193"/>
+						<line branch="false" hits="0" number="194"/>
+					</lines>
+				</class>
+				<class branch-rate="0.7272727272727273" complexity="0" filename="src/graphql/router.ts" line-rate="0.9444444444444444" name="src.graphql.router.ts">
+					<methods>
+						<method branch-rate="1.0" line-rate="1.0" name="handleApolloClientError" signature="">
+							<lines>
+								<line branch="false" hits="1" number="21"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_8)" signature="">
+							<lines>
+								<line branch="false" hits="1" number="22"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="graphqlRoute" signature="">
+							<lines>
+								<line branch="false" hits="18" number="43"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_10)" signature="">
+							<lines>
+								<line branch="false" hits="11" number="53"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_11)" signature="">
+							<lines>
+								<line branch="false" hits="11" number="53"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line branch="false" hits="3" number="12"/>
+						<line branch="false" hits="3" number="14"/>
+						<line branch="false" hits="1" number="22"/>
+						<line branch="true" condition-coverage="100% (3/3)" hits="1" number="23"/>
+						<line branch="true" condition-coverage="50% (1/2)" hits="0" number="26"/>
+						<line branch="true" condition-coverage="50% (1/2)" hits="1" number="32"/>
+						<line branch="false" hits="1" number="33"/>
+						<line branch="false" hits="1" number="34"/>
+						<line branch="false" hits="0" number="37"/>
+						<line branch="false" hits="3" number="43"/>
+						<line branch="false" hits="18" number="53"/>
+						<line branch="false" hits="11" number="54"/>
+						<line branch="true" condition-coverage="100% (2/2)" hits="0" number="55"/>
+						<line branch="false" hits="11" number="57"/>
+						<line branch="false" hits="11" number="58"/>
+						<line branch="false" hits="11" number="63"/>
+						<line branch="false" hits="11" number="64"/>
+						<line branch="true" condition-coverage="50% (1/2)" hits="10" number="65"/>
+						<line branch="false" hits="10" number="66"/>
+						<line branch="false" hits="1" number="68"/>
+					</lines>
+				</class>
+				<class branch-rate="0.0" complexity="0" filename="src/graphql/schema.ts" line-rate="1.0" name="src.graphql.schema.ts">
+					<methods>
+						<method branch-rate="1.0" line-rate="1.0" name="getGraphqlSchema" signature="">
+							<lines>
+								<line branch="false" hits="4" number="9"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line branch="false" hits="3" number="1"/>
+						<line branch="false" hits="3" number="2"/>
+						<line branch="false" hits="3" number="4"/>
+						<line branch="false" hits="3" number="5"/>
+						<line branch="false" hits="3" number="9"/>
+						<line branch="true" condition-coverage="0% (0/1)" hits="0" number="11"/>
+						<line branch="false" hits="4" number="13"/>
+						<line branch="false" hits="4" number="15"/>
+						<line branch="false" hits="4" number="16"/>
+						<line branch="false" hits="4" number="17"/>
+						<line branch="false" hits="4" number="19"/>
+					</lines>
+				</class>
+				<class branch-rate="0.8333333333333334" complexity="0" filename="src/graphql/transforms.ts" line-rate="0.9" name="src.graphql.transforms.ts">
+					<methods>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_0)" signature="">
+							<lines>
+								<line branch="false" hits="6" number="9"/>
+							</lines>
+						</method>
+						<method branch-rate="1.0" line-rate="1.0" name="(anonymous_1)" signature="">
+							<lines>
+								<line branch="false" hits="1" number="20"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line branch="false" hits="4" number="9"/>
+						<line branch="true" condition-coverage="100% (2/2)" hits="6" number="13"/>
+						<line branch="false" hits="2" number="14"/>
+						<line branch="true" condition-coverage="100% (2/2)" hits="6" number="15"/>
+						<line branch="false" hits="1" number="16"/>
+						<line branch="false" hits="6" number="17"/>
+						<line branch="false" hits="4" number="20"/>
+						<line branch="true" condition-coverage="50% (1/2)" hits="1" number="23"/>
+						<line branch="false" hits="0" number="24"/>
+						<line branch="false" hits="1" number="25"/>
+					</lines>
+				</class>
+			</classes>
+		</package>
+		<package branch-rate="0.0" complexity="0" line-rate="0.0" name="src.workers">
+			<classes>
+				<class branch-rate="0.0" complexity="0" filename="src/workers/primary-worker.js" line-rate="0.0" name="src.workers.primary-worker.js">
+					<methods>
+						<method branch-rate="0.0" line-rate="0.0" name="doWork" signature="">
+							<lines>
+								<line branch="false" hits="0" number="16"/>
+							</lines>
+						</method>
+						<method branch-rate="0.0" line-rate="0.0" name="(anonymous_9)" signature="">
+							<lines>
+								<line branch="false" hits="0" number="25"/>
+							</lines>
+						</method>
+						<method branch-rate="0.0" line-rate="0.0" name="(anonymous_10)" signature="">
+							<lines>
+								<line branch="false" hits="0" number="49"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line branch="false" hits="0" number="2"/>
+						<line branch="false" hits="0" number="3"/>
+						<line branch="false" hits="0" number="4"/>
+						<line branch="false" hits="0" number="5"/>
+						<line branch="false" hits="0" number="6"/>
+						<line branch="false" hits="0" number="8"/>
+						<line branch="false" hits="0" number="16"/>
+						<line branch="true" condition-coverage="0% (0/1)" hits="0" number="17"/>
+						<line branch="true" condition-coverage="0% (0/2)" hits="0" number="21"/>
+						<line branch="false" hits="0" number="22"/>
+						<line branch="false" hits="0" number="23"/>
+						<line branch="false" hits="0" number="24"/>
+						<line branch="false" hits="0" number="25"/>
+						<line branch="false" hits="0" number="27"/>
+						<line branch="false" hits="0" number="28"/>
+						<line branch="false" hits="0" number="31"/>
+						<line branch="false" hits="0" number="33"/>
+						<line branch="false" hits="0" number="34"/>
+						<line branch="false" hits="0" number="37"/>
+						<line branch="false" hits="0" number="38"/>
+						<line branch="false" hits="0" number="48"/>
+						<line branch="true" condition-coverage="0% (0/2)" hits="0" number="49"/>
+						<line branch="false" hits="0" number="51"/>
+						<line branch="false" hits="0" number="53"/>
+					</lines>
+				</class>
+				<class branch-rate="0.0" complexity="0" filename="src/workers/secondary-worker.js" line-rate="0.0" name="src.workers.secondary-worker.js">
+					<methods>
+						<method branch-rate="0.0" line-rate="0.0" name="doWork" signature="">
+							<lines>
+								<line branch="false" hits="0" number="4"/>
+							</lines>
+						</method>
+						<method branch-rate="0.0" line-rate="0.0" name="(anonymous_9)" signature="">
+							<lines>
+								<line branch="false" hits="0" number="13"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line branch="false" hits="0" number="2"/>
+						<line branch="false" hits="0" number="4"/>
+						<line branch="true" condition-coverage="0% (0/1)" hits="0" number="5"/>
+						<line branch="true" condition-coverage="0% (0/2)" hits="0" number="9"/>
+						<line branch="false" hits="0" number="10"/>
+						<line branch="false" hits="0" number="11"/>
+						<line branch="false" hits="0" number="12"/>
+						<line branch="false" hits="0" number="13"/>
+						<line branch="false" hits="0" number="14"/>
+						<line branch="false" hits="0" number="15"/>
+						<line branch="false" hits="0" number="16"/>
+						<line branch="false" hits="0" number="18"/>
+						<line branch="false" hits="0" number="19"/>
+						<line branch="false" hits="0" number="22"/>
+						<line branch="false" hits="0" number="23"/>
+						<line branch="true" condition-coverage="0% (0/2)" hits="0" number="24"/>
+						<line branch="false" hits="0" number="25"/>
+						<line branch="false" hits="0" number="26"/>
+						<line branch="false" hits="0" number="27"/>
+						<line branch="false" hits="0" number="29"/>
+					</lines>
+				</class>
+			</classes>
+		</package>
+	</packages>
+</coverage>

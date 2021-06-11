@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { runDockerContainer } from '@backstage/backend-common';
+import { ContainerRunner } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import path from 'path';
 import { PassThrough } from 'stream';
@@ -24,6 +24,7 @@ import {
   patchMkdocsYmlPreBuild,
   runCommand,
   storeEtagMetadata,
+  validateMkdocsYaml,
 } from './helpers';
 import { GeneratorBase, GeneratorRunOptions } from './types';
 
@@ -48,20 +49,29 @@ const createStream = (): [string[], PassThrough] => {
 
 export class TechdocsGenerator implements GeneratorBase {
   private readonly logger: Logger;
+  private readonly containerRunner: ContainerRunner;
   private readonly options: TechdocsGeneratorOptions;
 
-  constructor(logger: Logger, config: Config) {
+  constructor({
+    logger,
+    containerRunner,
+    config,
+  }: {
+    logger: Logger;
+    containerRunner: ContainerRunner;
+    config: Config;
+  }) {
     this.logger = logger;
     this.options = {
       runGeneratorIn:
         config.getOptionalString('techdocs.generators.techdocs') ?? 'docker',
     };
+    this.containerRunner = containerRunner;
   }
 
   public async run({
     inputDir,
     outputDir,
-    dockerClient,
     parsedLocationAnnotation,
     etag,
   }: GeneratorRunOptions): Promise<void> {
@@ -70,13 +80,16 @@ export class TechdocsGenerator implements GeneratorBase {
     // TODO: In future mkdocs.yml can be mkdocs.yaml. So, use a config variable here to find out
     // the correct file name.
     // Do some updates to mkdocs.yml before generating docs e.g. adding repo_url
+    const mkdocsYmlPath = path.join(inputDir, 'mkdocs.yml');
     if (parsedLocationAnnotation) {
       await patchMkdocsYmlPreBuild(
-        path.join(inputDir, 'mkdocs.yml'),
+        mkdocsYmlPath,
         this.logger,
         parsedLocationAnnotation,
       );
     }
+
+    await validateMkdocsYaml(mkdocsYmlPath);
 
     // Directories to bind on container
     const mountDirs = {
@@ -100,7 +113,7 @@ export class TechdocsGenerator implements GeneratorBase {
           );
           break;
         case 'docker':
-          await runDockerContainer({
+          await this.containerRunner.runContainer({
             imageName: 'spotify/techdocs',
             args: ['build', '-d', '/output'],
             logStream,
@@ -109,7 +122,6 @@ export class TechdocsGenerator implements GeneratorBase {
             // Set the home directory inside the container as something that applications can
             // write to, otherwise they will just fail trying to write to /
             envVars: { HOME: '/tmp' },
-            dockerClient,
           });
           this.logger.info(
             `Successfully generated docs from ${inputDir} into ${outputDir} using techdocs-container`,

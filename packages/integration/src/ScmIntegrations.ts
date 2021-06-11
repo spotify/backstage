@@ -20,11 +20,8 @@ import { BitbucketIntegration } from './bitbucket/BitbucketIntegration';
 import { GitHubIntegration } from './github/GitHubIntegration';
 import { GitLabIntegration } from './gitlab/GitLabIntegration';
 import { defaultScmResolveUrl } from './helpers';
-import {
-  ScmIntegration,
-  ScmIntegrationRegistry,
-  ScmIntegrationsGroup,
-} from './types';
+import { ScmIntegration, ScmIntegrationsGroup } from './types';
+import { ScmIntegrationRegistry } from './registry';
 
 type IntegrationsByType = {
   azure: ScmIntegrationsGroup<AzureIntegration>;

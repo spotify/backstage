@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getVoidLogger } from '@backstage/backend-common';
+import { ContainerRunner, getVoidLogger } from '@backstage/backend-common';
 import { ConfigReader } from '@backstage/config';
 import { Generators } from './generators';
 import { TechdocsGenerator } from './techdocs';
@@ -30,6 +30,10 @@ const mockEntity = {
 };
 
 describe('generators', () => {
+  const containerRunner: jest.Mocked<ContainerRunner> = {
+    runContainer: jest.fn(),
+  };
+
   it('should return error if no generator is registered', async () => {
     const generators = new Generators();
 
@@ -40,7 +44,11 @@ describe('generators', () => {
 
   it('should return correct registered generator', async () => {
     const generators = new Generators();
-    const techdocs = new TechdocsGenerator(logger, new ConfigReader({}));
+    const techdocs = new TechdocsGenerator({
+      logger,
+      containerRunner,
+      config: new ConfigReader({}),
+    });
 
     generators.register('techdocs', techdocs);
 

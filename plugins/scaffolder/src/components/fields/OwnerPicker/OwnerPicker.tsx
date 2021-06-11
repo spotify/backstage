@@ -13,81 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { FieldProps } from '@rjsf/core';
 import React from 'react';
-import { Field } from '@rjsf/core';
-import { catalogApiRef } from '@backstage/plugin-catalog-react';
-import { useApi } from '@backstage/core';
-import { useAsync } from 'react-use';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import FormControl from '@material-ui/core/FormControl';
-import { Entity } from '@backstage/catalog-model';
-import { TextField } from '@material-ui/core';
+import { EntityPicker } from '../EntityPicker';
 
-const entityRef = (entity: Entity | undefined): string => {
-  if (!entity) {
-    return '';
-  }
-  const {
-    kind,
-    metadata: { namespace, name },
-  } = entity;
-
-  const namespacePart =
-    !namespace || namespace === 'default' ? '' : `${namespace}/`;
-  const kindPart = kind.toLowerCase() === 'group' ? '' : `${kind}:`;
-
-  return `${kindPart}${namespacePart}${name}`;
-};
-
-export const OwnerPicker: Field = ({
-  onChange,
+export const OwnerPicker = ({
   schema: { title = 'Owner', description = 'The owner of the component' },
-  required,
   uiSchema,
-  rawErrors,
-  formData,
-}) => {
-  const allowedKinds = (uiSchema['ui:options']?.allowedKinds || [
-    'Group',
-    'User',
-  ]) as string[];
-  const catalogApi = useApi(catalogApiRef);
-
-  const { value: owners, loading } = useAsync(() =>
-    catalogApi.getEntities({ filter: { kind: allowedKinds } }),
-  );
-
-  const ownerRefs = owners?.items.map(entityRef);
-
-  const onSelect = (_: any, value: string | null) => {
-    onChange(value || '');
+  ...props
+}: FieldProps<string>) => {
+  const ownerUiSchema = {
+    ...uiSchema,
+    'ui:options': {
+      allowedKinds: (uiSchema['ui:options']?.allowedKinds || [
+        'Group',
+        'User',
+      ]) as string[],
+      defaultKind: 'Group',
+    },
   };
 
   return (
-    <FormControl
-      margin="normal"
-      required={required}
-      error={rawErrors?.length > 0 && !formData}
-    >
-      <Autocomplete
-        value={(formData as string) || ''}
-        loading={loading}
-        onChange={onSelect}
-        options={ownerRefs || []}
-        autoSelect
-        freeSolo
-        renderInput={params => (
-          <TextField
-            {...params}
-            label={title}
-            margin="normal"
-            helperText={description}
-            variant="outlined"
-            required={required}
-            InputProps={params.InputProps}
-          />
-        )}
-      />
-    </FormControl>
+    <EntityPicker
+      {...props}
+      schema={{ title, description }}
+      uiSchema={ownerUiSchema}
+    />
   );
 };

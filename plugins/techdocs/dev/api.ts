@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DiscoveryApi, IdentityApi } from '@backstage/core';
-import { Config } from '@backstage/config';
 import { EntityName } from '@backstage/catalog-model';
-import { TechDocsStorage } from '../src/api';
+import { Config } from '@backstage/config';
+import { DiscoveryApi, IdentityApi } from '@backstage/core';
 import { NotFoundError } from '@backstage/errors';
+import { TechDocsStorageApi } from '../src/api';
 
-export class TechDocsDevStorageApi implements TechDocsStorage {
+export class TechDocsDevStorageApi implements TechDocsStorageApi {
   public configApi: Config;
   public discoveryApi: DiscoveryApi;
   public identityApi: IdentityApi;

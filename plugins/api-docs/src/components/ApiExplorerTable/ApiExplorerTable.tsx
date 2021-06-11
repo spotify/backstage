@@ -156,7 +156,6 @@ export const ApiExplorerTable = ({
 }: ExplorerTableProps) => {
   const [queryParamState, setQueryParamState] = useQueryParamState<TableState>(
     'apiTable',
-    500,
   );
 
   if (error) {

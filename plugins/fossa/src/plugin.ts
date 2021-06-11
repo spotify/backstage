@@ -22,6 +22,7 @@ import {
   identityApiRef,
 } from '@backstage/core';
 import { fossaApiRef, FossaClient } from './api';
+import { rootRoute } from './routes';
 
 export const fossaPlugin = createPlugin({
   id: 'fossa',
@@ -41,4 +42,7 @@ export const fossaPlugin = createPlugin({
         }),
     }),
   ],
+  routes: {
+    fossaOverview: rootRoute,
+  },
 });

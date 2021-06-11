@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-import { Entity } from '@backstage/catalog-model';
+import { Entity, RELATION_OWNED_BY } from '@backstage/catalog-model';
 import { Content, Header, Page } from '@backstage/core';
 import { createDevApp } from '@backstage/dev-utils';
-import { EntityProvider } from '@backstage/plugin-catalog-react';
+import {
+  CatalogApi,
+  catalogApiRef,
+  EntityProvider,
+} from '@backstage/plugin-catalog-react';
 import { Grid } from '@material-ui/core';
 import React from 'react';
-import { EntityFossaCard } from '../src';
-import { FossaApi, fossaApiRef } from '../src/api';
-import { FOSSA_PROJECT_NAME_ANNOTATION } from '../src/components/useProjectName';
+import { EntityFossaCard, fossaPlugin } from '../src';
+import { FindingSummary, FossaApi, fossaApiRef } from '../src/api';
+import { FossaPage } from '../src/components/FossaPage';
+import { FOSSA_PROJECT_NAME_ANNOTATION } from '../src/components/getProjectName';
 
 const entity = (name?: string) =>
   ({
@@ -34,9 +39,16 @@ const entity = (name?: string) =>
       },
       name: name,
     },
+    relations: [
+      {
+        type: RELATION_OWNED_BY,
+        target: { kind: 'Group', namespace: 'default', name },
+      },
+    ],
   } as Entity);
 
 createDevApp()
+  .registerPlugin(fossaPlugin)
   .registerApi({
     api: fossaApiRef,
     deps: {},
@@ -81,7 +93,62 @@ createDevApp()
               return undefined;
           }
         },
+        getFindingSummaries: async () => {
+          await new Promise(r => setTimeout(r, 1000));
+
+          return new Map<string, FindingSummary>([
+            [
+              'zero-deps',
+              {
+                timestamp: '2000-01-01T00:00:00Z',
+                projectUrl: '',
+                projectDefaultBranch: 'master',
+                issueCount: 0,
+                dependencyCount: 0,
+              },
+            ],
+            [
+              'issues',
+              {
+                timestamp: '2001-01-01T00:00:00Z',
+                projectUrl: '',
+                projectDefaultBranch: 'develop',
+                issueCount: 10,
+                dependencyCount: 15,
+              },
+            ],
+            [
+              'no-issues',
+              {
+                timestamp: '2002-01-01T00:00:00Z',
+                projectUrl: '',
+                projectDefaultBranch: 'master',
+                issueCount: 0,
+                dependencyCount: 5,
+              },
+            ],
+          ]);
+        },
       } as FossaApi),
+  })
+  .registerApi({
+    api: catalogApiRef,
+    deps: {},
+    factory: () =>
+      (({
+        getEntities: async () => {
+          await new Promise(r => setTimeout(r, 1000));
+
+          return {
+            items: [
+              entity('no-fossa'),
+              entity('zero-deps'),
+              entity('issues'),
+              entity('no-issues'),
+            ],
+          };
+        },
+      } as Partial<CatalogApi>) as any),
   })
   .addPage({
     title: 'Entity Content',
@@ -129,5 +196,9 @@ createDevApp()
         </Content>
       </Page>
     ),
+  })
+  .addPage({
+    title: 'Catalog Overview',
+    element: <FossaPage />,
   })
   .render();

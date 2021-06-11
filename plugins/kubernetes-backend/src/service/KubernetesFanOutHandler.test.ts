@@ -34,8 +34,8 @@ const mockFetch = (mock: jest.Mock) => {
 };
 
 function generateMockResourcesAndErrors(
-  serviceId: String,
-  clusterName: String,
+  serviceId: string,
+  clusterName: string,
 ) {
   if (clusterName === 'empty-cluster') {
     return {

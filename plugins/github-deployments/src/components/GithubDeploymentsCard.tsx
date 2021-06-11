@@ -17,29 +17,38 @@ import React from 'react';
 import {
   MissingAnnotationEmptyState,
   ResponseErrorPanel,
+  TableColumn,
   useApi,
 } from '@backstage/core';
 import { useAsyncRetry } from 'react-use';
-import { githubDeploymentsApiRef } from '../api';
+import { GithubDeployment, githubDeploymentsApiRef } from '../api';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import {
   GITHUB_PROJECT_SLUG_ANNOTATION,
   isGithubDeploymentsAvailable,
 } from '../Router';
-import GithubDeploymentsTable from './GithubDeploymentsTable/GithubDeploymentsTable';
+import { GithubDeploymentsTable } from './GithubDeploymentsTable/GithubDeploymentsTable';
+import {
+  LOCATION_ANNOTATION,
+  SOURCE_LOCATION_ANNOTATION,
+} from '@backstage/catalog-model';
 
 const GithubDeploymentsComponent = ({
   projectSlug,
   last,
+  columns,
+  host,
 }: {
   projectSlug: string;
   last: number;
+  columns: TableColumn<GithubDeployment>[];
+  host: string | undefined;
 }) => {
   const api = useApi(githubDeploymentsApiRef);
   const [owner, repo] = projectSlug.split('/');
 
   const { loading, value, error, retry: reload } = useAsyncRetry(
-    async () => await api.listDeployments({ owner, repo, last }),
+    async () => await api.listDeployments({ host, owner, repo, last }),
   );
 
   if (error) {
@@ -51,12 +60,23 @@ const GithubDeploymentsComponent = ({
       deployments={value || []}
       isLoading={loading}
       reload={reload}
+      columns={columns}
     />
   );
 };
 
-export const GithubDeploymentsCard = ({ last }: { last?: number }) => {
+export const GithubDeploymentsCard = ({
+  last,
+  columns,
+}: {
+  last?: number;
+  columns?: TableColumn<GithubDeployment>[];
+}) => {
   const { entity } = useEntity();
+  const [host] = [
+    entity?.metadata.annotations?.[SOURCE_LOCATION_ANNOTATION],
+    entity?.metadata.annotations?.[LOCATION_ANNOTATION],
+  ].filter(Boolean);
 
   return !isGithubDeploymentsAvailable(entity) ? (
     <MissingAnnotationEmptyState annotation={GITHUB_PROJECT_SLUG_ANNOTATION} />
@@ -66,6 +86,8 @@ export const GithubDeploymentsCard = ({ last }: { last?: number }) => {
         entity?.metadata.annotations?.[GITHUB_PROJECT_SLUG_ANNOTATION] || ''
       }
       last={last || 10}
+      host={host}
+      columns={columns || GithubDeploymentsTable.defaultDeploymentColumns}
     />
   );
 };

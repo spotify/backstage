@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-const runDockerContainer = jest.fn();
 const runCommand = jest.fn();
 const commandExists = jest.fn();
 
 jest.mock('./helpers', () => ({ runCommand }));
-jest.mock('@backstage/backend-common', () => ({ runDockerContainer }));
 jest.mock('command-exists-promise', () => commandExists);
 jest.mock('fs-extra');
 
-import Docker from 'dockerode';
+import { ContainerRunner } from '@backstage/backend-common';
 import fs from 'fs-extra';
 import parseGitUrl from 'git-url-parse';
 import path from 'path';
@@ -31,7 +29,9 @@ import { PassThrough } from 'stream';
 import { CookieCutter } from './cookiecutter';
 
 describe('CookieCutter Templater', () => {
-  const mockDocker = {} as Docker;
+  const containerRunner: jest.Mocked<ContainerRunner> = {
+    runContainer: jest.fn(),
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -50,11 +50,10 @@ describe('CookieCutter Templater', () => {
 
     jest.spyOn(fs, 'readdir').mockResolvedValueOnce(['newthing'] as any);
 
-    const templater = new CookieCutter();
+    const templater = new CookieCutter({ containerRunner });
     await templater.run({
       workspacePath: 'tempdir',
       values,
-      dockerClient: mockDocker,
     });
 
     expect(fs.ensureDir).toBeCalledWith(path.join('tempdir', 'intermediate'));
@@ -83,11 +82,10 @@ describe('CookieCutter Templater', () => {
       },
     };
 
-    const templater = new CookieCutter();
+    const templater = new CookieCutter({ containerRunner });
     await templater.run({
       workspacePath: 'tempdir',
       values,
-      dockerClient: mockDocker,
     });
 
     expect(fs.writeJSON).toBeCalledWith(
@@ -115,12 +113,11 @@ describe('CookieCutter Templater', () => {
       },
     };
 
-    const templater = new CookieCutter();
+    const templater = new CookieCutter({ containerRunner });
     await expect(
       templater.run({
         workspacePath: 'tempdir',
         values,
-        dockerClient: mockDocker,
       }),
     ).rejects.toThrow('BAM');
   });
@@ -140,23 +137,16 @@ describe('CookieCutter Templater', () => {
       .spyOn(fs, 'realpath')
       .mockImplementation(x => Promise.resolve(x.toString()));
 
-    const templater = new CookieCutter();
+    const templater = new CookieCutter({ containerRunner });
     await templater.run({
       workspacePath: 'tempdir',
       values,
-      dockerClient: mockDocker,
     });
 
-    expect(runDockerContainer).toHaveBeenCalledWith({
+    expect(containerRunner.runContainer).toHaveBeenCalledWith({
       imageName: 'spotify/backstage-cookiecutter',
-      args: [
-        'cookiecutter',
-        '--no-input',
-        '-o',
-        '/output',
-        '/input',
-        '--verbose',
-      ],
+      command: 'cookiecutter',
+      args: ['--no-input', '-o', '/output', '/input', '--verbose'],
       envVars: { HOME: '/tmp' },
       mountDirs: {
         [path.join('tempdir', 'template')]: '/input',
@@ -164,7 +154,6 @@ describe('CookieCutter Templater', () => {
       },
       workingDir: '/input',
       logStream: undefined,
-      dockerClient: mockDocker,
     });
   });
 
@@ -177,14 +166,13 @@ describe('CookieCutter Templater', () => {
 
     jest.spyOn(fs, 'readdir').mockResolvedValueOnce(['newthing'] as any);
 
-    const templater = new CookieCutter();
+    const templater = new CookieCutter({ containerRunner });
     await templater.run({
       workspacePath: 'tempdir',
       values,
-      dockerClient: mockDocker,
     });
 
-    expect(runDockerContainer).toHaveBeenCalledWith(
+    expect(containerRunner.runContainer).toHaveBeenCalledWith(
       expect.objectContaining({
         imageName: 'foo/cookiecutter-image-with-extensions',
       }),
@@ -205,24 +193,17 @@ describe('CookieCutter Templater', () => {
 
     jest.spyOn(fs, 'readdir').mockResolvedValueOnce(['newthing'] as any);
 
-    const templater = new CookieCutter();
+    const templater = new CookieCutter({ containerRunner });
     await templater.run({
       workspacePath: 'tempdir',
       values,
       logStream: stream,
-      dockerClient: mockDocker,
     });
 
-    expect(runDockerContainer).toHaveBeenCalledWith({
+    expect(containerRunner.runContainer).toHaveBeenCalledWith({
       imageName: 'spotify/backstage-cookiecutter',
-      args: [
-        'cookiecutter',
-        '--no-input',
-        '-o',
-        '/output',
-        '/input',
-        '--verbose',
-      ],
+      command: 'cookiecutter',
+      args: ['--no-input', '-o', '/output', '/input', '--verbose'],
       envVars: { HOME: '/tmp' },
       mountDirs: {
         [path.join('tempdir', 'template')]: '/input',
@@ -230,7 +211,6 @@ describe('CookieCutter Templater', () => {
       },
       workingDir: '/input',
       logStream: stream,
-      dockerClient: mockDocker,
     });
   });
 
@@ -250,12 +230,11 @@ describe('CookieCutter Templater', () => {
       jest.spyOn(fs, 'readdir').mockResolvedValueOnce(['newthing'] as any);
       commandExists.mockImplementationOnce(() => () => true);
 
-      const templater = new CookieCutter();
+      const templater = new CookieCutter({ containerRunner });
       await templater.run({
         workspacePath: 'tempdir',
         values,
         logStream: stream,
-        dockerClient: mockDocker,
       });
 
       expect(runCommand).toHaveBeenCalledWith({
@@ -280,7 +259,7 @@ describe('CookieCutter Templater', () => {
         .spyOn(fs, 'readdir')
         .mockImplementationOnce(() => Promise.resolve([]));
 
-      const templater = new CookieCutter();
+      const templater = new CookieCutter({ containerRunner });
       await expect(
         templater.run({
           workspacePath: 'tempdir',
@@ -292,7 +271,6 @@ describe('CookieCutter Templater', () => {
             },
           },
           logStream: stream,
-          dockerClient: mockDocker,
         }),
       ).rejects.toThrow(/No data generated by cookiecutter/);
     });

@@ -15,14 +15,16 @@
  */
 
 import { EntityName } from '@backstage/catalog-model';
-import { JsonObject } from '@backstage/config';
+import { JsonObject, JsonValue } from '@backstage/config';
 import {
   createApiRef,
   DiscoveryApi,
   IdentityApi,
   Observable,
 } from '@backstage/core';
+import { ResponseError } from '@backstage/errors';
 import { ScmIntegrationRegistry } from '@backstage/integration';
+import { Field, FieldValidation } from '@rjsf/core';
 import ObservableImpl from 'zen-observable';
 import { ListActionsResponse, ScaffolderTask, Status } from './types';
 
@@ -49,6 +51,12 @@ export type LogEvent = {
   createdAt: string;
   id: string;
   taskId: string;
+};
+
+export type CustomField = {
+  name: string;
+  component: Field;
+  validation: (data: JsonValue, field: FieldValidation) => void;
 };
 
 export interface ScaffolderApi {
@@ -128,9 +136,7 @@ export class ScaffolderClient implements ScaffolderApi {
     });
 
     if (!response.ok) {
-      throw new Error(
-        `Failed to fetch template parameter schema, ${await response.text()}`,
-      );
+      throw ResponseError.fromResponse(response);
     }
 
     const schema: TemplateParameterSchema = await response.json();
@@ -173,9 +179,15 @@ export class ScaffolderClient implements ScaffolderApi {
     const token = await this.identityApi.getIdToken();
     const baseUrl = await this.discoveryApi.getBaseUrl('scaffolder');
     const url = `${baseUrl}/v2/tasks/${encodeURIComponent(taskId)}`;
-    return fetch(url, {
+    const response = await fetch(url, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
-    }).then(x => x.json());
+    });
+
+    if (!response.ok) {
+      throw ResponseError.fromResponse(response);
+    }
+
+    return await response.json();
   }
 
   streamLogs({
@@ -214,6 +226,7 @@ export class ScaffolderClient implements ScaffolderApi {
                 subscriber.error(ex);
               }
             }
+            eventSource.close();
             subscriber.complete();
           });
           eventSource.addEventListener('error', event => {
@@ -233,6 +246,11 @@ export class ScaffolderClient implements ScaffolderApi {
   async listActions(): Promise<ListActionsResponse> {
     const baseUrl = await this.discoveryApi.getBaseUrl('scaffolder');
     const response = await fetch(`${baseUrl}/v2/actions`);
+
+    if (!response.ok) {
+      throw ResponseError.fromResponse(response);
+    }
+
     return await response.json();
   }
 }

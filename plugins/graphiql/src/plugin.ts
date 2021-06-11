@@ -18,7 +18,7 @@ import {
   createPlugin,
   createApiFactory,
   createRoutableExtension,
-} from '@backstage/core';
+} from '@backstage/core-plugin-api';
 import { graphQlBrowseApiRef, GraphQLEndpoints } from './lib/api';
 import { graphiQLRouteRef } from './route-refs';
 

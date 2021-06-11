@@ -23,13 +23,35 @@ export interface CatalogEntityDocument extends IndexableDocument {
   componentType: string;
   namespace: string;
   kind: string;
+  lifecycle: string;
+  owner: string;
 }
 
 export class DefaultCatalogCollator implements DocumentCollator {
   protected discovery: PluginEndpointDiscovery;
+  protected locationTemplate: string;
 
-  constructor(discovery: PluginEndpointDiscovery) {
+  constructor({
+    discovery,
+    locationTemplate,
+  }: {
+    discovery: PluginEndpointDiscovery;
+    locationTemplate?: string;
+  }) {
     this.discovery = discovery;
+    this.locationTemplate =
+      locationTemplate || '/catalog/:namespace/:kind/:name';
+  }
+
+  protected applyArgsToFormat(
+    format: string,
+    args: Record<string, string>,
+  ): string {
+    let formatted = format;
+    for (const [key, value] of Object.entries(args)) {
+      formatted = formatted.replace(`:${key}`, value);
+    }
+    return formatted.toLowerCase();
   }
 
   async execute() {
@@ -37,17 +59,20 @@ export class DefaultCatalogCollator implements DocumentCollator {
     const res = await fetch(`${baseUrl}/entities`);
     const entities: Entity[] = await res.json();
     return entities.map(
-      (entity): CatalogEntityDocument => {
+      (entity: Entity): CatalogEntityDocument => {
         return {
           title: entity.metadata.name,
-          // TODO: Use a config-based template approach for entity location.
-          location: `/catalog/${
-            entity.metadata.namespace || 'default'
-          }/component/${entity.metadata.name}`,
+          location: this.applyArgsToFormat(this.locationTemplate, {
+            namespace: entity.metadata.namespace || 'default',
+            kind: entity.kind,
+            name: entity.metadata.name,
+          }),
           text: entity.metadata.description || '',
           componentType: entity.spec?.type?.toString() || 'other',
           namespace: entity.metadata.namespace || 'default',
           kind: entity.kind,
+          lifecycle: (entity.spec?.lifecycle as string) || '',
+          owner: (entity.spec?.owner as string) || '',
         };
       },
     );

@@ -17,6 +17,7 @@
 export * from './AlertDisplay';
 export * from './Avatar';
 export * from './Button';
+export * from './CheckboxTree';
 export * from './CodeSnippet';
 export * from './CopyTextButton';
 export * from './DependencyGraph';

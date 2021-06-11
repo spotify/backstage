@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { runDockerContainer } from '@backstage/backend-common';
+import { ContainerRunner } from '@backstage/backend-common';
 import { JsonValue } from '@backstage/config';
 import fs from 'fs-extra';
 import path from 'path';
@@ -24,6 +24,12 @@ import { TemplaterBase, TemplaterRunOptions } from './types';
 const commandExists = require('command-exists-promise');
 
 export class CookieCutter implements TemplaterBase {
+  private readonly containerRunner: ContainerRunner;
+
+  constructor({ containerRunner }: { containerRunner: ContainerRunner }) {
+    this.containerRunner = containerRunner;
+  }
+
   private async fetchTemplateCookieCutter(
     directory: string,
   ): Promise<Record<string, JsonValue>> {
@@ -40,7 +46,6 @@ export class CookieCutter implements TemplaterBase {
 
   public async run({
     workspacePath,
-    dockerClient,
     values,
     logStream,
   }: TemplaterRunOptions): Promise<void> {
@@ -74,23 +79,16 @@ export class CookieCutter implements TemplaterBase {
         logStream,
       });
     } else {
-      await runDockerContainer({
+      await this.containerRunner.runContainer({
         imageName: imageName || 'spotify/backstage-cookiecutter',
-        args: [
-          'cookiecutter',
-          '--no-input',
-          '-o',
-          '/output',
-          '/input',
-          '--verbose',
-        ],
+        command: 'cookiecutter',
+        args: ['--no-input', '-o', '/output', '/input', '--verbose'],
         mountDirs,
         workingDir: '/input',
         // Set the home directory inside the container as something that applications can
         // write to, otherwise they will just fail trying to write to /
         envVars: { HOME: '/tmp' },
         logStream,
-        dockerClient,
       });
     }
 

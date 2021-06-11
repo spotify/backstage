@@ -19,13 +19,9 @@ This plugin provides:
 Install the plugin:
 
 ```bash
+# From your Backstage root directory
+cd packages/app
 yarn add @backstage/plugin-pagerduty
-```
-
-Add it to the app in `plugins.ts`:
-
-```ts
-export { plugin as Pagerduty } from '@backstage/plugin-pagerduty';
 ```
 
 Add it to the `EntityPage.tsx`:
@@ -74,7 +70,7 @@ proxy:
 Then start the backend passing the token as an environment variable:
 
 ```bash
-$ PAGERDUTY_TOKEN='Token token=<TOKEN>' yarn start
+$ PAGERDUTY_TOKEN='<TOKEN>' yarn start
 ```
 
 This will proxy the request by adding `Authorization` header with the provided token.

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import knexFactory, { Knex } from 'knex';
 import { Config } from '@backstage/config';
+import knexFactory, { Knex } from 'knex';
 import { mergeDatabaseConfig } from './config';
+import { createMysqlDatabaseClient, ensureMysqlDatabaseExists } from './mysql';
 import { createPgDatabaseClient, ensurePgDatabaseExists } from './postgres';
 import { createSqliteDatabaseClient } from './sqlite3';
 
@@ -36,8 +37,10 @@ export function createDatabaseClient(
 
   if (client === 'pg') {
     return createPgDatabaseClient(dbConfig, overrides);
+  } else if (client === 'mysql' || client === 'mysql2') {
+    return createMysqlDatabaseClient(dbConfig, overrides);
   } else if (client === 'sqlite3') {
-    return createSqliteDatabaseClient(dbConfig);
+    return createSqliteDatabaseClient(dbConfig, overrides);
   }
 
   return knexFactory(mergeDatabaseConfig(dbConfig.get(), overrides));
@@ -60,6 +63,8 @@ export async function ensureDatabaseExists(
 
   if (client === 'pg') {
     return ensurePgDatabaseExists(dbConfig, ...databases);
+  } else if (client === 'mysql' || client === 'mysql2') {
+    return ensureMysqlDatabaseExists(dbConfig, ...databases);
   }
 
   return undefined;

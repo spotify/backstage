@@ -16,69 +16,25 @@ When installed it is accessible on [localhost:3000/register-component](localhost
 
 ## Standalone setup
 
-0. Install plugin and its dependency `plugin-catalog`
+1. Install plugin and its dependency `plugin-catalog`
 
 ```bash
-yarn add @backstage/plugin-register-component -W
-yarn add @backstage/plugin-catalog -W
+# From your Backstage root directory
+cd packages/app
+yarn add @backstage/plugin-register-component
 ```
 
-1. Add dependencies to the active plugins list
+2. Add the `RegisterComponentPage` extension to your `App.tsx`:
 
-```typescript
-// packages/app/src/plugins.ts
-export { plugin as RegisterComponent } from '@backstage/plugin-register-component';
-export { plugin as CatalogPlugin } from '@backstage/plugin-catalog';
-```
-
-2. Create `packages/app/src/apis.ts` and register all the needed plugins
-
-```typescript
-import {
-  alertApiRef,
-  AlertApiForwarder,
-  ApiRegistry,
-  ConfigApi,
-  errorApiRef,
-  ErrorApiForwarder,
-  ErrorAlerter,
-} from '@backstage/core';
-
-import { catalogApiRef, CatalogClient } from '@backstage/plugin-catalog';
-
-export const apis = (config: ConfigApi) => {
-  const backendUrl = config.getString('backend.baseUrl');
-
-  const builder = ApiRegistry.builder();
-
-  const alertApi = builder.add(alertApiRef, new AlertApiForwarder());
-  const errorApi = builder.add(
-    errorApiRef,
-    new ErrorAlerter(alertApi, new ErrorApiForwarder()),
-  );
-
-  builder.add(
-    catalogApiRef,
-    new CatalogClient({
-      apiOrigin: backendUrl,
-      basePath: '/catalog',
-    }),
-  );
-
-  return builder.build();
-};
-```
-
-3. Pass `apis` to createApp
-
-```typescript
+```tsx
 // packages/app/src/App.tsx
-import { apis } from './apis';
+import { RegisterComponentPage } from '@backstage/plugin-cost-insights';
 
-const app = createApp({
-  apis,
-  plugins: Object.values(plugins),
-});
+<FlatRoutes>
+  ...
+  <Route path="/register-component" element={<RegisterComponentPage />} />
+  ...
+</FlatRoutes>;
 ```
 
 ## Running

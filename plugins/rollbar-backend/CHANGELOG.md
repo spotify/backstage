@@ -1,5 +1,41 @@
 # @backstage/plugin-rollbar-backend
 
+## 0.1.11
+
+### Patch Changes
+
+- Updated dependencies [22fd8ce2a]
+- Updated dependencies [f9fb4a205]
+  - @backstage/backend-common@0.8.0
+
+## 0.1.10
+
+### Patch Changes
+
+- Updated dependencies [e0bfd3d44]
+- Updated dependencies [38ca05168]
+- Updated dependencies [d8b81fd28]
+  - @backstage/backend-common@0.7.0
+  - @backstage/config@0.1.5
+
+## 0.1.9
+
+### Patch Changes
+
+- 49574a8a3: Fix some `spleling`.
+
+  The `scaffolder-backend` has a configuration schema change that may be breaking
+  in rare circumstances. Due to a typo in the schema, the
+  `scaffolder.github.visibility`, `scaffolder.gitlab.visibility`, and
+  `scaffolder.bitbucket.visibility` did not get proper validation that the value
+  is one of the supported strings (`public`, `internal` (not available for
+  Bitbucket), and `private`). If you had a value that was not one of these three,
+  you may have to adjust your config.
+
+- Updated dependencies [d367f63b5]
+- Updated dependencies [b42531cfe]
+  - @backstage/backend-common@0.6.3
+
 ## 0.1.8
 
 ### Patch Changes

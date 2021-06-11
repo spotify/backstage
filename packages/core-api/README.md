@@ -7,13 +7,13 @@ This package provides the core API used by Backstage plugins and apps.
 Do not install this package directly, it is reexported by `@backstage/core`. Install that instead:
 
 ```sh
-$ npm install --save @backstage/core
+npm install --save @backstage/core
 ```
 
 or
 
 ```sh
-$ yarn add @backstage/core
+yarn add @backstage/core
 ```
 
 ## Documentation

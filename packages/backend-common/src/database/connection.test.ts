@@ -46,11 +46,11 @@ describe('database connection', () => {
       ).toBeTruthy();
     });
 
-    it('tries to create a mysql connection as a passthrough', () => {
+    it('returns a mysql connection', () => {
       expect(() =>
         createDatabaseClient(
           new ConfigReader({
-            client: 'mysql',
+            client: 'mysql2',
             connection: {
               host: '127.0.0.1',
               user: 'foo',
@@ -59,7 +59,7 @@ describe('database connection', () => {
             },
           }),
         ),
-      ).toThrowError(/Cannot find module 'mysql'/);
+      ).toBeTruthy();
     });
 
     it('accepts overrides', () => {

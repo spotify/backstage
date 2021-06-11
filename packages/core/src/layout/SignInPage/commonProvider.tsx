@@ -21,13 +21,13 @@ import {
   ProviderComponent,
   ProviderLoader,
   SignInProvider,
-  SignInConfig,
+  SignInProviderConfig,
 } from './types';
 import { useApi, errorApiRef } from '@backstage/core-api';
 import { GridItem } from './styles';
 
 const Component: ProviderComponent = ({ config, onResult }) => {
-  const { apiRef, title, message } = config as SignInConfig;
+  const { apiRef, title, message } = config as SignInProviderConfig;
   const authApi = useApi(apiRef);
   const errorApi = useApi(errorApiRef);
 

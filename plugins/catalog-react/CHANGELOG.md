@@ -1,5 +1,80 @@
 # @backstage/plugin-catalog-react
 
+## 0.2.1
+
+### Patch Changes
+
+- deaba2e13: Sort `EntityTagPicker` entries.
+- 8e919a6f8: Tweak the `EntityListProvider` to do single-cycle updates
+- Updated dependencies [031ccd45f]
+- Updated dependencies [e7c5e4b30]
+- Updated dependencies [ebe802bc4]
+- Updated dependencies [1cf1d351f]
+  - @backstage/core-plugin-api@0.1.1
+  - @backstage/catalog-model@0.8.1
+  - @backstage/core@0.7.12
+
+## 0.2.0
+
+### Minor Changes
+
+- 17c497b81: The default `CatalogPage` has been reworked to be more composable and make
+  customization easier. This change only affects those who have replaced the
+  default `CatalogPage` with a custom implementation; others can safely ignore the
+  rest of this changelog.
+
+  If you created a custom `CatalogPage` to **add or remove tabs** from the
+  catalog, a custom page is no longer necessary. The fixed tabs have been replaced
+  with a `spec.type` dropdown that shows all available `Component` types in the
+  catalog.
+
+  For other needs, customizing the `CatalogPage` should now be easier. The new
+  [CatalogPage.tsx](https://github.com/backstage/backstage/blob/9a4baa74509b6452d7dc054d34cf079f9997166d/plugins/catalog/src/components/CatalogPage/CatalogPage.tsx)
+  shows the default implementation. Overriding this with your own, similar
+  `CatalogPage` component in your `App.tsx` routing allows you to adjust the
+  layout, header, and which filters are available.
+
+  See the documentation added on [Catalog
+  Customization](https://backstage.io/docs/features/software-catalog/catalog-customization)
+  for instructions.
+
+### Patch Changes
+
+- Updated dependencies [add62a455]
+- Updated dependencies [cc592248b]
+- Updated dependencies [704875e26]
+  - @backstage/catalog-client@0.3.12
+  - @backstage/catalog-model@0.8.0
+  - @backstage/core@0.7.11
+
+## 0.1.6
+
+### Patch Changes
+
+- 062bbf90f: chore: bump `@testing-library/user-event` from 12.8.3 to 13.1.8
+- 675a569a9: chore: bump `react-use` dependency in all packages
+- Updated dependencies [062bbf90f]
+- Updated dependencies [10c008a3a]
+- Updated dependencies [889d89b6e]
+- Updated dependencies [16be1d093]
+- Updated dependencies [3f988cb63]
+- Updated dependencies [675a569a9]
+  - @backstage/core@0.7.9
+  - @backstage/catalog-model@0.7.9
+
+## 0.1.5
+
+### Patch Changes
+
+- 81c54d1f2: Fetch relations in batches in `useRelatedEntities`
+- Updated dependencies [f65adcde7]
+- Updated dependencies [80888659b]
+- Updated dependencies [d8b81fd28]
+- Updated dependencies [d1b1306d9]
+  - @backstage/core@0.7.8
+  - @backstage/catalog-model@0.7.8
+  - @backstage/catalog-client@0.3.11
+
 ## 0.1.4
 
 ### Patch Changes

@@ -13,15 +13,18 @@
       "properties": {
         "kind": {
           "type": "string",
-          "description": "The kind field of the entity."
+          "description": "The kind field of the entity.",
+          "minLength": 1
         },
         "namespace": {
           "type": "string",
-          "description": "The metadata.namespace field of the entity."
+          "description": "The metadata.namespace field of the entity.",
+          "minLength": 1
         },
         "name": {
           "type": "string",
-          "description": "The metadata.name field of the entity."
+          "description": "The metadata.name field of the entity.",
+          "minLength": 1
         }
       }
     },
@@ -29,7 +32,7 @@
       "$id": "#relation",
       "type": "object",
       "description": "A directed relation from one entity to another.",
-      "required": ["type", "source", "target"],
+      "required": ["type", "target"],
       "additionalProperties": false,
       "properties": {
         "type": {
@@ -38,11 +41,81 @@
           "pattern": "^\\w+$",
           "description": "The type of relation."
         },
-        "source": {
-          "$ref": "#reference"
-        },
         "target": {
           "$ref": "#reference"
+        }
+      }
+    },
+    "status": {
+      "$id": "#status",
+      "type": "object",
+      "description": "The current status of the entity, as claimed by various sources.",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#statusItem"
+          }
+        }
+      }
+    },
+    "statusItem": {
+      "$id": "#statusItem",
+      "type": "object",
+      "description": "A specific status item on a well known format.",
+      "required": ["type", "level", "message"],
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "level": {
+          "$ref": "#statusLevel",
+          "description": "The status level / severity of the status item."
+        },
+        "message": {
+          "type": "string",
+          "description": "A brief message describing the status, intended for human consumption."
+        },
+        "error": {
+          "$ref": "#error",
+          "description": "An optional serialized error object related to the status."
+        }
+      }
+    },
+    "statusLevel": {
+      "$id": "#statusLevel",
+      "type": "string",
+      "description": "A status level / severity.",
+      "enum": ["info", "warning", "error"]
+    },
+    "error": {
+      "$id": "#error",
+      "type": "object",
+      "description": "A serialized error object.",
+      "required": ["name", "message"],
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string",
+          "examples": ["Error", "InputError"],
+          "description": "The type name of the error",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "description": "The message of the error"
+        },
+        "code": {
+          "type": "string",
+          "description": "An error code associated with the error"
+        },
+        "stack": {
+          "type": "string",
+          "description": "An error stack trace"
         }
       }
     }

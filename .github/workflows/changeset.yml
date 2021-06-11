@@ -20,3 +20,4 @@ jobs:
           version: yarn release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_SERVICE_ACCOUNT_TOKEN }}
+          HUSKY: '0'

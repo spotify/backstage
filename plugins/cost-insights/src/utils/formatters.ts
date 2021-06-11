@@ -16,8 +16,9 @@
 
 import moment from 'moment';
 import pluralize from 'pluralize';
-import { Duration } from '../types';
+import { ChangeStatistic, Duration } from '../types';
 import { inclusiveEndDateOf, inclusiveStartDateOf } from '../utils/duration';
+import { notEmpty } from './assert';
 
 export type Period = {
   periodStart: string;
@@ -76,6 +77,13 @@ export function formatCurrency(amount: number, currency?: string): string {
   const numString = numberFormatter.format(n);
 
   return currency ? `${numString} ${pluralize(currency, n)}` : numString;
+}
+
+export function formatChange(change: ChangeStatistic): string {
+  if (notEmpty(change.ratio)) {
+    return formatPercent(Math.abs(change.ratio));
+  }
+  return change.amount >= 0 ? '∞' : '-∞';
 }
 
 export function formatPercent(n: number): string {

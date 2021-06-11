@@ -23,7 +23,7 @@ import {
   rootRouteRef,
   rootDocsRouteRef,
   rootCatalogDocsRouteRef,
-} from './plugin';
+} from './routes';
 import { TechDocsHome } from './home/components/TechDocsHome';
 import { TechDocsPage } from './reader/components/TechDocsPage';
 import { EntityPageDocs } from './EntityPageDocs';

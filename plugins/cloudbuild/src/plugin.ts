@@ -15,23 +15,13 @@
  */
 import {
   createPlugin,
-  createRouteRef,
   createApiFactory,
   googleAuthApiRef,
   createRoutableExtension,
   createComponentExtension,
 } from '@backstage/core';
 import { cloudbuildApiRef, CloudbuildClient } from './api';
-
-export const rootRouteRef = createRouteRef({
-  path: '',
-  title: 'Google Cloudbuild',
-});
-
-export const buildRouteRef = createRouteRef({
-  path: ':id',
-  title: 'Cloudbuild Run',
-});
+import { rootRouteRef } from './routes';
 
 export const cloudbuildPlugin = createPlugin({
   id: 'cloudbuild',

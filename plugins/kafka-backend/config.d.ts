@@ -19,7 +19,7 @@ export interface Config {
      * Client ID used to Backstage uses to identify when connecting to the Kafka cluster.
      */
     clientId: string;
-    clusters: {
+    clusters: Array<{
       name: string;
       /**
        * List of brokers in the Kafka cluster to connect to.
@@ -46,6 +46,6 @@ export interface Config {
         /** @visibility secret */
         password: string;
       };
-    }[];
+    }>;
   };
 }

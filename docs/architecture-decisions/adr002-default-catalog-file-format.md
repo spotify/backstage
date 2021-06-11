@@ -125,8 +125,8 @@ entity, and for machines and other components to reference the entity (e.g. in
 URLs or from other entity specification files).
 
 Names must be unique per kind, within a given namespace (if specified), at any
-point in time. Names may be reused at a later time, after an entity is deleted
-from the registry.
+point in time. This uniqueness constraint is also case insensitive. Names may be
+reused at a later time, after an entity is deleted from the registry.
 
 Names are required to follow a certain format. Entities that do not follow those
 rules will not be accepted for registration in the catalog. The ruleset is
@@ -138,18 +138,6 @@ follows.
   `[-_.]`
 
 Example: `visits-tracking-service`, `CircleciBuildsDs_avro_gcs`
-
-In addition to this, names are passed through a normalization function and then
-compared to the same normalized form of other entity names and made sure to not
-collide. This rule of uniqueness exists to avoid situations where e.g. both
-`my-component` and `MyComponent` are registered side by side, which leads to
-confusion and risk. The normalization function is also configurable, but the
-default behavior is as follows.
-
-- Strip out all characters outside of the set `[a-zA-Z0-9]`
-- Convert to lowercase
-
-Example: `CircleciBuildsDs_avro_gcs` -> `circlecibuildsdsavrogcs`
 
 ### `namespace`
 

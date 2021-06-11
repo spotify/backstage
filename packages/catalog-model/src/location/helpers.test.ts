@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { parseLocationReference, stringifyLocationReference } from './helpers';
+import {
+  getEntitySourceLocation,
+  parseLocationReference,
+  stringifyLocationReference,
+} from './helpers';
 
 describe('parseLocationReference', () => {
   it('works for the simple case', () => {
@@ -66,5 +70,50 @@ describe('stringifyLocationReference', () => {
     expect(() =>
       stringifyLocationReference({ type: 'hello', target: '' }),
     ).toThrow('Unable to stringify location reference, empty target');
+  });
+});
+
+describe('getEntitySourceLocation', () => {
+  it('returns the source-location', () => {
+    expect(
+      getEntitySourceLocation({
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'Location',
+        metadata: {
+          name: 'test',
+          namespace: 'default',
+          annotations: {
+            'backstage.io/source-location': 'url:https://backstage.io/foo.yaml',
+            'backstage.io/managed-by-location': 'url:https://spotify.com',
+          },
+        },
+      }),
+    ).toEqual({ target: 'https://backstage.io/foo.yaml', type: 'url' });
+  });
+
+  it('returns the managed-by-location', () => {
+    expect(
+      getEntitySourceLocation({
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'Location',
+        metadata: {
+          name: 'test',
+          namespace: 'default',
+          annotations: {
+            'backstage.io/managed-by-location': 'url:https://spotify.com',
+          },
+        },
+      }),
+    ).toEqual({ target: 'https://spotify.com', type: 'url' });
+  });
+
+  it('rejects missing location annotation', () => {
+    expect(() =>
+      getEntitySourceLocation({
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'Location',
+        metadata: { name: 'test', namespace: 'default' },
+      }),
+    ).toThrow(`Entity 'location:default/test' is missing location`);
   });
 });

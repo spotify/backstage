@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import transformer from '../reader/transformers';
 import type { Transformer } from '../reader/transformers';
+import { transform as transformer } from '../reader/transformers';
 
 export type CreateTestShadowDomOptions = {
   preTransformers: Transformer[];

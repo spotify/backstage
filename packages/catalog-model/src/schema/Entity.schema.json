@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "$id": "Entity",
-  "description": "The format envelope that's common to all versions/kinds of entity.",
+  "description": "The parts of the format that's common to all versions/kinds of entity.",
   "examples": [
     {
       "apiVersion": "backstage.io/v1alpha1",
@@ -62,6 +62,9 @@
       "items": {
         "$ref": "common#relation"
       }
+    },
+    "status": {
+      "$ref": "common#status"
     }
   }
 }

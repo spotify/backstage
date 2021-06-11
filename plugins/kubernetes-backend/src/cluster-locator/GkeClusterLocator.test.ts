@@ -106,6 +106,7 @@ describe('GkeClusterLocator', () => {
           authProvider: 'google',
           name: 'some-cluster',
           url: 'https://1.2.3.4',
+          skipTLSVerify: false,
         },
       ]);
       expect(mockedListClusters).toBeCalledTimes(1);
@@ -141,6 +142,7 @@ describe('GkeClusterLocator', () => {
           authProvider: 'google',
           name: 'some-cluster',
           url: 'https://1.2.3.4',
+          skipTLSVerify: false,
         },
       ]);
       expect(mockedListClusters).toBeCalledTimes(1);
@@ -181,11 +183,13 @@ describe('GkeClusterLocator', () => {
           authProvider: 'google',
           name: 'some-cluster',
           url: 'https://1.2.3.4',
+          skipTLSVerify: false,
         },
         {
           authProvider: 'google',
           name: 'some-other-cluster',
           url: 'https://6.7.8.9',
+          skipTLSVerify: false,
         },
       ]);
       expect(mockedListClusters).toBeCalledTimes(1);

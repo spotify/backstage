@@ -99,7 +99,7 @@ export default async (cmd: Command): Promise<void> => {
           return chalk.red('Please enter a name for the app');
         } else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(value)) {
           return chalk.red(
-            'App name must be kebab-cased and contain only letters, digits, and dashes.',
+            'App name must be lowercase and contain only letters, digits, and dashes.',
           );
         }
         return true;
@@ -147,9 +147,12 @@ export default async (cmd: Command): Promise<void> => {
       chalk.green(`🥇  Successfully created ${chalk.cyan(answers.name)}`),
     );
     Task.log();
+    Task.section('All set! Now you might want to');
+    Task.log(`  Run the app: ${chalk.cyan(`cd ${answers.name} && yarn dev`)}`);
     Task.log(
-      'See https://backstage.io/docs/tutorials/quickstart-app-auth to know more about enabling auth providers',
+      '  Set up the software catalog: https://backstage.io/docs/features/software-catalog/configuration',
     );
+    Task.log('  Add authentication: https://backstage.io/docs/auth/');
     Task.log();
     Task.exit();
   } catch (error) {

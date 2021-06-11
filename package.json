@@ -9,6 +9,9 @@
     "start": "yarn workspace example-app start",
     "start-backend": "yarn workspace example-backend start",
     "build": "lerna run build",
+    "build:api-reports": "tsc && yarn build:api-reports:only",
+    "build:api-reports:only": "ts-node -T -P scripts/tsconfig.json scripts/api-extractor.ts",
+    "build:api-docs": "yarn build:api-reports --docs",
     "tsc": "tsc",
     "tsc:full": "tsc --skipLibCheck false --incremental false",
     "clean": "backstage-cli clean && lerna run clean",
@@ -27,7 +30,8 @@
     "prettier:check": "prettier --check .",
     "lerna": "lerna",
     "storybook": "yarn workspace storybook start",
-    "build-storybook": "yarn workspace storybook build-storybook"
+    "build-storybook": "yarn workspace storybook build-storybook",
+    "prepare": "husky install"
   },
   "workspaces": {
     "packages": [
@@ -39,29 +43,30 @@
     "**/@roadiehq/**/@backstage/core": "*",
     "**/@roadiehq/**/@backstage/plugin-catalog": "*",
     "**/@roadiehq/**/@backstage/catalog-model": "*",
+    "**/@microsoft/api-extractor/typescript": "^4.0.3",
     "graphql-language-service-interface": "2.8.2",
     "graphql-language-service-parser": "1.9.0"
   },
   "version": "1.0.0",
+  "dependencies": {
+    "@microsoft/api-documenter": "^7.12.16",
+    "@microsoft/api-extractor": "7.13.2-pr1916.0",
+    "@microsoft/api-extractor-model": "^7.12.5"
+  },
   "devDependencies": {
     "@changesets/cli": "^2.14.0",
     "@octokit/openapi-types": "^2.2.0",
-    "@spotify/eslint-config-oss": "^1.0.1",
     "@spotify/prettier-config": "^9.0.0",
     "command-exists": "^1.2.9",
     "concurrently": "^6.0.0",
+    "eslint-plugin-notice": "^0.9.10",
     "fs-extra": "^9.0.0",
-    "husky": "^4.2.3",
+    "husky": "^6.0.0",
     "lerna": "^4.0.0",
     "lint-staged": "^10.1.0",
     "prettier": "^2.2.1",
     "recursive-readdir": "^2.2.2",
     "shx": "^0.3.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "prettier": "@spotify/prettier-config",
   "lint-staged": {

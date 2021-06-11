@@ -1,0 +1,41 @@
+# The purpose of this image is to serve the frontend app content separately.
+# By default the Backstage backend uses the app-backend plugin to serve the
+# app from the backend itself, but it may be desirable to move the frontend
+# content serving to a separate deployment, in which case this image can be
+# used.
+
+# This dockerfile requires the app to be built on the host first, as it
+# simply copies in the build output into the image. If you want to also perform
+# the build itself inside docker, use Dockerfile.build in this folder instead.
+
+
+# USAGE:
+#
+# - Copy this file and the "docker" folder from this directory to your project
+#   root
+#
+# - Add the following line to your .dockerignore to make sure that the built
+#   frontend actually can be transferred into the docker image:
+#
+#       !packages/app/dist
+#
+# - In your project root, run:
+#
+#       yarn install
+#       yarn tsc
+#       yarn build --config <config1> --config <config2> ...
+#       docker build -t backstage-frontend -f Dockerfile.hostbuild .
+
+
+
+FROM nginx:mainline
+
+RUN apt-get update && apt-get -y install jq && rm -rf /var/lib/apt/lists/*
+
+COPY packages/app/dist /usr/share/nginx/html
+COPY docker/default.conf.template /etc/nginx/templates/default.conf.template
+
+COPY docker/inject-config.sh /docker-entrypoint.d/40-inject-config.sh
+
+ENV PORT 80
+

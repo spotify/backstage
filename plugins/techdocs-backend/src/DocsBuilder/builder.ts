@@ -28,7 +28,6 @@ import {
   PublisherBase,
   UrlPreparer,
 } from '@backstage/techdocs-common';
-import Docker from 'dockerode';
 import fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
@@ -41,7 +40,6 @@ type DocsBuilderArguments = {
   publisher: PublisherBase;
   entity: Entity;
   logger: Logger;
-  dockerClient: Docker;
 };
 
 export class DocsBuilder {
@@ -50,7 +48,6 @@ export class DocsBuilder {
   private publisher: PublisherBase;
   private entity: Entity;
   private logger: Logger;
-  private dockerClient: Docker;
 
   constructor({
     preparers,
@@ -58,14 +55,12 @@ export class DocsBuilder {
     publisher,
     entity,
     logger,
-    dockerClient,
   }: DocsBuilderArguments) {
     this.preparer = preparers.get(entity);
     this.generator = generators.get(entity);
     this.publisher = publisher;
     this.entity = entity;
     this.logger = logger;
-    this.dockerClient = dockerClient;
   }
 
   public async build(): Promise<void> {
@@ -157,7 +152,6 @@ export class DocsBuilder {
     await this.generator.run({
       inputDir: preparedDir,
       outputDir,
-      dockerClient: this.dockerClient,
       parsedLocationAnnotation,
       etag: newEtag,
     });

@@ -14,79 +14,30 @@
  * limitations under the License.
  */
 
-import { ComponentEntity, RELATION_HAS_PART } from '@backstage/catalog-model';
-import {
-  CodeSnippet,
-  InfoCard,
-  Link,
-  Progress,
-  WarningPanel,
-} from '@backstage/core';
-import { Typography } from '@material-ui/core';
-import {
-  EntityTable,
-  useEntity,
-  useRelatedEntities,
-} from '@backstage/plugin-catalog-react';
+import { RELATION_HAS_PART } from '@backstage/catalog-model';
 import React from 'react';
+import {
+  asComponentEntities,
+  componentEntityColumns,
+  componentEntityHelpLink,
+  RelatedEntitiesCard,
+} from '../RelatedEntitiesCard';
 
 type Props = {
   variant?: 'gridItem';
 };
 
-const columns = [
-  EntityTable.columns.createEntityRefColumn({ defaultKind: 'component' }),
-  EntityTable.columns.createOwnerColumn(),
-  EntityTable.columns.createSpecTypeColumn(),
-  EntityTable.columns.createSpecLifecycleColumn(),
-  EntityTable.columns.createMetadataDescriptionColumn(),
-];
-
 export const HasComponentsCard = ({ variant = 'gridItem' }: Props) => {
-  const { entity } = useEntity();
-  const { entities, loading, error } = useRelatedEntities(entity, {
-    type: RELATION_HAS_PART,
-    kind: 'Component',
-  });
-
-  if (loading) {
-    return (
-      <InfoCard variant={variant} title="Components">
-        <Progress />
-      </InfoCard>
-    );
-  }
-
-  if (error || !entities) {
-    return (
-      <InfoCard variant={variant} title="Components">
-        <WarningPanel
-          severity="error"
-          title="Could not load components"
-          message={<CodeSnippet text={`${error}`} language="text" />}
-        />
-      </InfoCard>
-    );
-  }
-
   return (
-    <EntityTable
-      title="Components"
+    <RelatedEntitiesCard
       variant={variant}
-      emptyContent={
-        <div style={{ textAlign: 'center' }}>
-          <Typography variant="body1">
-            No component is part of this system.
-          </Typography>
-          <Typography variant="body2">
-            <Link to="https://backstage.io/docs/features/software-catalog/descriptor-format#kind-component">
-              Learn how to change this.
-            </Link>
-          </Typography>
-        </div>
-      }
-      columns={columns}
-      entities={entities as ComponentEntity[]}
+      title="Components"
+      entityKind="Component"
+      relationType={RELATION_HAS_PART}
+      columns={componentEntityColumns}
+      emptyMessage="No component is part of this system"
+      emptyHelpLink={componentEntityHelpLink}
+      asRenderableEntities={asComponentEntities}
     />
   );
 };

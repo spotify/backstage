@@ -3,8 +3,7 @@ const WebpackPluginFailBuildOnWarning = require('./webpack-plugin-fail-build-on-
 
 module.exports = {
   stories: [
-    '../../core/src/layout/**/*.stories.tsx',
-    '../../core/src/components/**/*.stories.tsx',
+    '../../core-components/src/**/*.stories.tsx',
     '../../../plugins/**/src/**/*.stories.tsx',
   ],
   addons: [
@@ -14,9 +13,6 @@ module.exports = {
     'storybook-dark-mode/register',
   ],
   webpackFinal: async config => {
-    /* eslint-disable-next-line no-restricted-syntax */
-    const coreSrc = path.resolve(__dirname, '../../core/src');
-
     // Mirror config in packages/cli/src/lib/bundler
     config.resolve.mainFields = ['browser', 'module', 'main'];
 

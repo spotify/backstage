@@ -19,7 +19,7 @@ import { CatalogApi } from '@backstage/catalog-client';
 import { Config } from '@backstage/config';
 import express from 'express';
 import { Logger } from 'winston';
-import { TokenIssuer } from '../identity';
+import { TokenIssuer } from '../identity/types';
 
 export type AuthProviderConfig = {
   /**

@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-import { FilePreparer, PreparerBuilder } from './prepare';
-import Docker from 'dockerode';
-import { TemplaterBuilder, TemplaterValues } from './templater';
-import { PublisherBuilder } from './publish';
 import { createTemplateAction } from '../actions';
+import { FilePreparer, PreparerBuilder } from './prepare';
+import { PublisherBuilder } from './publish';
+import { TemplaterBuilder, TemplaterValues } from './templater';
 
 type Options = {
-  dockerClient: Docker;
   preparers: PreparerBuilder;
   templaters: TemplaterBuilder;
   publishers: PublisherBuilder;
 };
 
 export function createLegacyActions(options: Options) {
-  const { dockerClient, preparers, templaters, publishers } = options;
+  const { preparers, templaters, publishers } = options;
 
   return [
     createTemplateAction({
@@ -55,7 +53,6 @@ export function createLegacyActions(options: Options) {
         const templater = templaters.get(ctx.input.templater as string);
         await templater.run({
           workspacePath: ctx.workspacePath,
-          dockerClient,
           logStream: ctx.logStream,
           values: ctx.input.values as TemplaterValues,
         });

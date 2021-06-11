@@ -1,5 +1,68 @@
 # @backstage/cli
 
+## 0.6.14
+
+### Patch Changes
+
+- ee4eb5b40: Adjust the Webpack `devtool` module filename template to correctly resolve via the source maps to the source files.
+- 84160313e: Mark the `create-github-app` command as ready for use and reveal it in the command list.
+- 7e7c71417: Exclude core packages from package dependency diff.
+- e7c5e4b30: Update installation instructions in README.
+- 2305ab8fc: chore(deps): bump `@spotify/eslint-config-react` from 9.0.0 to 10.0.0
+- 054bcd029: Deprecated the `backend:build-image` command, pointing to the newer `backend:bundle` command.
+
+## 0.6.13
+
+### Patch Changes
+
+- 1cd0cacd9: Add support for transforming yaml files in jest with 'yaml-jest'
+- 7a7da5146: Bumped `eslint-config-prettier` to `8.x`.
+- 3a181cff1: Bump webpack-node-externals from `2.5.2` to `3.0.0`.
+- Updated dependencies [2cf98d279]
+- Updated dependencies [438a512eb]
+  - @backstage/config-loader@0.6.3
+
+## 0.6.12
+
+### Patch Changes
+
+- 2bfec55a6: Update `fork-ts-checker-webpack-plugin`
+- Updated dependencies [290405276]
+  - @backstage/config-loader@0.6.2
+
+## 0.6.11
+
+### Patch Changes
+
+- 2cd70e164: Add context for versions:bump on what version it was bumped to. Updated tests for the same.
+- 3be844496: chore: bump `ts-node` versions to 9.1.1
+- e3fc89df6: update plugins created to use react-use 17.2.4
+
+## 0.6.10
+
+### Patch Changes
+
+- f65adcde7: Fix some transitive dependency warnings in yarn
+- fc79a6dd3: Added lax option to backstage-cli app:build command
+- d8b81fd28: Bump `json-schema` dependency from `0.2.5` to `0.3.0`.
+- Updated dependencies [d8b81fd28]
+  - @backstage/config-loader@0.6.1
+  - @backstage/config@0.1.5
+
+## 0.6.9
+
+### Patch Changes
+
+- 4e5c94249: Add `config:docs` command that opens up reference documentation for the local configuration schema in a browser.
+- 1373f4f12: No longer add newly created plugins to `plugins.ts` in the app, as it is no longer needed.
+- 479b29124: Added support for Datadog rum events
+
+## 0.6.8
+
+### Patch Changes
+
+- 60ce64aa2: Disable hot reloading in CI environments.
+
 ## 0.6.7
 
 ### Patch Changes

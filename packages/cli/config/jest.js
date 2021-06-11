@@ -89,6 +89,7 @@ async function getConfig() {
       '\\.(bmp|gif|jpg|jpeg|png|frag|xml|svg)$': require.resolve(
         './jestFileTransform.js',
       ),
+      '\\.(yaml)$': require.resolve('yaml-jest'),
     },
 
     // A bit more opinionated

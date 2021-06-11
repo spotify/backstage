@@ -42,7 +42,7 @@ export class CatalogClientWrapper implements CatalogApi {
   }
 
   async getLocationById(
-    id: String,
+    id: string,
     options?: CatalogRequestOptions,
   ): Promise<Location | undefined> {
     return await this.client.getLocationById(id, {

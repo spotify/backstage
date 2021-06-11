@@ -14,3 +14,4 @@
  * limitations under the License.
  */
 export { RepoUrlPicker } from './RepoUrlPicker';
+export { repoPickerValidation } from './validation';

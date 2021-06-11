@@ -21,8 +21,6 @@ import { ChangeThreshold, EngineerThreshold } from '../../types';
 
 describe.each`
   ratio                           | amount                     | ariaLabel
-  ${-0.1}                         | ${undefined}               | ${'savings'}
-  ${0.01}                         | ${undefined}               | ${'excess'}
   ${ChangeThreshold.lower}        | ${EngineerThreshold}       | ${'savings'}
   ${ChangeThreshold.lower - 0.01} | ${EngineerThreshold}       | ${'savings'}
   ${ChangeThreshold.lower - 0.01} | ${EngineerThreshold + 0.1} | ${'savings'}
@@ -32,7 +30,7 @@ describe.each`
 `('growthOf', ({ ratio, amount, ariaLabel }) => {
   it(`should display the correct indicator for ${ariaLabel}`, async () => {
     const { getByLabelText } = await renderInTestApp(
-      <CostGrowthIndicator ratio={ratio} amount={amount} />,
+      <CostGrowthIndicator change={{ ratio, amount }} />,
     );
     expect(getByLabelText(ariaLabel)).toBeInTheDocument();
   });
@@ -40,7 +38,8 @@ describe.each`
 
 describe.each`
   ratio                           | amount
-  ${0}                            | ${undefined}
+  ${undefined}                    | ${0}
+  ${0}                            | ${0}
   ${ChangeThreshold.lower}        | ${0}
   ${ChangeThreshold.lower + 0.01} | ${EngineerThreshold}
   ${ChangeThreshold.lower + 0.01} | ${EngineerThreshold + 0.1}
@@ -49,7 +48,7 @@ describe.each`
 `('growthOf', ({ ratio, amount }) => {
   it('should display the correct indicator for negligible growth', async () => {
     const { queryByLabelText } = await renderInTestApp(
-      <CostGrowthIndicator ratio={ratio} amount={amount} />,
+      <CostGrowthIndicator change={{ ratio, amount }} />,
     );
     expect(queryByLabelText('savings')).not.toBeInTheDocument();
     expect(queryByLabelText('excess')).not.toBeInTheDocument();

@@ -81,13 +81,13 @@ describe('GithubCredentialsProvider tests', () => {
       },
     } as RestEndpointMethodTypes['apps']['createInstallationAccessToken']['response']);
 
-    const { token, headers } = await github.getCredentials({
+    const { token, headers, type } = await github.getCredentials({
       url: 'https://github.com/backstage/foobar',
     });
     const { token: accessToken2 } = await github.getCredentials({
       url: 'https://github.com/backstage/foobar',
     });
-
+    expect(type).toEqual('app');
     expect(token).toEqual('secret_token');
     expect(token).toEqual(accessToken2);
     expect(headers).toEqual({ Authorization: 'Bearer secret_token' });
@@ -102,6 +102,7 @@ describe('GithubCredentialsProvider tests', () => {
         Authorization: 'Bearer hardcoded_token',
       },
       token: 'hardcoded_token',
+      type: 'token',
     });
   });
 
@@ -260,6 +261,6 @@ describe('GithubCredentialsProvider tests', () => {
       githubProvider.getCredentials({
         url: 'https://github.com/backstage',
       }),
-    ).resolves.toEqual({ headers: undefined, token: undefined });
+    ).resolves.toEqual({ headers: undefined, token: undefined, type: 'token' });
   });
 });

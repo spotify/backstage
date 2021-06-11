@@ -13,7 +13,10 @@ import {
   catalogPlugin,
 } from '@backstage/plugin-catalog';
 import {CatalogImportPage, catalogImportPlugin} from '@backstage/plugin-catalog-import';
-import { ScaffolderPage, scaffolderPlugin } from '@backstage/plugin-scaffolder';
+import { 
+  ScaffolderPage, 
+  scaffolderPlugin 
+} from '@backstage/plugin-scaffolder';
 import { SearchPage } from '@backstage/plugin-search';
 import { TechRadarPage } from '@backstage/plugin-tech-radar';
 import { TechdocsPage } from '@backstage/plugin-techdocs';
@@ -21,11 +24,9 @@ import { UserSettingsPage } from '@backstage/plugin-user-settings';
 import { apis } from './apis';
 import { entityPage } from './components/catalog/EntityPage';
 import { Root } from './components/Root';
-import * as plugins from './plugins';
 
 const app = createApp({
   apis,
-  plugins: Object.values(plugins),
   bindRoutes({ bind }) {
     bind(catalogPlugin.externalRoutes, {
       createComponent: scaffolderPlugin.routes.root,

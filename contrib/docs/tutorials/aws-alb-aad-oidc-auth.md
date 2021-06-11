@@ -167,4 +167,4 @@ Once it's deployed, after going through the AAD authentication flow, Backstage s
 
 <!-- links -->
 
-[monorepo-app-setup-with-auth-ms]: https://backstage.io/docs/tutorials/quickstart-app-auth#the-auth-configuration
+[monorepo-app-setup-with-auth-ms]: https://backstage.io/docs/auth/microsoft/provider

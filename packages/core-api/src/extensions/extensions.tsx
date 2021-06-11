@@ -47,12 +47,15 @@ export function createRoutableExtension<
               // Validate that the routing is wired up correctly in the App.tsx
               try {
                 useRouteRef(mountPoint);
-              } catch {
-                throw new Error(
-                  `Routable extension component with mount point ${mountPoint} was not discovered in the app element tree. ` +
-                    'Routable extension components may not be rendered by other components and must be ' +
-                    'directly available as an element within the App provider component.',
-                );
+              } catch (error) {
+                if (error?.message.startsWith('No path for ')) {
+                  throw new Error(
+                    `Routable extension component with mount point ${mountPoint} was not discovered in the app element tree. ` +
+                      'Routable extension components may not be rendered by other components and must be ' +
+                      'directly available as an element within the App provider component.',
+                  );
+                }
+                throw error;
               }
               return <InnerComponent {...props} />;
             };

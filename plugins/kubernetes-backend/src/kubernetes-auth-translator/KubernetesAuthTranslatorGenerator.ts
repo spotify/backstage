@@ -21,7 +21,7 @@ import { AwsIamKubernetesAuthTranslator } from './AwsIamKubernetesAuthTranslator
 
 export class KubernetesAuthTranslatorGenerator {
   static getKubernetesAuthTranslatorInstance(
-    authProvider: String,
+    authProvider: string,
   ): KubernetesAuthTranslator {
     switch (authProvider) {
       case 'google': {

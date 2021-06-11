@@ -24,7 +24,6 @@ import {
   PublisherBase,
 } from '@backstage/techdocs-common';
 import fetch from 'cross-fetch';
-import Docker from 'dockerode';
 import express from 'express';
 import Router from 'express-promise-router';
 import { Knex } from 'knex';
@@ -40,7 +39,6 @@ type RouterOptions = {
   discovery: PluginEndpointDiscovery;
   database?: Knex; // TODO: Make database required when we're implementing database stuff.
   config: Config;
-  dockerClient: Docker;
 };
 
 export async function createRouter({
@@ -48,7 +46,6 @@ export async function createRouter({
   generators,
   publisher,
   config,
-  dockerClient,
   logger,
   discovery,
 }: RouterOptions): Promise<express.Router> {
@@ -165,7 +162,6 @@ export async function createRouter({
       preparers,
       generators,
       publisher,
-      dockerClient,
       logger,
       entity,
     });

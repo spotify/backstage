@@ -18,28 +18,28 @@ import { Config } from '@backstage/config';
 import * as container from '@google-cloud/container';
 import { ClusterDetails, KubernetesClustersSupplier } from '../types/types';
 
-export class GkeClusterLocator implements KubernetesClustersSupplier {
-  private readonly projectId: string;
-  private readonly region: string | undefined;
-  private readonly client: container.v1.ClusterManagerClient;
+type GkeClusterLocatorOptions = {
+  projectId: string;
+  region?: string;
+  skipTLSVerify?: boolean;
+};
 
+export class GkeClusterLocator implements KubernetesClustersSupplier {
   constructor(
-    projectId: string,
-    client: container.v1.ClusterManagerClient,
-    region?: string,
-  ) {
-    this.projectId = projectId;
-    this.region = region;
-    this.client = client;
-  }
+    private readonly options: GkeClusterLocatorOptions,
+    private readonly client: container.v1.ClusterManagerClient,
+  ) {}
 
   static fromConfigWithClient(
     config: Config,
     client: container.v1.ClusterManagerClient,
   ): GkeClusterLocator {
-    const projectId = config.getString('projectId');
-    const region = config.getOptionalString('region');
-    return new GkeClusterLocator(projectId, client, region);
+    const options = {
+      projectId: config.getString('projectId'),
+      region: config.getOptionalString('region') ?? '-',
+      skipTLSVerify: config.getOptionalBoolean('skipTLSVerify') ?? false,
+    };
+    return new GkeClusterLocator(options, client);
   }
 
   static fromConfig(config: Config): GkeClusterLocator {
@@ -50,9 +50,9 @@ export class GkeClusterLocator implements KubernetesClustersSupplier {
   }
 
   async getClusters(): Promise<ClusterDetails[]> {
-    const region = this.region ?? '-';
+    const { projectId, region, skipTLSVerify } = this.options;
     const request = {
-      parent: `projects/${this.projectId}/locations/${region}`,
+      parent: `projects/${projectId}/locations/${region}`,
     };
 
     try {
@@ -62,10 +62,11 @@ export class GkeClusterLocator implements KubernetesClustersSupplier {
         name: r.name ?? 'unknown',
         url: `https://${r.endpoint ?? ''}`,
         authProvider: 'google',
+        skipTLSVerify,
       }));
     } catch (e) {
       throw new Error(
-        `There was an error retrieving clusters from GKE for projectId=${this.projectId} region=${region} : [${e.message}]`,
+        `There was an error retrieving clusters from GKE for projectId=${projectId} region=${region} : [${e.message}]`,
       );
     }
   }

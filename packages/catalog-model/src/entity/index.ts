@@ -15,10 +15,10 @@
  */
 
 export {
+  EDIT_URL_ANNOTATION,
   ENTITY_DEFAULT_NAMESPACE,
   ENTITY_META_GENERATED_FIELDS,
   VIEW_URL_ANNOTATION,
-  EDIT_URL_ANNOTATION,
 } from './constants';
 export type {
   Entity,
@@ -27,6 +27,12 @@ export type {
   EntityRelation,
   EntityRelationSpec,
 } from './Entity';
+export type { EntityEnvelope } from './EntityEnvelope';
+export type {
+  UNSTABLE_EntityStatus,
+  UNSTABLE_EntityStatusItem,
+  UNSTABLE_EntityStatusLevel,
+} from './EntityStatus';
 export * from './policies';
 export {
   compareEntityToRef,

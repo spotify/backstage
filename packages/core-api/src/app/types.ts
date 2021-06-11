@@ -15,13 +15,12 @@
  */
 
 import { ComponentType } from 'react';
-import { IconComponent, IconComponentMap, IconKey } from '../icons';
+import { IconComponent, IconComponentMap, IconKey } from '../icons/types';
 import { AnyExternalRoutes, BackstagePlugin } from '../plugin/types';
-import { ExternalRouteRef, RouteRef } from '../routing';
-import { AnyApiFactory } from '../apis';
+import { ExternalRouteRef, RouteRef, SubRouteRef } from '../routing/types';
+import { AnyApiFactory } from '../apis/system';
 import { AppTheme, ProfileInfo } from '../apis/definitions';
 import { AppConfig } from '@backstage/config';
-import { SubRouteRef } from '../routing/types';
 
 export type BootErrorPageProps = {
   step: 'load-config' | 'load-chunk';

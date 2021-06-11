@@ -26,16 +26,18 @@ import limiterFactory from 'p-limit';
 import { default as path, default as platformPath } from 'path';
 import { Logger } from 'winston';
 import { getFileTreeRecursively, getHeadersForFileExtension } from './helpers';
-import { PublisherBase, PublishRequest, TechDocsMetadata } from './types';
+import {
+  PublisherBase,
+  PublishRequest,
+  ReadinessResponse,
+  TechDocsMetadata,
+} from './types';
 
 // The number of batches that may be ongoing at the same time.
 const BATCH_CONCURRENCY = 3;
 
 export class AzureBlobStoragePublish implements PublisherBase {
-  static async fromConfig(
-    config: Config,
-    logger: Logger,
-  ): Promise<PublisherBase> {
+  static fromConfig(config: Config, logger: Logger): PublisherBase {
     let containerName = '';
     try {
       containerName = config.getString(
@@ -78,26 +80,6 @@ export class AzureBlobStoragePublish implements PublisherBase {
       credential,
     );
 
-    try {
-      const response = await storageClient
-        .getContainerClient(containerName)
-        .getProperties();
-
-      if (response._response.status >= 400) {
-        throw new Error(
-          `Failed to retrieve metadata from ${response._response.request.url} with status code ${response._response.status}.`,
-        );
-      }
-    } catch (e) {
-      logger.error(
-        `Could not retrieve metadata about the Azure Blob Storage container ${containerName}. ` +
-          'Make sure that the Azure project and container exist and the access key is setup correctly ' +
-          'techdocs.publisher.azureBlobStorage.credentials defined in app config has correct permissions. ' +
-          'Refer to https://backstage.io/docs/features/techdocs/using-cloud-storage',
-      );
-      throw new Error(`from Azure Blob Storage client library: ${e.message}`);
-    }
-
     return new AzureBlobStoragePublish(storageClient, containerName, logger);
   }
 
@@ -109,6 +91,37 @@ export class AzureBlobStoragePublish implements PublisherBase {
     this.storageClient = storageClient;
     this.containerName = containerName;
     this.logger = logger;
+  }
+
+  async getReadiness(): Promise<ReadinessResponse> {
+    try {
+      const response = await this.storageClient
+        .getContainerClient(this.containerName)
+        .getProperties();
+
+      if (response._response.status === 200) {
+        return {
+          isAvailable: true,
+        };
+      }
+
+      if (response._response.status >= 400) {
+        this.logger.error(
+          `Failed to retrieve metadata from ${response._response.request.url} with status code ${response._response.status}.`,
+        );
+      }
+    } catch (e) {
+      this.logger.error(`from Azure Blob Storage client library: ${e.message}`);
+    }
+
+    this.logger.error(
+      `Could not retrieve metadata about the Azure Blob Storage container ${this.containerName}. ` +
+        'Make sure that the Azure project and container exist and the access key is setup correctly ' +
+        'techdocs.publisher.azureBlobStorage.credentials defined in app config has correct permissions. ' +
+        'Refer to https://backstage.io/docs/features/techdocs/using-cloud-storage',
+    );
+
+    return { isAvailable: false };
   }
 
   /**
@@ -208,7 +221,8 @@ export class AzureBlobStoragePublish implements PublisherBase {
             .on('end', () => {
               resolve(Buffer.concat(fileStreamChunks));
             });
-        });
+        })
+        .catch(reject);
     });
   }
 
@@ -240,9 +254,9 @@ export class AzureBlobStoragePublish implements PublisherBase {
    */
   docsRouter(): express.Handler {
     return (req, res) => {
-      // Trim the leading forward slash
+      // Decode and trim the leading forward slash
       // filePath example - /default/Component/documented-component/index.html
-      const filePath = req.path.replace(/^\//, '');
+      const filePath = decodeURI(req.path.replace(/^\//, ''));
       // Files with different extensions (CSS, HTML) need to be served with different headers
       const fileExtension = platformPath.extname(filePath);
       const responseHeaders = getHeadersForFileExtension(fileExtension);

@@ -42,6 +42,7 @@ export class BitbucketPublisher implements PublisherBase {
       token: config.token,
       appPassword: config.appPassword,
       username: config.username,
+      apiBaseUrl: config.apiBaseUrl,
       repoVisibility,
     });
   }
@@ -52,6 +53,7 @@ export class BitbucketPublisher implements PublisherBase {
       token?: string;
       appPassword?: string;
       username?: string;
+      apiBaseUrl?: string;
       repoVisibility: RepoVisibilityOptions;
     },
   ) {}
@@ -181,10 +183,11 @@ export class BitbucketPublisher implements PublisherBase {
     };
 
     try {
-      response = await fetch(
-        `https://${this.config.host}/rest/api/1.0/projects/${project}/repos`,
-        options,
-      );
+      const baseUrl = this.config.apiBaseUrl
+        ? this.config.apiBaseUrl
+        : `https://${this.config.host}/rest/api/1.0`;
+
+      response = await fetch(`${baseUrl}/projects/${project}/repos`, options);
     } catch (e) {
       throw new Error(`Unable to create repository, ${e}`);
     }

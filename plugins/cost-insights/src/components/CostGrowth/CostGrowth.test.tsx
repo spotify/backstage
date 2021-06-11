@@ -46,6 +46,7 @@ describe.each`
   engineerCost | ratio           | amount     | expected
   ${200_000}   | ${0}            | ${0}       | ${'Negligible'}
   ${200_000}   | ${0}            | ${8_333}   | ${'Negligible'}
+  ${200_000}   | ${undefined}    | ${10_000}  | ${`~1 ${engineers.unit}`}
   ${200_000}   | ${0.000000001}  | ${8_334}   | ${`0% or ~1 ${engineers.unit}`}
   ${200_000}   | ${-0.000000001} | ${10_000}  | ${`0% or ~1 ${engineers.unit}`}
   ${200_000}   | ${-0.8}         | ${10_000}  | ${`80% or ~1 ${engineers.unit}`}
@@ -65,6 +66,9 @@ describe.each`
   engineerCost | ratio           | amount     | expected
   ${200_000}   | ${0}            | ${0}       | ${'Negligible'}
   ${200_000}   | ${0}            | ${8_333}   | ${'Negligible'}
+  ${200_000}   | ${undefined}    | ${-1_000}  | ${'Negligible'}
+  ${200_000}   | ${undefined}    | ${1_000}   | ${'Negligible'}
+  ${200_000}   | ${undefined}    | ${10_000}  | ${'~$10,000'}
   ${200_000}   | ${0.000000001}  | ${8_334}   | ${'0% or ~$8,334'}
   ${200_000}   | ${-0.000000001} | ${10_000}  | ${'0% or ~$10,000'}
   ${200_000}   | ${-0.8}         | ${10_000}  | ${'80% or ~$10,000'}
@@ -84,6 +88,8 @@ describe.each`
   engineerCost | ratio           | amount     | expected
   ${200_000}   | ${0}            | ${0}       | ${'Negligible'}
   ${200_000}   | ${0}            | ${8_333}   | ${'Negligible'}
+  ${200_000}   | ${undefined}    | ${1_000}   | ${'Negligible'}
+  ${200_000}   | ${undefined}    | ${10_000}  | ${`~2,857 ${carbon.unit}s`}
   ${200_000}   | ${0.000000001}  | ${8_334}   | ${`0% or ~2,381 ${carbon.unit}s`}
   ${200_000}   | ${-0.000000001} | ${10_000}  | ${`0% or ~2,857 ${carbon.unit}s`}
   ${200_000}   | ${-0.8}         | ${10_000}  | ${`80% or ~2,857 ${carbon.unit}s`}

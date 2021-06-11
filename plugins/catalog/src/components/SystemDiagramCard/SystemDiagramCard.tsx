@@ -19,10 +19,13 @@ import {
   RELATION_DEPENDS_ON,
   RELATION_PROVIDES_API,
   RELATION_PART_OF,
-  serializeEntityRef,
+  stringifyEntityRef,
+  ENTITY_DEFAULT_NAMESPACE,
+  parseEntityRef,
 } from '@backstage/catalog-model';
 import {
   catalogApiRef,
+  entityRouteRef,
   getEntityRelations,
   useEntity,
 } from '@backstage/plugin-catalog-react';
@@ -33,26 +36,107 @@ import {
   Progress,
   useApi,
   ResponseErrorPanel,
+  Link,
+  useRouteRef,
 } from '@backstage/core';
-import { Box, Typography } from '@material-ui/core';
+import { Box, makeStyles, Typography } from '@material-ui/core';
 import ZoomOutMap from '@material-ui/icons/ZoomOutMap';
 import React from 'react';
 import { useAsync } from 'react-use';
+import { BackstageTheme } from '@backstage/theme';
 
-function simplifiedEntityName(
+const useStyles = makeStyles((theme: BackstageTheme) => ({
+  domainNode: {
+    fill: theme.palette.primary.main,
+    stroke: theme.palette.border,
+  },
+  systemNode: {
+    fill: 'coral',
+    stroke: theme.palette.border,
+  },
+  componentNode: {
+    fill: 'yellowgreen',
+    stroke: theme.palette.border,
+  },
+  apiNode: {
+    fill: theme.palette.gold,
+    stroke: theme.palette.border,
+  },
+  resourceNode: {
+    fill: 'grey',
+    stroke: theme.palette.border,
+  },
+}));
+
+// Simplifies the diagram output by hiding the default namespace and kind
+function readableEntityName(
   ref:
     | Entity
     | {
-        kind?: string;
+        kind: string;
         namespace?: string;
         name: string;
       },
 ): string {
-  // Simplify the diagram output by hiding only the default namespace
-  return serializeEntityRef(ref)
-    .toString()
+  return stringifyEntityRef(ref)
     .toLocaleLowerCase('en-US')
-    .replace(':default/', ':');
+    .replace(`:${ENTITY_DEFAULT_NAMESPACE}/`, ':')
+    .split(':')[1];
+}
+
+function RenderNode(props: DependencyGraphTypes.RenderNodeProps<any>) {
+  const classes = useStyles();
+  const catalogEntityRoute = useRouteRef(entityRouteRef);
+  const kind = props.node.kind || 'Component';
+  const ref = parseEntityRef(props.node.id);
+  let nodeClass = classes.componentNode;
+
+  switch (kind) {
+    case 'Domain':
+      nodeClass = classes.domainNode;
+      break;
+    case 'System':
+      nodeClass = classes.systemNode;
+      break;
+    case 'Component':
+      nodeClass = classes.componentNode;
+      break;
+    case 'API':
+      nodeClass = classes.apiNode;
+      break;
+    case 'Resource':
+      nodeClass = classes.resourceNode;
+      break;
+    default:
+      nodeClass = classes.componentNode;
+  }
+
+  return (
+    <g>
+      <rect width={200} height={100} rx={20} className={nodeClass} />
+      <Link
+        to={catalogEntityRoute({
+          kind: kind,
+          namespace: ref.namespace,
+          name: ref.name,
+        })}
+      >
+        <text
+          x={100}
+          y={45}
+          textAnchor="middle"
+          alignmentBaseline="baseline"
+          style={{ fontWeight: 'bold' }}
+        >
+          {props.node.name}
+        </text>
+      </Link>
+
+      <text x={100} y={65} textAnchor="middle" alignmentBaseline="hanging">
+        {props.node.kind}
+      </text>
+    </g>
+  );
 }
 
 /**
@@ -62,8 +146,8 @@ function simplifiedEntityName(
 export function SystemDiagramCard() {
   const { entity } = useEntity();
   const currentSystemName = entity.metadata.name;
-  const currentSystemNode = simplifiedEntityName(entity);
-  const systemNodes = new Array<{ id: string }>();
+  const currentSystemNode = stringifyEntityRef(entity);
+  const systemNodes = new Array<{ id: string; kind: string; name: string }>();
   const systemEdges = new Array<{ from: string; to: string; label: string }>();
 
   const catalogApi = useApi(catalogApiRef);
@@ -71,7 +155,10 @@ export function SystemDiagramCard() {
     return catalogApi.getEntities({
       filter: {
         kind: ['Component', 'API', 'Resource', 'System', 'Domain'],
-        'spec.system': currentSystemName,
+        'spec.system': [
+          currentSystemName,
+          `${ENTITY_DEFAULT_NAMESPACE}/${currentSystemName}`,
+        ],
       },
     });
   }, [catalogApi, currentSystemName]);
@@ -79,22 +166,26 @@ export function SystemDiagramCard() {
   // pick out the system itself
   systemNodes.push({
     id: currentSystemNode,
+    kind: 'System',
+    name: readableEntityName(entity),
   });
 
   // check if the system has an assigned domain
   // even if the domain object doesn't exist in the catalog, display it in the map
   const catalogItemDomain = getEntityRelations(entity, RELATION_PART_OF, {
-    kind: 'domain',
+    kind: 'Domain',
   });
   catalogItemDomain.forEach(foundDomain =>
     systemNodes.push({
-      id: simplifiedEntityName(foundDomain),
+      id: stringifyEntityRef(foundDomain),
+      kind: foundDomain.kind,
+      name: readableEntityName(foundDomain),
     }),
   );
   catalogItemDomain.forEach(foundDomain =>
     systemEdges.push({
       from: currentSystemNode,
-      to: simplifiedEntityName(foundDomain),
+      to: stringifyEntityRef(foundDomain),
       label: 'part of',
     }),
   );
@@ -102,7 +193,9 @@ export function SystemDiagramCard() {
   if (catalogResponse && catalogResponse.items) {
     for (const catalogItem of catalogResponse.items) {
       systemNodes.push({
-        id: simplifiedEntityName(catalogItem),
+        id: stringifyEntityRef(catalogItem),
+        kind: catalogItem.kind,
+        name: readableEntityName(catalogItem),
       });
 
       // Check relations of the entity assigned to this system to see
@@ -115,8 +208,8 @@ export function SystemDiagramCard() {
       );
       catalogItemRelations_partOf.forEach(foundRelation =>
         systemEdges.push({
-          from: simplifiedEntityName(catalogItem),
-          to: simplifiedEntityName(foundRelation),
+          from: stringifyEntityRef(catalogItem),
+          to: stringifyEntityRef(foundRelation),
           label: 'part of',
         }),
       );
@@ -127,9 +220,9 @@ export function SystemDiagramCard() {
       );
       catalogItemRelations_providesApi.forEach(foundRelation =>
         systemEdges.push({
-          from: simplifiedEntityName(catalogItem),
-          to: simplifiedEntityName(foundRelation),
-          label: 'provides API',
+          from: stringifyEntityRef(catalogItem),
+          to: stringifyEntityRef(foundRelation),
+          label: 'provides',
         }),
       );
 
@@ -139,8 +232,8 @@ export function SystemDiagramCard() {
       );
       catalogItemRelations_dependsOn.forEach(foundRelation =>
         systemEdges.push({
-          from: simplifiedEntityName(catalogItem),
-          to: simplifiedEntityName(foundRelation),
+          from: stringifyEntityRef(catalogItem),
+          to: stringifyEntityRef(foundRelation),
           label: 'depends on',
         }),
       );
@@ -160,6 +253,7 @@ export function SystemDiagramCard() {
         edges={systemEdges}
         nodeMargin={10}
         direction={DependencyGraphTypes.Direction.BOTTOM_TOP}
+        renderNode={RenderNode}
       />
       <Box m={1} />
       <Typography

@@ -102,7 +102,8 @@ export const darkTheme = createTheme({
       },
     },
     primary: {
-      main: '#8CB4E5',
+      main: '#9CC9FF',
+      dark: '#82BAFD',
     },
     secondary: {
       main: '#FF88B2',
@@ -124,8 +125,8 @@ export const darkTheme = createTheme({
     errorText: '#CA001B',
     infoText: '#004e8a',
     warningText: '#000000',
-    linkHover: '#2196F3',
-    link: '#0A6EBE',
+    linkHover: '#82BAFD',
+    link: '#9CC9FF',
     gold: yellow.A700,
     navigation: {
       background: '#424242',

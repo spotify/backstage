@@ -17,6 +17,7 @@
 import React from 'react';
 import { renderInTestApp } from '@backstage/test-utils';
 import { HeaderTabs } from './';
+import { Badge, makeStyles } from '@material-ui/core';
 
 const mockTabs = [
   { id: 'overview', label: 'Overview' },
@@ -45,5 +46,36 @@ describe('<HeaderTabs />', () => {
       'aria-selected',
       'true',
     );
+  });
+  it('should render extension component to tab if one present', async () => {
+    const useStyles = makeStyles(() => ({
+      badge: {
+        margin: '20px 20px 0 0',
+      },
+    }));
+
+    const TextualBadge = React.forwardRef<HTMLSpanElement>((props, ref) => (
+      <Badge
+        classes={useStyles()}
+        color="secondary"
+        badgeContent="three new alarms"
+      >
+        <span ref={ref} {...props}>
+          {props.children}
+        </span>
+      </Badge>
+    ));
+    const iconTab = [
+      {
+        id: 'icon-tab',
+        label: 'Alarms',
+        tabProps: { component: TextualBadge },
+      },
+    ];
+
+    const rendered = await renderInTestApp(<HeaderTabs tabs={iconTab} />);
+
+    expect(rendered.getByText('Alarms')).toBeInTheDocument();
+    expect(rendered.getByText('three new alarms')).toBeInTheDocument();
   });
 });

@@ -1,7 +1,7 @@
 {
   "name": "@backstage/core-api",
   "description": "Internal Core API used by Backstage plugins and apps",
-  "version": "0.2.16",
+  "version": "0.2.21",
   "private": false,
   "publishConfig": {
     "access": "public",
@@ -30,7 +30,8 @@
   },
   "dependencies": {
     "@backstage/config": "^0.1.4",
-    "@backstage/theme": "^0.2.5",
+    "@backstage/core-plugin-api": "^0.1.1",
+    "@backstage/theme": "^0.2.8",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@types/react": "^16.9",
@@ -38,17 +39,17 @@
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-router-dom": "6.0.0-beta.0",
-    "react-use": "^15.3.3",
+    "react-use": "^17.2.4",
     "zen-observable": "^0.8.15"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.6.7",
-    "@backstage/test-utils": "^0.1.10",
+    "@backstage/cli": "^0.6.14",
+    "@backstage/test-utils": "^0.1.13",
     "@backstage/test-utils-core": "^0.1.1",
     "@testing-library/jest-dom": "^5.10.1",
     "@testing-library/react": "^11.2.5",
     "@testing-library/react-hooks": "^3.3.0",
-    "@testing-library/user-event": "^12.0.7",
+    "@testing-library/user-event": "^13.1.8",
     "@types/jest": "^26.0.7",
     "@types/node": "^14.14.32",
     "@types/zen-observable": "^0.8.0",

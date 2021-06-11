@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import { Entity } from '@backstage/catalog-model';
 import { ApiProvider, ApiRegistry } from '@backstage/core';
 import { CatalogApi, catalogApiRef } from '@backstage/plugin-catalog-react';
 import { renderInTestApp } from '@backstage/test-utils';
-import userEvent from '@testing-library/user-event';
-import { Entity } from '@backstage/catalog-model';
 import { FieldProps } from '@rjsf/core';
-
+import React from 'react';
 import { OwnerPicker } from './OwnerPicker';
 
 const makeEntity = (kind: string, namespace: string, name: string): Entity => ({
@@ -92,20 +90,6 @@ describe('<OwnerPicker />', () => {
           kind: ['Group', 'User'],
         },
       });
-    });
-
-    it('updates even if there is not an exact match', async () => {
-      const { getByLabelText } = await renderInTestApp(
-        <Wrapper>
-          <OwnerPicker {...props} />
-        </Wrapper>,
-      );
-      const input = getByLabelText('Owner');
-
-      userEvent.type(input, 'squ');
-      input.blur();
-
-      expect(onChange).toHaveBeenCalledWith('squ');
     });
   });
 

@@ -195,8 +195,14 @@ export default async () => {
       );
       console.log();
 
-      for (const name of Array.from(breakingUpdates.keys()).sort()) {
-        console.log(`  ${chalk.yellow(name)}`);
+      for (const [name, { from, to }] of Array.from(
+        breakingUpdates.entries(),
+      ).sort()) {
+        console.log(
+          `  ${chalk.yellow(name)} : ${chalk.yellow(from)} ~> ${chalk.yellow(
+            to,
+          )}`,
+        );
 
         let path;
         if (name.startsWith('@backstage/plugin-')) {

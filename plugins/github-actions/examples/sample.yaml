@@ -9,4 +9,4 @@ metadata:
 spec:
   type: website
   lifecycle: production
-  owner: guest
+  owner: user:guest

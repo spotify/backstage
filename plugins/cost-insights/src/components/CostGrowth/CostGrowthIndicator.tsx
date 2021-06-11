@@ -20,49 +20,33 @@ import { Typography, TypographyProps } from '@material-ui/core';
 import { default as ArrowDropUp } from '@material-ui/icons/ArrowDropUp';
 import { default as ArrowDropDown } from '@material-ui/icons/ArrowDropDown';
 import { growthOf } from '../../utils/change';
-import { GrowthType } from '../../types';
+import { ChangeStatistic, GrowthType, Maybe } from '../../types';
 import { useCostGrowthStyles as useStyles } from '../../utils/styles';
 
 export type CostGrowthIndicatorProps = TypographyProps & {
-  ratio: number;
-  amount?: number;
-  formatter?: (amount: number) => string;
+  change: ChangeStatistic;
+  formatter?: (change: ChangeStatistic) => Maybe<string>;
 };
 
 export const CostGrowthIndicator = ({
-  ratio,
-  amount,
+  change,
   formatter,
   className,
   ...props
 }: CostGrowthIndicatorProps) => {
   const classes = useStyles();
-  const growth = growthOf(ratio, amount);
+  const growth = growthOf(change);
 
   const classNames = classnames(classes.indicator, className, {
-    [classes.savings]: growth === GrowthType.Savings,
     [classes.excess]: growth === GrowthType.Excess,
+    [classes.savings]: growth === GrowthType.Savings,
   });
 
-  // Display cost as a factor of engineer cost growth and percentage growth
-  if (typeof amount === 'number') {
-    return (
-      <Typography className={classNames} component="span" {...props}>
-        {formatter ? formatter(amount) : amount}
-        {growth === GrowthType.Savings && (
-          <ArrowDropDown aria-label="savings" />
-        )}
-        {growth === GrowthType.Excess && <ArrowDropUp aria-label="excess" />}
-      </Typography>
-    );
-  }
-
-  // Display cost as a factor of percent change
   return (
     <Typography className={classNames} component="span" {...props}>
-      {formatter ? formatter(ratio) : ratio}
-      {ratio < 0 && <ArrowDropDown aria-label="savings" />}
-      {ratio > 0 && <ArrowDropUp aria-label="excess" />}
+      {formatter ? formatter(change) : change.ratio}
+      {growth === GrowthType.Excess && <ArrowDropUp aria-label="excess" />}
+      {growth === GrowthType.Savings && <ArrowDropDown aria-label="savings" />}
     </Typography>
   );
 };

@@ -42,11 +42,9 @@ export function generateEntityEtag(): string {
  * the next version of this entity.
  *
  * Significance, in this case, means that we do not compare generated fields
- * such as uid, etag and generation, and we only check that no new annotations
- * are added or existing annotations were changed (since they are effectively
- * merged when doing updates).
+ * such as uid, etag and generation.
  *
- * Note that this comparison does NOT take state, relations or similar into
+ * Note that this comparison does NOT take status, relations or similar into
  * account. It only compares the actual input entity data, i.e. metadata and
  * spec.
  *
@@ -86,7 +84,9 @@ export function entityHasChanges(previous: Entity, next: Entity): boolean {
 
   // Remove things that we explicitly do not compare
   delete e1.relations;
+  delete e1.status;
   delete e2.relations;
+  delete e2.status;
 
   return !lodash.isEqual(e1, e2);
 }

@@ -222,17 +222,17 @@ You can see it in the above full example which is a separate step and it looks a
 little like this:
 
 ```yaml
-   - title: Choose a location
-      required:
-        - repoUrl
-      properties:
-        repoUrl:
-          title: Repository Location
-          type: string
-          ui:field: RepoUrlPicker
-          ui:options:
-            allowedHosts:
-              - github.com
+- title: Choose a location
+  required:
+    - repoUrl
+  properties:
+    repoUrl:
+      title: Repository Location
+      type: string
+      ui:field: RepoUrlPicker
+      ui:options:
+        allowedHosts:
+          - github.com
 ```
 
 The `allowedHosts` part should be set to where you wish to enable this template

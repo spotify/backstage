@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-export { schemaValidator } from './util';
-export type { KindValidator } from './types';
 export { apiEntityV1alpha1Validator } from './ApiEntityV1alpha1';
 export type {
   ApiEntityV1alpha1 as ApiEntity,
@@ -59,6 +57,7 @@ export type {
 } from './TemplateEntityV1alpha1';
 export { templateEntityV1beta2Validator } from './TemplateEntityV1beta2';
 export type { TemplateEntityV1beta2 } from './TemplateEntityV1beta2';
+export type { KindValidator } from './types';
 export { userEntityV1alpha1Validator } from './UserEntityV1alpha1';
 export type {
   UserEntityV1alpha1 as UserEntity,

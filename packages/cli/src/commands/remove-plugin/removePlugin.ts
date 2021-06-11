@@ -189,7 +189,7 @@ export default async () => {
           return chalk.red('Please enter an ID for the plugin');
         } else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(value)) {
           return chalk.red(
-            'Plugin IDs must be kebab-cased and contain only letters, digits and dashes.',
+            'Plugin IDs must be lowercase and contain only letters, digits and dashes.',
           );
         }
         return true;

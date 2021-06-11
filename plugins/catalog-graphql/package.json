@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-catalog-graphql",
-  "version": "0.2.7",
+  "version": "0.2.10",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -30,9 +30,9 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.6.0",
-    "@backstage/catalog-model": "^0.7.1",
-    "@backstage/config": "^0.1.4",
+    "@backstage/backend-common": "^0.8.0",
+    "@backstage/catalog-model": "^0.8.0",
+    "@backstage/config": "^0.1.5",
     "@graphql-modules/core": "^0.7.17",
     "apollo-server": "^2.16.1",
     "cross-fetch": "^3.0.6",
@@ -42,8 +42,8 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.6.5",
-    "@backstage/test-utils": "^0.1.9",
+    "@backstage/cli": "^0.6.13",
+    "@backstage/test-utils": "^0.1.11",
     "@graphql-codegen/cli": "^1.21.3",
     "@graphql-codegen/typescript": "^1.17.7",
     "@graphql-codegen/typescript-resolvers": "^1.17.7",
@@ -52,7 +52,7 @@
     "eslint-plugin-graphql": "^4.0.0",
     "msw": "^0.21.2",
     "supertest": "^6.1.3",
-    "ts-node": "^8.10.2"
+    "ts-node": "^9.1.1"
   },
   "files": [
     "dist"

@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
+import { JsonObject } from '@backstage/config';
 import type { Entity, EntityMeta } from '../entity/Entity';
 import schema from '../schema/kinds/Template.v1beta2.schema.json';
-import entitySchema from '../schema/Entity.schema.json';
-import entityMetaSchema from '../schema/EntityMeta.schema.json';
-import commonSchema from '../schema/shared/common.schema.json';
 import { ajvCompiledJsonSchemaValidator } from './util';
-import { JsonObject } from '@backstage/config';
-
-const API_VERSION = ['backstage.io/v1beta2'] as const;
-const KIND = 'Template' as const;
 
 export interface TemplateEntityV1beta2 extends Entity {
-  apiVersion: typeof API_VERSION[number];
-  kind: typeof KIND;
+  apiVersion: 'backstage.io/v1beta2';
+  kind: 'Template';
   metadata: EntityMeta & {
     title?: string;
   };
@@ -38,15 +32,13 @@ export interface TemplateEntityV1beta2 extends Entity {
       id?: string;
       name?: string;
       action: string;
-      parameters?: JsonObject;
+      input?: JsonObject;
     }>;
     output?: { [name: string]: string };
+    owner?: string;
   };
 }
 
 export const templateEntityV1beta2Validator = ajvCompiledJsonSchemaValidator(
-  KIND,
-  API_VERSION,
   schema,
-  [commonSchema, entityMetaSchema, entitySchema],
 );

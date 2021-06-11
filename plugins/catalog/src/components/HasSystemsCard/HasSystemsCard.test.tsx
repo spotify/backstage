@@ -89,14 +89,18 @@ describe('<HasSystemsCard />', () => {
         },
       ],
     };
-    catalogApi.getEntityByName.mockResolvedValue({
-      apiVersion: 'v1',
-      kind: 'System',
-      metadata: {
-        name: 'target-name',
-        namespace: 'my-namespace',
-      },
-      spec: {},
+    catalogApi.getEntities.mockResolvedValue({
+      items: [
+        {
+          apiVersion: 'v1',
+          kind: 'System',
+          metadata: {
+            name: 'target-name',
+            namespace: 'my-namespace',
+          },
+          spec: {},
+        },
+      ],
     });
 
     const { getByText } = await renderInTestApp(

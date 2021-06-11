@@ -1,0 +1,50 @@
+{
+  "name": "@backstage/backend-test-utils",
+  "description": "Test helpers library for Backstage backends",
+  "version": "0.1.1",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.cjs.js",
+    "types": "dist/index.d.ts"
+  },
+  "homepage": "https://backstage.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/backstage/backstage",
+    "directory": "packages/backend-test-utils"
+  },
+  "keywords": [
+    "backstage",
+    "test"
+  ],
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "backstage-cli build --outputs cjs,types",
+    "lint": "backstage-cli lint",
+    "test": "backstage-cli test",
+    "prepack": "backstage-cli prepack",
+    "postpack": "backstage-cli postpack",
+    "clean": "backstage-cli clean"
+  },
+  "dependencies": {
+    "@backstage/backend-common": "^0.8.0",
+    "@backstage/cli": "^0.6.10",
+    "@backstage/config": "^0.1.5",
+    "knex": "^0.95.1",
+    "mysql2": "^2.2.5",
+    "pg": "^8.3.0",
+    "sqlite3": "^5.0.0",
+    "testcontainers": "^7.10.0",
+    "uuid": "^8.0.0"
+  },
+  "devDependencies": {
+    "@backstage/cli": "^0.6.10",
+    "jest": "^26.0.1"
+  },
+  "files": [
+    "dist"
+  ]
+}

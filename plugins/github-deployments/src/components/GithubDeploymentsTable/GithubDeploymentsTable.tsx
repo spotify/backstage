@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 import React from 'react';
-import {
-  StatusPending,
-  StatusRunning,
-  StatusOK,
-  Table,
-  TableColumn,
-  StatusAborted,
-  StatusError,
-} from '@backstage/core';
+import { Table, TableColumn } from '@backstage/core';
 import { GithubDeployment } from '../../api';
-import { DateTime } from 'luxon';
-import { Box, Typography, Link, makeStyles } from '@material-ui/core';
+import { Typography, makeStyles } from '@material-ui/core';
 import SyncIcon from '@material-ui/icons/Sync';
+import * as columnFactories from './columns';
+import { defaultDeploymentColumns } from './presets';
 
 const useStyles = makeStyles(theme => ({
   empty: {
@@ -36,63 +29,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const statusIndicator = (value: string): React.ReactNode => {
-  switch (value) {
-    case 'PENDING':
-      return <StatusPending />;
-    case 'IN_PROGRESS':
-      return <StatusRunning />;
-    case 'ACTIVE':
-      return <StatusOK />;
-    case 'ERROR':
-    case 'FAILURE':
-      return <StatusError />;
-    default:
-      return <StatusAborted />;
-  }
-};
-
-const columns: TableColumn<GithubDeployment>[] = [
-  {
-    title: 'Environment',
-    field: 'environment',
-    highlight: true,
-  },
-  {
-    title: 'Status',
-    render: (row: GithubDeployment): React.ReactNode => (
-      <Box display="flex" alignItems="center">
-        {statusIndicator(row.state)}
-        <Typography variant="caption">{row.state}</Typography>
-      </Box>
-    ),
-  },
-  {
-    title: 'Commit',
-    render: (row: GithubDeployment): React.ReactNode => (
-      <Link href={row.commit.commitUrl} target="_blank" rel="noopener">
-        {row.commit.abbreviatedOid}
-      </Link>
-    ),
-  },
-  {
-    title: 'Last Updated',
-    render: (row: GithubDeployment): React.ReactNode =>
-      DateTime.fromISO(row.updatedAt).toRelative({ locale: 'en' }),
-  },
-];
-
 type GithubDeploymentsTableProps = {
   deployments: GithubDeployment[];
   isLoading: boolean;
   reload: () => void;
+  columns: TableColumn<GithubDeployment>[];
 };
 
-const GithubDeploymentsTable = ({
+export function GithubDeploymentsTable({
   deployments,
   isLoading,
   reload,
-}: GithubDeploymentsTableProps) => {
+  columns,
+}: GithubDeploymentsTableProps) {
   const classes = useStyles();
 
   return (
@@ -119,6 +68,8 @@ const GithubDeploymentsTable = ({
       }
     />
   );
-};
+}
 
-export default GithubDeploymentsTable;
+GithubDeploymentsTable.columns = columnFactories;
+
+GithubDeploymentsTable.defaultDeploymentColumns = defaultDeploymentColumns;

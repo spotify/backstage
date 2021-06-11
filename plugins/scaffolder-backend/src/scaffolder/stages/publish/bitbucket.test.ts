@@ -170,4 +170,59 @@ describe('Bitbucket Publisher', () => {
       });
     });
   });
+
+  it('should use apiBaseUrl to create the repository if it is set', async () => {
+    server.use(
+      rest.post(
+        'https://bitbucket.mycompany.com/bitbucket/rest/api/1.0/projects/project/repos',
+        (_, res, ctx) =>
+          res(
+            ctx.status(201),
+            ctx.set('Content-Type', 'application/json'),
+            ctx.json({
+              links: {
+                self: [
+                  {
+                    href:
+                      'https://bitbucket.mycompany.com/bitbucket/projects/project/repos/repo',
+                  },
+                ],
+                clone: [
+                  {
+                    name: 'http',
+                    href:
+                      'https://bitbucket.mycompany.com/bitbucket/scm/project/repo',
+                  },
+                ],
+              },
+            }),
+          ),
+      ),
+    );
+
+    const publisher = await BitbucketPublisher.fromConfig(
+      {
+        host: 'bitbucket.mycompany.com',
+        username: 'foo',
+        token: 'fake-token',
+        apiBaseUrl: 'https://bitbucket.mycompany.com/bitbucket/rest/api/1.0',
+      },
+      { repoVisibility: 'private' },
+    );
+
+    const result = await publisher.publish({
+      values: {
+        storePath: 'https://bitbucket.mycompany.com/project/repo',
+        owner: 'bob',
+      },
+      workspacePath,
+      logger: logger,
+    });
+
+    expect(result).toEqual({
+      remoteUrl: 'https://bitbucket.mycompany.com/bitbucket/scm/project/repo',
+      catalogInfoUrl:
+        'https://bitbucket.mycompany.com/bitbucket/projects/project/repos/repo/catalog-info.yaml',
+    });
+  });
 });

@@ -24,10 +24,8 @@ Explicit credentials can be set in the following format:
 ```yaml
 integrations:
   googleGcs:
-    clientEmail:
-      $env: GCS_CLIENT_EMAIL
-    privateKey:
-      $env: GCS_PRIVATE_KEY
+    clientEmail: ${GCS_CLIENT_EMAIL}
+    privateKey: ${GCS_PRIVATE_KEY}
 ```
 
 Then make sure the environment variables `GCS_CLIENT_EMAIL` and

@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useCallback } from 'react';
+import { SidebarSearchField, useRouteRef } from '@backstage/core';
 import qs from 'qs';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SidebarSearchField } from '@backstage/core';
+import { rootRouteRef } from '../../plugin';
 
 export const SidebarSearch = () => {
+  const searchRoute = useRouteRef(rootRouteRef);
   const navigate = useNavigate();
   const handleSearch = useCallback(
     (query: string): void => {
       const queryString = qs.stringify({ query }, { addQueryPrefix: true });
 
-      // TODO: Here the url to the search plugin is hardcoded. We need a way to query the route in the future.
-      // Maybe an API that I can just call from other places?
-      navigate(`/search${queryString}`);
+      navigate(`${searchRoute()}${queryString}`);
     },
-    [navigate],
+    [navigate, searchRoute],
   );
 
   return <SidebarSearchField onSearch={handleSearch} to="/search" />;

@@ -9,20 +9,12 @@ The FOSSA Plugin displays code statistics from [FOSSA](https://fossa.com/).
 1. Install the FOSSA Plugin:
 
 ```bash
-# packages/app
-
+# From your Backstage root directory
+cd packages/app
 yarn add @backstage/plugin-fossa
 ```
 
-2. Add plugin to the app:
-
-```js
-// packages/app/src/plugins.ts
-
-export { fossaPlugin } from '@backstage/plugin-fossa';
-```
-
-3. Add the `EntityFossaCard` to the EntityPage:
+2. Add the `EntityFossaCard` to the EntityPage:
 
 ```jsx
 // packages/app/src/components/catalog/EntityPage.tsx
@@ -40,7 +32,7 @@ const OverviewContent = ({ entity }: { entity: Entity }) => (
 );
 ```
 
-4. Add the proxy config:
+3. Add the proxy config:
 
 ```yaml
 # app-config.yaml
@@ -50,18 +42,16 @@ proxy:
     target: https://app.fossa.io/api
     allowedMethods: ['GET']
     headers:
-      Authorization:
-        # Content: 'token <your-fossa-api-token>'
-        $env: FOSSA_AUTH_HEADER
+      Authorization: token ${FOSSA_API_TOKEN}
 
 # if you have a fossa organization, configure your id here
 fossa:
   organizationId: <your-fossa-organization-id>
 ```
 
-5. Get an api-token and provide `FOSSA_AUTH_HEADER` as env variable (https://app.fossa.com/account/settings/integrations/api_tokens)
+4. Get an api-token and provide `FOSSA_AUTH_HEADER` as env variable (https://app.fossa.com/account/settings/integrations/api_tokens)
 
-6. Add the `fossa.io/project-name` annotation to your catalog-info.yaml file:
+5. Add the `fossa.io/project-name` annotation to your catalog-info.yaml file:
 
 ```yaml
 apiVersion: backstage.io/v1alpha1
@@ -76,4 +66,52 @@ spec:
   type: library
   owner: CNCF
   lifecycle: experimental
+```
+
+## Other Components
+
+### FOSSA Overview Page
+
+The plugin provides an optional page that can be used to check the license compliance of all components.
+
+![FOSSA Overview](./docs/fossa-overview.png)
+
+Add it to your Backstage application:
+
+1. Install the FOSSA Plugin (see [Getting Started](#getting-started)).
+
+2. Register the page:
+
+```tsx
+// packages/app/src/App.tsx
+
+import { FossaPage } from '@backstage/plugin-fossa';
+
+// ...
+
+const routes = (
+  <FlatRoutes>
+    // ...
+    <Route path="/fossa" element={<FossaPage />} />
+  </FlatRoutes>
+);
+```
+
+3. (Optional) Add a Sidebar Icon:
+
+```tsx
+// packages/app/src/components/Root/Root.tsx
+
+// ...
+
+export const Root = ({ children }: PropsWithChildren<{}>) => (
+  <SidebarPage>
+    <Sidebar>
+      // ...
+      <SidebarItem icon={CheckCircleIcon} to="fossa" text="FOSSA" />
+      // ...
+    </Sidebar>
+    {children}
+  </SidebarPage>
+);
 ```

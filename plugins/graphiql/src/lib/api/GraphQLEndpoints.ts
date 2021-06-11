@@ -15,7 +15,7 @@
  */
 
 import { GraphQLBrowseApi, GraphQLEndpoint } from './types';
-import { ErrorApi, OAuthApi } from '@backstage/core';
+import { ErrorApi, OAuthApi } from '@backstage/core-plugin-api';
 
 // Helper for generic http endpoints
 export type EndpointConfig = {

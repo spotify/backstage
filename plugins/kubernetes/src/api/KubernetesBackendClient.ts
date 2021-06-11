@@ -19,7 +19,7 @@ import { KubernetesApi } from './types';
 import {
   KubernetesRequestBody,
   ObjectsByEntityResponse,
-} from '@backstage/plugin-kubernetes-backend';
+} from '@backstage/plugin-kubernetes-common';
 
 export class KubernetesBackendClient implements KubernetesApi {
   private readonly discoveryApi: DiscoveryApi;

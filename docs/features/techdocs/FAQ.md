@@ -45,3 +45,15 @@ metadata annotation is used in the build process of TechDocs. But when
 annotation should still be present in entity descriptor file (e.g.
 `catalog-info.yaml`) for Backstage to know that TechDocs is enabled for the
 entity.
+
+#### Is it possible for users to suggest changes or provide feedback on a TechDocs page?
+
+This is supported for TechDocs sites whose source code is hosted in either
+GitHub or GitLab. In order to add "edit this page" and "leave feedback" buttons
+on a TechDocs page, be sure that you have `repo_url` and `edit_uri` values in
+your `mkdocs.yml` files per
+[MkDocs instructions](https://www.mkdocs.org/user-guide/configuration).
+
+If the host name of your source code hosting URL does not include `github` or
+`gitlab`, an `integrations` entry in your `app-config.yaml` pointed at your
+source code provider is also needed (only the `host` key is necessary).

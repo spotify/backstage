@@ -45,7 +45,7 @@ The only thing you need to do is to start the app:
 
 ```bash
 cd my-app
-yarn start
+yarn dev
 ```
 
 And you are good to go! 👍
@@ -101,18 +101,12 @@ We provide a collection of public Backstage plugins (look for packages with the 
 Install in your app’s package folder (`<root>/packages/app`) with:
 
 ```bash
+# From your Backstage root directory
+cd packages/app
 yarn add @backstage/plugin-<plugin-name>
 ```
 
-Then add it to your app's `plugin.ts` file to import and register it:
-
-`<root>/packages/app/src/plugin.ts`:
-
-```js
-export { plugin as PluginName } from '@backstage/plugin-<plugin-name>';
-```
-
-A plugin registers its own `route` in the app — read the documentation for the specific plugin you are installing for more information on that.
+After that, you inject the plugin into the application where you want it to be exposed. Please read the documentation for the specific plugin you are installing for more information.
 
 ### Creating an internal plugin
 

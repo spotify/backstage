@@ -18,20 +18,15 @@ The catalog frontend plugin should be installed in your `app` package, which is
 created as a part of `@backstage/create-app`. To install the package, run:
 
 ```bash
+# From your Backstage root directory
 cd packages/app
 yarn add @backstage/plugin-catalog
 ```
 
 ### Adding the Plugin to your `packages/app`
 
-Add the following entry to the head of your `packages/app/src/plugins.ts`:
-
-```ts
-export { catalogPlugin } from '@backstage/plugin-catalog';
-```
-
-Next we need to install the two pages that the catalog plugin provides. You can
-choose any name for these routes, but we recommend the following:
+Add the two pages that the catalog plugin provides to your app. You can choose
+any name for these routes, but we recommend the following:
 
 ```tsx
 // packages/app/src/App.tsx
@@ -109,6 +104,7 @@ The catalog backend should be installed in your `backend` package, which is
 created as a part of `@backstage/create-app`. To install the package, run:
 
 ```bash
+# From your Backstage root directory
 cd packages/backend
 yarn add @backstage/plugin-catalog-backend
 ```

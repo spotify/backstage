@@ -24,6 +24,7 @@ import { ConfigReader, JsonObject } from '@backstage/config';
 import { StorageTaskBroker } from './StorageTaskBroker';
 import { DatabaseTaskStore } from './DatabaseTaskStore';
 import { createTemplateAction, TemplateActionRegistry } from '../actions';
+import { RepoSpec } from '../actions/builtin/publish/util';
 
 async function createStore(): Promise<DatabaseTaskStore> {
   const manager = SingleConnectionDatabaseManager.fromConfig(
@@ -41,19 +42,23 @@ async function createStore(): Promise<DatabaseTaskStore> {
 
 describe('TaskWorker', () => {
   let storage: DatabaseTaskStore;
+  let actionRegistry = new TemplateActionRegistry();
 
   beforeAll(async () => {
     storage = await createStore();
   });
 
-  const logger = getVoidLogger();
-  const actionRegistry = new TemplateActionRegistry();
-  actionRegistry.register({
-    id: 'test-action',
-    handler: async ctx => {
-      ctx.output('testOutput', 'winning');
-    },
+  beforeEach(() => {
+    actionRegistry = new TemplateActionRegistry();
+    actionRegistry.register({
+      id: 'test-action',
+      handler: async ctx => {
+        ctx.output('testOutput', 'winning');
+      },
+    });
   });
+
+  const logger = getVoidLogger();
 
   it('should fail when action does not exist', async () => {
     const broker = new StorageTaskBroker(storage, logger);
@@ -165,5 +170,195 @@ describe('TaskWorker', () => {
     const { events } = await storage.listEvents({ taskId });
     const event = events.find(e => e.type === 'completion');
     expect((event?.body?.output as JsonObject).result).toBe('winning');
+  });
+
+  it('should parse strings as objects if possible', async () => {
+    const inputAction = createTemplateAction<{
+      address: { line1: string };
+      list: string[];
+      address2: string;
+    }>({
+      id: 'test-input',
+      schema: {
+        input: {
+          type: 'object',
+          required: ['address'],
+          properties: {
+            address: {
+              title: 'address',
+              description: 'Enter name',
+              type: 'object',
+              properties: {
+                line1: {
+                  type: 'string',
+                },
+              },
+            },
+            address2: {
+              type: 'string',
+            },
+            list: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+      async handler(ctx) {
+        if (ctx.input.list.length !== 1) {
+          throw new Error(
+            `expected list to have length "1" got ${ctx.input.list.length}`,
+          );
+        }
+        if (ctx.input.address.line1 !== 'line 1') {
+          throw new Error(
+            `expected address.line1 to be "line 1" got ${ctx.input.address.line1}`,
+          );
+        }
+
+        if (ctx.input.address2 !== '{"not valid"}') {
+          throw new Error(
+            `expected address2 to be "{"not valid"}" got ${ctx.input.address2}`,
+          );
+        }
+        ctx.output('address', ctx.input.address.line1);
+      },
+    });
+    actionRegistry.register(inputAction);
+
+    const broker = new StorageTaskBroker(storage, logger);
+    const taskWorker = new TaskWorker({
+      logger,
+      workingDirectory: os.tmpdir(),
+      actionRegistry,
+      taskBroker: broker,
+    });
+
+    const { taskId } = await broker.dispatch({
+      steps: [
+        {
+          id: 'test-input',
+          name: 'test-input',
+          action: 'test-input',
+          input: {
+            address: JSON.stringify({ line1: 'line 1' }),
+            list: JSON.stringify(['hey!']),
+            address2: '{"not valid"}',
+          },
+        },
+      ],
+      output: {
+        result: '{{ steps.test-input.output.address }}',
+      },
+      values: {},
+    });
+
+    const task = await broker.claim();
+    await taskWorker.runOneTask(task);
+
+    const { events } = await storage.listEvents({ taskId });
+    const event = events.find(e => e.type === 'completion');
+
+    expect((event?.body?.output as JsonObject).result).toBe('line 1');
+  });
+
+  // TODO(blam): Can delete this test when we make the helpers a public API
+  it('should provide a repoUrlParse helper for the templates', async () => {
+    const inputAction = createTemplateAction<{
+      destination: RepoSpec;
+    }>({
+      id: 'test-input',
+      schema: {
+        input: {
+          type: 'object',
+          required: ['destination'],
+          properties: {
+            destination: {
+              title: 'destination',
+              type: 'object',
+              properties: {
+                repo: {
+                  type: 'string',
+                },
+                host: {
+                  type: 'string',
+                },
+                owner: {
+                  type: 'string',
+                },
+                organization: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+      async handler(ctx) {
+        ctx.output('host', ctx.input.destination.host);
+        ctx.output('repo', ctx.input.destination.repo);
+        ctx.output('owner', ctx.input.destination.owner);
+
+        if (ctx.input.destination.host !== 'github.com') {
+          throw new Error(
+            `expected host to be "github.com" got ${ctx.input.destination.host}`,
+          );
+        }
+
+        if (ctx.input.destination.repo !== 'repo') {
+          throw new Error(
+            `expected repo to be "repo" got ${ctx.input.destination.repo}`,
+          );
+        }
+
+        if (ctx.input.destination.owner !== 'owner') {
+          throw new Error(
+            `expected repo to be "owner" got ${ctx.input.destination.owner}`,
+          );
+        }
+      },
+    });
+    actionRegistry.register(inputAction);
+
+    const broker = new StorageTaskBroker(storage, logger);
+    const taskWorker = new TaskWorker({
+      logger,
+      workingDirectory: os.tmpdir(),
+      actionRegistry,
+      taskBroker: broker,
+    });
+
+    const { taskId } = await broker.dispatch({
+      steps: [
+        {
+          id: 'test-input',
+          name: 'test-input',
+          action: 'test-input',
+          input: {
+            destination: '{{ parseRepoUrl parameters.repoUrl }}',
+          },
+        },
+      ],
+      output: {
+        host: '{{ steps.test-input.output.host }}',
+        repo: '{{ steps.test-input.output.repo }}',
+        owner: '{{ steps.test-input.output.owner }}',
+      },
+      values: {
+        repoUrl: 'github.com?repo=repo&owner=owner',
+      },
+    });
+
+    const task = await broker.claim();
+    await taskWorker.runOneTask(task);
+
+    const { events } = await storage.listEvents({ taskId });
+    const event = events.find(e => e.type === 'completion');
+
+    expect((event?.body?.output as JsonObject).host).toBe('github.com');
+    expect((event?.body?.output as JsonObject).repo).toBe('repo');
+    expect((event?.body?.output as JsonObject).owner).toBe('owner');
   });
 });

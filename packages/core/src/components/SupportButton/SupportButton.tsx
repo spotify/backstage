@@ -17,6 +17,7 @@
 import { HelpIcon, useApp } from '@backstage/core-api';
 import {
   Button,
+  DialogActions,
   List,
   ListItem,
   ListItemIcon,
@@ -127,6 +128,11 @@ export const SupportButton = ({ children }: PropsWithChildren<Props>) => {
           {items &&
             items.map((item, i) => <SupportListItem item={item} key={i} />)}
         </List>
+        <DialogActions>
+          <Button color="primary" onClick={popoverCloseHandler}>
+            Close
+          </Button>
+        </DialogActions>
       </Popover>
     </Fragment>
   );

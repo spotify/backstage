@@ -14,60 +14,18 @@
  * limitations under the License.
  */
 
-import Ajv, { AnySchema } from 'ajv';
-import * as yup from 'yup';
+import { entityKindSchemaValidator } from '../validation';
 import { KindValidator } from './types';
 
-/**
- * @deprecated We no longer use yup for the catalog model. This utility method will be removed.
- */
-export function schemaValidator(
-  kind: string,
-  apiVersion: readonly string[],
-  schema: yup.Schema<any>,
-): KindValidator {
+// TODO(freben): Left here as a compatibility helper. It would be nicer to
+// just export the inner validator directly. However, all of the already
+// exported kind validators have the `KindValidator` signature which is
+// different. So let's postpone that change until a later time.
+export function ajvCompiledJsonSchemaValidator(schema: unknown): KindValidator {
+  const validator = entityKindSchemaValidator(schema);
   return {
-    async check(envelope) {
-      if (kind !== envelope.kind || !apiVersion.includes(envelope.apiVersion)) {
-        return false;
-      }
-      await schema.validate(envelope, { strict: true });
-      return true;
-    },
-  };
-}
-
-export function ajvCompiledJsonSchemaValidator(
-  kind: string,
-  apiVersion: readonly string[],
-  schema: AnySchema,
-  extraSchemas?: AnySchema[],
-): KindValidator {
-  const ajv = new Ajv({ allowUnionTypes: true });
-  if (extraSchemas) {
-    ajv.addSchema(extraSchemas, undefined, undefined, true);
-  }
-  const validate = ajv.compile(schema);
-
-  return {
-    async check(envelope) {
-      if (kind !== envelope.kind || !apiVersion.includes(envelope.apiVersion)) {
-        return false;
-      }
-
-      const result = validate(envelope);
-      if (result === true) {
-        return true;
-      }
-
-      const [error] = validate.errors || [];
-      if (!error) {
-        throw new TypeError(`Malformed ${kind}, Unknown error`);
-      }
-
-      throw new TypeError(
-        `Malformed ${kind}, ${error.dataPath || '<root>'} ${error.message}`,
-      );
+    async check(data) {
+      return validator(data) === data;
     },
   };
 }

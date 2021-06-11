@@ -21,7 +21,7 @@ import {
   AuthRequesterOptions,
 } from '../../definitions';
 import { OAuthPendingRequests, PendingRequest } from './OAuthPendingRequests';
-import { BehaviorSubject } from '../../../lib';
+import { BehaviorSubject } from '../../../lib/subjects';
 import { Observable } from '../../../types';
 
 /**

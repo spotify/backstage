@@ -18,23 +18,24 @@ import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { SearchQuery, SearchResultSet } from '@backstage/search-common';
+import { SearchEngine } from '@backstage/plugin-search-backend-node';
 
 type RouterOptions = {
+  engine: SearchEngine;
   logger: Logger;
 };
 
 export async function createRouter({
+  engine,
   logger,
 }: RouterOptions): Promise<express.Router> {
   const router = Router();
-
   router.get(
     '/query',
     async (
       req: express.Request<any, unknown, unknown, SearchQuery>,
       res: express.Response<SearchResultSet>,
     ) => {
-      // TODO: Actually transform req.params into search engine specific query.
       const { term, filters = {}, pageCursor = '' } = req.query;
       logger.info(
         `Search request received: ${term}, ${JSON.stringify(
@@ -43,13 +44,12 @@ export async function createRouter({
       );
 
       try {
-        // TODO: Actually query search engine.
-        // TODO: And actually transform results into frontend-readable result
-        res.send({
-          results: [],
-        });
+        const results = await engine?.query(req.query);
+        res.send(results);
       } catch (err) {
-        throw new Error(`There was a problem performing the search query.`);
+        throw new Error(
+          `There was a problem performing the search query. ${err}`,
+        );
       }
     },
   );

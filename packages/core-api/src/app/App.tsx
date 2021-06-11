@@ -52,6 +52,7 @@ import {
 } from '../extensions/traversal';
 import { IconComponent, IconComponentMap, IconKey } from '../icons';
 import { BackstagePlugin } from '../plugin';
+import { pluginCollector } from '../plugin/collectors';
 import { AnyRoutes } from '../plugin/types';
 import { RouteRef, ExternalRouteRef, SubRouteRef } from '../routing';
 import {
@@ -189,7 +190,7 @@ export class PrivateAppImpl implements BackstageApp {
 
   private readonly apis: Iterable<AnyApiFactory>;
   private readonly icons: IconComponentMap;
-  private readonly plugins: BackstagePlugin<any, any>[];
+  private readonly plugins: Set<BackstagePlugin<any, any>>;
   private readonly components: AppComponents;
   private readonly themes: AppTheme[];
   private readonly configLoader?: AppConfigLoader;
@@ -201,7 +202,7 @@ export class PrivateAppImpl implements BackstageApp {
   constructor(options: FullAppOptions) {
     this.apis = options.apis;
     this.icons = options.icons;
-    this.plugins = options.plugins;
+    this.plugins = new Set(options.plugins);
     this.components = options.components;
     this.themes = options.themes;
     this.configLoader = options.configLoader;
@@ -210,7 +211,7 @@ export class PrivateAppImpl implements BackstageApp {
   }
 
   getPlugins(): BackstagePlugin<any, any>[] {
-    return this.plugins;
+    return Array.from(this.plugins);
   }
 
   getSystemIcon(key: IconKey): IconComponent | undefined {
@@ -276,7 +277,6 @@ export class PrivateAppImpl implements BackstageApp {
 
   getProvider(): ComponentType<{}> {
     const appContext = new AppContextImpl(this);
-    const apiHolder = this.getApiHolder();
 
     const Provider = ({ children }: PropsWithChildren<{}>) => {
       const appThemeApi = useMemo(
@@ -292,10 +292,21 @@ export class PrivateAppImpl implements BackstageApp {
             routePaths: routePathCollector,
             routeParents: routeParentCollector,
             routeObjects: routeObjectCollector,
+            collectedPlugins: pluginCollector,
           },
         });
 
         validateRoutes(result.routePaths, result.routeParents);
+
+        // TODO(Rugvip): Restructure the public API so that we can get an immediate view of
+        //               the app, rather than having to wait for the provider to render.
+        //               For now we need to push the additional plugins we find during
+        //               collection and then make sure we initialize things afterwards.
+        result.collectedPlugins.forEach(plugin => this.plugins.add(plugin));
+        this.verifyPlugins(this.plugins);
+
+        // Initialize APIs once all plugins are available
+        this.getApiHolder();
 
         return result;
       }, [children]);
@@ -340,7 +351,7 @@ export class PrivateAppImpl implements BackstageApp {
       }
 
       return (
-        <ApiProvider apis={apiHolder}>
+        <ApiProvider apis={this.getApiHolder()}>
           <AppContextProvider appContext={appContext}>
             <AppThemeProvider>
               <RoutingProvider
@@ -495,10 +506,15 @@ export class PrivateAppImpl implements BackstageApp {
     return this.apiHolder;
   }
 
-  verify() {
+  /**
+   * @deprecated
+   */
+  verify() {}
+
+  private verifyPlugins(plugins: Iterable<BackstagePlugin>) {
     const pluginIds = new Set<string>();
 
-    for (const plugin of this.plugins) {
+    for (const plugin of plugins) {
       const id = plugin.getId();
       if (pluginIds.has(id)) {
         throw new Error(`Duplicate plugin found '${id}'`);

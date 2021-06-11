@@ -20,37 +20,36 @@ This plugin provides:
 Install the plugin:
 
 ```bash
+# From your Backstage root directory
+cd packages/app
 yarn add @backstage/plugin-splunk-on-call
 ```
 
-Add it to the app in `plugins.ts`:
+Add it to your `EntityPage`:
 
 ```ts
-export { plugin as SplunkOnCall } from '@backstage/plugin-splunk-on-call';
-```
-
-Add it to the `EntityPage.tsx`:
-
-```ts
+// packages/app/src/components/catalog/EntityPage.tsx
 import {
-  isPluginApplicableToEntity as isSplunkOnCallAvailable,
-  SplunkOnCallCard,
+  isSplunkOnCallAvailable,
+  EntitySplunkOnCallCard,
 } from '@backstage/plugin-splunk-on-call';
 // ...
-{
-  isSplunkOnCallAvailable(entity) && (
-    <Grid item md={6}>
-      <SplunkOnCallCard entity={entity} />
-    </Grid>
-  );
-}
+const overviewContent = (
+  <Grid container spacing={3} alignItems="stretch">
+    <EntitySwitch>
+      <EntitySwitch.Case if={isSplunkOnCallAvailable}>
+        <Grid item md={6}>
+          <EntitySplunkOnCallCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
 ```
 
 ## Client configuration
 
 In order to be able to perform certain action (create-acknowledge-resolve an action), you need to provide a REST Endpoint.
 
-To enable the REST Endpoint integration you can go on https://portal.victorops.com/ inside Integrations > 3rd Party Integrations > REST – Generic.  
+To enable the REST Endpoint integration you can go on https://portal.victorops.com/ inside Integrations > 3rd Party Integrations > REST – Generic.
 You can now copy the URL to notify: `<SPLUNK_ON_CALL_REST_ENDPOINT>/$routing_key`
 
 In `app-config.yaml`:
@@ -69,10 +68,8 @@ proxy:
   '/splunk-on-call':
     target: https://api.victorops.com/api-public
     headers:
-      X-VO-Api-Id:
-        $env: SPLUNK_ON_CALL_API_ID
-      X-VO-Api-Key:
-        $env: SPLUNK_ON_CALL_API_KEY
+      X-VO-Api-Id: ${SPLUNK_ON_CALL_API_ID}
+      X-VO-Api-Key: ${SPLUNK_ON_CALL_API_KEY}
 ```
 
 In addition, to make certain API calls (trigger-resolve-acknowledge an incident) you need to add the `PATCH` method to the backend `cors` methods list: `[GET, POST, PUT, DELETE, PATCH]`.

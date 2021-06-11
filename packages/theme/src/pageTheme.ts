@@ -63,5 +63,5 @@ export const pageTheme: Record<string, PageTheme> = {
   library: genPageTheme(colorVariants.rubyRed, shapes.wave),
   other: genPageTheme(colorVariants.darkGrey, shapes.wave),
   app: genPageTheme(colorVariants.toastyOrange, shapes.wave),
-  apis: genPageTheme(colorVariants.eveningSea, shapes.wave2),
+  apis: genPageTheme(colorVariants.teal, shapes.wave2),
 };

@@ -84,10 +84,13 @@ describe('catalog:register', () => {
         catalogInfoUrl: 'http://foo/var',
       },
     });
-    expect(addLocation).toBeCalledWith({
-      type: 'url',
-      target: 'http://foo/var',
-    });
+    expect(addLocation).toBeCalledWith(
+      {
+        type: 'url',
+        target: 'http://foo/var',
+      },
+      {},
+    );
 
     expect(mockContext.output).toBeCalledWith(
       'entityRef',

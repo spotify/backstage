@@ -33,6 +33,8 @@ Cost Explorer permission policy:
 Install the AWS Cost Explorer SDK. The AWS docs recommend using the SDK over making calls to the API directly as it simplifies authentication and provides direct access to commands.
 
 ```bash
+# From your Backstage root directory
+cd packages/app
 yarn add @aws-sdk/client-cost-explorer
 ```
 

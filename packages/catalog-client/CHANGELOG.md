@@ -1,5 +1,32 @@
 # @backstage/catalog-client
 
+## 0.3.12
+
+### Patch Changes
+
+- add62a455: Foundation for standard entity status values
+- Updated dependencies [add62a455]
+- Updated dependencies [704875e26]
+  - @backstage/catalog-model@0.8.0
+
+## 0.3.11
+
+### Patch Changes
+
+- d1b1306d9: Allow `filter` parameter to be specified multiple times
+- Updated dependencies [d8b81fd28]
+  - @backstage/catalog-model@0.7.8
+  - @backstage/config@0.1.5
+
+## 0.3.10
+
+### Patch Changes
+
+- 442f34b87: Make sure the `CatalogClient` escapes URL parameters correctly.
+- Updated dependencies [bb5055aee]
+- Updated dependencies [5d0740563]
+  - @backstage/catalog-model@0.7.7
+
 ## 0.3.9
 
 ### Patch Changes

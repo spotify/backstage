@@ -15,8 +15,7 @@ proxy:
   '/newrelic/apm/api':
     target: https://api.newrelic.com/v2
     headers:
-      X-Api-Key:
-        $env: NEW_RELIC_REST_API_KEY
+      X-Api-Key: ${NEW_RELIC_REST_API_KEY}
 ```
 
 In your production deployment of Backstage, you would also need to ensure that

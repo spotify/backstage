@@ -19,12 +19,6 @@ const Background = props => {
           <Block.TextBox>
             <Block.Title>See us in action</Block.Title>
             <Block.Paragraph>
-              To explore the UI and basic features of Backstage firsthand, go
-              to: <a href="https://demo.backstage.io">demo.backstage.io</a>.
-              (Tip: click “All” to view all the example components in the
-              service catalog.)
-            </Block.Paragraph>
-            <Block.Paragraph>
               Watch the videos below to get an introduction to Backstage and to
               see how we use different plugins to customize{' '}
               <a href="https://engineering.atspotify.com/2020/04/21/how-we-use-backstage-at-spotify/">
@@ -32,13 +26,31 @@ const Background = props => {
               </a>
               .
             </Block.Paragraph>
+            <Block.Paragraph>
+              To see how other companies have already started using Backstage,
+              watch these presentations from{' '}
+              <a href="https://youtu.be/rRphwXeq33Q?t=1508">Expedia</a>,{' '}
+              <a href="https://youtu.be/6sg5uMCLxTA?t=153">Zalando</a>, and{' '}
+              <a href="https://youtu.be/UZTVjv-AvZA?t=188">TELUS</a>. For more,
+              join our{' '}
+              <a href="https://github.com/backstage/community">
+                Community Sessions
+              </a>
+              .
+            </Block.Paragraph>
+            <Block.Paragraph>
+              To explore the UI and basic features of Backstage firsthand, go
+              to: <a href="https://demo.backstage.io">demo.backstage.io</a>.
+              (Tip: click “All” to view all the example components in the
+              service catalog.)
+            </Block.Paragraph>
           </Block.TextBox>
           <Block.Graphics>
             <Block.Graphic
               x={-7}
               y={-12}
               width={120}
-              src={`${baseUrl}img/demo-illustration.svg`}
+              src={`${baseUrl}img/demo-screen.png`}
             />
           </Block.Graphics>
         </Block.Container>

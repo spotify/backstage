@@ -1,10 +1,10 @@
 ---
 title: Buildkite
 author: roadie.io
-authorUrl: https://roadie.io
+authorUrl: https://roadie.io/?utm_source=backstage.io&utm_medium=marketplace&utm_campaign=buildkite
 category: CI/CD
 description: View Buildkite CI builds for your service in Backstage.
-documentation: https://roadie.io/backstage/plugins/buildkite
+documentation: https://roadie.io/backstage/plugins/buildkite/?utm_source=backstage.io&utm_medium=marketplace&utm_campaign=buildkite
 iconUrl: https://roadie.io/images/logos/buildkite.png
 npmPackageName: '@roadiehq/backstage-plugin-buildkite'
 tags:

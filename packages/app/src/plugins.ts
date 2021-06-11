@@ -13,36 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { plugin as LighthousePlugin } from '@backstage/plugin-lighthouse';
-export { catalogPlugin } from '@backstage/plugin-catalog';
-export { scaffolderPlugin } from '@backstage/plugin-scaffolder';
-export { plugin as TechRadar } from '@backstage/plugin-tech-radar';
-export { explorePlugin } from '@backstage/plugin-explore';
-export { plugin as Circleci } from '@backstage/plugin-circleci';
-export { plugin as RegisterComponent } from '@backstage/plugin-register-component';
-export { plugin as Sentry } from '@backstage/plugin-sentry';
-export { plugin as GitopsProfiles } from '@backstage/plugin-gitops-profiles';
-export { plugin as TechDocs } from '@backstage/plugin-techdocs';
-export { plugin as GraphiQL } from '@backstage/plugin-graphiql';
-export { plugin as GithubActions } from '@backstage/plugin-github-actions';
-export { plugin as Rollbar } from '@backstage/plugin-rollbar';
-export { plugin as Newrelic } from '@backstage/plugin-newrelic';
-export { travisciPlugin } from '@roadiehq/backstage-plugin-travis-ci';
-export { plugin as Jenkins } from '@backstage/plugin-jenkins';
-export { plugin as ApiDocs } from '@backstage/plugin-api-docs';
-export { githubPullRequestsPlugin } from '@roadiehq/backstage-plugin-github-pull-requests';
-export { plugin as GcpProjects } from '@backstage/plugin-gcp-projects';
-export { plugin as Kubernetes } from '@backstage/plugin-kubernetes';
-export { plugin as Cloudbuild } from '@backstage/plugin-cloudbuild';
-export { plugin as CostInsights } from '@backstage/plugin-cost-insights';
-export { githubInsightsPlugin } from '@roadiehq/backstage-plugin-github-insights';
-export { plugin as CatalogImport } from '@backstage/plugin-catalog-import';
-export { plugin as UserSettings } from '@backstage/plugin-user-settings';
-export { plugin as PagerDuty } from '@backstage/plugin-pagerduty';
-export { buildkitePlugin } from '@roadiehq/backstage-plugin-buildkite';
-export { plugin as Search } from '@backstage/plugin-search';
-export { plugin as Org } from '@backstage/plugin-org';
-export { plugin as Kafka } from '@backstage/plugin-kafka';
-export { todoPlugin } from '@backstage/plugin-todo';
+
+// TODO(Rugvip): This plugin is currently not part of the app element tree,
+//               ideally we have an API for the context menu that permits that.
 export { badgesPlugin } from '@backstage/plugin-badges';
-export { githubDeploymentsPlugin } from '@backstage/plugin-github-deployments';
+export { shortcutsPlugin } from '@backstage/plugin-shortcuts';

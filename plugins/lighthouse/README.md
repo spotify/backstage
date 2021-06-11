@@ -28,29 +28,21 @@ _It's likely you will need to [enable CORS](https://developer.mozilla.org/en-US/
 When you have an instance running that Backstage can hook into, first install the plugin into your app:
 
 ```sh
-$ yarn add @backstage/plugin-lighthouse
+# From your Backstage root directory
+cd packages/app
+yarn add @backstage/plugin-lighthouse
 ```
 
-Then make sure to export the plugin in
-your app's [`plugins.ts`](https://github.com/backstage/backstage/blob/master/packages/app/src/plugins.ts)
-to enable the plugin:
-
-```js
-export { plugin as LighthousePlugin } from '@backstage/plugin-lighthouse';
-```
-
-Modify your app routes in `App.tsx` to include the Router component exported from the plugin, for example:
+Modify your app routes in `App.tsx` to include the `LighthousePage` component exported from the plugin, for example:
 
 ```tsx
-// At the top imports
-import { Router as LighthouseRouter } from '@backstage/plugin-lighthouse';
+// In packages/app/src/App.tsx
+import { LighthousePage } from '@backstage/plugin-lighthouse';
 
-// Inside App component
-<Routes>
-  // ...
-  <Route path="/lighthouse/*" element={<LighthouseRouter />} />
-  // ...
-</Routes>;
+const routes = (
+  <FlatRoutes>
+    {/* ...other routes */}
+    <Route path="/lighthouse" element={<LighthousePage />} />
 ```
 
 Then configure the `lighthouse-audit-service` URL in your [`app-config.yaml`](https://github.com/backstage/backstage/blob/master/app-config.yaml).
@@ -72,55 +64,45 @@ kind: Component
 metadata:
   # ...
   annotations:
-    # ...
     lighthouse.com/website-url: # A single website url e.g. https://backstage.io/
 ```
 
 > NOTE: The plugin only supports one website URL per component at this time.
 
-Add a **Lighthouse tab** to the EntityPage:
+Add a Lighthouse tab to the entity page:
 
 ```tsx
-// packages/app/src/components/catalog/EntityPage.tsx
-import { EmbeddedRouter as LighthouseRouter } from '@backstage/plugin-lighthouse';
+// In packages/app/src/components/catalog/EntityPage.tsx
+import { EntityLighthouseContent } from '@backstage/plugin-lighthouse';
 
-// ...
-const WebsiteEntityPage = ({ entity }: { entity: Entity }) => (
-  <EntityPageLayout>
-    // ...
-    <EntityPageLayout.Content
-      path="/lighthouse/*"
-      title="Lighthouse"
-      element={<LighthouseRouter entity={entity} />}
-    />
-  </EntityPageLayout>
-);
+const websiteEntityPage = (
+  <EntityLayout>
+    {/* other tabs... */}
+    <EntityLayout.Route path="/lighthouse" title="Lighthouse">
+      <EntityLighthouseContent />
+    </EntityLayout.Route>
 ```
 
-> NOTE: The embedded router renders page content without a header section allowing it to be rendered within a
-> catalog plugin page.
+> NOTE: The embedded router renders page content without a header section
+> allowing it to be rendered within a catalog plugin page.
 
 Add a **Lighthouse card** to the overview tab on the EntityPage:
 
 ```tsx
-// packages/app/src/components/catalog/EntityPage.tsx
+// In packages/app/src/components/catalog/EntityPage.tsx
 import {
-  LastLighthouseAuditCard,
-  isPluginApplicableToEntity as isLighthouseAvailable,
+  EntityLastLighthouseAuditCard,
+  isLighthouseAvailable,
 } from '@backstage/plugin-lighthouse';
 
-// ...
-
-const OverviewContent = ({ entity }: { entity: Entity }) => (
-  <Grid container spacing={3}>
-    // ...
-    {isLighthouseAvailable(entity) && (
-      <Grid item sm={4}>
-        <LastLighthouseAuditCard />
-      </Grid>
-    )}
-  </Grid>
-);
+const overviewContent = (
+  <Grid container spacing={3} alignItems="stretch">
+    {/* ...other content */}
+    <EntitySwitch>
+      <EntitySwitch.Case if={isLighthouseAvailable}>
+        <Grid item md={6}>
+          <EntityLastLighthouseAuditCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
 ```
-
-Link Lighthouse

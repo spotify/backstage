@@ -212,6 +212,9 @@ describe('Integration Test', () => {
     expect(screen.getByText('extLink2: /foo/a')).toBeInTheDocument();
     expect(screen.getByText('extLink3: /sub1')).toBeInTheDocument();
     expect(screen.getByText('extLink4: /foo/b')).toBeInTheDocument();
+
+    // Plugins should be discovered through element tree
+    expect(app.getPlugins()).toEqual([plugin1, plugin2]);
   });
 
   it('runs happy paths without optional routes', async () => {

@@ -29,10 +29,13 @@ import {
   storageApiRef,
 } from '@backstage/core';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
-import { MockStorageApi, wrapInTestApp } from '@backstage/test-utils';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import {
+  MockStorageApi,
+  renderWithEffects,
+  wrapInTestApp,
+} from '@backstage/test-utils';
+import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
-import { EntityFilterGroupsProvider } from '../../filter';
 import { createComponentRouteRef } from '../../routes';
 import { CatalogPage } from './CatalogPage';
 
@@ -106,7 +109,7 @@ describe('CatalogPage', () => {
   };
 
   const renderWrapped = (children: React.ReactNode) =>
-    render(
+    renderWithEffects(
       wrapInTestApp(
         <ApiProvider
           apis={ApiRegistry.from([
@@ -115,7 +118,7 @@ describe('CatalogPage', () => {
             [storageApiRef, MockStorageApi.create()],
           ])}
         >
-          <EntityFilterGroupsProvider>{children}</EntityFilterGroupsProvider>,
+          {children}
         </ApiProvider>,
         {
           mountedRoutes: {
@@ -129,35 +132,38 @@ describe('CatalogPage', () => {
   // related to some theme issues in mui-table
   // https://github.com/mbrn/material-table/issues/1293
   it('should render', async () => {
-    const { findByText, getByText } = renderWrapped(<CatalogPage />);
-    expect(await findByText(/Owned \(1\)/)).toBeInTheDocument();
-    fireEvent.click(getByText(/All/));
-    expect(await findByText(/All \(2\)/)).toBeInTheDocument();
+    const { findByText, getByTestId } = await renderWrapped(<CatalogPage />);
+    await expect(findByText(/Owned \(1\)/)).resolves.toBeInTheDocument();
+    fireEvent.click(getByTestId('user-picker-all'));
+    await expect(findByText(/All \(2\)/)).resolves.toBeInTheDocument();
   });
+
   it('should set initial filter correctly', async () => {
-    const { findByText } = renderWrapped(
+    const { findByText } = await renderWrapped(
       <CatalogPage initiallySelectedFilter="all" />,
     );
-    expect(await findByText(/All \(2\)/)).toBeInTheDocument();
+    await expect(findByText(/All \(2\)/)).resolves.toBeInTheDocument();
   });
-  // this test is for fixing the bug after favoriting an entity, the matching entities defaulting
-  // to "owned" filter and not based on the selected filter
-  it('should render the correct entities filtered on the selectedfilter', async () => {
-    const { findByText, findAllByTitle, getByText } = renderWrapped(
-      <CatalogPage />,
-    );
-    expect(await findByText(/Owned \(1\)/)).toBeInTheDocument();
-    expect(await findByText(/Starred/)).toBeInTheDocument();
-    fireEvent.click(getByText(/Starred/));
-    expect(await findByText(/Starred \(0\)/)).toBeInTheDocument();
-    fireEvent.click(getByText(/All/));
-    expect(await findByText(/All \(2\)/)).toBeInTheDocument();
 
-    const starredIcons = await findAllByTitle('Add to favorites');
+  // this test is for fixing the bug after favoriting an entity, the matching
+  // entities defaulting to "owned" filter and not based on the selected filter
+  it('should render the correct entities filtered on the selected filter', async () => {
+    await renderWrapped(<CatalogPage />);
+    await expect(screen.findByText(/Owned \(1\)/)).resolves.toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('user-picker-starred'));
+    await expect(
+      screen.findByText(/Starred \(0\)/),
+    ).resolves.toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('user-picker-all'));
+    await expect(screen.findByText(/All \(2\)/)).resolves.toBeInTheDocument();
+
+    const starredIcons = await screen.findAllByTitle('Add to favorites');
     fireEvent.click(starredIcons[0]);
-    expect(await findByText(/All \(2\)/)).toBeInTheDocument();
+    await expect(screen.findByText(/All \(2\)/)).resolves.toBeInTheDocument();
 
-    fireEvent.click(getByText(/Starred/));
-    waitFor(() => expect(findByText(/Starred \(1\)/)).toBeInTheDocument());
+    fireEvent.click(screen.getByTestId('user-picker-starred'));
+    await expect(
+      screen.findByText(/Starred \(1\)/),
+    ).resolves.toBeInTheDocument();
   });
 });

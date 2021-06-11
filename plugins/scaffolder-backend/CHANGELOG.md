@@ -1,5 +1,227 @@
 # @backstage/plugin-scaffolder-backend
 
+## 0.11.5
+
+### Patch Changes
+
+- 6fe1567a7: This adds a configuration option to the scaffolder plugin router, so we can allow for multiple `TaskWorkers`. Currently with only one `TaskWorker` you are limited to scaffolding one thing at a time. Set the `taskWorkers?: number` option in your scaffolder router to get more than 1 `TaskWorker`
+- Updated dependencies [ebe802bc4]
+- Updated dependencies [49d7ec169]
+  - @backstage/catalog-model@0.8.1
+  - @backstage/integration@0.5.5
+
+## 0.11.4
+
+### Patch Changes
+
+- 260aaa684: Bump `@gitbeaker` dependencies to `29.x`.
+- Updated dependencies [0fd4ea443]
+- Updated dependencies [add62a455]
+- Updated dependencies [704875e26]
+  - @backstage/integration@0.5.4
+  - @backstage/catalog-client@0.3.12
+  - @backstage/catalog-model@0.8.0
+
+## 0.11.3
+
+### Patch Changes
+
+- 021eb366a: Instead of failing, warn when you need to pay for GitHub Pro.
+
+## 0.11.2
+
+### Patch Changes
+
+- f7f7783a3: Add Owner field in template card and new data distribution
+  Add spec.owner as optional field into TemplateV1Alpha and TemplateV1Beta Schema
+  Add relations ownedBy and ownerOf into Template entity
+  Template documentation updated
+- 65e6c4541: Remove circular dependencies
+- 81d7b9c6f: Added deprecation warnings for `v1alpha1` templates
+- 9962faa2b: Add branch protection for default branches of scaffolded GitHub repositories
+- Updated dependencies [f7f7783a3]
+- Updated dependencies [c7dad9218]
+- Updated dependencies [65e6c4541]
+- Updated dependencies [68fdbf014]
+- Updated dependencies [5001de908]
+  - @backstage/catalog-model@0.7.10
+  - @backstage/backend-common@0.8.1
+  - @backstage/integration@0.5.3
+
+## 0.11.1
+
+### Patch Changes
+
+- 062bbf90f: chore: bump `@testing-library/user-event` from 12.8.3 to 13.1.8
+- 82ca1ac22: The apiBaseUrl setting for Bitbucket Server integrations will now be used when it is set. Otherwise, it will default back to the host setting.
+- fd39d4662: Move `jest-when` to the dev dependencies
+- Updated dependencies [22fd8ce2a]
+- Updated dependencies [10c008a3a]
+- Updated dependencies [f9fb4a205]
+- Updated dependencies [16be1d093]
+  - @backstage/backend-common@0.8.0
+  - @backstage/catalog-model@0.7.9
+
+## 0.11.0
+
+### Minor Changes
+
+- e0bfd3d44: Migrate the plugin to use the `ContainerRunner` interface instead of `runDockerContainer(…)`.
+  It also provides the `ContainerRunner` to the individual templaters instead of to the `createRouter` function.
+
+  To apply this change to an existing backend application, add the following to `src/plugins/scaffolder.ts`:
+
+  ```diff
+  - import { SingleHostDiscovery } from '@backstage/backend-common';
+  + import {
+  +   DockerContainerRunner,
+  +   SingleHostDiscovery,
+  + } from '@backstage/backend-common';
+
+    export default async function createPlugin({
+      logger,
+      config,
+      database,
+      reader,
+    }: PluginEnvironment): Promise<Router> {
+  +   const dockerClient = new Docker();
+  +   const containerRunner = new DockerContainerRunner({ dockerClient });
+
+  +   const cookiecutterTemplater = new CookieCutter({ containerRunner });
+  -   const cookiecutterTemplater = new CookieCutter();
+  +   const craTemplater = new CreateReactAppTemplater({ containerRunner });
+  -   const craTemplater = new CreateReactAppTemplater();
+      const templaters = new Templaters();
+
+      templaters.register('cookiecutter', cookiecutterTemplater);
+      templaters.register('cra', craTemplater);
+
+      const preparers = await Preparers.fromConfig(config, { logger });
+      const publishers = await Publishers.fromConfig(config, { logger });
+
+  -   const dockerClient = new Docker();
+
+      const discovery = SingleHostDiscovery.fromConfig(config);
+      const catalogClient = new CatalogClient({ discoveryApi: discovery });
+
+      return await createRouter({
+        preparers,
+        templaters,
+        publishers,
+        logger,
+        config,
+  -     dockerClient,
+        database,
+        catalogClient,
+        reader,
+      });
+    }
+  ```
+
+### Patch Changes
+
+- 38ca05168: The default `@octokit/rest` dependency was bumped to `"^18.5.3"`.
+- 69eefb5ae: Fix GithubPR built-in action `credentialsProvider.getCredentials` URL.
+  Adding Documentation for GitHub PR built-in action.
+- 75c8cec39: bump `jsonschema` from 1.2.7 to 1.4.0
+- Updated dependencies [e0bfd3d44]
+- Updated dependencies [38ca05168]
+- Updated dependencies [d8b81fd28]
+- Updated dependencies [d1b1306d9]
+  - @backstage/backend-common@0.7.0
+  - @backstage/integration@0.5.2
+  - @backstage/catalog-model@0.7.8
+  - @backstage/config@0.1.5
+  - @backstage/catalog-client@0.3.11
+
+## 0.10.1
+
+### Patch Changes
+
+- a1783f306: Added the `nebula-preview` preview to `Octokit` for repository visibility.
+
+## 0.10.0
+
+### Minor Changes
+
+- 49574a8a3: Fix some `spleling`.
+
+  The `scaffolder-backend` has a configuration schema change that may be breaking
+  in rare circumstances. Due to a typo in the schema, the
+  `scaffolder.github.visibility`, `scaffolder.gitlab.visibility`, and
+  `scaffolder.bitbucket.visibility` did not get proper validation that the value
+  is one of the supported strings (`public`, `internal` (not available for
+  Bitbucket), and `private`). If you had a value that was not one of these three,
+  you may have to adjust your config.
+
+### Patch Changes
+
+- 84c54474d: Forward user token to scaffolder task for subsequent api requests
+- Updated dependencies [d367f63b5]
+- Updated dependencies [b42531cfe]
+  - @backstage/backend-common@0.6.3
+
+## 0.9.6
+
+### Patch Changes
+
+- d8ffec739: Add built-in publish action for creating GitHub pull requests.
+- 7abec4dbc: Fix for the `file://` protocol check in the `FilePreparer` being too strict, breaking Windows.
+- d840d30bc: Bitbucket server needs username to be set as well as the token or appPassword for the publishing process to work.
+
+  ```yaml
+  integrations:
+    bitbucket:
+      - host: bitbucket.mycompany.com
+        apiBaseUrl: https://bitbucket.mycompany.com/rest/api/1.0
+        token: token
+        username: username
+  ```
+
+- b25846562: Enable the JSON parsing of the response from templated variables in the `v2beta1` syntax. Previously if template parameters json strings they were left as strings, they are now parsed as JSON objects.
+
+  Before:
+
+  ```yaml
+  - id: test
+    name: test-action
+    action: custom:run
+    input:
+      input: '{"hello":"ben"}'
+  ```
+
+  Now:
+
+  ```yaml
+  - id: test
+    name: test-action
+    action: custom:run
+    input:
+      input:
+        hello: ben
+  ```
+
+  Also added the `parseRepoUrl` and `json` helpers to the parameters syntax. You can now use these helpers to parse work with some `json` or `repoUrl` strings in templates.
+
+  ```yaml
+  - id: test
+    name: test-action
+    action: cookiecutter:fetch
+    input:
+      destination: '{{ parseRepoUrl parameters.repoUrl }}'
+  ```
+
+  Will produce a parsed version of the `repoUrl` of type `{ repo: string, owner: string, host: string }` that you can use in your actions. Specifically `cookiecutter` with `{{ cookiecutter.destination.owner }}` like the `plugins/scaffolder-backend/sample-templates/v1beta2-demo/template.yaml` example.
+
+- a376e3ee8: Adds a collaborator field to GitHub publish action for multiple users and access levels
+- 423a514c3: Fix execution of the GitHub Pull Request publish action on Windows.
+- 0b7fd7a9d: Fix bug in pull request sample template.
+- Updated dependencies [bb5055aee]
+- Updated dependencies [5d0740563]
+- Updated dependencies [442f34b87]
+  - @backstage/catalog-model@0.7.7
+  - @backstage/catalog-client@0.3.10
+
 ## 0.9.5
 
 ### Patch Changes

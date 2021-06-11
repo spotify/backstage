@@ -98,7 +98,11 @@ describe('<StepInitAnalyzeUrl />', () => {
     );
 
     await act(async () => {
-      userEvent.click(getByRole('button', { name: /Analyze/i }));
+      try {
+        userEvent.click(getByRole('button', { name: /Analyze/i }));
+      } catch {
+        return;
+      }
     });
 
     expect(catalogImportApi.analyzeUrl).toBeCalledTimes(0);
@@ -127,7 +131,9 @@ describe('<StepInitAnalyzeUrl />', () => {
     expect(catalogImportApi.analyzeUrl).toBeCalledTimes(0);
     expect(onAnalysisFn).toBeCalledTimes(0);
     expect(errorApi.post).toBeCalledTimes(0);
-    expect(getByText('Must start with https://.')).toBeInTheDocument();
+    expect(
+      getByText('Must start with http:// or https://.'),
+    ).toBeInTheDocument();
   });
 
   it('should analyze single location', async () => {

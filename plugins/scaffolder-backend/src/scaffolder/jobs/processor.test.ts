@@ -60,6 +60,7 @@ describe('JobProcessor', () => {
           },
         },
       },
+      owner: 'example@email.com',
     },
   };
 

@@ -21,8 +21,5 @@ export * from './gitlab';
 export * from './googleGcs';
 export { defaultScmResolveUrl } from './helpers';
 export { ScmIntegrations } from './ScmIntegrations';
-export type {
-  ScmIntegration,
-  ScmIntegrationRegistry,
-  ScmIntegrationsGroup,
-} from './types';
+export type { ScmIntegration, ScmIntegrationsGroup } from './types';
+export type { ScmIntegrationRegistry } from './registry';

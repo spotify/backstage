@@ -71,11 +71,17 @@ export const MultistepJsonForm = ({
   return (
     <>
       <Stepper activeStep={activeStep} orientation="vertical">
-        {steps.map(({ title, schema, ...formProps }) => {
+        {steps.map(({ title, schema, ...formProps }, index) => {
           return (
             <StepUI key={title}>
-              <StepLabel>
-                <Typography variant="h6">{title}</Typography>
+              <StepLabel
+                aria-label={`Step ${index + 1} ${title}`}
+                aria-disabled="false"
+                tabIndex={0}
+              >
+                <Typography variant="h6" component="h3">
+                  {title}
+                </Typography>
               </StepLabel>
               <StepContent key={title}>
                 <Form

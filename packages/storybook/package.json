@@ -1,7 +1,7 @@
 {
   "name": "storybook",
   "version": "0.2.0",
-  "description": "Storybook build for core package",
+  "description": "Storybook build for components package",
   "private": true,
   "scripts": {
     "start": "start-storybook -p 6006",
@@ -14,7 +14,9 @@
     ]
   },
   "dependencies": {
-    "@backstage/theme": "^0.2.0"
+    "@backstage/theme": "^0.2.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^6.1.11",

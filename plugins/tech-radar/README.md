@@ -18,7 +18,7 @@ It serves and scales well for teams and companies of all sizes that want to have
 
 The Tech Radar can be used in two ways:
 
-- **Simple (Recommended)** - This gives you an out-of-the-box Tech Radar experience. It lives on the `/tech-radar` URL of your Backstage installation, and you can set a variety of configuration directly in your `apis.ts`.
+- **Simple (Recommended)** - This gives you an out-of-the-box Tech Radar experience. It lives on the `/tech-radar` URL of your Backstage installation.
 - **Advanced** - This gives you the React UI component directly. It enables you to insert the Radar on your own layout or page for a more customized feel.
 
 ### Install
@@ -26,6 +26,8 @@ The Tech Radar can be used in two ways:
 For either simple or advanced installations, you'll need to add the dependency using Yarn:
 
 ```sh
+# From your Backstage root directory
+cd packages/app
 yarn add @backstage/plugin-tech-radar
 ```
 
@@ -34,17 +36,16 @@ yarn add @backstage/plugin-tech-radar
 Modify your app routes to include the Router component exported from the tech radar, for example:
 
 ```tsx
-import { Router as TechRadarRouter } from '@backstage/plugin-tech-radar';
+// In packages/app/src/App.tsx
+import { TechRadarPage } from '@backstage/plugin-tech-radar';
 
-// Inside App component
-<Routes>
-  {/* other routes ... */}
-  <Route
-    path="/tech-radar"
-    element={<TechRadarRouter width={1500} height={800} />}
-  />
-  {/* other routes ... */}
-</Routes>;
+const routes = (
+  <FlatRoutes>
+    {/* ...other routes */}
+    <Route
+      path="/tech-radar"
+      element={<TechRadarPage width={1500} height={800} />}
+    />
 ```
 
 If you'd like to configure it more, see the `TechRadarPageProps` and `TechRadarComponentProps` types for options:
@@ -59,7 +60,6 @@ export type TechRadarPageProps = TechRadarComponentProps & {
 export interface TechRadarPageProps {
   width: number;
   height: number;
-  getData?: () => Promise<TechRadarLoaderResponse>;
   svgProps?: object;
 }
 ```
@@ -72,36 +72,35 @@ export interface TechRadarPageProps {
 
 ### How do I load in my own data?
 
-It's simple, you can pass through a `getData` prop which expects a `Promise<TechRadarLoaderResponse>` signature.
+The `TechRadar` plugin uses the `techRadarApiRef` to get a client which implements the `TechRadarApi` interface. The default sample one is located [here](https://github.com/backstage/backstage/blob/master/plugins/tech-radar/src/sample.ts). To load your own data, you'll need to provide a class that implements the `TechRadarApi` and override the `techRadarApiRef` in the `app/src/apis.ts`.
 
-Here's an example:
+```ts
+// app/src/lib/MyClient.ts
+import {
+  TechRadarApi,
+  TechRadarLoaderResponse,
+} from '@backstage/plugin-tech-radar';
 
-```tsx
-const getHardCodedData = () =>
-  Promise.resolve({
-    quadrants: [{ id: 'infrastructure', name: 'Infrastructure' }],
-    rings: [{ id: 'use', name: 'USE', color: '#93c47d' }],
-    entries: [
-      {
-        url: '#',
-        key: 'github-actions',
-        id: 'github-actions',
-        title: 'GitHub Actions',
-        quadrant: 'infrastructure',
-        timeline: [
-          {
-            moved: 0,
-            ringId: 'use',
-            date: new Date('2020-08-06'),
-            description:
-              'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat',
-          },
-        ],
-      },
-    ],
-  });
+class MyOwnClient implements TechRadarApi {
+  async load(): Promise<TechRadarLoaderResponse> {
+    const data = await fetch('https://mydata.json').then(res => res.json());
 
-<TechRadarComponent width={1400} height={800} getData={getHardCodedData} />;
+    // maybe you'll need to do some data transformation here to make it look like TechRadarLoaderResponse
+
+    return data;
+  }
+}
+
+// app/src/apis.ts
+import { MyOwnClient } from './lib/MyClient';
+import { techRadarApiRef } from '@backstage/plugin-tech-radar';
+
+export const apis: AnyApiFactory[] = [
+  /*
+  ...
+  */
+  createApiFactory(techRadarApiRef, new MyOwnClient()),
+];
 ```
 
 ### How do I write tests?

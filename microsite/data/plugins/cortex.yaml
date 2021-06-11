@@ -1,0 +1,13 @@
+---
+title: Cortex Service Quality Scorecards
+author: Cortex
+authorUrl: https://www.getcortexapp.com
+category: Monitoring
+description: Grade the quality of your Backstage services using Scorecards. Automate production readiness, migrations, security audits, and more with CQL (Cortex Query Language).
+documentation: https://github.com/cortexapps/backstage-plugin
+iconUrl: img/cortex.png
+npmPackageName: '@cortexapps/backstage-plugin'
+tags:
+  - web
+  - monitoring
+  - sre

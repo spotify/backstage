@@ -15,6 +15,7 @@
  */
 
 import { GroupEntity, UserEntity } from '@backstage/catalog-model';
+import { SearchEntry } from 'ldapjs';
 import lodashSet from 'lodash/set';
 import { buildOrgHierarchy } from '../util/org';
 import { LdapClient } from './client';
@@ -25,7 +26,6 @@ import {
   LDAP_UUID_ANNOTATION,
 } from './constants';
 import { LdapVendor } from './vendors';
-import { SearchEntry } from 'ldapjs';
 
 /**
  * Reads users out of an LDAP provider.
@@ -63,7 +63,7 @@ export async function readLdapUsers(
     };
 
     if (set) {
-      for (const { path, value } of set) {
+      for (const [path, value] of Object.entries(set)) {
         lodashSet(entity, path, value);
       }
     }
@@ -142,7 +142,7 @@ export async function readLdapGroups(
     };
 
     if (set) {
-      for (const { path, value } of set) {
+      for (const [path, value] of Object.entries(set)) {
         lodashSet(entity, path, value);
       }
     }

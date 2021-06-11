@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2021 Spotify AB
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,90 +14,44 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
-import { useAsync } from 'react-use';
-
-import { catalogApiRef, CatalogApi } from '@backstage/plugin-catalog-react';
+import React from 'react';
 import { Entity } from '@backstage/catalog-model';
-import {
-  CodeSnippet,
-  Content,
-  Header,
-  HeaderTabs,
-  Page,
-  Progress,
-  useApi,
-  WarningPanel,
-} from '@backstage/core';
-
-import { OverviewContent } from './OverviewContent';
-import { OwnedContent } from './OwnedContent';
+import { useOwnUser } from '../hooks';
+import { isOwnerOf } from '@backstage/plugin-catalog-react';
+import { PanelType, TechDocsCustomHome } from './TechDocsCustomHome';
 
 export const TechDocsHome = () => {
-  const [selectedTab, setSelectedTab] = useState<number>(0);
-  const catalogApi: CatalogApi = useApi(catalogApiRef);
+  const { value: user } = useOwnUser();
 
-  const tabs = [{ label: 'Overview' }, { label: 'Owned Documents' }];
-
-  const { value, loading, error } = useAsync(async () => {
-    const response = await catalogApi.getEntities();
-    return response.items.filter((entity: Entity) => {
-      return !!entity.metadata.annotations?.['backstage.io/techdocs-ref'];
-    });
-  });
-
-  if (loading) {
-    return (
-      <Page themeId="documentation">
-        <Header
-          title="Documentation"
-          subtitle="Documentation available in Backstage"
-        />
-        <Content>
-          <Progress />
-        </Content>
-      </Page>
-    );
-  }
-
-  if (error) {
-    return (
-      <Page themeId="documentation">
-        <Header
-          title="Documentation"
-          subtitle="Documentation available in Backstage"
-        />
-        <Content>
-          <WarningPanel
-            severity="error"
-            title="Could not load available documentation."
-          >
-            <CodeSnippet language="text" text={error.toString()} />
-          </WarningPanel>
-        </Content>
-      </Page>
-    );
-  }
-
-  return (
-    <Page themeId="documentation">
-      <Header
-        title="Documentation"
-        subtitle="Documentation available in Backstage"
-      />
-      <HeaderTabs
-        selectedIndex={selectedTab}
-        onChange={index => setSelectedTab(index)}
-        tabs={tabs.map(({ label }, index) => ({
-          id: index.toString(),
-          label,
-        }))}
-      />
-      {selectedTab === 0 ? (
-        <OverviewContent entities={value} />
-      ) : (
-        <OwnedContent entities={value} />
-      )}
-    </Page>
-  );
+  const tabsConfig = [
+    {
+      label: 'Overview',
+      panels: [
+        {
+          title: 'Overview',
+          description:
+            'Explore your internal technical ecosystem through documentation.',
+          panelType: 'DocsCardGrid' as PanelType,
+          filterPredicate: () => true,
+        },
+      ],
+    },
+    {
+      label: 'Owned Documents',
+      panels: [
+        {
+          title: 'Owned documents',
+          description: 'Access your documentation.',
+          panelType: 'DocsTable' as PanelType,
+          filterPredicate: (entity: Entity) => {
+            if (!user) {
+              return false;
+            }
+            return isOwnerOf(user, entity);
+          },
+        },
+      ],
+    },
+  ];
+  return <TechDocsCustomHome tabsConfig={tabsConfig} />;
 };

@@ -26,13 +26,15 @@ import createLimiter from 'p-limit';
 import path from 'path';
 import { Logger } from 'winston';
 import { getFileTreeRecursively, getHeadersForFileExtension } from './helpers';
-import { PublisherBase, PublishRequest, TechDocsMetadata } from './types';
+import {
+  PublisherBase,
+  PublishRequest,
+  ReadinessResponse,
+  TechDocsMetadata,
+} from './types';
 
 export class GoogleGCSPublish implements PublisherBase {
-  static async fromConfig(
-    config: Config,
-    logger: Logger,
-  ): Promise<PublisherBase> {
+  static fromConfig(config: Config, logger: Logger): PublisherBase {
     let bucketName = '';
     try {
       bucketName = config.getString('techdocs.publisher.googleGcs.bucketName');
@@ -65,21 +67,6 @@ export class GoogleGCSPublish implements PublisherBase {
       }),
     });
 
-    // Check if the defined bucket exists. Being able to connect means the configuration is good
-    // and the storage client will work.
-    try {
-      await storageClient.bucket(bucketName).getMetadata();
-      logger.info(`Successfully connected to the GCS bucket ${bucketName}.`);
-    } catch (err) {
-      logger.error(
-        `Could not retrieve metadata about the GCS bucket ${bucketName}. ` +
-          'Make sure the bucket exists. Also make sure that authentication is setup either by explicitly defining ' +
-          'techdocs.publisher.googleGcs.credentials in app config or by using environment variables. ' +
-          'Refer to https://backstage.io/docs/features/techdocs/using-cloud-storage',
-      );
-      throw new Error(err.message);
-    }
-
     return new GoogleGCSPublish(storageClient, bucketName, logger);
   }
 
@@ -91,6 +78,33 @@ export class GoogleGCSPublish implements PublisherBase {
     this.storageClient = storageClient;
     this.bucketName = bucketName;
     this.logger = logger;
+  }
+
+  /**
+   * Check if the defined bucket exists. Being able to connect means the configuration is good
+   * and the storage client will work.
+   */
+  async getReadiness(): Promise<ReadinessResponse> {
+    try {
+      await this.storageClient.bucket(this.bucketName).getMetadata();
+      this.logger.info(
+        `Successfully connected to the GCS bucket ${this.bucketName}.`,
+      );
+
+      return {
+        isAvailable: true,
+      };
+    } catch (err) {
+      this.logger.error(
+        `Could not retrieve metadata about the GCS bucket ${this.bucketName}. ` +
+          'Make sure the bucket exists. Also make sure that authentication is setup either by explicitly defining ' +
+          'techdocs.publisher.googleGcs.credentials in app config or by using environment variables. ' +
+          'Refer to https://backstage.io/docs/features/techdocs/using-cloud-storage',
+      );
+      this.logger.error(`from GCS client library: ${err.message}`);
+
+      return { isAvailable: false };
+    }
   }
 
   /**
@@ -154,7 +168,7 @@ export class GoogleGCSPublish implements PublisherBase {
         .createReadStream()
         .on('error', err => {
           this.logger.error(err.message);
-          reject(err.message);
+          reject(err);
         })
         .on('data', chunk => {
           fileStreamChunks.push(chunk);
@@ -173,9 +187,9 @@ export class GoogleGCSPublish implements PublisherBase {
    */
   docsRouter(): express.Handler {
     return (req, res) => {
-      // Trim the leading forward slash
+      // Decode and trim the leading forward slash
       // filePath example - /default/Component/documented-component/index.html
-      const filePath = req.path.replace(/^\//, '');
+      const filePath = decodeURI(req.path.replace(/^\//, ''));
 
       // Files with different extensions (CSS, HTML) need to be served with different headers
       const fileExtension = path.extname(filePath);

@@ -1,5 +1,163 @@
 # @backstage/backend-common
 
+## 0.8.1
+
+### Patch Changes
+
+- c7dad9218: All cache-related connection errors are now handled and logged by the cache manager. App Integrators may provide an optional error handler when instantiating the cache manager if custom error handling is needed.
+
+  ```typescript
+  // Providing an error handler
+  const cacheManager = CacheManager.fromConfig(config, {
+    onError: e => {
+      if (isSomehowUnrecoverable(e)) {
+        gracefullyShutThingsDown();
+        process.exit(1);
+      }
+    },
+  });
+  ```
+
+- 65e6c4541: Remove circular dependencies
+- 5001de908: Change GitlabUrlReader to SHA timestamp compare using only commits that modify given file path, if file path given
+- Updated dependencies [65e6c4541]
+- Updated dependencies [290405276]
+  - @backstage/integration@0.5.3
+  - @backstage/config-loader@0.6.2
+
+## 0.8.0
+
+### Minor Changes
+
+- 22fd8ce2a: Introducing: a standard API for App Integrators to configure cache stores and Plugin Developers to interact with them.
+
+  Two cache stores are currently supported.
+
+  - `memory`, which is a very simple in-memory key/value store, intended for local development.
+  - `memcache`, which can be used to connect to a memcache host.
+
+  Configuring and working with cache stores is very similar to the process for database connections.
+
+  ```yaml
+  backend:
+    cache:
+      store: memcache
+      connection: user:pass@cache.example.com:11211
+  ```
+
+  ```typescript
+  import { CacheManager } from '@backstage/backend-common';
+
+  // Instantiating a cache client for a plugin.
+  const cacheManager = CacheManager.fromConfig(config);
+  const somePluginCache = cacheManager.forPlugin('somePlugin');
+  const cacheClient = somePluginCache.getClient();
+
+  // Using the cache client:
+  const cachedValue = await cacheClient.get('someKey');
+  if (cachedValue) {
+    return cachedValue;
+  } else {
+    const someValue = await someExpensiveProcess();
+    await cacheClient.set('someKey', someValue);
+  }
+  await cacheClient.delete('someKey');
+  ```
+
+  Cache clients deal with TTLs in milliseconds. A TTL can be provided as a defaultTtl when getting a client, or may be passed when setting specific objects. If no TTL is provided, data will be persisted indefinitely.
+
+  ```typescript
+  // Getting a client with a default TTL
+  const cacheClient = somePluginCache.getClient({
+    defaultTtl: 3600000,
+  });
+
+  // Setting a TTL on a per-object basis.
+  cacheClient.set('someKey', data, { ttl: 3600000 });
+  ```
+
+  Configuring a cache store is optional. Even when no cache store is configured, the cache manager will dutifully pass plugins a manager that resolves a cache client that does not actually write or read any data.
+
+### Patch Changes
+
+- f9fb4a205: Prep work for mysql support in backend-common
+
+## 0.7.0
+
+### Minor Changes
+
+- e0bfd3d44: Refactor the `runDockerContainer(…)` function to an interface-based api.
+  This gives the option to replace the docker runtime in the future.
+
+  Packages and plugins that previously used the `dockerode` as argument should be migrated to use the new `ContainerRunner` interface instead.
+
+  ```diff
+    import {
+  -   runDockerContainer,
+  +   ContainerRunner,
+      PluginEndpointDiscovery,
+    } from '@backstage/backend-common';
+  - import Docker from 'dockerode';
+
+    type RouterOptions = {
+      // ...
+  -   dockerClient: Docker,
+  +   containerRunner: ContainerRunner;
+    };
+
+    export async function createRouter({
+      // ...
+  -   dockerClient,
+  +   containerRunner,
+    }: RouterOptions): Promise<express.Router> {
+      // ...
+
+  +   await containerRunner.runContainer({
+  -   await runDockerContainer({
+        image: 'docker',
+        // ...
+  -     dockerClient,
+      });
+
+      // ...
+    }
+  ```
+
+  To keep the `dockerode` based runtime, use the `DockerContainerRunner` implementation:
+
+  ```diff
+  + import {
+  +   ContainerRunner,
+  +   DockerContainerRunner
+  + } from '@backstage/backend-common';
+  - import { runDockerContainer } from '@backstage/backend-common';
+
+  + const containerRunner: ContainerRunner = new DockerContainerRunner({dockerClient});
+  + await containerRunner.runContainer({
+  - await runDockerContainer({
+      image: 'docker',
+      // ...
+  -   dockerClient,
+    });
+  ```
+
+### Patch Changes
+
+- 38ca05168: The default `@octokit/rest` dependency was bumped to `"^18.5.3"`.
+- Updated dependencies [38ca05168]
+- Updated dependencies [d8b81fd28]
+  - @backstage/integration@0.5.2
+  - @backstage/config-loader@0.6.1
+  - @backstage/config@0.1.5
+
+## 0.6.3
+
+### Patch Changes
+
+- d367f63b5: remove use of deprecated type HelmetOptions
+- b42531cfe: Support configuration of file storage for SQLite databases. Every plugin has its
+  own database file at the specified path.
+
 ## 0.6.2
 
 ### Patch Changes

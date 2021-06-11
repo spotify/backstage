@@ -176,10 +176,9 @@ export const StepPrepareCreatePullRequest = ({
   return (
     <>
       <Typography>
-        You entered a link to a {analyzeResult.integrationType} repository but
-        we didn't found a <code>catalog-info.yaml</code>. Use this form to
-        create a Pull Request that creates an initial{' '}
-        <code>catalog-info.yaml</code>.
+        You entered a link to a {analyzeResult.integrationType} repository but a{' '}
+        <code>catalog-info.yaml</code> could not be found. Use this form to open
+        a Pull Request that creates one.
       </Typography>
 
       <PreparePullRequestForm<FormData>

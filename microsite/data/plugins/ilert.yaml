@@ -1,0 +1,15 @@
+---
+title: iLert
+author: iLert
+authorUrl: https://www.ilert.com
+category: Monitoring
+description: iLert is a platform for alerting, on-call management and uptime monitoring targeted at DevOps and IT teams.
+documentation: https://github.com/backstage/backstage/tree/master/plugins/ilert
+iconUrl: https://avatars.githubusercontent.com/u/13230510?s=200&v=4
+npmPackageName: '@backstage/plugin-ilert'
+tags:
+  - monitoring
+  - errors
+  - alerting
+  - uptime
+  - on-call

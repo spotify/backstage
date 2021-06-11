@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export { createLegacyActions } from './stages/legacy';
 export * from './stages';
 export * from './jobs';
 export * from './actions';

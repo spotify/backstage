@@ -28,9 +28,9 @@ import os from 'os';
 import path from 'path';
 import { NotModifiedError } from '@backstage/errors';
 import { BitbucketUrlReader } from './BitbucketUrlReader';
-import { ReadTreeResponseFactory } from './tree';
+import { DefaultReadTreeResponseFactory } from './tree';
 
-const treeResponseFactory = ReadTreeResponseFactory.create({
+const treeResponseFactory = DefaultReadTreeResponseFactory.create({
   config: new ConfigReader({}),
 });
 

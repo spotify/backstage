@@ -19,7 +19,10 @@ import {
   ScmIntegrationRegistry,
 } from '@backstage/integration';
 import { Octokit } from '@octokit/rest';
-import { initRepoAndPush } from '../../../stages/publish/helpers';
+import {
+  enableBranchProtectionOnDefaultRepoBranch,
+  initRepoAndPush,
+} from '../../../stages/publish/helpers';
 import { getRepoSourceDirectory, parseRepoUrl } from './util';
 import { createTemplateAction } from '../../createTemplateAction';
 
@@ -67,13 +70,13 @@ export function createPublishGithubAction(options: {
             type: 'string',
           },
           repoVisibility: {
-            title: 'Repository Visiblity',
+            title: 'Repository Visibility',
             type: 'string',
             enum: ['private', 'public', 'internal'],
           },
           sourcePath: {
             title:
-              'Path within the workspace that will be used as the repository root. If omitted, the entire workspace will be published as the respository.',
+              'Path within the workspace that will be used as the repository root. If omitted, the entire workspace will be published as the repository.',
             type: 'string',
           },
           collaborators: {
@@ -149,6 +152,7 @@ export function createPublishGithubAction(options: {
       const client = new Octokit({
         auth: token,
         baseUrl: integrationConfig.config.apiBaseUrl,
+        previews: ['nebula-preview'],
       });
 
       const user = await client.users.getByUsername({
@@ -170,7 +174,7 @@ export function createPublishGithubAction(options: {
               description: description,
             });
 
-      const { data } = await repoCreationPromise;
+      const { data: newRepo } = await repoCreationPromise;
       if (access?.startsWith(`${owner}/`)) {
         const [, team] = access.split('/');
         await client.teams.addOrUpdateRepoPermissionsInOrg({
@@ -180,7 +184,7 @@ export function createPublishGithubAction(options: {
           repo,
           permission: 'admin',
         });
-        // no need to add access if it's the person who own's the personal account
+        // No need to add access if it's the person who owns the personal account
       } else if (access && access !== owner) {
         await client.repos.addCollaborator({
           owner,
@@ -211,8 +215,8 @@ export function createPublishGithubAction(options: {
         }
       }
 
-      const remoteUrl = data.clone_url;
-      const repoContentsUrl = `${data.html_url}/blob/master`;
+      const remoteUrl = newRepo.clone_url;
+      const repoContentsUrl = `${newRepo.html_url}/blob/master`;
 
       await initRepoAndPush({
         dir: getRepoSourceDirectory(ctx.workspacePath, ctx.input.sourcePath),
@@ -223,6 +227,19 @@ export function createPublishGithubAction(options: {
         },
         logger: ctx.logger,
       });
+
+      try {
+        await enableBranchProtectionOnDefaultRepoBranch({
+          owner,
+          client,
+          repoName: newRepo.name,
+          logger: ctx.logger,
+        });
+      } catch (e) {
+        throw new Error(
+          `Failed to add branch protection to '${newRepo.name}', ${e}`,
+        );
+      }
 
       ctx.output('remoteUrl', remoteUrl);
       ctx.output('repoContentsUrl', repoContentsUrl);

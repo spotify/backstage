@@ -17,7 +17,8 @@
 import { Entity } from '@backstage/catalog-model';
 import { spawn } from 'child_process';
 import fs from 'fs-extra';
-import yaml from 'js-yaml';
+import yaml, { DEFAULT_SCHEMA, Type } from 'js-yaml';
+import { isAbsolute, normalize } from 'path';
 import { PassThrough, Writable } from 'stream';
 import { Logger } from 'winston';
 import { ParsedLocationAnnotation } from '../../helpers';
@@ -138,6 +139,47 @@ export const getRepoUrlFromLocationAnnotation = (
   return undefined;
 };
 
+class UnknownTag {
+  constructor(public readonly data: any, public readonly type?: string) {}
+}
+
+const MKDOCS_SCHEMA = DEFAULT_SCHEMA.extend([
+  new Type('', {
+    kind: 'scalar',
+    multi: true,
+    representName: o => (o as UnknownTag).type,
+    represent: o => (o as UnknownTag).data ?? '',
+    instanceOf: UnknownTag,
+    construct: (data: string, type?: string) => new UnknownTag(data, type),
+  }),
+]);
+
+/**
+ * Validating mkdocs config file for incorrect/insecure values
+ * Throws on invalid configs
+ *
+ * @param {string} mkdocsYmlPath Absolute path to mkdocs.yml or equivalent of a docs site
+ */
+export const validateMkdocsYaml = async (mkdocsYmlPath: string) => {
+  let mkdocsYmlFileString;
+  try {
+    mkdocsYmlFileString = await fs.readFile(mkdocsYmlPath, 'utf8');
+  } catch (error) {
+    throw new Error(
+      `Could not read MkDocs YAML config file ${mkdocsYmlPath} before for validation: ${error.message}`,
+    );
+  }
+
+  const mkdocsYml: any = yaml.load(mkdocsYmlFileString, {
+    schema: MKDOCS_SCHEMA,
+  });
+  if (mkdocsYml.docs_dir && isAbsolute(normalize(mkdocsYml.docs_dir))) {
+    throw new Error(
+      "docs_dir configuration value in mkdocs can't be an absolute directory path for security reasons. Use relative paths instead which are resolved relative to your mkdocs.yml file location.",
+    );
+  }
+};
+
 /**
  * Update the mkdocs.yml file before TechDocs generator uses it to generate docs site.
  *
@@ -171,7 +213,7 @@ export const patchMkdocsYmlPreBuild = async (
 
   let mkdocsYml: any;
   try {
-    mkdocsYml = yaml.load(mkdocsYmlFileString);
+    mkdocsYml = yaml.load(mkdocsYmlFileString, { schema: MKDOCS_SCHEMA });
 
     // mkdocsYml should be an object type after successful parsing.
     // But based on its type definition, it can also be a string or undefined, which we don't want.
@@ -197,7 +239,11 @@ export const patchMkdocsYmlPreBuild = async (
   }
 
   try {
-    await fs.writeFile(mkdocsYmlPath, yaml.dump(mkdocsYml), 'utf8');
+    await fs.writeFile(
+      mkdocsYmlPath,
+      yaml.dump(mkdocsYml, { schema: MKDOCS_SCHEMA }),
+      'utf8',
+    );
   } catch (error) {
     logger.warn(
       `Could not write to ${mkdocsYmlPath} after updating it before running the generator. ${error.message}`,

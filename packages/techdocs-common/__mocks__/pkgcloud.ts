@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { EventEmitter } from 'events';
 import fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
-import { EventEmitter } from 'events';
+import { ClientError } from 'pkgcloud';
 
 const rootDir = os.platform() === 'win32' ? 'C:\\rootDir' : '/rootDir';
 
@@ -37,12 +38,11 @@ class PkgCloudStorageClient {
   getFile(
     containerName: string,
     file: string,
-    callback: (err: any, file: string) => any,
+    callback: (err: any, file: any) => any,
   ) {
     checkFileExists(file).then(res => {
       if (!res) {
-        callback('File does not exist', file);
-        throw new Error('File does not exist');
+        callback('File does not exist', undefined);
       } else {
         callback(undefined, 'success');
       }
@@ -51,13 +51,12 @@ class PkgCloudStorageClient {
 
   getContainer(
     containerName: string,
-    callback: (err: string, container: string) => any,
+    callback: (err: ClientError, container: any) => any,
   ) {
     if (containerName !== 'mock') {
-      callback('Container does not exist', containerName);
-      throw new Error('Container does not exist');
+      callback(new Error('Container does not exist'), undefined);
     } else {
-      callback('Container does not exist', 'success');
+      callback(undefined, 'success');
     }
   }
 

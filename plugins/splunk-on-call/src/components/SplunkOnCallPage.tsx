@@ -23,8 +23,7 @@ import {
   Header,
   SupportButton,
 } from '@backstage/core';
-import { SplunkOnCallCard } from './SplunkOnCallCard';
-import { useEntity } from '@backstage/plugin-catalog-react';
+import { EntitySplunkOnCallCard } from './EntitySplunkOnCallCard';
 
 const useStyles = makeStyles(() => ({
   overflowXScroll: {
@@ -44,7 +43,6 @@ export const SplunkOnCallPage = ({
   pageTitle,
 }: SplunkOnCallPageProps): JSX.Element => {
   const classes = useStyles();
-  const { entity } = useEntity();
 
   return (
     <Page themeId="tool">
@@ -57,7 +55,7 @@ export const SplunkOnCallPage = ({
         </ContentHeader>
         <Grid container spacing={3} direction="row">
           <Grid item xs={12} sm={6} md={4}>
-            <SplunkOnCallCard entity={entity} />
+            <EntitySplunkOnCallCard />
           </Grid>
         </Grid>
       </Content>

@@ -202,13 +202,13 @@ export const WorkflowRunDetails = ({ entity }: { entity: Entity }) => {
               <TableCell>
                 <Typography noWrap>Message</Typography>
               </TableCell>
-              <TableCell>{details.value?.head_commit.message}</TableCell>
+              <TableCell>{details.value?.head_commit?.message}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
                 <Typography noWrap>Commit ID</Typography>
               </TableCell>
-              <TableCell>{details.value?.head_commit.id}</TableCell>
+              <TableCell>{details.value?.head_commit?.id}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
@@ -231,7 +231,7 @@ export const WorkflowRunDetails = ({ entity }: { entity: Entity }) => {
               <TableCell>
                 <Typography noWrap>Author</Typography>
               </TableCell>
-              <TableCell>{`${details.value?.head_commit.author?.name} (${details.value?.head_commit.author?.email})`}</TableCell>
+              <TableCell>{`${details.value?.head_commit?.author?.name} (${details.value?.head_commit?.author?.email})`}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>

@@ -19,7 +19,11 @@ export {
   ORIGIN_LOCATION_ANNOTATION,
   SOURCE_LOCATION_ANNOTATION,
 } from './annotation';
-export { parseLocationReference, stringifyLocationReference } from './helpers';
+export {
+  parseLocationReference,
+  stringifyLocationReference,
+  getEntitySourceLocation,
+} from './helpers';
 export type { Location, LocationSpec } from './types';
 export {
   analyzeLocationSchema,

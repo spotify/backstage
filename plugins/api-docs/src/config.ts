@@ -16,7 +16,7 @@
 
 import { ApiEntity } from '@backstage/catalog-model';
 import { createApiRef } from '@backstage/core';
-import { ApiDefinitionWidget } from './components';
+import { ApiDefinitionWidget } from './components/ApiDefinitionCard/ApiDefinitionWidget';
 
 export const apiDocsConfigRef = createApiRef<ApiDocsConfig>({
   id: 'plugin.api-docs.config',

@@ -33,7 +33,9 @@ export const ProjectSelect = ({
 
   const projectOptions = projects
     .filter(p => p.id)
-    .sort((a, b) => (a.id as string).localeCompare(b.id as string));
+    .sort((a, b) =>
+      ((a.name ?? a.id) as string).localeCompare((b.name ?? b.id) as string),
+    );
 
   const handleOnChange = (e: React.ChangeEvent<{ value: unknown }>) => {
     onSelect(e.target.value as string);
@@ -41,9 +43,10 @@ export const ProjectSelect = ({
 
   const renderValue = (value: unknown) => {
     const proj = value as string;
+    const projectObj = projects.find(p => p.id === proj);
     return (
       <b data-testid={`selected-${proj}`}>
-        {proj === 'all' ? 'All Projects' : proj}
+        {proj === 'all' ? 'All Projects' : projectObj?.name ?? proj}
       </b>
     );
   };
@@ -52,7 +55,7 @@ export const ProjectSelect = ({
     <Select
       className={classes.select}
       variant="outlined"
-      value={project || 'all'}
+      value={project ?? 'all'}
       renderValue={renderValue}
       onChange={handleOnChange}
       data-testid="project-filter-select"
@@ -64,7 +67,7 @@ export const ProjectSelect = ({
           value={proj.id}
           data-testid={`option-${proj.id}`}
         >
-          {proj.id === 'all' ? 'All Projects' : proj.id}
+          {proj.id === 'all' ? 'All Projects' : proj.name ?? proj.id}
         </MenuItem>
       ))}
     </Select>

@@ -18,10 +18,10 @@ import React from 'react';
 import classnames from 'classnames';
 import { Table, TableColumn } from '@backstage/core';
 import { Typography } from '@material-ui/core';
-import { costFormatter, formatPercent } from '../../utils/formatters';
+import { costFormatter, formatChange } from '../../utils/formatters';
 import { useEntityDialogStyles as useStyles } from '../../utils/styles';
 import { CostGrowthIndicator } from '../CostGrowth';
-import { BarChartOptions, Entity } from '../../types';
+import { BarChartOptions, ChangeStatistic, Entity } from '../../types';
 
 export type ProductEntityTableOptions = Partial<
   Pick<BarChartOptions, 'previousName' | 'currentName'>
@@ -32,7 +32,7 @@ type RowData = {
   label: string;
   previous: number;
   current: number;
-  ratio: number;
+  change: ChangeStatistic;
 };
 
 function createRenderer(col: keyof RowData, classes: Record<string, string>) {
@@ -41,7 +41,7 @@ function createRenderer(col: keyof RowData, classes: Record<string, string>) {
     const rowStyles = classnames(classes.row, {
       [classes.rowTotal]: row.id === 'total',
       [classes.colFirst]: col === 'label',
-      [classes.colLast]: col === 'ratio',
+      [classes.colLast]: col === 'change',
     });
 
     switch (col) {
@@ -52,12 +52,12 @@ function createRenderer(col: keyof RowData, classes: Record<string, string>) {
             {costFormatter.format(row[col])}
           </Typography>
         );
-      case 'ratio':
+      case 'change':
         return (
           <CostGrowthIndicator
             className={rowStyles}
-            ratio={row.ratio}
-            formatter={amount => formatPercent(Math.abs(amount))}
+            change={row.change}
+            formatter={formatChange}
           />
         );
       default:
@@ -75,10 +75,15 @@ function createSorter(field?: keyof Omit<RowData, 'id'>) {
     if (a.id === 'total') return 1;
     if (b.id === 'total') return 1;
     if (field === 'label') return a.label.localeCompare(b.label);
+    if (field === 'change') {
+      if (formatChange(a[field]) === '∞' || formatChange(b[field]) === '-∞')
+        return 1;
+      if (formatChange(a[field]) === '-∞' || formatChange(b[field]) === '∞')
+        return -1;
+      return a[field].ratio! - b[field].ratio!;
+    }
 
-    return field
-      ? a[field] - b[field]
-      : b.previous + b.current - (a.previous + a.current);
+    return b.previous + b.current - (a.previous + a.current);
   };
 }
 
@@ -134,11 +139,11 @@ export const ProductEntityTable = ({
       customSort: createSorter('current'),
     },
     {
-      field: 'ratio',
+      field: 'change',
       title: <Typography className={lastColClasses}>Change</Typography>,
       align: 'right',
-      render: createRenderer('ratio', classes),
-      customSort: createSorter('ratio'),
+      render: createRenderer('change', classes),
+      customSort: createSorter('change'),
     },
   ];
 
@@ -148,14 +153,14 @@ export const ProductEntityTable = ({
       label: e.id || 'Unknown',
       previous: e.aggregation[0],
       current: e.aggregation[1],
-      ratio: e.change.ratio,
+      change: e.change,
     }))
     .concat({
       id: 'total',
       label: 'Total',
       previous: entity.aggregation[0],
       current: entity.aggregation[1],
-      ratio: entity.change.ratio,
+      change: entity.change,
     })
     .sort(createSorter());
 

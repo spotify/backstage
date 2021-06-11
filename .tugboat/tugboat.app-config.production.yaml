@@ -1,13 +1,10 @@
 app:
   title: Backstage Tugboat Preview
-  baseUrl:
-    $env: TUGBOAT_DEFAULT_SERVICE_URL
+  baseUrl: ${TUGBOAT_DEFAULT_SERVICE_URL}
 
 backend:
-  baseUrl:
-    $env: TUGBOAT_DEFAULT_SERVICE_URL
+  baseUrl: ${TUGBOAT_DEFAULT_SERVICE_URL}
   cors:
-    origin:
-      $env: TUGBOAT_DEFAULT_SERVICE_URL
+    origin: ${TUGBOAT_DEFAULT_SERVICE_URL}
     methods: [GET, POST, PUT, DELETE]
     credentials: true

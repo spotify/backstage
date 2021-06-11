@@ -275,7 +275,7 @@ export function defaultGenerateStepper(
                       }
                     />
                     <FormHelperText>
-                      WARNING: This may fail is no CODEOWNERS file is found at
+                      WARNING: This may fail if no CODEOWNERS file is found at
                       the target location.
                     </FormHelperText>
                   </>

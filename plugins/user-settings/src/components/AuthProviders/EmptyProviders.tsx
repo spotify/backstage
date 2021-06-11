@@ -22,10 +22,8 @@ const EXAMPLE = `auth:
   providers:
     google:
       development:
-        clientId:
-          $env: AUTH_GOOGLE_CLIENT_ID
-        clientSecret:
-          $env: AUTH_GOOGLE_CLIENT_SECRET
+        clientId: \${AUTH_GOOGLE_CLIENT_ID}
+        clientSecret: \${AUTH_GOOGLE_CLIENT_SECRET}
 `;
 
 export const EmptyProviders = () => (

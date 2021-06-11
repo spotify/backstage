@@ -29,6 +29,7 @@ export function registerCommands(program: CommanderStatic) {
     .command('app:build')
     .description('Build an app for a production release')
     .option('--stats', 'Write bundle stats to output directory')
+    .option('--lax', 'Do not require environment variables to be set')
     .option(...configOption)
     .action(lazy(() => import('./app/build').then(m => m.default)));
 
@@ -59,11 +60,7 @@ export function registerCommands(program: CommanderStatic) {
     .helpOption(', --backstage-cli-help') // Let docker handle --help
     .option('--build', 'Build packages before packing them into the image')
     .description(
-      // TODO: Add example use cases in Backstage documentation.
-      // For example, if a $NPM_TOKEN needs to be exposed, run `backend:build-image --secret
-      // id=NPM_TOKEN,src=/NPM_TOKEN.txt`.
-      'Bundles the package into a docker image. All extra args are forwarded to ' +
-        '`docker image build`.',
+      'Bundles the package into a docker image. This command is deprecated and will be removed.',
     )
     .action(lazy(() => import('./backend/buildImage').then(m => m.default)));
 
@@ -141,6 +138,15 @@ export function registerCommands(program: CommanderStatic) {
     .action(lazy(() => import('./testCommand').then(m => m.default)));
 
   program
+    .command('config:docs')
+    .option(
+      '--package <name>',
+      'Only include the schema that applies to the given package',
+    )
+    .description('Browse the configuration reference documentation')
+    .action(lazy(() => import('./config/docs').then(m => m.default)));
+
+  program
     .command('config:print')
     .option(
       '--package <name>',
@@ -215,10 +221,8 @@ export function registerCommands(program: CommanderStatic) {
     .action(lazy(() => import('./buildWorkspace').then(m => m.default)));
 
   program
-    .command('create-github-app <github-org>', { hidden: true })
-    .description(
-      'Create new GitHub App in your organization. This command is experimental and may change in the future.',
-    )
+    .command('create-github-app <github-org>')
+    .description('Create new GitHub App in your organization.')
     .action(lazy(() => import('./create-github-app').then(m => m.default)));
 }
 

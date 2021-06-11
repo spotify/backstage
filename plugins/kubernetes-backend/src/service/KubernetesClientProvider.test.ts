@@ -34,6 +34,7 @@ describe('KubernetesClientProvider', () => {
       url: 'http://localhost:9999',
       serviceAccountToken: 'TOKEN',
       authProvider: 'serviceAccount',
+      skipTLSVerify: false,
     });
 
     expect(result.basePath).toBe('http://localhost:9999');
@@ -41,6 +42,7 @@ describe('KubernetesClientProvider', () => {
     const auth = (result as any).authentications.default;
     expect(auth.users[0].token).toBe('TOKEN');
     expect(auth.clusters[0].name).toBe('cluster-name');
+    expect(auth.clusters[0].skipTLSVerify).toBe(false);
 
     expect(mockGetKubeConfig.mock.calls.length).toBe(1);
   });
@@ -57,6 +59,7 @@ describe('KubernetesClientProvider', () => {
       url: 'http://localhost:9999',
       serviceAccountToken: 'TOKEN',
       authProvider: 'serviceAccount',
+      skipTLSVerify: false,
     });
 
     expect(result.basePath).toBe('http://localhost:9999');

@@ -23,7 +23,7 @@ import { ConfigContextProps } from '../hooks/useConfig';
 const schema = yup
   .object()
   .shape({
-    group: yup.string(),
+    group: yup.string().nullable(),
     project: yup.string().nullable(),
   })
   .required();

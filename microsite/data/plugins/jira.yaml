@@ -1,9 +1,9 @@
 ---
 title: Jira
 author: roadie.io
-authorUrl: https://roadie.io
+authorUrl: https://roadie.io/?utm_source=backstage.io&utm_medium=marketplace&utm_campaign=jira
 category: Agile Planning
 description: View Jira summary for your projects in Backstage.
-documentation: https://roadie.io/backstage/plugins/jira
+documentation: https://roadie.io/backstage/plugins/jira/?utm_source=backstage.io&utm_medium=marketplace&utm_campaign=jira
 iconUrl: https://roadie.io/images/logos/jira.png
 npmPackageName: '@roadiehq/backstage-plugin-jira'

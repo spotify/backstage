@@ -17,12 +17,13 @@ import { ApiProvider, ApiRegistry, errorApiRef } from '@backstage/core';
 import { renderInTestApp, renderWithEffects } from '@backstage/test-utils';
 import { lightTheme } from '@backstage/theme';
 import { ThemeProvider } from '@material-ui/core';
+import { fireEvent, within } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter, Route } from 'react-router';
 import { ScaffolderApi, scaffolderApiRef } from '../../api';
 import { rootRouteRef } from '../../routes';
-import { TemplatePage, createValidator } from './TemplatePage';
+import { TemplatePage } from './TemplatePage';
 
 jest.mock('react-router-dom', () => {
   return {
@@ -123,58 +124,76 @@ describe('TemplatePage', () => {
     ).not.toBeInTheDocument();
     expect(rendered.queryByText('This is root')).toBeInTheDocument();
   });
-});
 
-describe('createValidator', () => {
-  it('should validate deep schema', () => {
-    const validator = createValidator({
-      type: 'object',
-      properties: {
-        foo: {
-          type: 'object',
-          properties: {
-            bar: {
-              type: 'string',
-              'ui:field': 'RepoUrlPicker',
-            },
+  it('display template with oneOf', async () => {
+    scaffolderApiMock.getTemplateParameterSchema.mockResolvedValue({
+      title: 'my-schema',
+      steps: [
+        {
+          title: 'Fill in some steps',
+          schema: {
+            oneOf: [
+              {
+                title: 'First',
+                properties: {
+                  name: {
+                    title: 'Name',
+                    type: 'string',
+                  },
+                },
+                required: ['name'],
+              },
+              {
+                title: 'Second',
+                properties: {
+                  something: {
+                    title: 'Something',
+                    type: 'string',
+                  },
+                },
+                required: ['something'],
+              },
+            ],
           },
         },
-      },
+      ],
     });
 
-    const errors = { foo: { bar: { addError: jest.fn() } } };
-    validator({ foo: { bar: 'github.com?type=github&owner=a' } }, errors as any);
-    expect(errors.foo.bar.addError).toHaveBeenCalledWith(
-      'Incomplete repository location provided',
+    const {
+      findByText,
+      findByLabelText,
+      findAllByRole,
+      findByRole,
+    } = await renderInTestApp(
+      <ApiProvider apis={apis}>
+        <TemplatePage />
+      </ApiProvider>,
+      {
+        mountedRoutes: {
+          '/create/actions': rootRouteRef,
+        },
+      },
     );
-    jest.resetAllMocks();
 
-    validator({ foo: { bar: 'github.com?type=github&repo=b' } }, errors as any);
-    expect(errors.foo.bar.addError).toHaveBeenCalledWith(
-      'Incomplete repository location provided',
-    );
-    jest.resetAllMocks();
+    expect(await findByText('Fill in some steps')).toBeInTheDocument();
 
-    validator({ foo: { bar: 'github.com?type=github&owner=a&repo=b' } }, errors as any);
-    expect(errors.foo.bar.addError).not.toHaveBeenCalled();
+    // Fill the first option
+    fireEvent.change(await findByLabelText('Name', { exact: false }), {
+      target: { value: 'my-name' },
+    });
 
-    validator({ foo: { bar: 'bitbucket.org?type=bitbucket' } }, errors as any);
-    expect(errors.foo.bar.addError).toHaveBeenCalledWith(
-      'Incomplete repository location provided, workspace, project and repo required',
-    );
-    jest.resetAllMocks();
+    // Switch to second option
+    fireEvent.mouseDown((await findAllByRole('button'))[0]);
+    const listbox = within(await findByRole('listbox'));
+    fireEvent.click(listbox.getByText(/Second/i));
 
-    validator({ foo: { bar: 'bitbucket.org?type=bitbucket&workspace=workspace' } }, errors as any);
-    expect(errors.foo.bar.addError).toHaveBeenCalledWith(
-      'Incomplete repository location provided, workspace, project and repo required',
-    );
-    jest.resetAllMocks();
+    // Fill the second option
+    fireEvent.change(await findByLabelText('Something', { exact: false }), {
+      target: { value: 'my-something' },
+    });
 
-    validator({ foo: { bar: 'bitbucket.org?type=bitbucket&workspace=workspace&project=project' } }, errors as any);
-    expect(errors.foo.bar.addError).toHaveBeenCalledWith(
-      'Incomplete repository location provided, workspace, project and repo required',
-    );
-    jest.resetAllMocks();
-
+    // Go to the final page
+    fireEvent.click(await findByText('Next step'));
+    expect(await findByText('Reset')).toBeInTheDocument();
   });
 });

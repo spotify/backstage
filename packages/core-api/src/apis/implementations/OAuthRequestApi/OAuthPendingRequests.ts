@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { BehaviorSubject } from '../../../lib';
+import { BehaviorSubject } from '../../../lib/subjects';
 import { Observable } from '../../../types';
 
 type RequestQueueEntry<ResultType> = {

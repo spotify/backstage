@@ -9,13 +9,14 @@ You can use the flag `--skip-install` to skip the install.
 With `npx`:
 
 ```sh
-$ npx @backstage/create-app
+npx @backstage/create-app
 ```
 
 With a local clone of this repo, from the main `create-app/` folder, run:
 
 ```sh
-$ yarn backstage-create-app
+yarn install
+yarn backstage-create-app
 ```
 
 ## Documentation

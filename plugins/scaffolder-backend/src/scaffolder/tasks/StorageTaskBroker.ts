@@ -18,6 +18,7 @@ import { Logger } from 'winston';
 import {
   CompletedTaskState,
   Task,
+  TaskSecrets,
   TaskSpec,
   TaskStore,
   TaskBroker,
@@ -46,6 +47,10 @@ export class TaskAgent implements Task {
 
   get spec() {
     return this.state.spec;
+  }
+
+  get secrets() {
+    return this.state.secrets;
   }
 
   async getWorkspaceName() {
@@ -101,6 +106,7 @@ export class TaskAgent implements Task {
 interface TaskState {
   spec: TaskSpec;
   taskId: string;
+  secrets?: TaskSecrets;
 }
 
 function defer() {
@@ -126,6 +132,7 @@ export class StorageTaskBroker implements TaskBroker {
           {
             taskId: pendingTask.id,
             spec: pendingTask.spec,
+            secrets: pendingTask.secrets,
           },
           this.storage,
           this.logger,
@@ -136,8 +143,11 @@ export class StorageTaskBroker implements TaskBroker {
     }
   }
 
-  async dispatch(spec: TaskSpec): Promise<DispatchResult> {
-    const taskRow = await this.storage.createTask(spec);
+  async dispatch(
+    spec: TaskSpec,
+    secrets?: TaskSecrets,
+  ): Promise<DispatchResult> {
+    const taskRow = await this.storage.createTask(spec, secrets);
     this.signalDispatch();
     return {
       taskId: taskRow.taskId,

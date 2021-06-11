@@ -28,7 +28,7 @@ import {
 } from '../../lib/passport';
 import { AuthProviderRouteHandlers, AuthProviderFactory } from '../types';
 import { postMessageResponse } from '../../lib/flow';
-import { TokenIssuer } from '../../identity';
+import { TokenIssuer } from '../../identity/types';
 
 type SamlInfo = {
   fullProfile: any;

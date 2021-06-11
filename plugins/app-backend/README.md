@@ -7,7 +7,9 @@ This backend plugin can be installed to serve static content of a Backstage app.
 Add both this package and your local frontend app package as dependencies to your backend, for example
 
 ```bash
-yarn add @backstage/plugin-app-backend example-app
+# From your Backstage root directory
+cd packages/backend
+yarn add @backstage/plugin-app-backend app
 ```
 
 By adding the app package as a dependency we ensure that it is built as part of the backend, and that it can be resolved at runtime.

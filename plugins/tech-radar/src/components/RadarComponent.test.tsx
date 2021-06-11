@@ -24,6 +24,7 @@ import { withLogCollector } from '@backstage/test-utils';
 
 import GetBBoxPolyfill from '../utils/polyfills/getBBox';
 import RadarComponent from './RadarComponent';
+import { TechRadarLoaderResponse, techRadarApiRef, TechRadarApi } from '../api';
 
 describe('RadarComponent', () => {
   beforeAll(() => {
@@ -34,13 +35,30 @@ describe('RadarComponent', () => {
     GetBBoxPolyfill.remove();
   });
 
+  class MockClient implements TechRadarApi {
+    async load(): Promise<TechRadarLoaderResponse> {
+      return {
+        entries: [],
+        quadrants: [],
+        rings: [],
+      };
+    }
+  }
+
+  const mockClient = new MockClient();
+
   it('should render a progress bar', async () => {
     jest.useFakeTimers();
 
     const errorApi = { post: () => {} };
     const { getByTestId, queryByTestId } = render(
       <ThemeProvider theme={lightTheme}>
-        <ApiProvider apis={ApiRegistry.from([[errorApiRef, errorApi]])}>
+        <ApiProvider
+          apis={ApiRegistry.from([
+            [errorApiRef, errorApi],
+            [techRadarApiRef, mockClient],
+          ])}
+        >
           <RadarComponent
             width={1200}
             height={800}
@@ -61,16 +79,21 @@ describe('RadarComponent', () => {
 
   it('should call the errorApi if load fails', async () => {
     const errorApi = { post: jest.fn() };
-    const techRadarLoadFail = () =>
-      Promise.reject(new Error('404 Page Not Found'));
+    jest
+      .spyOn(mockClient, 'load')
+      .mockRejectedValue(new Error('404 Page Not Found'));
 
     const { queryByTestId } = render(
       <ThemeProvider theme={lightTheme}>
-        <ApiProvider apis={ApiRegistry.from([[errorApiRef, errorApi]])}>
+        <ApiProvider
+          apis={ApiRegistry.from([
+            [errorApiRef, errorApi],
+            [techRadarApiRef, mockClient],
+          ])}
+        >
           <RadarComponent
             width={1200}
             height={800}
-            getData={techRadarLoadFail}
             svgProps={{ 'data-testid': 'tech-radar-svg' }}
           />
         </ApiProvider>

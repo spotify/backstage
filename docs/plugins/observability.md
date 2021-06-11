@@ -13,6 +13,11 @@ Backstage integrator.
 See how to install Google Analytics in your app
 [here](../integrations/google-analytics/installation.md)
 
+## Datadog RUM Events
+
+See how to install Datadog Events in your app
+[here](../integrations/datadog-rum/installation.md)
+
 ## Logging
 
 The backend supplies a central [winston](https://github.com/winstonjs/winston)

@@ -95,40 +95,27 @@ auth:
   providers:
     google:
       development:
-        clientId:
-          $env: AUTH_GOOGLE_CLIENT_ID
-        clientSecret:
-          $env: AUTH_GOOGLE_CLIENT_SECRET
+        clientId: ${AUTH_GOOGLE_CLIENT_ID}
+        clientSecret: ${AUTH_GOOGLE_CLIENT_SECRET}
     github:
       development:
-        clientId:
-          $env: AUTH_GITHUB_CLIENT_ID
-        clientSecret:
-          $env: AUTH_GITHUB_CLIENT_SECRET
-        enterpriseInstanceUrl:
-          $env: AUTH_GITHUB_ENTERPRISE_INSTANCE_URL
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        enterpriseInstanceUrl: ${AUTH_GITHUB_ENTERPRISE_INSTANCE_URL}
     gitlab:
       development:
-        clientId:
-          $env:
+        clientId: ${AUTH_GITLAB_CLIENT_ID}
     oauth2:
       development:
-        clientId:
-          $env: AUTH_OAUTH2_CLIENT_ID
-        clientSecret:
-          $env: AUTH_OAUTH2_CLIENT_SECRET
-        authorizationUrl:
-          $env: AUTH_OAUTH2_AUTH_URL
-        tokenUrl:
-          $env: AUTH_OAUTH2_TOKEN_URL
-        scope:
-          $env: AUTH_OAUTH2_SCOPE
+        clientId: ${AUTH_OAUTH2_CLIENT_ID}
+        clientSecret: ${AUTH_OAUTH2_CLIENT_SECRET}
+        authorizationUrl: ${AUTH_OAUTH2_AUTH_URL}
+        tokenUrl: ${AUTH_OAUTH2_TOKEN_URL}
+        scope: ${AUTH_OAUTH2_SCOPE}
     saml:
-      entryPoint:
-        $env: AUTH_SAML_ENTRY_POINT
-      issuer:
-        $env: AUTH_SAML_ISSUER
-            ...
+      entryPoint: ${AUTH_SAML_ENTRY_POINT}
+      issuer: ${AUTH_SAML_ISSUER}
+    ...
 ```
 
 ## Implementing Your Own Auth Wrapper

@@ -294,7 +294,6 @@ export const MockBigQueryInsights: Entity = {
         id: 'dataset-c',
         aggregation: [0, 10_000],
         change: {
-          ratio: 10_000,
           amount: 10_000,
         },
         entities: {},
@@ -415,7 +414,6 @@ export const MockCloudDataflowInsights: Entity = {
         id: 'pipeline-c',
         aggregation: [0, 10_000],
         change: {
-          ratio: 10_000,
           amount: 10_000,
         },
         entities: {},
@@ -503,7 +501,6 @@ export const MockCloudStorageInsights: Entity = {
               id: 'Mock SKU C',
               aggregation: [2_000, 0],
               change: {
-                ratio: -1,
                 amount: -2000,
               },
               entities: {},
@@ -515,7 +512,6 @@ export const MockCloudStorageInsights: Entity = {
         id: 'bucket-c',
         aggregation: [0, 0],
         change: {
-          ratio: 0,
           amount: 0,
         },
         entities: {},
@@ -655,7 +651,6 @@ export const MockComputeEngineInsights: Entity = {
         id: 'service-c',
         aggregation: [0, 10_000],
         change: {
-          ratio: 10_000,
           amount: 10_000,
         },
         entities: {},

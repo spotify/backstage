@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 export {
+  EntitySplunkOnCallCard,
   splunkOnCallPlugin,
   splunkOnCallPlugin as plugin,
   SplunkOnCallPage,
 } from './plugin';
-export {
-  isPluginApplicableToEntity,
-  SplunkOnCallCard,
-} from './components/SplunkOnCallCard';
+export { isSplunkOnCallAvailable } from './components/EntitySplunkOnCallCard';
 export {
   SplunkOnCallClient,
   splunkOnCallApiRef,

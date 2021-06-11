@@ -19,7 +19,7 @@ import { msw } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { getVoidLogger } from '../logging';
 import { FetchUrlReader } from './FetchUrlReader';
-import { ReadTreeResponseFactory } from './tree';
+import { DefaultReadTreeResponseFactory } from './tree';
 
 describe('FetchUrlReader', () => {
   const worker = setupServer();
@@ -45,7 +45,7 @@ describe('FetchUrlReader', () => {
         },
       }),
       logger: getVoidLogger(),
-      treeResponseFactory: ReadTreeResponseFactory.create({
+      treeResponseFactory: DefaultReadTreeResponseFactory.create({
         config: new ConfigReader({}),
       }),
     });

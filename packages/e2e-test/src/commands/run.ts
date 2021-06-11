@@ -335,7 +335,7 @@ async function testAppServe(pluginName: string, appDir: string) {
       try {
         const browser = new Browser();
 
-        await waitForPageWithText(browser, '/', 'My Company Service Catalog');
+        await waitForPageWithText(browser, '/', 'My Company Catalog');
         await waitForPageWithText(
           browser,
           `/${pluginName}`,

@@ -48,5 +48,7 @@ jobs:
       - uses: chromaui/action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          # projetToken intentionally shared to allow collaborators to run Chromatic on forks
+          # https://www.chromatic.com/docs/custom-ci-provider#run-chromatic-on-external-forks-of-open-source-projects
           projectToken: 9tzak77m9nj
           storybookBuildDir: 'packages/storybook/dist'

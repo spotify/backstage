@@ -15,7 +15,7 @@
  */
 
 import { Observable } from '../../types';
-import { SessionState } from '../../apis';
+import { SessionState } from '../../apis/definitions';
 
 export type GetSessionOptions = {
   optional?: boolean;

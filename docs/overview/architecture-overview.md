@@ -67,32 +67,40 @@ is available at
 
 ### Installing plugins
 
-Plugins are typically loaded by the UI in your Backstage applications
-`plugins.ts` file. For example,
-[here](https://github.com/backstage/backstage/blob/master/packages/app/src/plugins.ts)
-is that file in the Backstage sample app.
+Plugins are typically installed as React components in your Backstage
+application. For example,
+[here](https://github.com/backstage/backstage/blob/master/packages/app/src/App.tsx)
+is a file that imports many full-page plugins in the Backstage sample app.
 
-Plugins can be enabled, and passed configuration in `apis.ts`. For example,
-[here](https://github.com/backstage/backstage/blob/master/packages/app/src/apis.ts)
-is that file in the Backstage sample app.
-
-This is how the Lighthouse plugin would be enabled in a typical Backstage
-application:
+An example of one of these plugin components is the `CatalogIndexPage`, which is
+a full-page view that allows you to browse entities in the Backstage catalog. It
+is installed in the app by importing it and adding it as an element like this:
 
 ```tsx
-import { ApiHolder, ApiRegistry } from '@backstage/core';
-import {
-  lighthouseApiRef,
-  LighthouseRestApi,
-} from '@backstage/plugin-lighthouse';
+import { CatalogIndexPage } from '@backstage/plugin-catalog';
 
-const builder = ApiRegistry.builder();
+...
 
-export const lighthouseApi = new LighthouseRestApi(/* URL of the lighthouse microservice! */);
-builder.add(lighthouseApiRef, lighthouseApi);
-
-export default builder.build() as ApiHolder;
+const routes = (
+  <FlatRoutes>
+    ...
+    <Route path="/catalog" element={<CatalogIndexPage />} />
+    ...
+  </FlatRoutes>
+);
 ```
+
+Note that we use `"/catalog"` as our path to this plugin page, but we can choose
+any route we want for the page, as long as it doesn't collide with the routes
+that we choose for the other plugins in the app.
+
+These components that are exported from plugins are referred to as "Plugin
+Extension Components", or "Extension Components". They are regular React
+components, but in addition to being able to be rendered by React, they also
+contain various pieces of metadata that is used to wire together the entire app.
+Extension components are created using `create*Extension` methods, which you can
+read more about in the
+[composability documentation](../plugins/composability.md).
 
 As of this moment, there is no config based install procedure for plugins. Some
 code changes are required.
@@ -173,6 +181,21 @@ production database. Other databases such as the MySQL variants are reported to
 work but
 [aren't tested as fully](https://github.com/backstage/backstage/issues/2460)
 yet.
+
+## Cache
+
+The Backstage backend and its builtin plugins are also able to leverage cache
+stores as a means of improving performance or reliability. Similar to how
+databases are supported, plugins receive logically separated cache connections,
+which are powered by [Keyv](https://github.com/lukechilds/keyv) under the hood.
+
+At this time of writing, Backstage can be configured to use one of two cache
+stores: memory, which is mainly used for local testing, and memcache, which is a
+cache store better suited for production deployment. The right cache store for
+your Backstage instance will depend on your own run-time constraints and those
+required of the plugins you're running.
+
+Contributions supporting other cache stores are welcome!
 
 ## Containerization
 

@@ -2,6 +2,12 @@ app:
   title: Backstage Example App
   baseUrl: http://localhost:3000
   googleAnalyticsTrackingId: # UA-000000-0
+  #datadogRum:
+  #  clientToken: '123456789'
+  #  applicationId: qwerty
+  #   site: # datadoghq.eu default = datadoghq.com
+  #   env: # optional
+
   support:
     url: https://github.com/backstage/backstage/issues # Used by common ErrorPage
     items: # Used by common SupportButton component
@@ -23,6 +29,8 @@ backend:
   database:
     client: sqlite3
     connection: ':memory:'
+  cache:
+    store: memory
   cors:
     origin: http://localhost:3000
     methods: [GET, POST, PUT, DELETE]
@@ -40,47 +48,47 @@ proxy:
   '/circleci/api':
     target: https://circleci.com/api/v1.1
     headers:
-      Circle-Token:
-        $env: CIRCLECI_AUTH_TOKEN
+      Circle-Token: ${CIRCLECI_AUTH_TOKEN}
 
   '/jenkins/api':
     target: http://localhost:8080
     headers:
-      Authorization:
-        $env: JENKINS_BASIC_AUTH_HEADER
+      Authorization: ${JENKINS_BASIC_AUTH_HEADER}
 
   '/travisci/api':
     target: https://api.travis-ci.com
     changeOrigin: true
     headers:
-      Authorization:
-        $env: TRAVISCI_AUTH_TOKEN
+      Authorization: ${TRAVISCI_AUTH_TOKEN}
       travis-api-version: '3'
 
   '/newrelic/apm/api':
     target: https://api.newrelic.com/v2
     headers:
-      X-Api-Key:
-        $env: NEW_RELIC_REST_API_KEY
+      X-Api-Key: ${NEW_RELIC_REST_API_KEY}
 
   '/pagerduty':
     target: https://api.pagerduty.com
     headers:
-      Authorization:
-        $env: PAGERDUTY_TOKEN
+      Authorization: ${PAGERDUTY_TOKEN}
 
   '/buildkite/api':
     target: https://api.buildkite.com/v2/
     headers:
-      Authorization:
-        $env: BUILDKITE_TOKEN
+      Authorization: ${BUILDKITE_TOKEN}
 
   '/sentry/api':
     target: https://sentry.io/api/
     allowedMethods: ['GET']
     headers:
-      Authorization:
-        $env: SENTRY_TOKEN
+      Authorization: ${SENTRY_TOKEN}
+
+  '/ilert':
+    target: https://api.ilert.com
+    allowedMethods: ['GET', 'POST', 'PUT']
+    allowedHeaders: ['Authorization']
+    headers:
+      Authorization: ${ILERT_AUTH_HEADER}
 
 organization:
   name: My Company
@@ -124,22 +132,18 @@ kafka:
 integrations:
   github:
     - host: github.com
-      token:
-        $env: GITHUB_TOKEN
+      token: ${GITHUB_TOKEN}
     ### Example for how to add your GitHub Enterprise instance using the API:
     # - host: ghe.example.net
     #   apiBaseUrl: https://ghe.example.net/api/v3
-    #   token:
-    #     $env: GHE_TOKEN
+    #   token: ${GHE_TOKEN}
     ### Example for how to add your GitHub Enterprise instance using raw HTTP fetches (token is optional):
     # - host: ghe.example.net
     #   rawBaseUrl: https://ghe.example.net/raw
-    #   token:
-    #     $env: GHE_TOKEN
+    #   token: ${GHE_TOKEN}
   gitlab:
     - host: gitlab.com
-      token:
-        $env: GITLAB_TOKEN
+      token: ${GITLAB_TOKEN}
   bitbucket:
     - host: bitbucket.org
       username:
@@ -152,14 +156,14 @@ integrations:
         $env: BITBUCKET_SERVER_USERNAME
       appPassword:
         $env: BITBUCKET_SERVER_APP_PASSWORD
+      username: ${BITBUCKET_USERNAME}
+      appPassword: ${BITBUCKET_APP_PASSWORD}
   azure:
     - host: dev.azure.com
-      token:
-        $env: AZURE_TOKEN
+      token: ${AZURE_TOKEN}
 #  googleGcs:
 #    clientEmail: 'example@example.com'
-#    privateKey:
-#      $env: GCS_PRIVATE_KEY
+#    privateKey: ${GCS_PRIVATE_KEY}
 
 catalog:
   rules:
@@ -178,21 +182,18 @@ catalog:
     githubOrg:
       providers:
         - target: https://github.com
-          token:
-            $env: GITHUB_TOKEN
+          token: ${GITHUB_TOKEN}
         #### Example for how to add your GitHub Enterprise instance using the API:
         # - target: https://ghe.example.net
         #   apiBaseUrl: https://ghe.example.net/api
-        #   token:
-        #     $env: GHE_TOKEN
+        #   token: ${GHE_TOKEN}
     ldapOrg:
       ### Example for how to add your enterprise LDAP server
       # providers:
       #   - target: ldaps://ds.example.net
       #     bind:
       #       dn: uid=ldap-reader-user,ou=people,ou=example,dc=example,dc=net
-      #       secret:
-      #         $env: LDAP_SECRET
+      #       secret: ${LDAP_SECRET}
       #     users:
       #       dn: ou=people,ou=example,dc=example,dc=net
       #       options:
@@ -208,12 +209,9 @@ catalog:
       #providers:
       #  - target: https://graph.microsoft.com/v1.0
       #    authority: https://login.microsoftonline.com
-      #    tenantId:
-      #      $env: MICROSOFT_GRAPH_TENANT_ID
-      #    clientId:
-      #      $env: MICROSOFT_GRAPH_CLIENT_ID
-      #    clientSecret:
-      #      $env: MICROSOFT_GRAPH_CLIENT_SECRET_TOKEN
+      #    tenantId: ${MICROSOFT_GRAPH_TENANT_ID}
+      #    clientId: ${MICROSOFT_GRAPH_CLIENT_ID}
+      #    clientSecret: ${MICROSOFT_GRAPH_CLIENT_SECRET_TOKEN}
       #    userFilter: accountEnabled eq true and userType eq 'member'
       #    groupFilter: securityEnabled eq false and mailEnabled eq true and groupTypes/any(c:c+eq+'Unified')
 
@@ -261,27 +259,22 @@ catalog:
 
 scaffolder:
   github:
-    token:
-      $env: GITHUB_TOKEN
+    token: ${GITHUB_TOKEN}
     visibility: public # or 'internal' or 'private'
   gitlab:
     api:
       baseUrl: https://gitlab.com
-      token:
-        $env: GITLAB_TOKEN
+      token: ${GITLAB_TOKEN}
     visibility: public # or 'internal' or 'private'
   azure:
     baseUrl: https://dev.azure.com/{your-organization}
     api:
-      token:
-        $env: AZURE_TOKEN
+      token: ${AZURE_TOKEN}
   bitbucket:
     api:
       host: https://bitbucket.org
-      username:
-        $env: BITBUCKET_USERNAME
-      token:
-        $env: BITBUCKET_TOKEN
+      username: ${BITBUCKET_USERNAME}
+      token: ${BITBUCKET_TOKEN}
     visibility: public # or or 'private'
 
 auth:
@@ -292,89 +285,59 @@ auth:
   providers:
     google:
       development:
-        clientId:
-          $env: AUTH_GOOGLE_CLIENT_ID
-        clientSecret:
-          $env: AUTH_GOOGLE_CLIENT_SECRET
+        clientId: ${AUTH_GOOGLE_CLIENT_ID}
+        clientSecret: ${AUTH_GOOGLE_CLIENT_SECRET}
     github:
       development:
-        clientId:
-          $env: AUTH_GITHUB_CLIENT_ID
-        clientSecret:
-          $env: AUTH_GITHUB_CLIENT_SECRET
-        enterpriseInstanceUrl:
-          $env: AUTH_GITHUB_ENTERPRISE_INSTANCE_URL
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        enterpriseInstanceUrl: ${AUTH_GITHUB_ENTERPRISE_INSTANCE_URL}
     gitlab:
       development:
-        clientId:
-          $env: AUTH_GITLAB_CLIENT_ID
-        clientSecret:
-          $env: AUTH_GITLAB_CLIENT_SECRET
-        audience:
-          $env: GITLAB_BASE_URL
+        clientId: ${AUTH_GITLAB_CLIENT_ID}
+        clientSecret: ${AUTH_GITLAB_CLIENT_SECRET}
+        audience: ${GITLAB_BASE_URL}
     saml:
       entryPoint: 'http://localhost:7001/'
       issuer: 'passport-saml'
     okta:
       development:
-        clientId:
-          $env: AUTH_OKTA_CLIENT_ID
-        clientSecret:
-          $env: AUTH_OKTA_CLIENT_SECRET
-        audience:
-          $env: AUTH_OKTA_AUDIENCE
+        clientId: ${AUTH_OKTA_CLIENT_ID}
+        clientSecret: ${AUTH_OKTA_CLIENT_SECRET}
+        audience: ${AUTH_OKTA_AUDIENCE}
     oauth2:
       development:
-        clientId:
-          $env: AUTH_OAUTH2_CLIENT_ID
-        clientSecret:
-          $env: AUTH_OAUTH2_CLIENT_SECRET
-        authorizationUrl:
-          $env: AUTH_OAUTH2_AUTH_URL
-        tokenUrl:
-          $env: AUTH_OAUTH2_TOKEN_URL
+        clientId: ${AUTH_OAUTH2_CLIENT_ID}
+        clientSecret: ${AUTH_OAUTH2_CLIENT_SECRET}
+        authorizationUrl: ${AUTH_OAUTH2_AUTH_URL}
+        tokenUrl: ${AUTH_OAUTH2_TOKEN_URL}
         ###
         # provide a list of scopes as needed for your OAuth2 Server:
         #
         # scope: saml-login-selector openid profile email
     oidc:
       development:
-        metadataUrl:
-          $env: AUTH_OIDC_METADATA_URL
-        clientId:
-          $env: AUTH_OIDC_CLIENT_ID
-        clientSecret:
-          $env: AUTH_OIDC_CLIENT_SECRET
-        authorizationUrl:
-          $env: AUTH_OIDC_AUTH_URL
-        tokenUrl:
-          $env: AUTH_OIDC_TOKEN_URL
-        tokenSignedResponseAlg:
-          $env: AUTH_OIDC_TOKEN_SIGNED_RESPONSE_ALG
+        metadataUrl: ${AUTH_OIDC_METADATA_URL}
+        clientId: ${AUTH_OIDC_CLIENT_ID}
+        clientSecret: ${AUTH_OIDC_CLIENT_SECRET}
+        authorizationUrl: ${AUTH_OIDC_AUTH_URL}
+        tokenUrl: ${AUTH_OIDC_TOKEN_URL}
+        tokenSignedResponseAlg: ${AUTH_OIDC_TOKEN_SIGNED_RESPONSE_ALG}
     auth0:
       development:
-        clientId:
-          $env: AUTH_AUTH0_CLIENT_ID
-        clientSecret:
-          $env: AUTH_AUTH0_CLIENT_SECRET
-        domain:
-          $env: AUTH_AUTH0_DOMAIN
+        clientId: ${AUTH_AUTH0_CLIENT_ID}
+        clientSecret: ${AUTH_AUTH0_CLIENT_SECRET}
+        domain: ${AUTH_AUTH0_DOMAIN}
     microsoft:
       development:
-        clientId:
-          $env: AUTH_MICROSOFT_CLIENT_ID
-        clientSecret:
-          $env: AUTH_MICROSOFT_CLIENT_SECRET
-        tenantId:
-          $env: AUTH_MICROSOFT_TENANT_ID
+        clientId: ${AUTH_MICROSOFT_CLIENT_ID}
+        clientSecret: ${AUTH_MICROSOFT_CLIENT_SECRET}
+        tenantId: ${AUTH_MICROSOFT_TENANT_ID}
     onelogin:
       development:
-        clientId:
-          $env: AUTH_ONELOGIN_CLIENT_ID
-        clientSecret:
-          $env: AUTH_ONELOGIN_CLIENT_SECRET
-        issuer:
-          $env: AUTH_ONELOGIN_ISSUER
+        clientId: ${AUTH_ONELOGIN_CLIENT_ID}
+        clientSecret: ${AUTH_ONELOGIN_CLIENT_SECRET}
+        issuer: ${AUTH_ONELOGIN_ISSUER}
 costInsights:
   engineerCost: 200000
   products:

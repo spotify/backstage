@@ -20,6 +20,7 @@ import {
   discoveryApiRef,
   configApiRef,
   createRoutableExtension,
+  createComponentExtension,
 } from '@backstage/core';
 import { splunkOnCallApiRef, SplunkOnCallClient } from './api';
 
@@ -47,5 +48,16 @@ export const SplunkOnCallPage = splunkOnCallPlugin.provide(
     component: () =>
       import('./components/SplunkOnCallPage').then(m => m.SplunkOnCallPage),
     mountPoint: rootRouteRef,
+  }),
+);
+
+export const EntitySplunkOnCallCard = splunkOnCallPlugin.provide(
+  createComponentExtension({
+    component: {
+      lazy: () =>
+        import('./components/EntitySplunkOnCallCard').then(
+          m => m.EntitySplunkOnCallCard,
+        ),
+    },
   }),
 );

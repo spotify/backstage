@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-app-backend",
-  "version": "0.3.11",
+  "version": "0.3.13",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -29,9 +29,9 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.6.2",
-    "@backstage/config-loader": "^0.6.0",
-    "@backstage/config": "^0.1.4",
+    "@backstage/backend-common": "^0.8.0",
+    "@backstage/config-loader": "^0.6.1",
+    "@backstage/config": "^0.1.5",
     "@types/express": "^4.17.6",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
@@ -40,7 +40,7 @@
     "yn": "^4.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.6.7",
+    "@backstage/cli": "^0.6.11",
     "@types/supertest": "^2.0.8",
     "msw": "^0.20.5",
     "supertest": "^6.1.3"

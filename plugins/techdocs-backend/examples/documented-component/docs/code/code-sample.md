@@ -5,19 +5,19 @@ This page provides some sample code which may be used in your example component.
 This code uses TypeScript, and the Markdown code fence to wrap the code.
 
 ```typescript
-const DefaultEntityPage = ({ entity }: { entity: Entity }) => (
-  <EntityPageLayout>
-    <EntityPageLayout.Content
-      path="/*"
-      title="Overview"
-      element={<ComponentOverviewContent entity={entity} />}
-    />
-    <EntityPageLayout.Content
-      path="/docs/*"
-      title="Docs"
-      element={<DocsRouter entity={entity} />}
-    />
-  </EntityPageLayout>
+const serviceEntityPage = (
+  <EntityLayout>
+    <EntityLayout.Route path="/" title="Overview">
+      <Grid container spacing={3} alignItems="stretch">
+        <Grid item md={6}>
+          <EntityAboutCard variant="gridItem" />
+        </Grid>
+      </Grid>
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/docs" title="Docs">
+      <EntityTechdocsContent />
+    </EntityLayout.Route>
+  </EntityLayout>
 );
 ```
 

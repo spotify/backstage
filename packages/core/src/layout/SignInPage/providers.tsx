@@ -22,7 +22,11 @@ import {
   useApiHolder,
   errorApiRef,
 } from '@backstage/core-api';
-import { SignInConfig, IdentityProviders, SignInProvider } from './types';
+import {
+  IdentityProviders,
+  SignInProvider,
+  SignInProviderConfig,
+} from './types';
 import { commonProvider } from './commonProvider';
 import { guestProvider } from './guestProvider';
 import { customProvider } from './customProvider';
@@ -33,7 +37,7 @@ export type SignInProviderType = {
   [key: string]: {
     components: SignInProvider;
     id: string;
-    config?: SignInConfig;
+    config?: SignInProviderConfig;
   };
 };
 
@@ -62,7 +66,7 @@ export function getSignInProviders(
         return acc;
       }
 
-      const { id } = config as SignInConfig;
+      const { id } = config as SignInProviderConfig;
       validateIDs(id, acc);
 
       acc[id] = { components: signInProviders.common, id, config };

@@ -1,0 +1,58 @@
+{
+  "name": "@backstage/plugin-code-coverage",
+  "version": "0.1.4",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.esm.js",
+    "types": "dist/index.d.ts"
+  },
+  "scripts": {
+    "build": "backstage-cli plugin:build",
+    "start": "backstage-cli plugin:serve",
+    "lint": "backstage-cli lint",
+    "test": "backstage-cli test",
+    "diff": "backstage-cli plugin:diff",
+    "prepack": "backstage-cli prepack",
+    "postpack": "backstage-cli postpack",
+    "clean": "backstage-cli clean"
+  },
+  "dependencies": {
+    "@backstage/catalog-model": "^0.8.0",
+    "@backstage/config": "^0.1.4",
+    "@backstage/core": "^0.7.11",
+    "@backstage/errors": "^0.1.1",
+    "@backstage/plugin-catalog-react": "^0.2.0",
+    "@backstage/theme": "^0.2.8",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/styles": "^4.11.0",
+    "@material-ui/lab": "4.0.0-alpha.45",
+    "highlight.js": "^10.6.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router": "6.0.0-beta.0",
+    "react-router-dom": "6.0.0-beta.0",
+    "react-use": "^17.2.4",
+    "recharts": "^1.8.5"
+  },
+  "devDependencies": {
+    "@backstage/cli": "^0.6.14",
+    "@backstage/dev-utils": "^0.1.17",
+    "@backstage/test-utils": "^0.1.13",
+    "@testing-library/jest-dom": "^5.10.1",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^13.1.8",
+    "@types/highlightjs": "^10.1.0",
+    "@types/jest": "^26.0.7",
+    "@types/node": "^14.14.32",
+    "@types/recharts": "^1.8.15",
+    "cross-fetch": "^3.0.6",
+    "msw": "^0.21.2"
+  },
+  "files": [
+    "dist"
+  ]
+}

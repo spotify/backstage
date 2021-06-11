@@ -101,4 +101,39 @@ describe('EntityLayout', () => {
     expect(rendered.getByText('tabbed-test-title-2')).toBeInTheDocument();
     expect(rendered.queryByText('tabbed-test-content-2')).toBeInTheDocument();
   });
+
+  it('should conditionally render tabs', async () => {
+    const shouldRenderTab = (e: Entity) => e.metadata.name === 'my-entity';
+    const shouldNotRenderTab = (e: Entity) => e.metadata.name === 'some-entity';
+
+    const rendered = await renderInTestApp(
+      <ApiProvider apis={mockApis}>
+        <EntityContext.Provider value={mockEntityData}>
+          <EntityLayout>
+            <EntityLayout.Route path="/" title="tabbed-test-title">
+              <div>tabbed-test-content</div>
+            </EntityLayout.Route>
+            <EntityLayout.Route
+              path="/some-other-path"
+              title="tabbed-test-title-2"
+              if={shouldNotRenderTab}
+            >
+              <div>tabbed-test-content-2</div>
+            </EntityLayout.Route>
+            <EntityLayout.Route
+              path="/some-other-other-path"
+              title="tabbed-test-title-3"
+              if={shouldRenderTab}
+            >
+              <div>tabbed-test-content-3</div>
+            </EntityLayout.Route>
+          </EntityLayout>
+        </EntityContext.Provider>
+      </ApiProvider>,
+    );
+
+    expect(rendered.queryByText('tabbed-test-title')).toBeInTheDocument();
+    expect(rendered.queryByText('tabbed-test-title-2')).not.toBeInTheDocument();
+    expect(rendered.queryByText('tabbed-test-title-3')).toBeInTheDocument();
+  });
 });

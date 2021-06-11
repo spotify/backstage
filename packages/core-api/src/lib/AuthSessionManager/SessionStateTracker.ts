@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SessionState } from '../../apis';
+import { SessionState } from '../../apis/definitions';
 import { Observable } from '../../types';
 import { BehaviorSubject } from '../subjects';
 

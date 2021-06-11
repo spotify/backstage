@@ -16,6 +16,41 @@ jobs:
       matrix:
         node-version: [12.x, 14.x]
 
+    services:
+      postgres13:
+        image: postgres:13
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432/tcp
+      postgres9:
+        image: postgres:9
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432/tcp
+      mysql8:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        options: >-
+          --health-cmd "mysqladmin ping -h localhost"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 3306/tcp
+
     env:
       CI: true
       NODE_OPTIONS: --max-old-space-size=4096
@@ -86,6 +121,10 @@ jobs:
           # Upload code coverage for some specific flags. Also see .codecov.yml
           bash <(curl -s https://codecov.io/bash) -f packages/core/coverage/* -F core
           bash <(curl -s https://codecov.io/bash) -f packages/core-api/coverage/* -F core-api
+        env:
+          BACKSTAGE_TEST_DATABASE_POSTGRES13_CONNECTION_STRING: postgresql://postgres:postgres@localhost:${{ job.services.postgres13.ports[5432] }}
+          BACKSTAGE_TEST_DATABASE_POSTGRES9_CONNECTION_STRING: postgresql://postgres:postgres@localhost:${{ job.services.postgres9.ports[5432] }}
+          BACKSTAGE_TEST_DATABASE_MYSQL8_CONNECTION_STRING: mysql://root:root@localhost:${{ job.services.mysql8.ports[3306] }}/ignored
 
       - name: Discord notification
         if: ${{ failure() }}

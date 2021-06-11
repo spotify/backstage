@@ -26,10 +26,15 @@ import {
 } from '@backstage/plugin-api-docs';
 import {
   EntityAboutCard,
+  EntityDependsOnComponentsCard,
+  EntityDependsOnResourcesCard,
   EntitySystemDiagramCard,
   EntityHasComponentsCard,
+  EntityHasResourcesCard,
+  EntityHasSubcomponentsCard,
   EntityHasSystemsCard,
   EntityLayout,
+  EntityLinksCard,
   EntitySwitch,
   isComponentType,
   isKind,
@@ -78,6 +83,12 @@ const overviewContent = (
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
     </Grid>
+    <Grid item md={4} xs={12}>
+      <EntityLinksCard />
+    </Grid>
+    <Grid item md={8} xs={12}>
+      <EntityHasSubcomponentsCard variant="gridItem" />
+    </Grid>
   </Grid>
 );
 
@@ -102,6 +113,17 @@ const serviceEntityPage = (
       </Grid>
     </EntityLayout.Route>
 
+    <EntityLayout.Route path="/dependencies" title="Dependencies">
+      <Grid container spacing={3} alignItems="stretch">
+        <Grid item md={6}>
+          <EntityDependsOnComponentsCard variant="gridItem" />
+        </Grid>
+        <Grid item md={6}>
+          <EntityDependsOnResourcesCard variant="gridItem" />
+        </Grid>
+      </Grid>
+    </EntityLayout.Route>
+
     <EntityLayout.Route path="/docs" title="Docs">
       <EntityTechdocsContent />
     </EntityLayout.Route>
@@ -116,6 +138,17 @@ const websiteEntityPage = (
 
     <EntityLayout.Route path="/ci-cd" title="CI/CD">
       {cicdContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/dependencies" title="Dependencies">
+      <Grid container spacing={3} alignItems="stretch">
+        <Grid item md={6}>
+          <EntityDependsOnComponentsCard variant="gridItem" />
+        </Grid>
+        <Grid item md={6}>
+          <EntityDependsOnResourcesCard variant="gridItem" />
+        </Grid>
+      </Grid>
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/docs" title="Docs">
@@ -208,10 +241,6 @@ const groupPage = (
         </Grid>
       </Grid>
     </EntityLayout.Route>
-
-    <EntityLayout.Route path="/diagram" title="Diagram">
-      <EntitySystemDiagramCard />
-    </EntityLayout.Route>
   </EntityLayout>
 );
 
@@ -228,7 +257,13 @@ const systemPage = (
         <Grid item md={6}>
           <EntityHasApisCard variant="gridItem" />
         </Grid>
+        <Grid item md={6}>
+          <EntityHasResourcesCard variant="gridItem" />
+        </Grid>
       </Grid>
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/diagram" title="Diagram">
+      <EntitySystemDiagramCard />
     </EntityLayout.Route>
   </EntityLayout>
 );

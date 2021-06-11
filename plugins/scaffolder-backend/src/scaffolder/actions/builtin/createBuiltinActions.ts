@@ -17,6 +17,7 @@
 import { UrlReader } from '@backstage/backend-common';
 import { CatalogApi } from '@backstage/catalog-client';
 import { ScmIntegrations } from '@backstage/integration';
+import { TemplaterBuilder } from '../../stages';
 import { createCatalogRegisterAction } from './catalog';
 import { createFetchCookiecutterAction, createFetchPlainAction } from './fetch';
 import {
@@ -26,23 +27,14 @@ import {
   createPublishGithubPullRequestAction,
   createPublishGitlabAction,
 } from './publish';
-import Docker from 'dockerode';
-import { TemplaterBuilder } from '../../stages';
 
 export const createBuiltinActions = (options: {
   reader: UrlReader;
   integrations: ScmIntegrations;
-  dockerClient: Docker;
   catalogClient: CatalogApi;
   templaters: TemplaterBuilder;
 }) => {
-  const {
-    reader,
-    integrations,
-    dockerClient,
-    templaters,
-    catalogClient,
-  } = options;
+  const { reader, integrations, templaters, catalogClient } = options;
 
   return [
     createFetchPlainAction({
@@ -52,7 +44,6 @@ export const createBuiltinActions = (options: {
     createFetchCookiecutterAction({
       reader,
       integrations,
-      dockerClient,
       templaters,
     }),
     createPublishGithubAction({

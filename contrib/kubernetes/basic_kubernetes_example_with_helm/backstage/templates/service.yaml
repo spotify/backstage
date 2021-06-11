@@ -16,7 +16,7 @@ spec:
     app.kubernetes.io/name: {{ include "backstage.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-{{- if .Values.app.enabled }}
+{{- if .Values.backend.enabled }}
 ---
 apiVersion: v1
 kind: Service

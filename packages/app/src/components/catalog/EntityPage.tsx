@@ -28,6 +28,8 @@ import {
 import { EntityBadgesDialog } from '@backstage/plugin-badges';
 import {
   EntityAboutCard,
+  EntityDependsOnComponentsCard,
+  EntityDependsOnResourcesCard,
   EntityHasComponentsCard,
   EntityHasSubcomponentsCard,
   EntityHasSystemsCard,
@@ -37,6 +39,9 @@ import {
   EntitySwitch,
   isComponentType,
   isKind,
+  EntityHasResourcesCard,
+  EntityOrphanWarning,
+  isOrphan,
 } from '@backstage/plugin-catalog';
 import {
   EntityCircleCIContent,
@@ -102,6 +107,7 @@ import {
   EntityTravisCIOverviewCard,
   isTravisciAvailable,
 } from '@roadiehq/backstage-plugin-travis-ci';
+import { EntityCodeCoverageContent } from '@backstage/plugin-code-coverage';
 
 const EntityLayoutWrapper = (props: { children?: ReactNode }) => {
   const [badgesDialogOpen, setBadgesDialogOpen] = useState(false);
@@ -210,7 +216,15 @@ const errorsContent = (
 
 const overviewContent = (
   <Grid container spacing={3} alignItems="stretch">
-    <Grid item md={6}>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isOrphan}>
+        <Grid item xs={12}>
+          <EntityOrphanWarning />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+
+    <Grid item md={8} xs={12}>
       <EntityAboutCard variant="gridItem" />
     </Grid>
 
@@ -222,7 +236,7 @@ const overviewContent = (
       </EntitySwitch.Case>
     </EntitySwitch>
 
-    <Grid item md={4} sm={6}>
+    <Grid item md={4} xs={12}>
       <EntityLinksCard />
     </Grid>
 
@@ -256,7 +270,7 @@ const overviewContent = (
       </EntitySwitch.Case>
     </EntitySwitch>
 
-    <Grid item md={6}>
+    <Grid item md={8} xs={12}>
       <EntityHasSubcomponentsCard variant="gridItem" />
     </Grid>
   </Grid>
@@ -287,6 +301,17 @@ const serviceEntityPage = (
       </Grid>
     </EntityLayout.Route>
 
+    <EntityLayout.Route path="/dependencies" title="Dependencies">
+      <Grid container spacing={3} alignItems="stretch">
+        <Grid item md={6}>
+          <EntityDependsOnComponentsCard variant="gridItem" />
+        </Grid>
+        <Grid item md={6}>
+          <EntityDependsOnResourcesCard variant="gridItem" />
+        </Grid>
+      </Grid>
+    </EntityLayout.Route>
+
     <EntityLayout.Route path="/docs" title="Docs">
       <EntityTechdocsContent />
     </EntityLayout.Route>
@@ -301,6 +326,10 @@ const serviceEntityPage = (
 
     <EntityLayout.Route path="/code-insights" title="Code Insights">
       <EntityGithubInsightsContent />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/code-coverage" title="Code Coverage">
+      <EntityCodeCoverageContent />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/kafka" title="Kafka">
@@ -331,6 +360,17 @@ const websiteEntityPage = (
       {errorsContent}
     </EntityLayout.Route>
 
+    <EntityLayout.Route path="/dependencies" title="Dependencies">
+      <Grid container spacing={3} alignItems="stretch">
+        <Grid item md={6}>
+          <EntityDependsOnComponentsCard variant="gridItem" />
+        </Grid>
+        <Grid item md={6}>
+          <EntityDependsOnResourcesCard variant="gridItem" />
+        </Grid>
+      </Grid>
+    </EntityLayout.Route>
+
     <EntityLayout.Route path="/docs" title="Docs">
       <EntityTechdocsContent />
     </EntityLayout.Route>
@@ -345,6 +385,10 @@ const websiteEntityPage = (
 
     <EntityLayout.Route path="/code-insights" title="Code Insights">
       <EntityGithubInsightsContent />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/code-coverage" title="Code Coverage">
+      <EntityCodeCoverageContent />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/todos" title="TODOs">
@@ -441,10 +485,6 @@ const groupPage = (
         </Grid>
       </Grid>
     </EntityLayout.Route>
-
-    <EntityLayout.Route path="/diagram" title="Diagram">
-      <EntitySystemDiagramCard />
-    </EntityLayout.Route>
   </EntityLayoutWrapper>
 );
 
@@ -461,7 +501,13 @@ const systemPage = (
         <Grid item md={6}>
           <EntityHasApisCard variant="gridItem" />
         </Grid>
+        <Grid item md={6}>
+          <EntityHasResourcesCard variant="gridItem" />
+        </Grid>
       </Grid>
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/diagram" title="Diagram">
+      <EntitySystemDiagramCard />
     </EntityLayout.Route>
   </EntityLayoutWrapper>
 );

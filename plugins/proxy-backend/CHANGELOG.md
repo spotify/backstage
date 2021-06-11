@@ -1,5 +1,24 @@
 # @backstage/plugin-proxy-backend
 
+## 0.2.8
+
+### Patch Changes
+
+- Updated dependencies [22fd8ce2a]
+- Updated dependencies [f9fb4a205]
+  - @backstage/backend-common@0.8.0
+
+## 0.2.7
+
+### Patch Changes
+
+- cdb3426e5: Prefix proxy routes with `/` if not present in configuration
+- Updated dependencies [e0bfd3d44]
+- Updated dependencies [38ca05168]
+- Updated dependencies [d8b81fd28]
+  - @backstage/backend-common@0.7.0
+  - @backstage/config@0.1.5
+
 ## 0.2.6
 
 ### Patch Changes

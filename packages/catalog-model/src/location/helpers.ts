@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { Entity, stringifyEntityRef } from '../entity';
+import { LOCATION_ANNOTATION, SOURCE_LOCATION_ANNOTATION } from './annotation';
+
 /**
  * Parses a string form location reference.
  *
@@ -79,4 +82,27 @@ export function stringifyLocationReference(ref: {
   }
 
   return `${type}:${target}`;
+}
+
+/**
+ * Returns the source code location of the Entity, to the extent that one exists.
+ *
+ * If the returned location type is of type 'url', the target should be readable at least
+ * using the UrlReader from @backstage/backend-common. If it is not of type 'url', the caller
+ * needs to have explicit handling of each location type or signal that it is not supported.
+ */
+export function getEntitySourceLocation(
+  entity: Entity,
+): { type: string; target: string } {
+  const locationRef =
+    entity.metadata?.annotations?.[SOURCE_LOCATION_ANNOTATION] ??
+    entity.metadata?.annotations?.[LOCATION_ANNOTATION];
+
+  if (!locationRef) {
+    throw new Error(
+      `Entity '${stringifyEntityRef(entity)}' is missing location`,
+    );
+  }
+
+  return parseLocationReference(locationRef);
 }

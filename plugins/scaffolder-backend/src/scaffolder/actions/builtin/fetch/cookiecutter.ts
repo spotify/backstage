@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-import fs from 'fs-extra';
-import { resolve as resolvePath } from 'path';
-import Docker from 'dockerode';
 import { UrlReader } from '@backstage/backend-common';
+import { JsonObject } from '@backstage/config';
 import { InputError } from '@backstage/errors';
 import { ScmIntegrations } from '@backstage/integration';
-import { JsonObject } from '@backstage/config';
+import fs from 'fs-extra';
+import { resolve as resolvePath } from 'path';
 import { TemplaterBuilder, TemplaterValues } from '../../../stages/templater';
-import { fetchContents } from './helpers';
 import { createTemplateAction } from '../../createTemplateAction';
+import { fetchContents } from './helpers';
 
 export function createFetchCookiecutterAction(options: {
-  dockerClient: Docker;
   reader: UrlReader;
   integrations: ScmIntegrations;
   templaters: TemplaterBuilder;
 }) {
-  const { dockerClient, reader, templaters, integrations } = options;
+  const { reader, templaters, integrations } = options;
 
   return createTemplateAction<{
     url: string;
@@ -134,7 +132,6 @@ export function createFetchCookiecutterAction(options: {
       // Will execute the template in ./template and put the result in ./result
       await cookiecutter.run({
         workspacePath: workDir,
-        dockerClient,
         logStream: ctx.logStream,
         values,
       });

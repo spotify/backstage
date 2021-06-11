@@ -1,5 +1,68 @@
 # @backstage/catalog-model
 
+## 0.8.1
+
+### Patch Changes
+
+- ebe802bc4: Remove the explicit connection from `EntityEnvelope` and `Entity`.
+
+## 0.8.0
+
+### Minor Changes
+
+- 704875e26: Breaking changes:
+
+  - The long-deprecated `schemaValidator` export is finally removed.
+
+  Additions:
+
+  - The `EntityEnvelope` type, which is a supertype of `Entity`.
+  - The `entityEnvelopeSchemaValidator` function, which returns a validator for an `EntityEnvelope` or its subtypes, based on a JSON schema.
+  - The `entitySchemaValidator` function, which returns a validator for an `Entity` or its subtypes, based on a JSON schema.
+  - The `entityKindSchemaValidator` function, which returns a specialized validator for custom `Entity` kinds, based on a JSON schema.
+
+### Patch Changes
+
+- add62a455: Foundation for standard entity status values
+
+## 0.7.10
+
+### Patch Changes
+
+- f7f7783a3: Add Owner field in template card and new data distribution
+  Add spec.owner as optional field into TemplateV1Alpha and TemplateV1Beta Schema
+  Add relations ownedBy and ownerOf into Template entity
+  Template documentation updated
+- 68fdbf014: Add the `status` field to the Entity envelope
+
+## 0.7.9
+
+### Patch Changes
+
+- 10c008a3a: Renamed parameters to input in template schema
+- 16be1d093: Improve error messages when schema validation fails
+
+## 0.7.8
+
+### Patch Changes
+
+- d8b81fd28: Bump `json-schema` dependency from `0.2.5` to `0.3.0`.
+- Updated dependencies [d8b81fd28]
+  - @backstage/config@0.1.5
+
+## 0.7.7
+
+### Patch Changes
+
+- bb5055aee: Add getEntitySourceLocation helper
+- 5d0740563: Implemented missing support for the dependsOn/dependencyOf relationships
+  between `Component` and `Resource` catalog model objects.
+
+  Added support for generating the relevant relationships to the
+  `BuiltinKindsEntityProcessor`, and added simple support for fetching
+  relationships between `Components` and `Resources` for rendering in the
+  system diagram. All catalog-model changes backwards compatible.
+
 ## 0.7.6
 
 ### Patch Changes

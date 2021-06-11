@@ -36,19 +36,21 @@ Example:
 ```yaml
 # in app-config.yaml
 proxy:
-  '/simple-example': http://simple.example.com:8080
+  simple-example: http://simple.example.com:8080
   '/larger-example/v1':
     target: http://larger.example.com:8080/svc.v1
     headers:
-      Authorization:
-        $env: EXAMPLE_AUTH_HEADER
+      Authorization: ${EXAMPLE_AUTH_HEADER}
+      # ...or interpolating a value into part of a string,
+      # Authorization: Bearer ${EXAMPLE_AUTH_TOKEN}
 ```
 
 Each key under the proxy configuration entry is a route to match, below the
-prefix that the proxy plugin is mounted on. It must start with a slash. For
-example, if the backend mounts the proxy plugin as `/proxy`, the above
-configuration will lead to the proxy acting on backend requests to
-`/api/proxy/simple-example/...` and `/api/proxy/larger-example/v1/...`.
+prefix that the proxy plugin is mounted on. If it does not start with a slash,
+one will be prefixed automatically. For example, if the backend mounts the proxy
+plugin as `/proxy`, the above configuration will lead to the proxy acting on
+backend requests to `/api/proxy/simple-example/...` and
+`/api/proxy/larger-example/v1/...`.
 
 The value inside each route is either a simple URL string, or an object on the
 format accepted by

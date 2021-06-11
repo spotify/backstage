@@ -7,50 +7,47 @@ Website: [https://circleci.com/](https://circleci.com/)
 
 ## Setup
 
-1. If you have standalone app (you didn't clone this repo), then do
+1. If you have a standalone app (you didn't clone this repo), then do
 
 ```bash
+# From your Backstage root directory
+cd packages/app
 yarn add @backstage/plugin-circleci
 ```
 
-2. Add plugin itself:
+2. Add the `EntityCircleCIContent` extension to the entity page in your app:
 
-```js
-// packages/app/src/plugins.ts
-export { plugin as Circleci } from '@backstage/plugin-circleci';
-```
+```tsx
+// In packages/app/src/components/catalog/EntityPage.tsx
+import {
+  EntityCircleCIContent,
+  isCircleCIAvailable,
+} from '@backstage/plugin-circleci';
 
-3. Register the plugin router:
-
-```jsx
-// packages/app/src/components/catalog/EntityPage.tsx
-
-import { Router as CircleCIRouter } from '@backstage/plugin-circleci';
-
-// Then somewhere inside <EntityPageLayout>
-<EntityPageLayout.Content
-  path="/ci-cd/*"
-  title="CI/CD"
-  element={<CircleCIRouter />}
-/>;
+// For example in the CI/CD section
+const cicdContent = (
+  <EntitySwitch>
+    <EntitySwitch.Case if={isCircleCIAvailable}>
+      <EntityCircleCIContent />
+    </EntitySwitch.Case>
 ```
 
 4. Add proxy config:
 
 ```yaml
-// app-config.yaml
+# In app-config.yaml
 proxy:
   '/circleci/api':
     target: https://circleci.com/api/v1.1
     headers:
-      Circle-Token:
-        $env: CIRCLECI_AUTH_TOKEN
+      Circle-Token: ${CIRCLECI_AUTH_TOKEN}
 ```
 
-5. Get and provide `CIRCLECI_AUTH_TOKEN` as env variable (https://circleci.com/docs/api/#add-an-api-token)
-6. Add `circleci.com/project-slug` annotation to your catalog-info.yaml file in format <git-provider>/<owner>/<project> (https://backstage.io/docs/architecture-decisions/adrs-adr002#format)
+5. Get and provide a `CIRCLECI_AUTH_TOKEN` as an environment variable (see the [CircleCI docs](https://circleci.com/docs/api/#add-an-api-token)).
+6. Add a `circleci.com/project-slug` annotation to your respective `catalog-info.yaml` files, on the format <git-provider>/<owner>/<project> (https://backstage.io/docs/architecture-decisions/adrs-adr002#format).
 
 ```yaml
+# Example catalog-info.yaml entity definition file
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:

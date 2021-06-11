@@ -1,5 +1,23 @@
 # @backstage/theme
 
+## 0.2.8
+
+### Patch Changes
+
+- e7c5e4b30: Update installation instructions in README.
+
+## 0.2.7
+
+### Patch Changes
+
+- 7b8272fb7: Remove extra bottom padding in InfoCard content
+
+## 0.2.6
+
+### Patch Changes
+
+- 931b21a12: Replace the link color in dark theme
+
 ## 0.2.5
 
 ### Patch Changes

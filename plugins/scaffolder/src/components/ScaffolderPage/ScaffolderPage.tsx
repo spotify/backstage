@@ -35,12 +35,12 @@ import StarIcon from '@material-ui/icons/Star';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { EntityFilterGroupsProvider, useFilteredEntities } from '../../filter';
+import { registerComponentRouteRef } from '../../routes';
 import { ResultsFilter } from '../ResultsFilter/ResultsFilter';
 import { ScaffolderFilter } from '../ScaffolderFilter';
 import { ButtonGroup } from '../ScaffolderFilter/ScaffolderFilter';
 import SearchToolbar from '../SearchToolbar/SearchToolbar';
-import { TemplateCard, TemplateCardProps } from '../TemplateCard';
-import { registerComponentRouteRef } from '../../routes';
+import { TemplateCard } from '../TemplateCard';
 
 const useStyles = makeStyles(theme => ({
   contentWrapper: {
@@ -50,19 +50,6 @@ const useStyles = makeStyles(theme => ({
     gridColumnGap: theme.spacing(2),
   },
 }));
-
-const getTemplateCardProps = (
-  template: TemplateEntityV1alpha1,
-): TemplateCardProps & { key: string } => {
-  return {
-    key: template.metadata.uid!,
-    name: template.metadata.name,
-    title: `${(template.metadata.title || template.metadata.name) ?? ''}`,
-    type: template.spec.type ?? '',
-    description: template.metadata.description ?? '-',
-    tags: (template.metadata?.tags as string[]) ?? [],
-  };
-};
 
 export const ScaffolderPageContents = () => {
   const styles = useStyles();
@@ -187,8 +174,12 @@ export const ScaffolderPageContents = () => {
             <ItemCardGrid>
               {matchingEntities &&
                 matchingEntities?.length > 0 &&
-                matchingEntities.map(template => (
-                  <TemplateCard {...getTemplateCardProps(template)} />
+                matchingEntities.map((template, i) => (
+                  <TemplateCard
+                    key={i}
+                    template={template}
+                    deprecated={template.apiVersion === 'backstage.io/v1alpha1'}
+                  />
                 ))}
             </ItemCardGrid>
           </div>

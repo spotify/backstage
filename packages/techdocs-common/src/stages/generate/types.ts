@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { Entity } from '@backstage/catalog-model';
-import Docker from 'dockerode';
 import { Writable } from 'stream';
 import { ParsedLocationAnnotation } from '../../helpers';
 
@@ -23,7 +22,6 @@ import { ParsedLocationAnnotation } from '../../helpers';
  *
  * @param {string} inputDir The directory of the uncompiled documentation, with the values from the frontend
  * @param {string} outputDir Directory to store generated docs in. Usually - a newly created temporary directory.
- * @param {Docker} dockerClient A docker client to run any generator on top of your directory
  * @param {ParsedLocationAnnotation} parsedLocationAnnotation backstage.io/techdocs-ref annotation of an entity
  * @param {string} etag A unique identifier for the prepared tree e.g. commit SHA. If provided it will be stored in techdocs_metadata.json.
  * @param {Writable} [logStream] A dedicated log stream
@@ -31,7 +29,6 @@ import { ParsedLocationAnnotation } from '../../helpers';
 export type GeneratorRunOptions = {
   inputDir: string;
   outputDir: string;
-  dockerClient: Docker;
   parsedLocationAnnotation?: ParsedLocationAnnotation;
   etag?: string;
   logStream?: Writable;

@@ -15,6 +15,17 @@
  */
 
 import { MovedState } from './utils/types';
+import { createApiRef } from '@backstage/core';
+
+export const techRadarApiRef = createApiRef<TechRadarApi>({
+  id: 'plugin.techradar.service',
+  description: 'Used to populate data in the TechRadar plugin',
+});
+
+export interface TechRadarApi {
+  // Loads the TechRadar response data to pass through to the TechRadar component
+  load: () => Promise<TechRadarLoaderResponse>;
+}
 
 /**
  * Types related to the Radar's visualization.
@@ -65,16 +76,5 @@ export interface TechRadarLoaderResponse {
 export interface TechRadarComponentProps {
   width: number;
   height: number;
-  getData?: () => Promise<TechRadarLoaderResponse>;
   svgProps?: object;
-}
-
-/**
- * Set up the Radar as a Backstage plugin.
- */
-
-export interface TechRadarApi extends TechRadarComponentProps {
-  title?: string;
-  subtitle?: string;
-  pageTitle?: string;
 }

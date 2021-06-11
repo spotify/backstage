@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ReadTreeResponseFactory } from './ReadTreeResponseFactory';
+export { DefaultReadTreeResponseFactory } from './ReadTreeResponseFactory';

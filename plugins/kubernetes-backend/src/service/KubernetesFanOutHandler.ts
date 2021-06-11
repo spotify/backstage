@@ -20,9 +20,9 @@ import {
   CustomResource,
   KubernetesFetcher,
   KubernetesObjectTypes,
-  KubernetesRequestBody,
   KubernetesServiceLocator,
 } from '../types/types';
+import { KubernetesRequestBody } from '@backstage/plugin-kubernetes-common';
 import { KubernetesAuthTranslator } from '../kubernetes-auth-translator/types';
 import { KubernetesAuthTranslatorGenerator } from '../kubernetes-auth-translator/KubernetesAuthTranslatorGenerator';
 

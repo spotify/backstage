@@ -16,29 +16,21 @@
 
 import type { Entity } from '../entity/Entity';
 import schema from '../schema/kinds/Template.v1alpha1.schema.json';
-import entitySchema from '../schema/Entity.schema.json';
-import entityMetaSchema from '../schema/EntityMeta.schema.json';
-import commonSchema from '../schema/shared/common.schema.json';
 import type { JSONSchema } from '../types';
 import { ajvCompiledJsonSchemaValidator } from './util';
 
-const API_VERSION = ['backstage.io/v1alpha1', 'backstage.io/v1beta1'] as const;
-const KIND = 'Template' as const;
-
 export interface TemplateEntityV1alpha1 extends Entity {
-  apiVersion: typeof API_VERSION[number];
-  kind: typeof KIND;
+  apiVersion: 'backstage.io/v1alpha1' | 'backstage.io/v1beta1';
+  kind: 'Template';
   spec: {
     type: string;
     templater: string;
     path?: string;
     schema: JSONSchema;
+    owner?: string;
   };
 }
 
 export const templateEntityV1alpha1Validator = ajvCompiledJsonSchemaValidator(
-  KIND,
-  API_VERSION,
   schema,
-  [commonSchema, entityMetaSchema, entitySchema],
 );

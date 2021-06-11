@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import React, { useEffect } from 'react';
-import { useWorkflowRuns } from '../useWorkflowRuns';
-import { WorkflowRun, WorkflowRunsTable } from '../WorkflowRunsTable';
+import { useWorkflowRuns, WorkflowRun } from '../useWorkflowRuns';
+import { WorkflowRunsTable } from '../WorkflowRunsTable';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { WorkflowRunStatus } from '../WorkflowRunStatus';

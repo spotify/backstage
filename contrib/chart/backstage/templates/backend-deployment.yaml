@@ -26,6 +26,13 @@ spec:
       {{- end}}
       containers:
         - name: {{ .Chart.Name }}-backend
+          command: ["node"]
+          args:
+            - "packages/backend"
+            - "--config"
+            - "app-config.yaml"
+            - "--config"
+            - {{ printf "/usr/src/app/%s" (include "backstage.appConfigFilename" .) | quote }}
           image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           ports:
@@ -49,16 +56,20 @@ spec:
                   name: {{ include "backend.postgresql.passwordSecret" .}}
                   key: postgresql-password
           volumeMounts:
+            {{- if .Values.backend.postgresCertMountEnabled }}
             - name: postgres-ca
               mountPath: {{ include "backstage.backend.postgresCaDir" . }}
+            {{- end }}
             - name: app-config
               mountPath: {{ printf "/usr/src/app/%s" (include "backstage.appConfigFilename" .) }}
               subPath: {{ include "backstage.appConfigFilename" . }}
 
       volumes:
+        {{- if .Values.backend.postgresCertMountEnabled }}
         - name: postgres-ca
           configMap:
             name: {{ include "backstage.fullname" . }}-postgres-ca
+        {{- end }}
         - name: app-config
           configMap:
             name: {{ include "backstage.fullname" . }}-app-config
@@ -83,5 +94,5 @@ spec:
     app: backstage
     component: backend
 
-  type: ClusterIP
+  type: {{ .Values.backend.serviceType }}
 {{- end }}

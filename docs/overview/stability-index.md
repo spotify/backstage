@@ -108,50 +108,40 @@ Stability: `1`. Mainly intended for internal use.
 
 ### `core` [GitHub](https://github.com/backstage/backstage/tree/master/packages/core/)
 
-#### Section: React Components
+The `@backstage/core` and `@backstage/core-api` packages are being phased out
+and replaced by other `@backstage/core-*` packages. They are still in use but
+will not receive any breaking changes.
 
-All of the React components exported from `src/components/` and `src/layout/`
+### `core-api` [GitHub](https://github.com/backstage/backstage/tree/master/packages/core-api/)
+
+Stability: See `@backstage/core` above
+
+### `core-app-api` [GitHub](https://github.com/backstage/backstage/tree/master/packages/core-app-api/)
+
+The APIs used exclusively in the app, such as `createApp` and the system icons.
+
+Stability: `2`.
+
+### `core-components` [GitHub](https://github.com/backstage/backstage/tree/master/packages/core-components/)
+
+A collection of React components for use in Backstage plugins and apps.
+Previously exported by `@backstage/core`.
 
 Stability: `1`. These components have not received a proper review of the API,
 but we also want to ensure stability.
 
-#### Section: Plugin API
+### `core-plugin-api` [GitHub](https://github.com/backstage/backstage/tree/master/packages/core-plugin-api/)
 
-The parts of the core API that are used by plugins, and the way plugins expose
-functionality to apps and other plugins. Includes for example `createPlugin`,
-`createRouteRef`, `createApiRef`.
+The core API used to build Backstage plugins and apps.
 
-Stability: `2`. There are planned breaking changes around the way that plugins
-expose features and do routing. We still commit to keeping a short deprecation
-period so that plugins outside of the main repo have time to migrate.
+Stability: `2`.
 
-#### Section: App API
+### `cost-insights` [GitHub](https://github.com/backstage/backstage/tree/master/plugins/cost-insights)
 
-The APIs used exclusively in the app, such as `createApp` and the system icons.
+A frontend plugin that allows users to visualize, understand and optimize your
+team's cloud costs.
 
-Stability: `2`
-
-#### Section: Utility API Definitions
-
-The type declarations of the core Utility APIs.
-
-Stability: `2`. Changes to the Utility API type declarations need time to
-propagate.
-
-#### Section: Utility API Implementations
-
-The interfaces and default implementations for various Utility APIs, such as
-ErrorApi, IdentityApi, the auth APIs, etc.
-
-Stability: `1`. Most changes to the core utility APIs will not lead to
-widespread breaking changes since most apps rely on the default implementations.
-
-### `core-api` [GitHub](https://github.com/backstage/backstage/tree/master/packages/core-api/)
-
-The non-visual parts of @backstage/core. Everything in this packages is
-re-exported from @backstage/core, and this package should not be used directly.
-
-Stability: See @backstage/core
+Stability: `1`
 
 ### `create-app` [GitHub](https://github.com/backstage/backstage/tree/master/packages/create-app/)
 
@@ -359,7 +349,7 @@ https://github.com/backstage/backstage/issues/2771.
 
 ### `tech-radar` [GitHub](https://github.com/backstage/backstage/tree/master/plugins/tech-radar/)
 
-Visualize the your company's official guidelines of different areas of software
+Visualize your company's official guidelines of different areas of software
 development.
 
 Stability: `0`

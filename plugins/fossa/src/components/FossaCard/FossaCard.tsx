@@ -17,20 +17,23 @@
 import {
   EmptyState,
   InfoCard,
+  InfoCardVariants,
   MissingAnnotationEmptyState,
   Progress,
+  ResponseErrorPanel,
   useApi,
 } from '@backstage/core';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { Grid, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import React from 'react';
+import { DateTime } from 'luxon';
+import React, { PropsWithChildren } from 'react';
 import { useAsync } from 'react-use';
 import { fossaApiRef } from '../../api';
 import {
   FOSSA_PROJECT_NAME_ANNOTATION,
-  useProjectName,
-} from '../useProjectName';
+  getProjectName,
+} from '../getProjectName';
 
 const useStyles = makeStyles(theme => ({
   numberError: {
@@ -65,109 +68,134 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const FossaCard = () => {
+const Card = ({
+  children,
+  disabled,
+  projectUrl,
+  variant = 'gridItem',
+}: PropsWithChildren<{
+  disabled?: boolean;
+  projectUrl?: string;
+  variant?: InfoCardVariants;
+}>) => {
+  const classes = useStyles();
+
+  return (
+    <InfoCard
+      title="License Findings"
+      deepLink={
+        projectUrl
+          ? {
+              title: 'View more',
+              link: projectUrl,
+            }
+          : undefined
+      }
+      variant={variant}
+      className={disabled ? classes.disabled : undefined}
+    >
+      {children}
+    </InfoCard>
+  );
+};
+export const FossaCard = ({ variant }: { variant?: InfoCardVariants }) => {
   const { entity } = useEntity();
   const fossaApi = useApi(fossaApiRef);
 
-  const projectTitle = useProjectName(entity);
-
-  const { value, loading } = useAsync(
+  const projectTitle = getProjectName(entity);
+  const { value, loading, error } = useAsync(
     async () =>
       projectTitle ? fossaApi.getFindingSummary(projectTitle) : undefined,
     [fossaApi, projectTitle],
   );
 
-  const deepLink = value
-    ? {
-        title: 'View more',
-        link: value.projectUrl,
-      }
-    : undefined;
-
   const classes = useStyles();
 
+  if (error) {
+    return (
+      <Card disabled variant={variant}>
+        <ResponseErrorPanel error={error} />
+      </Card>
+    );
+  }
+
+  if (loading) {
+    return (
+      <Card disabled variant={variant}>
+        <Progress />
+      </Card>
+    );
+  }
+
+  if (!projectTitle) {
+    return (
+      <Card disabled variant={variant}>
+        <MissingAnnotationEmptyState
+          annotation={FOSSA_PROJECT_NAME_ANNOTATION}
+        />
+      </Card>
+    );
+  }
+
+  if (!value) {
+    return (
+      <Card disabled variant={variant}>
+        <EmptyState
+          missing="info"
+          title="No information to display"
+          description={`There is no Fossa project with title '${projectTitle}'.`}
+        />
+      </Card>
+    );
+  }
+
   return (
-    <>
-      <InfoCard
-        title="License Findings"
-        deepLink={deepLink}
-        variant="gridItem"
-        className={
-          !loading && (!projectTitle || !value) ? classes.disabled : undefined
-        }
+    <Card projectUrl={value.projectUrl} variant={variant}>
+      <Grid
+        item
+        container
+        direction="column"
+        justify="space-between"
+        alignItems="center"
+        style={{ height: '100%' }}
+        spacing={0}
       >
-        {loading && <Progress />}
-
-        {!loading && !projectTitle && (
-          <MissingAnnotationEmptyState
-            annotation={FOSSA_PROJECT_NAME_ANNOTATION}
-          />
-        )}
-
-        {!loading && projectTitle && !value && (
-          <EmptyState
-            missing="info"
-            title="No information to display"
-            description={`There is no Fossa project with title '${projectTitle}'.`}
-          />
-        )}
-
-        {value && (
-          <Grid
-            item
-            container
-            direction="column"
-            justify="space-between"
-            alignItems="center"
-            style={{ height: '100%' }}
-            spacing={0}
+        <Grid item>
+          <p
+            className={
+              value.issueCount > 0 || value.dependencyCount === 0
+                ? classes.numberError
+                : classes.numberSuccess
+            }
           >
-            <Grid item>
-              <p
-                className={
-                  value.issueCount > 0 || value.dependencyCount === 0
-                    ? classes.numberError
-                    : classes.numberSuccess
-                }
-              >
-                {value.issueCount}
-              </p>
-              {value.dependencyCount > 0 && (
-                <p className={classes.description}>Number of issues</p>
-              )}
-              {value.dependencyCount === 0 && (
-                <p className={classes.description}>
-                  No Dependencies.
-                  <br />
-                  Please check your FOSSA project settings.
-                </p>
-              )}
-            </Grid>
+            {value.issueCount}
+          </p>
+          {value.dependencyCount > 0 && (
+            <p className={classes.description}>Number of issues</p>
+          )}
+          {value.dependencyCount === 0 && (
+            <p className={classes.description}>
+              No Dependencies.
+              <br />
+              Please check your FOSSA project settings.
+            </p>
+          )}
+        </Grid>
 
-            <Grid item className={classes.lastAnalyzed}>
-              Last analyzed on{' '}
-              {new Date(value.timestamp).toLocaleString('en-US', {
-                timeZone: 'UTC',
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false,
-              })}
-            </Grid>
-            <Grid item className={classes.lastAnalyzed}>
-              Based on {value.dependencyCount} Dependencies on branch{' '}
-              <Tooltip title="The default branch can be changed by a FOSSA admin.">
-                <span className={classes.branch}>
-                  {value.projectDefaultBranch}
-                </span>
-              </Tooltip>
-              .
-            </Grid>
-          </Grid>
-        )}
-      </InfoCard>
-    </>
+        <Grid item className={classes.lastAnalyzed}>
+          Last analyzed on{' '}
+          {DateTime.fromISO(value.timestamp).toLocaleString(
+            DateTime.DATETIME_MED,
+          )}
+        </Grid>
+        <Grid item className={classes.lastAnalyzed}>
+          Based on {value.dependencyCount} Dependencies on branch{' '}
+          <Tooltip title="The default branch can be changed by a FOSSA admin.">
+            <span className={classes.branch}>{value.projectDefaultBranch}</span>
+          </Tooltip>
+          .
+        </Grid>
+      </Grid>
+    </Card>
   );
 };

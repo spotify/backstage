@@ -53,6 +53,10 @@ export class PublishSubject<T>
     ZenObservable.SubscriptionObserver<T>
   >();
 
+  [Symbol.observable]() {
+    return this;
+  }
+
   get closed() {
     return this.isClosed;
   }
@@ -147,6 +151,10 @@ export class BehaviorSubject<T>
   private readonly subscribers = new Set<
     ZenObservable.SubscriptionObserver<T>
   >();
+
+  [Symbol.observable]() {
+    return this;
+  }
 
   get closed() {
     return this.isClosed;

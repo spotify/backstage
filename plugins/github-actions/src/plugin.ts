@@ -17,25 +17,13 @@
 import {
   configApiRef,
   createPlugin,
-  createRouteRef,
   createApiFactory,
   githubAuthApiRef,
   createRoutableExtension,
   createComponentExtension,
 } from '@backstage/core';
 import { githubActionsApiRef, GithubActionsClient } from './api';
-
-// TODO(freben): This is just a demo route for now
-export const rootRouteRef = createRouteRef({
-  path: '',
-  title: 'GitHub Actions',
-});
-
-export const buildRouteRef = createRouteRef({
-  path: ':id',
-  params: ['id'],
-  title: 'GitHub Actions Workflow Run',
-});
+import { rootRouteRef } from './routes';
 
 export const githubActionsPlugin = createPlugin({
   id: 'github-actions',

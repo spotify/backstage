@@ -22,14 +22,14 @@ export interface Config {
       /**
        * The visibility to set on created repositories.
        */
-      visiblity?: 'public' | 'internal' | 'private';
+      visibility?: 'public' | 'internal' | 'private';
     };
     gitlab?: {
       api: { [key: string]: string };
       /**
        * The visibility to set on created repositories.
        */
-      visiblity?: 'public' | 'internal' | 'private';
+      visibility?: 'public' | 'internal' | 'private';
     };
     azure?: {
       baseUrl: string;
@@ -40,7 +40,7 @@ export interface Config {
       /**
        * The visibility to set on created repositories.
        */
-      visiblity?: 'public' | 'private';
+      visibility?: 'public' | 'private';
     };
   };
 }

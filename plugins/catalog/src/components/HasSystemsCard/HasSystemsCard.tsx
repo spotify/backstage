@@ -14,76 +14,30 @@
  * limitations under the License.
  */
 
-import { RELATION_HAS_PART, SystemEntity } from '@backstage/catalog-model';
-import {
-  CodeSnippet,
-  InfoCard,
-  Link,
-  Progress,
-  WarningPanel,
-} from '@backstage/core';
-import { Typography } from '@material-ui/core';
-import {
-  EntityTable,
-  useEntity,
-  useRelatedEntities,
-} from '@backstage/plugin-catalog-react';
+import { RELATION_HAS_PART } from '@backstage/catalog-model';
 import React from 'react';
+import {
+  asSystemEntities,
+  RelatedEntitiesCard,
+  systemEntityColumns,
+  systemEntityHelpLink,
+} from '../RelatedEntitiesCard';
 
 type Props = {
   variant?: 'gridItem';
 };
 
-const columns = [
-  EntityTable.columns.createEntityRefColumn({ defaultKind: 'system' }),
-  EntityTable.columns.createOwnerColumn(),
-  EntityTable.columns.createMetadataDescriptionColumn(),
-];
-
 export const HasSystemsCard = ({ variant = 'gridItem' }: Props) => {
-  const { entity } = useEntity();
-  const { entities, loading, error } = useRelatedEntities(entity, {
-    type: RELATION_HAS_PART,
-  });
-
-  if (loading) {
-    return (
-      <InfoCard variant={variant} title="Systems">
-        <Progress />
-      </InfoCard>
-    );
-  }
-
-  if (error || !entities) {
-    return (
-      <InfoCard variant={variant} title="Systems">
-        <WarningPanel
-          severity="error"
-          title="Could not load systems"
-          message={<CodeSnippet text={`${error}`} language="text" />}
-        />
-      </InfoCard>
-    );
-  }
-
   return (
-    <EntityTable
-      title="Systems"
+    <RelatedEntitiesCard
       variant={variant}
-      emptyContent={
-        <div style={{ textAlign: 'center' }}>
-          <Typography variant="body1">
-            No system is part of this domain.
-          </Typography>
-          <Typography variant="body2">
-            <Link to="https://backstage.io/docs/features/software-catalog/descriptor-format#kind-system">
-              Learn how to change this.
-            </Link>
-          </Typography>
-        </div>
-      }
-      columns={columns}
-      entities={entities as SystemEntity[]}
+      title="Systems"
+      entityKind="System"
+      relationType={RELATION_HAS_PART}
+      columns={systemEntityColumns}
+      asRenderableEntities={asSystemEntities}
+      emptyMessage="No system is part of this domain"
+      emptyHelpLink={systemEntityHelpLink}
     />
   );
 };

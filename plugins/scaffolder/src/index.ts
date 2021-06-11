@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-export {
-  scaffolderPlugin,
-  scaffolderPlugin as plugin,
-  ScaffolderPage,
-} from './plugin';
+export { scaffolderApiRef, ScaffolderClient } from './api';
 export type { ScaffolderApi } from './api';
-export { ScaffolderClient, scaffolderApiRef } from './api';
+export {
+  createScaffolderFieldExtension,
+  ScaffolderFieldExtensions,
+} from './extensions';
+export {
+  EntityPickerFieldExtension,
+  OwnerPickerFieldExtension,
+  RepoUrlPickerFieldExtension,
+  ScaffolderPage,
+  scaffolderPlugin as plugin,
+  scaffolderPlugin,
+} from './plugin';

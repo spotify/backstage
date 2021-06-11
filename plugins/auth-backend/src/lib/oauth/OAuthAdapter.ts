@@ -23,7 +23,7 @@ import {
   AuthProviderConfig,
 } from '../../providers/types';
 import { InputError } from '@backstage/errors';
-import { TokenIssuer } from '../../identity';
+import { TokenIssuer } from '../../identity/types';
 import { verifyNonce } from './helpers';
 import { postMessageResponse, ensuresXRequestedWith } from '../flow';
 import { OAuthHandlers, OAuthStartRequest, OAuthRefreshRequest } from './types';

@@ -55,6 +55,8 @@ jobs:
 
       - name: test
         run: yarn lerna -- run test
+        env:
+          BACKSTAGE_TEST_DISABLE_DOCKER: 1
 
       # credit: https://github.com/appleboy/discord-action/issues/3#issuecomment-731426861
       - name: Discord notification

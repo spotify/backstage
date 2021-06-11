@@ -1,9 +1,9 @@
 ---
 title: Travis CI
 author: roadie.io
-authorUrl: https://roadie.io/
+authorUrl: https://roadie.io/?utm_source=backstage.io&utm_medium=marketplace&utm_campaign=travis-ci
 category: CI/CD
 description: View Travis CI builds for your service in Backstage.
-documentation: https://roadie.io/backstage/plugins/travis-ci
+documentation: https://roadie.io/backstage/plugins/travis-ci/?utm_source=backstage.io&utm_medium=marketplace&utm_campaign=travis-ci
 iconUrl: https://roadie.io/images/logos/travis.png
 npmPackageName: '@roadiehq/backstage-plugin-travis-ci'

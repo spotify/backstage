@@ -16,7 +16,7 @@
 import { useApi, useRouteRefParams } from '@backstage/core';
 import { useAsync } from 'react-use';
 import { githubActionsApiRef } from '../../api';
-import { buildRouteRef } from '../../plugin';
+import { buildRouteRef } from '../../routes';
 
 export const useWorkflowRunsDetails = ({
   hostname,

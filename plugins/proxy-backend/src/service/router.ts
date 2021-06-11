@@ -77,10 +77,24 @@ export function buildMiddleware(
       `Proxy target is not a valid URL: ${fullConfig.target ?? ''}`,
     );
   }
+
   // Default is to do a path rewrite that strips out the proxy's path prefix
   // and the rest of the route.
   if (fullConfig.pathRewrite === undefined) {
-    const routeWithSlash = route.endsWith('/') ? route : `${route}/`;
+    let routeWithSlash = route.endsWith('/') ? route : `${route}/`;
+
+    if (!pathPrefix.endsWith('/') && !routeWithSlash.startsWith('/')) {
+      // Need to insert a / between pathPrefix and routeWithSlash
+      routeWithSlash = `/${routeWithSlash}`;
+    } else if (pathPrefix.endsWith('/') && routeWithSlash.startsWith('/')) {
+      // Never expect this to happen at this point in time as
+      // pathPrefix is set using `getExternalBaseUrl` which "Returns the
+      // external HTTP base backend URL for a given plugin,
+      // **without a trailing slash.**". But in case this changes in future, we
+      // need to drop a / on either pathPrefix or routeWithSlash
+      routeWithSlash = routeWithSlash.substring(1);
+    }
+
     fullConfig.pathRewrite = {
       [`^${pathPrefix}${routeWithSlash}`]: '/',
     };

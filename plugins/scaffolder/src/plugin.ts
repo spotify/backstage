@@ -23,7 +23,14 @@ import {
 } from '@backstage/core';
 import { scmIntegrationsApiRef } from '@backstage/integration-react';
 import { scaffolderApiRef, ScaffolderClient } from './api';
-import { rootRouteRef, registerComponentRouteRef } from './routes';
+import { EntityPicker } from './components/fields/EntityPicker';
+import { OwnerPicker } from './components/fields/OwnerPicker';
+import {
+  repoPickerValidation,
+  RepoUrlPicker,
+} from './components/fields/RepoUrlPicker';
+import { createScaffolderFieldExtension } from './extensions';
+import { registerComponentRouteRef, rootRouteRef } from './routes';
 
 export const scaffolderPlugin = createPlugin({
   id: 'scaffolder',
@@ -46,6 +53,28 @@ export const scaffolderPlugin = createPlugin({
     registerComponent: registerComponentRouteRef,
   },
 });
+
+export const EntityPickerFieldExtension = scaffolderPlugin.provide(
+  createScaffolderFieldExtension({
+    component: EntityPicker,
+    name: 'EntityPicker',
+  }),
+);
+
+export const RepoUrlPickerFieldExtension = scaffolderPlugin.provide(
+  createScaffolderFieldExtension({
+    component: RepoUrlPicker,
+    name: 'RepoUrlPicker',
+    validation: repoPickerValidation,
+  }),
+);
+
+export const OwnerPickerFieldExtension = scaffolderPlugin.provide(
+  createScaffolderFieldExtension({
+    component: OwnerPicker,
+    name: 'OwnerPicker',
+  }),
+);
 
 export const ScaffolderPage = scaffolderPlugin.provide(
   createRoutableExtension({

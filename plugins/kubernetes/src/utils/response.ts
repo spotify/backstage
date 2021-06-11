@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FetchResponse } from '@backstage/plugin-kubernetes-backend';
+import { FetchResponse } from '@backstage/plugin-kubernetes-common';
 import { GroupedResponses } from '../types/types';
 
 // TODO this could probably be a lodash groupBy

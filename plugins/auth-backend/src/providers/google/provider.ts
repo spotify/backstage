@@ -39,7 +39,7 @@ import {
   PassportDoneCallback,
 } from '../../lib/passport';
 import { AuthProviderFactory, RedirectInfo } from '../types';
-import { TokenIssuer } from '../../identity';
+import { TokenIssuer } from '../../identity/types';
 
 type PrivateInfo = {
   refreshToken: string;

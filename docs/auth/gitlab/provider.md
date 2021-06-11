@@ -31,8 +31,8 @@ auth:
   providers:
     gitlab:
       development:
-        clientId: ${AUTH_GITLAB_APPLICATION_ID}
-        clientSecret: ${AUTH_GITLAB_SECRET}
+        clientId: ${AUTH_GITLAB_CLIENT_ID}
+        clientSecret: ${AUTH_GITLAB_CLIENT_SECRET}
         ## uncomment if using self-hosted GitLab
         # audience: https://gitlab.company.com
 ```

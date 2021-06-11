@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import React, { useCallback, useEffect } from 'react';
-import { Field } from '@rjsf/core';
+import { FieldProps } from '@rjsf/core';
 import { useApi, Progress } from '@backstage/core';
 import { scaffolderApiRef } from '../../../api';
 import { useAsync } from 'react-use';
@@ -89,20 +89,12 @@ function serializeFormData(data: {
   return `${data.host}?${params.toString()}`;
 }
 
-function getIntegrationTypeByHost(host: string, integrations: {
-  type: string,
-  title: string,
-  host: string,
-}[]) {
-  return integrations.filter(integration => integration.host === host)[0].type;
-}
-
-export const RepoUrlPicker: Field = ({
+export const RepoUrlPicker = ({
   onChange,
   uiSchema,
   rawErrors,
   formData,
-}) => {
+}: FieldProps<string>) => {
   const api = useApi(scaffolderApiRef);
   const allowedHosts = uiSchema['ui:options']?.allowedHosts as string[];
 
@@ -110,20 +102,30 @@ export const RepoUrlPicker: Field = ({
     return await api.getIntegrationsList({ allowedHosts });
   });
 
-  const { host, type, owner, repo, organization, workspace, project } = splitFormData(formData);
+  const {
+    host,
+    type,
+    owner,
+    repo,
+    organization,
+    workspace,
+    project,
+  } = splitFormData(formData);
   const updateHost = useCallback(
     (evt: React.ChangeEvent<{ name?: string; value: unknown }>) => {
       onChange(
         serializeFormData({
           host: evt.target.value as string,
-          type: (integrations?getIntegrationTypeByHost(evt.target.value as string, integrations): undefined),
+          type: integrations
+            ? getIntegrationTypeByHost(evt.target.value as string, integrations)
+            : undefined,
           owner,
           repo,
           organization,
           workspace,
           project,
         }),
-      )
+      );
     },
     [onChange, integrations, owner, repo, organization, workspace, project],
   );
@@ -173,7 +175,7 @@ export const RepoUrlPicker: Field = ({
           project,
         }),
       ),
-    [onChange, host , type, owner, repo, workspace, project],
+    [onChange, host, type, owner, repo, workspace, project],
   );
 
   const updateWorkspace = useCallback(
@@ -222,7 +224,17 @@ export const RepoUrlPicker: Field = ({
         }),
       );
     }
-  }, [onChange, integrations, host, type, owner, repo, organization, workspace, project]);
+  }, [
+    onChange,
+    integrations,
+    host,
+    type,
+    owner,
+    repo,
+    organization,
+    workspace,
+    project,
+  ]);
 
   if (loading) {
     return <Progress />;
@@ -279,7 +291,11 @@ export const RepoUrlPicker: Field = ({
               error={rawErrors?.length > 0 && !workspace}
             >
               <InputLabel htmlFor="wokrspaceInput">Workspace</InputLabel>
-              <Input id="wokrspaceInput" onChange={updateWorkspace} value={workspace} />
+              <Input
+                id="wokrspaceInput"
+                onChange={updateWorkspace}
+                value={workspace}
+              />
               <FormHelperText>
                 The workspace where the repository will be created
               </FormHelperText>
@@ -291,7 +307,11 @@ export const RepoUrlPicker: Field = ({
             error={rawErrors?.length > 0 && !project}
           >
             <InputLabel htmlFor="wokrspaceInput">Project</InputLabel>
-            <Input id="wokrspaceInput" onChange={updateProject} value={project} />
+            <Input
+              id="wokrspaceInput"
+              onChange={updateProject}
+              value={project}
+            />
             <FormHelperText>
               The project where the repository will be created
             </FormHelperText>

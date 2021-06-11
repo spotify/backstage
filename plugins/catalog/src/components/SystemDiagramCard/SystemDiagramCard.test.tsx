@@ -19,6 +19,7 @@ import {
   catalogApiRef,
   CatalogApi,
   EntityProvider,
+  entityRouteRef,
 } from '@backstage/plugin-catalog-react';
 import { Entity, RELATION_PART_OF } from '@backstage/catalog-model';
 import { renderInTestApp } from '@backstage/test-utils';
@@ -59,13 +60,16 @@ describe('<SystemDiagramCard />', () => {
           <SystemDiagramCard />
         </EntityProvider>
       </ApiProvider>,
+      {
+        mountedRoutes: {
+          '/catalog/:namespace/:kind/:name': entityRouteRef,
+        },
+      },
     );
 
     expect(queryByText(/System Diagram/)).toBeInTheDocument();
-    expect(queryByText(/system:my-namespace2\/my-system2/)).toBeInTheDocument();
-    expect(
-      queryByText(/component:my-namespace\/my-entity/),
-    ).not.toBeInTheDocument();
+    expect(queryByText(/my-namespace2\/my-system2/)).toBeInTheDocument();
+    expect(queryByText(/my-namespace\/my-entity/)).not.toBeInTheDocument();
   });
 
   it('shows related systems', async () => {
@@ -115,10 +119,15 @@ describe('<SystemDiagramCard />', () => {
           <SystemDiagramCard />
         </EntityProvider>
       </ApiProvider>,
+      {
+        mountedRoutes: {
+          '/catalog/:namespace/:kind/:name': entityRouteRef,
+        },
+      },
     );
 
     expect(getByText('System Diagram')).toBeInTheDocument();
-    expect(getByText('system:my-namespace/my-system')).toBeInTheDocument();
-    expect(getByText('component:my-namespace/my-entity')).toBeInTheDocument();
+    expect(getByText('my-namespace/my-system')).toBeInTheDocument();
+    expect(getByText('my-namespace/my-entity')).toBeInTheDocument();
   });
 });

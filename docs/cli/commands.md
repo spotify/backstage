@@ -44,6 +44,7 @@ clean                    Delete cache directories
 create-plugin            Creates a new plugin in the current repository
 remove-plugin            Removes plugin in the current repository
 
+config:docs              Browse the configuration reference documentation
 config:print             Print the app configuration for the current package
 config:check             Validate that the given configuration loads and matches schema
 config:schema            Dump the app configuration schema
@@ -110,6 +111,7 @@ Usage: backstage-cli app:build
 
 Options:
   --stats          Write bundle stats to output directory
+  --lax            Do not require environment variables to be set
   --config &lt;path&gt;  Config files to load instead of app-config.yaml (default: [])
   -h, --help       display help for command
 ```
@@ -447,6 +449,25 @@ Options:
   --backstage-cli-help    display help for command
 ```
 
+## config:docs
+
+Scope: `root`
+
+This commands opens up the reference documentation of your apps local
+configuration schema in the browser. This is useful to get an overview of what
+configuration values are available to use, a description of what they do and
+their format, and where they get sent.
+
+```text
+Usage: backstage-cli config:docs [options]
+
+Browse the configuration reference documentation
+
+Options:
+  --package <name>  Only include the schema that applies to the given package
+  -h, --help        display help for command
+```
+
 ## config:print
 
 Scope: `root`
@@ -466,6 +487,7 @@ Usage: backstage-cli config:print [options]
 
 Options:
   --package &lt;name&gt;   Only load config schema that applies to the given package
+  --lax              Do not require environment variables to be set
   --frontend         Print only the frontend configuration
   --with-secrets     Include secrets in the printed configuration
   --format &lt;format&gt;  Format to print the configuration in, either json or yaml [yaml]
@@ -486,6 +508,7 @@ Usage: backstage-cli config:check [options]
 
 Options:
   --package &lt;name&gt;  Only load config schema that applies to the given package
+  --lax                   Do not require environment variables to be set
   --config &lt;path&gt;   Config files to load instead of app-config.yaml (default: [])
   -h, --help        display help for command
 ```

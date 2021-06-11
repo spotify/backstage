@@ -129,6 +129,16 @@ For the CA, create a `configMap` named `<release name>-<chart name>-postgres-ca`
 kubectl create configmap my-company-backstage-postgres-ca --from-file=ca.crt"
 ```
 
+or disable CA mount
+
+```yaml
+backend:
+  postgresCertMountEnabled: false
+
+lighthouse:
+  postgresCertMountEnabled: false
+```
+
 > Where the release name contains the chart name "backstage" then only the release name will be used.
 
 Now install the helm chart:

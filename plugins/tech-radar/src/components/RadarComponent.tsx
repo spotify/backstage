@@ -15,38 +15,35 @@
  */
 
 import React, { useEffect } from 'react';
-import { Progress, useApi, errorApiRef, ErrorApi } from '@backstage/core';
+import { Progress, useApi, errorApiRef } from '@backstage/core';
 import { useAsync } from 'react-use';
 import Radar from '../components/Radar';
-import { TechRadarComponentProps, TechRadarLoaderResponse } from '../api';
-import getSampleData from '../sampleData';
+import {
+  techRadarApiRef,
+  TechRadarComponentProps,
+  TechRadarLoaderResponse,
+} from '../api';
 import { Entry } from '../utils/types';
 
-const useTechRadarLoader = (props: TechRadarComponentProps) => {
-  const errorApi = useApi<ErrorApi>(errorApiRef);
+const useTechRadarLoader = () => {
+  const errorApi = useApi(errorApiRef);
+  const techRadarApi = useApi(techRadarApiRef);
 
-  const { getData } = props;
-
-  const state = useAsync(async () => {
-    if (getData) {
-      const response: TechRadarLoaderResponse = await getData();
-      return response;
-    }
-    return undefined;
-  }, [getData, errorApi]);
+  const { error, value, loading } = useAsync(async () => techRadarApi.load(), [
+    techRadarApi,
+  ]);
 
   useEffect(() => {
-    const { error } = state;
     if (error) {
       errorApi.post(error);
     }
-  }, [errorApi, state]);
+  }, [error, errorApi]);
 
-  return state;
+  return { loading, value, error };
 };
 
 const RadarComponent = (props: TechRadarComponentProps): JSX.Element => {
-  const { loading, error, value: data } = useTechRadarLoader(props);
+  const { loading, error, value: data } = useTechRadarLoader();
 
   const mapToEntries = (
     loaderResponse: TechRadarLoaderResponse | undefined,
@@ -87,10 +84,6 @@ const RadarComponent = (props: TechRadarComponentProps): JSX.Element => {
       )}
     </>
   );
-};
-
-RadarComponent.defaultProps = {
-  getData: getSampleData,
 };
 
 export default RadarComponent;

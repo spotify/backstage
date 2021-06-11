@@ -51,14 +51,18 @@ spec:
                   name: {{ include "lighthouse.postgresql.passwordSecret" . }}
                   key: postgresql-password
 
+          {{- if .Values.lighthouse.postgresCertMountEnabled }}
           volumeMounts:
             - name: postgres-ca
               mountPath: {{ include "backstage.lighthouse.postgresCaDir" . }}
+          {{- end }}
 
+      {{- if .Values.lighthouse.postgresCertMountEnabled }}
       volumes:
         - name: postgres-ca
           configMap:
             name: {{ include "backstage.fullname" . }}-postgres-ca
+      {{- end }}
 
       {{- if .Values.global.nodeSelector }}
       nodeSelector: {{- toYaml .Values.global.nodeSelector | nindent 8 }}
@@ -78,5 +82,5 @@ spec:
     app: backstage
     component: lighthouse-audit-service
 
-  type: ClusterIP
+  type: {{ .Values.lighthouse.serviceType }}
 {{- end }}

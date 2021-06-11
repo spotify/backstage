@@ -154,7 +154,7 @@ class DevAppBuilder {
     }
 
     const app = createApp({
-      apis: this.apis,
+      apis,
       plugins: this.plugins,
       bindRoutes: ({ bind }) => {
         for (const plugin of this.plugins ?? []) {

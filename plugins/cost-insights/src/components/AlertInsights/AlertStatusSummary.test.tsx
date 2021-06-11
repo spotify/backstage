@@ -50,8 +50,8 @@ describe('<AlertStatusSummary />', () => {
       </MockScrollProvider>,
     );
     [mockSnoozed, mockAccepted, mockDismissed].forEach(a => {
-      expect(getByText(a.title)).toBeInTheDocument();
-      expect(getByText(a.subtitle)).toBeInTheDocument();
+      expect(getByText(a.title as string)).toBeInTheDocument();
+      expect(getByText(a.subtitle as string)).toBeInTheDocument();
       expect(getByRole('img', { name: a.status })).toBeInTheDocument();
     });
   });

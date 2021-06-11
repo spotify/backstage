@@ -12,22 +12,18 @@ By exposing GraphiQL as a plugin instead of a standalone app, it's possible to p
 Start out by installing the plugin in your Backstage app:
 
 ```bash
+# From your Backstage root directory
 cd packages/app
 yarn add @backstage/plugin-graphiql
 ```
 
 ```diff
-# in packages/app/src/plugins.ts
-+export { plugin as GraphiQL } from '@backstage/plugin-graphiql';
-```
-
-```diff
 # in packages/app/src/App.tsx
-+import { Router as GraphiQLRouter } from '@backstage/plugin-graphiql';
++import { GraphiQLPage } from '@backstage/plugin-graphiql';
 
- const AppRoutes = () => (
-   <Routes>
-+    <Route path="/graphiql" element={<GraphiQLRouter />} />
+ const routes = (
+   <FlatRoutes>
++    <Route path="/graphiql" element={<GraphiQLPage />} />
 ```
 
 ### Adding GraphQL endpoints

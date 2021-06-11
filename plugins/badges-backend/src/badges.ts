@@ -24,8 +24,8 @@ function appTitle(context: BadgeContext): string {
 
 function entityUrl(context: BadgeContext): string {
   const e = context.entity!;
-  const entityUri = `${e.kind}/${
-    e.metadata.namespace || ENTITY_DEFAULT_NAMESPACE
+  const entityUri = `${e.metadata.namespace || ENTITY_DEFAULT_NAMESPACE}/${
+    e.kind
   }/${e.metadata.name}`;
   const catalogUrl = `${context.config.getString('app.baseUrl')}/catalog`;
   return `${catalogUrl}/${entityUri}`.toLowerCase();

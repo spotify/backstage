@@ -46,6 +46,7 @@ import {
   resourceEntityV1alpha1Validator,
   SystemEntity,
   systemEntityV1alpha1Validator,
+  TemplateEntity,
   templateEntityV1alpha1Validator,
   templateEntityV1beta2Validator,
   UserEntity,
@@ -129,6 +130,19 @@ export class BuiltinKindsEntityProcessor implements CatalogProcessor {
           }),
         );
       }
+    }
+
+    /*
+     * Emit relations for the Template kind
+     */
+    if (entity.kind === 'Template') {
+      const template = entity as TemplateEntity;
+      doEmit(
+        template.spec.owner,
+        { defaultKind: 'Group', defaultNamespace: selfRef.namespace },
+        RELATION_OWNED_BY,
+        RELATION_OWNER_OF,
+      );
     }
 
     /*

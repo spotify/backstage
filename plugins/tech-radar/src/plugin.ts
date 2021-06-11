@@ -18,7 +18,11 @@ import {
   createPlugin,
   createRouteRef,
   createRoutableExtension,
+  createApiFactory,
 } from '@backstage/core';
+
+import { techRadarApiRef } from './api';
+import { SampleTechRadarApi } from './sample';
 
 const rootRouteRef = createRouteRef({
   title: 'Tech Radar',
@@ -29,6 +33,7 @@ export const techRadarPlugin = createPlugin({
   routes: {
     root: rootRouteRef,
   },
+  apis: [createApiFactory(techRadarApiRef, new SampleTechRadarApi())],
 });
 
 export const TechRadarPage = techRadarPlugin.provide(

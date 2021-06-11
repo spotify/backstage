@@ -148,6 +148,23 @@ jobs:
       - uses: actions/setup-node@v2
       - uses: actions/setup-python@v2
 
+      # the 2 steps below can be removed if you aren't using plantuml in your documentation
+      - name: setup java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      - name: download, validate, install plantuml and its dependencies
+        run: |
+          curl -o plantuml.jar -L http://sourceforge.net/projects/plantuml/files/plantuml.1.2021.4.jar/download
+          echo "be498123d20eaea95a94b174d770ef94adfdca18  plantuml.jar" | sha1sum -c -
+          mv plantuml.jar /opt/plantuml.jar
+          mkdir -p "$HOME/.local/bin"
+          echo $'#!/bin/sh\n\njava -jar '/opt/plantuml.jar' ${@}' >> "$HOME/.local/bin/plantuml"
+          chmod +x "$HOME/.local/bin/plantuml"
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          sudo apt-get install -y graphviz
+
       - name: Install techdocs-cli
         run: sudo npm install -g @techdocs/cli
 

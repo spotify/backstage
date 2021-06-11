@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
+import { configApiRef, SignInPageProps, useApi } from '@backstage/core-api';
+import { Button, Grid, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { Page } from '../Page';
-import { Header } from '../Header';
+import { Progress } from '../../components/Progress';
 import { Content } from '../Content/Content';
 import { ContentHeader } from '../ContentHeader/ContentHeader';
-import { Grid, Button, Typography } from '@material-ui/core';
-import { SignInPageProps, useApi, configApiRef } from '@backstage/core-api';
-import { useSignInProviders, getSignInProviders } from './providers';
-import { IdentityProviders, SignInConfig } from './types';
-import { Progress } from '../../components/Progress';
-import { GridItem, useStyles } from './styles';
+import { Header } from '../Header';
 import { InfoCard } from '../InfoCard';
+import { Page } from '../Page';
+import { getSignInProviders, useSignInProviders } from './providers';
+import { GridItem, useStyles } from './styles';
+import { IdentityProviders, SignInProviderConfig } from './types';
 
 type MultiSignInPageProps = SignInPageProps & {
   providers: IdentityProviders;
@@ -34,7 +34,7 @@ type MultiSignInPageProps = SignInPageProps & {
 };
 
 type SingleSignInPageProps = SignInPageProps & {
-  provider: SignInConfig;
+  provider: SignInProviderConfig;
   auto?: boolean;
 };
 
@@ -87,34 +87,62 @@ export const SingleSignInPage = ({
   const authApi = useApi(provider.apiRef);
   const configApi = useApi(configApiRef);
 
-  const [retry, setRetry] = useState<{} | boolean | undefined>(auto);
+  const [autoShowPopup, setAutoShowPopup] = useState<boolean>(auto ?? false);
+  // Defaults to true so that an initial check for existing user session is made
+  const [retry, setRetry] = useState<{} | boolean | undefined>(undefined);
   const [error, setError] = useState<Error>();
+
+  // The SignIn component takes some time to decide whether the user is logged-in or not.
+  // showLoginPage is used to prevent a glitch-like experience where the sign-in page is
+  // displayed for a split second when the user is already logged-in.
+  const [showLoginPage, setShowLoginPage] = useState<boolean>(false);
 
   useEffect(() => {
     const login = async () => {
-      const identity = await authApi.getBackstageIdentity({
-        instantPopup: true,
-      });
+      try {
+        let identity;
+        // Do an initial check if any logged-in session exists
+        identity = await authApi.getBackstageIdentity({
+          optional: true,
+        });
 
-      const profile = await authApi.getProfile();
-      onResult({
-        userId: identity!.id,
-        profile: profile!,
-        getIdToken: () => {
-          return authApi.getBackstageIdentity().then(i => i!.idToken);
-        },
-        signOut: async () => {
-          await authApi.signOut();
-        },
-      });
+        // If no session exists, show the sign-in page
+        if (!identity && autoShowPopup) {
+          // Unless auto is set to true, this step should not happen.
+          // When user intentionally clicks the Sign In button, autoShowPopup is set to true
+          setShowLoginPage(true);
+          identity = await authApi.getBackstageIdentity({
+            instantPopup: true,
+          });
+        }
+
+        if (!identity) {
+          setShowLoginPage(true);
+          return;
+        }
+
+        const profile = await authApi.getProfile();
+        onResult({
+          userId: identity!.id,
+          profile: profile!,
+          getIdToken: () => {
+            return authApi.getBackstageIdentity().then(i => i!.idToken);
+          },
+          signOut: async () => {
+            await authApi.signOut();
+          },
+        });
+      } catch (err) {
+        // User closed the sign-in modal
+        setError(err);
+        setShowLoginPage(true);
+      }
     };
 
-    if (retry) {
-      login().catch(setError);
-    }
-  }, [onResult, authApi, retry]);
+    login();
+  }, [onResult, authApi, retry, autoShowPopup]);
 
-  return (
+  return showLoginPage ? (
     <Page themeId="home">
       <Header title={configApi.getString('app.title')} />
       <Content>
@@ -133,7 +161,10 @@ export const SingleSignInPage = ({
                 <Button
                   color="primary"
                   variant="outlined"
-                  onClick={() => setRetry({})}
+                  onClick={() => {
+                    setRetry({});
+                    setAutoShowPopup(true);
+                  }}
                 >
                   Sign In
                 </Button>
@@ -150,6 +181,8 @@ export const SingleSignInPage = ({
         </Grid>
       </Content>
     </Page>
+  ) : (
+    <Progress />
   );
 };
 

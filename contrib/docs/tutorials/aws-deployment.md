@@ -41,11 +41,8 @@ documentation to build a new Backstage Docker image:
 
 ```shell
 $ yarn build
-$ docker image build . -f packages/backend/Dockerfile --tag backstage
+$ yarn build-image --tag backstage
 ```
-
-This command builds a backend-only image, but you can similarly build a frontend
-or combined Docker image.
 
 Next, configure the [AWS CLI](https://aws.amazon.com/cli/) to use the
 `ecr-publisher` user you created:
@@ -90,65 +87,37 @@ document, but it can be as easy as `eksctl create cluster` documented in the
 guide](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html),
 which uses a Cloudformation template to create the necessary resources.
 
-To deploy the Docker image to EKS, create a `kubernetes` folder in your
-Backstage source folder and add a Kubernetes `deployment.yaml`:
+To deploy the Docker image to EKS, follow the [Kubernetes
+guide](https://backstage.io/docs/deployment/k8s#creating-the-backstage-instance)
+but set the Backstage deployment `image` to the ECR repository URL:
 
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backstage-backend
-  labels:
-    app: backstage-backend
-  namespace: default
+  name: backstage
+  namespace: backstage
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: backstage-backend
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
+  ...
   template:
     metadata:
       labels:
-        app: backstage-backend
+        app: backstage
     spec:
       containers:
         - image: <repo_url>/backstage:1.0.0
           imagePullPolicy: Always
-          name: backstage-backend
-          ports:
-            - containerPort: 7000
-              protocol: TCP
+          ...
 ```
 
-Note the `image` key in the container spec referencing the ECR repository.
-
-Now create a simple `service.yaml` to map the container ports:
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: backstage-backend
-spec:
-  selector:
-    app: backstage-backend
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 7000
-```
-
-Apply these Kubernetes definitions to the EKS cluster to complete the Backstage
-deployment:
+Create the [Service
+descriptor](https://backstage.io/docs/deployment/k8s#creating-a-backstage-service)
+as well, and apply these Kubernetes definitions to the EKS cluster to complete
+the Backstage deployment:
 
 ```shell
-$ kubectl apply -f deployment.yaml
-$ kubectl apply -f service.yaml
+$ kubectl apply -f kubernetes/backstage.yaml
+$ kubectl apply -f kubernetes/backstage-service.yaml
 ```
 
 Now you can see your Backstage workload running from the [EKS
@@ -158,14 +127,15 @@ console](https://console.aws.amazon.com/eks/home).
 
 ### Exposing Backstage with a load balancer
 
-Backstage users need to query the backend, which means we need to expose
-the workload with a load balancer. Follow the [Application load balancing on
+To make the service useful, we need to expose the workload with a load balancer.
+Follow the [Application load balancing on
 EKS](https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html) guide to
 set up a Load Balancer controller and Kubernetes ingress to your application.
 
 This is ultimately a `kubectl apply` with an ingress definition:
 
 ```yaml
+# kubernetes/backstage-ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -187,9 +157,3 @@ spec:
                 port:
                   number: 80
 ```
-
-### Updating the deployment
-
-To update the Kubernetes deployment to a newly published version of your
-Backstage Docker image, update the image tag reference in `deployment.yaml` and
-then apply the changes to EKS with `kubectl apply -f deployment.yaml`.

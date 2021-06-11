@@ -156,8 +156,18 @@ The key points to note are:
 - Call `emit` any number of times with the results of that process
 - Finally return `true`
 
-You should now be able to instantiate this class in your backend, and add it to
-the `CatalogBuilder` using the `addProcessors` method.
+You should now be able to add this class to your backend in
+`packages/backend/src/plugins/catalog.ts`:
+
+```diff
++ import { SystemXReaderProcessor } from '../path/to/class';
+
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
+  const builder = new CatalogBuilder(env);
++  builder.addProcessor(new SystemXReaderProcessor(env.reader));
+```
 
 Start up the backend - it should now start reading from the previously
 registered location and you'll see your entities start to appear in Backstage.

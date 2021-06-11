@@ -1,3 +1,9 @@
+# Backstage Documentation
+
+This folder holds the service and configuration that runs Backstage's documentation hosted at https://backstage.io.
+
+It pulls content in from the [root `/docs`](../docs/) folder and builds it into the resulting HTML web site.
+
 This website was created with [Docusaurus](https://docusaurus.io/).
 
 # What's In This Document
@@ -9,6 +15,8 @@ This website was created with [Docusaurus](https://docusaurus.io/).
 - [Full Documentation](#full-documentation)
 
 # Getting Started
+
+Testing the web site locally is a great way to see what final website will look like after publishing, and is ideal for testing more complex changes, large updates to navigation, or complex page designs that may include special alignment, which may not otherwise be validated through continuous integration.
 
 ## Installation
 
@@ -22,7 +30,7 @@ $ yarn install
 $ yarn start
 ```
 
-This command starts a local development server and open up a browser window. Most changes are reflected live without having to restart the server.
+This command starts a local development server and opens up a browser window. Most content changes made to the `docs/` root folder are reflected live without having to restart the server.
 
 ## Build
 
@@ -57,9 +65,9 @@ my-docusaurus/
     siteConfig.js
 ```
 
-# Editing Content
+## Editing Content
 
-## Editing an existing docs page
+### Editing an existing docs page
 
 Edit docs by navigating to `docs/` and editing the corresponding document:
 
@@ -76,7 +84,7 @@ Edit me...
 
 For more information about docs, click [here](https://docusaurus.io/docs/en/navigation)
 
-## Editing an existing blog post
+### Editing an existing blog post
 
 Edit blog posts by navigating to `website/blog` and editing the corresponding post:
 
@@ -93,9 +101,9 @@ Edit me...
 
 For more information about blog posts, click [here](https://docusaurus.io/docs/en/adding-blog)
 
-# Adding Content
+## Adding Content
 
-## Adding a new docs page to an existing sidebar
+### Adding a new docs page to an existing sidebar
 
 1. Create the doc as a new markdown file in `/docs`, example `docs/newly-created-doc.md`:
 
@@ -126,7 +134,7 @@ My new content here..
 
 For more information about adding new docs, click [here](https://docusaurus.io/docs/en/navigation)
 
-## Adding a new blog post
+### Adding a new blog post
 
 1. Make sure there is a header link to your blog in `website/siteConfig.js`:
 
@@ -157,7 +165,7 @@ Lorem Ipsum...
 
 For more information about blog posts, click [here](https://docusaurus.io/docs/en/adding-blog)
 
-## Adding items to your site's top navigation bar
+### Adding items to your site's top navigation bar
 
 1. Add links to docs, custom pages or external links by editing the headerLinks field of `website/siteConfig.js`:
 
@@ -181,7 +189,7 @@ For more information about blog posts, click [here](https://docusaurus.io/docs/e
 
 For more information about the navigation bar, click [here](https://docusaurus.io/docs/en/navigation)
 
-## Adding custom pages
+### Adding custom pages
 
 1. Docusaurus uses React components to build pages. The components are saved as .js files in `website/pages/en`:
 1. If you want your page to show up in your navigation header, you will need to update `website/siteConfig.js` to add to the `headerLinks` element:
@@ -199,11 +207,11 @@ For more information about the navigation bar, click [here](https://docusaurus.i
 }
 ```
 
-For more information about custom pages, click [here](https://docusaurus.io/docs/en/custom-pages).
+Learn more about [Docusaurus custom pages](https://docusaurus.io/docs/en/custom-pages).
 
-# Full Documentation
+## Full Documentation
 
-Full documentation can be found on the [website](https://docusaurus.io/).
+Full documentation can be found on the [Docusaurus website](https://docusaurus.io/).
 
 ## Additional notes
 

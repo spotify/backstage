@@ -15,6 +15,7 @@
  */
 
 import ldap, { Client, SearchEntry, SearchOptions } from 'ldapjs';
+import { Logger } from 'winston';
 import { BindConfig } from './config';
 import { errorString } from './util';
 import {
@@ -31,8 +32,20 @@ import {
 export class LdapClient {
   private vendor: Promise<LdapVendor> | undefined;
 
-  static async create(target: string, bind?: BindConfig): Promise<LdapClient> {
+  static async create(
+    logger: Logger,
+    target: string,
+    bind?: BindConfig,
+  ): Promise<LdapClient> {
     const client = ldap.createClient({ url: target });
+
+    // We want to have a catch-all error handler at the top, since the default
+    // behavior of the client is to blow up the entire process when it fails,
+    // unless an error handler is set.
+    client.on('error', (err: ldap.Error) => {
+      logger.warn(`LDAP client threw an error, ${errorString(err)}`);
+    });
+
     if (!bind) {
       return new LdapClient(client);
     }
@@ -92,7 +105,7 @@ export class LdapClient {
         });
       });
     } catch (e) {
-      throw new Error(`LDAP search at ${dn} failed, ${e.message}`);
+      throw new Error(`LDAP search at DN "${dn}" failed, ${e.message}`);
     }
   }
 

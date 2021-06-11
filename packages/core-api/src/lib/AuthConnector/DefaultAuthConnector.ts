@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { AuthRequester } from '../../apis';
 import {
+  AuthRequester,
   OAuthRequestApi,
   AuthProvider,
   DiscoveryApi,

@@ -29,6 +29,16 @@ spec:
           ui:options:
             allowedKinds: 
               - Group
+        system:
+          title: System
+          type: string
+          description: System of the component
+          ui:field: EntityPicker
+          ui:options:
+            allowedKinds: 
+              - System
+            defaultKind: System
+            
     - title: Choose a location
       required:
         - repoUrl
@@ -50,6 +60,7 @@ spec:
         values:
           name: '{{ parameters.name }}'
           owner: '{{ parameters.owner }}'
+          destination: '{{ parseRepoUrl parameters.repoUrl }}'
 
     - id: fetch-docs
       name: Fetch Docs

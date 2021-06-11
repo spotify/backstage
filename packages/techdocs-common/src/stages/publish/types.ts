@@ -38,6 +38,14 @@ export type PublishResponse = {
 } | void;
 
 /**
+ * Result for the validation check.
+ */
+export type ReadinessResponse = {
+  /** If true, the publisher is able to interact with the backing storage. */
+  isAvailable: boolean;
+};
+
+/**
  * Type to hold metadata found in techdocs_metadata.json and associated with each site
  * @param etag ETag of the resource used to generate the site. Usually the latest commit sha of the source repository.
  */
@@ -53,6 +61,14 @@ export type TechDocsMetadata = {
  * It also provides APIs to communicate with the storage service.
  */
 export interface PublisherBase {
+  /**
+   * Check if the publisher is ready. This check tries to perform certain checks to see if the
+   * publisher is configured correctly and can be used to publish or read documentations.
+   * The different implementations might e.g. use the provided service credentials to access the
+   * target or check if a folder/bucket is available.
+   */
+  getReadiness(): Promise<ReadinessResponse>;
+
   /**
    * Store the generated static files onto a storage service (either local filesystem or external service).
    *

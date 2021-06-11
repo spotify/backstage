@@ -431,7 +431,7 @@ class Index extends React.Component {
               <Block.SmallTitle small>Pick a cloud, any cloud</Block.SmallTitle>
               <Block.Paragraph>
                 Since Backstage uses the Kubernetes API, it's cloud agnostic —
-                so it works no matter which cloud provide or managed Kubernetes
+                so it works no matter which cloud provider or managed Kubernetes
                 service you use, and even works in multi-cloud orgs
               </Block.Paragraph>
             </Block.TextBox>

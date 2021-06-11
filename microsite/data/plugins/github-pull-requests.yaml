@@ -1,9 +1,9 @@
 ---
 title: GitHub Pull Requests
 author: roadie.io
-authorUrl: https://roadie.io/
+authorUrl: https://roadie.io/?utm_source=backstage.io&utm_medium=marketplace&utm_campaign=github-pull-requests
 category: Source Control Mgmt
 description: View GitHub pull requests for your service in Backstage.
-documentation: https://roadie.io/backstage/plugins/github-pull-requests
+documentation: https://roadie.io/backstage/plugins/github-pull-requests/?utm_source=backstage.io&utm_medium=marketplace&utm_campaign=github-pull-requests
 iconUrl: https://roadie.io/images/logos/github.png
 npmPackageName: '@roadiehq/backstage-plugin-github-pull-requests'

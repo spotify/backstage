@@ -18,20 +18,12 @@ Some features are not yet available for all supported Git providers.
 1. Install the Catalog Import Plugin:
 
 ```bash
-# packages/app
-
+# From your Backstage root directory
+cd packages/app
 yarn add @backstage/plugin-catalog-import
 ```
 
-2. Add the plugin to the app:
-
-```ts
-// packages/app/src/plugins.ts
-
-export { catalogImportPlugin } from '@backstage/plugin-catalog-import';
-```
-
-3. Register the `CatalogImportPage` at the `/catalog-import` path:
+2. Add the `CatalogImportPage` extension to the app:
 
 ```tsx
 // packages/app/src/App.tsx

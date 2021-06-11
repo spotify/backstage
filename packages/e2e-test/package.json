@@ -34,7 +34,7 @@
     "handlebars": "^4.7.3",
     "pgtools": "^0.3.0",
     "tree-kill": "^1.2.2",
-    "ts-node": "^8.6.2",
+    "ts-node": "^9.1.1",
     "zombie": "^6.1.4"
   },
   "nodemonConfig": {

@@ -1,3 +1,4 @@
+{{- if .Values.frontend.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -46,7 +47,6 @@ spec:
       {{- if .Values.global.nodeSelector }}
       nodeSelector: {{- toYaml .Values.global.nodeSelector | nindent 8 }}
       {{- end }}
-{{- if .Values.frontend.enabled }}
 ---
 apiVersion: v1
 kind: Service
@@ -62,5 +62,5 @@ spec:
     app: backstage
     component: frontend
 
-  type: ClusterIP
+  type: {{ .Values.frontend.serviceType }}
 {{- end }}

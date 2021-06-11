@@ -21,6 +21,7 @@ import {
   GroupEntity,
   ResourceEntity,
   SystemEntity,
+  TemplateEntity,
   UserEntity,
 } from '@backstage/catalog-model';
 import { BuiltinKindsEntityProcessor } from './BuiltinKindsEntityProcessor';
@@ -517,6 +518,48 @@ describe('BuiltinKindsEntityProcessor', () => {
           source: { kind: 'Group', namespace: 'default', name: 'n' },
           type: 'hasMember',
           target: { kind: 'User', namespace: 'default', name: 'm' },
+        },
+      });
+    });
+    it('generates relations for template entities', async () => {
+      const entity: TemplateEntity = {
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'Template',
+        metadata: { name: 'n' },
+        spec: {
+          schema: {
+            properties: {
+              description: {
+                title: 'd',
+                type: 'string',
+                description: 'des',
+              },
+            },
+          },
+          templater: 'cookiecutter',
+          path: '.',
+          type: 'service',
+          owner: 'o',
+        },
+      };
+
+      await processor.postProcessEntity(entity, location, emit);
+
+      expect(emit).toBeCalledTimes(2);
+      expect(emit).toBeCalledWith({
+        type: 'relation',
+        relation: {
+          source: { kind: 'Group', namespace: 'default', name: 'o' },
+          type: 'ownerOf',
+          target: { kind: 'Template', namespace: 'default', name: 'n' },
+        },
+      });
+      expect(emit).toBeCalledWith({
+        type: 'relation',
+        relation: {
+          source: { kind: 'Template', namespace: 'default', name: 'n' },
+          type: 'ownedBy',
+          target: { kind: 'Group', namespace: 'default', name: 'o' },
         },
       });
     });

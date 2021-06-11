@@ -1,0 +1,56 @@
+{
+  "name": "@backstage/plugin-ilert",
+  "version": "0.1.3",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.esm.js",
+    "types": "dist/index.d.ts"
+  },
+  "scripts": {
+    "build": "backstage-cli plugin:build",
+    "start": "backstage-cli plugin:serve",
+    "lint": "backstage-cli lint",
+    "test": "backstage-cli test",
+    "diff": "backstage-cli plugin:diff",
+    "prepack": "backstage-cli prepack",
+    "postpack": "backstage-cli postpack",
+    "clean": "backstage-cli clean"
+  },
+  "dependencies": {
+    "@backstage/catalog-model": "^0.8.0",
+    "@backstage/core": "^0.7.11",
+    "@backstage/errors": "^0.1.1",
+    "@backstage/plugin-catalog-react": "^0.2.0",
+    "@backstage/theme": "^0.2.8",
+    "@date-io/luxon": "1.x",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "4.0.0-alpha.45",
+    "@material-ui/pickers": "^3.3.10",
+    "humanize-duration": "^3.26.0",
+    "luxon": "^1.26.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-use": "^17.2.4"
+  },
+  "devDependencies": {
+    "@backstage/cli": "^0.6.14",
+    "@backstage/dev-utils": "^0.1.17",
+    "@backstage/test-utils": "^0.1.13",
+    "@testing-library/jest-dom": "^5.10.1",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^13.1.8",
+    "@types/jest": "^26.0.7",
+    "@types/node": "^14.14.32",
+    "cross-fetch": "^3.0.6",
+    "msw": "^0.21.2"
+  },
+  "files": [
+    "dist",
+    "config.d.ts"
+  ],
+  "configSchema": "config.d.ts"
+}

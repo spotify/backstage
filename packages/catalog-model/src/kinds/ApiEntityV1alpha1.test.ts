@@ -168,4 +168,16 @@ components:
     (entity as any).spec.system = '';
     await expect(validator.check(entity)).rejects.toThrow(/system/);
   });
+
+  it('rejects additional properties', async () => {
+    (entity as any).annotations = 'Test';
+    await expect(validator.check(entity)).rejects.toThrow(
+      /additional properties/,
+    );
+  });
+
+  it('rejects with useful error message', async () => {
+    (entity as any).annotations = 'Test';
+    await expect(validator.check(entity)).rejects.toThrow(/annotations/);
+  });
 });

@@ -19,6 +19,7 @@ import {
   createPlugin,
   githubAuthApiRef,
 } from '@backstage/core';
+import { scmIntegrationsApiRef } from '@backstage/integration-react';
 import { githubDeploymentsApiRef, GithubDeploymentsApiClient } from './api';
 
 export const githubDeploymentsPlugin = createPlugin({
@@ -26,9 +27,12 @@ export const githubDeploymentsPlugin = createPlugin({
   apis: [
     createApiFactory({
       api: githubDeploymentsApiRef,
-      deps: { githubAuthApi: githubAuthApiRef },
-      factory: ({ githubAuthApi }) =>
-        new GithubDeploymentsApiClient({ githubAuthApi }),
+      deps: {
+        scmIntegrationsApi: scmIntegrationsApiRef,
+        githubAuthApi: githubAuthApiRef,
+      },
+      factory: ({ scmIntegrationsApi, githubAuthApi }) =>
+        new GithubDeploymentsApiClient({ scmIntegrationsApi, githubAuthApi }),
     }),
   ],
 });

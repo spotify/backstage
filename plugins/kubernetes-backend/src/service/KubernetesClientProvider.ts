@@ -30,8 +30,7 @@ export class KubernetesClientProvider {
     const cluster = {
       name: clusterDetails.name,
       server: clusterDetails.url,
-      // TODO configure this
-      skipTLSVerify: true,
+      skipTLSVerify: clusterDetails.skipTLSVerify,
     };
 
     // TODO configure

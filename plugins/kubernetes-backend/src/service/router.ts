@@ -23,11 +23,11 @@ import { MultiTenantServiceLocator } from '../service-locator/MultiTenantService
 import {
   ClusterDetails,
   KubernetesClustersSupplier,
-  KubernetesRequestBody,
   KubernetesServiceLocator,
   ServiceLocatorMethod,
   CustomResource,
 } from '../types/types';
+import { KubernetesRequestBody } from '@backstage/plugin-kubernetes-common';
 import { KubernetesClientProvider } from './KubernetesClientProvider';
 import { KubernetesFanOutHandler } from './KubernetesFanOutHandler';
 import { KubernetesClientBasedFetcher } from './KubernetesFetcher';

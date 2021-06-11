@@ -38,7 +38,7 @@ describe('parseEntityYaml', () => {
       spec:
         type: website
         lifecycle: production
-        owner: guest
+        owner: user:guest
     `,
           'utf8',
         ),
@@ -60,7 +60,7 @@ describe('parseEntityYaml', () => {
         spec: {
           type: 'website',
           lifecycle: 'production',
-          owner: 'guest',
+          owner: 'user:guest',
         },
       }),
     ]);

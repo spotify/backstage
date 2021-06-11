@@ -27,9 +27,10 @@ type Props = {
   /** @deprecated The entity is now grabbed from context instead */
   entity?: Entity;
   cols?: ColumnBreakpoints | number;
+  variant?: 'gridItem';
 };
 
-export const EntityLinksCard = ({ cols = undefined }: Props) => {
+export const EntityLinksCard = ({ cols = undefined, variant }: Props) => {
   const { entity } = useEntity();
   const app = useApp();
 
@@ -39,7 +40,7 @@ export const EntityLinksCard = ({ cols = undefined }: Props) => {
   const links = entity?.metadata?.links;
 
   return (
-    <InfoCard title="Links">
+    <InfoCard title="Links" variant={variant}>
       {!links || links.length === 0 ? (
         <EntityLinksEmptyState />
       ) : (

@@ -14,14 +14,43 @@
  * limitations under the License.
  */
 
-import { ClusterLocatorMethod, CustomResource } from './src/types';
-
 export interface Config {
   kubernetes?: {
     serviceLocatorMethod: {
       type: 'multiTenant';
     };
-    clusterLocatorMethods: ClusterLocatorMethod[];
-    customResources?: CustomResource[];
+    clusterLocatorMethods: Array<
+      | {
+          /** @visibility frontend */
+          type: 'gke';
+          /** @visibility frontend */
+          projectId: string;
+          /** @visibility frontend */
+          region?: string;
+          /** @visibility frontend */
+          skipTLSVerify?: boolean;
+        }
+      | {
+          /** @visibility frontend */
+          type: 'config';
+          clusters: Array<{
+            /** @visibility frontend */
+            url: string;
+            /** @visibility frontend */
+            name: string;
+            /** @visibility secret  */
+            serviceAccountToken?: string;
+            /** @visibility frontend */
+            authProvider: 'aws' | 'google' | 'serviceAccount';
+            /** @visibility frontend */
+            skipTLSVerify?: boolean;
+          }>;
+        }
+    >;
+    customResources?: Array<{
+      group: string;
+      apiVersion: string;
+      plural: string;
+    }>;
   };
 }

@@ -23,7 +23,7 @@ import { renderInTestApp } from '@backstage/test-utils';
 
 const mockProjects = [
   { id: 'project1' },
-  { id: 'project2' },
+  { id: 'project2', name: 'Project 2' },
   { id: 'project3' },
 ];
 
@@ -56,7 +56,9 @@ describe('<ProjectSelect />', () => {
     await waitFor(() => rendered.getByTestId('option-all'));
 
     mockProjects.forEach(project =>
-      expect(rendered.getByText(project.id)).toBeInTheDocument(),
+      expect(
+        rendered.getByText(project.name ?? project.id),
+      ).toBeInTheDocument(),
     );
   });
 });

@@ -90,6 +90,13 @@ export interface Config {
              * @visibility secret
              */
             endpoint?: string;
+            /**
+             * (Optional) Whether to use path style URLs when communicating with S3.
+             * Defaults to false.
+             * This allows providers like LocalStack, Minio and Wasabi (and possibly others) to be used to host tech docs.
+             * @visibility backend
+             */
+            s3ForcePathStyle?: boolean;
           };
         }
       | {

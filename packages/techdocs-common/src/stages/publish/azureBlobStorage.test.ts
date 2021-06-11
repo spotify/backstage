@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { getVoidLogger } from '@backstage/backend-common';
 import {
   Entity,
@@ -20,6 +21,8 @@ import {
   ENTITY_DEFAULT_NAMESPACE,
 } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
+import express from 'express';
+import request from 'supertest';
 import mockFs from 'mock-fs';
 import os from 'os';
 import path from 'path';
@@ -59,12 +62,9 @@ const getEntityRootDir = (entity: Entity) => {
   return path.join(rootDir, namespace || ENTITY_DEFAULT_NAMESPACE, kind, name);
 };
 
-function createLogger() {
-  const logger = getVoidLogger();
-  jest.spyOn(logger, 'info').mockReturnValue(logger);
-  jest.spyOn(logger, 'error').mockReturnValue(logger);
-  return logger;
-}
+const logger = getVoidLogger();
+jest.spyOn(logger, 'info').mockReturnValue(logger);
+jest.spyOn(logger, 'error').mockReturnValue(logger);
 
 let publisher: PublisherBase;
 beforeEach(async () => {
@@ -85,13 +85,51 @@ beforeEach(async () => {
     },
   });
 
-  publisher = await AzureBlobStoragePublish.fromConfig(
-    mockConfig,
-    createLogger(),
-  );
+  publisher = AzureBlobStoragePublish.fromConfig(mockConfig, logger);
 });
 
 describe('publishing with valid credentials', () => {
+  describe('getReadiness', () => {
+    it('should validate correct config', async () => {
+      expect(await publisher.getReadiness()).toEqual({
+        isAvailable: true,
+      });
+    });
+
+    it('should reject incorrect config', async () => {
+      const mockConfig = new ConfigReader({
+        techdocs: {
+          requestUrl: 'http://localhost:7000',
+          publisher: {
+            type: 'azureBlobStorage',
+            azureBlobStorage: {
+              credentials: {
+                accountName: 'accountName',
+                accountKey: 'accountKey',
+              },
+              containerName: 'bad_container',
+            },
+          },
+        },
+      });
+
+      const errorPublisher = await AzureBlobStoragePublish.fromConfig(
+        mockConfig,
+        logger,
+      );
+
+      expect(await errorPublisher.getReadiness()).toEqual({
+        isAvailable: false,
+      });
+
+      expect(logger.error).toHaveBeenCalledWith(
+        expect.stringContaining(
+          `Could not retrieve metadata about the Azure Blob Storage container bad_container.`,
+        ),
+      );
+    });
+  });
+
   describe('publish', () => {
     beforeEach(() => {
       const entity = createMockEntity();
@@ -122,7 +160,6 @@ describe('publishing with valid credentials', () => {
     });
 
     it('should fail to publish a directory', async () => {
-      expect.assertions(1);
       const wrongPathToGeneratedDirectory = path.join(
         rootDir,
         'wrong',
@@ -133,22 +170,74 @@ describe('publishing with valid credentials', () => {
 
       const entity = createMockEntity();
 
-      await publisher
-        .publish({
-          entity,
-          directory: wrongPathToGeneratedDirectory,
-        })
-        .catch(error => {
-          // Can not do exact error message match due to mockFs adding unexpected characters in the path when throwing the error
-          // Issue reported https://github.com/tschaub/mock-fs/issues/118
-          expect.stringContaining(
-            `Unable to upload file(s) to Azure Blob Storage. Error: Failed to read template directory: ENOENT, no such file or directory`,
-          );
+      const fails = publisher.publish({
+        entity,
+        directory: wrongPathToGeneratedDirectory,
+      });
 
-          expect(error.message).toEqual(
-            expect.stringContaining(wrongPathToGeneratedDirectory),
-          );
+      await expect(fails).rejects.toMatchObject({
+        message: expect.stringContaining(
+          `Unable to upload file(s) to Azure Blob Storage. Error: Failed to read template directory: ENOENT, no such file or directory`,
+        ),
+      });
+      await expect(fails).rejects.toMatchObject({
+        message: expect.stringContaining(wrongPathToGeneratedDirectory),
+      });
+
+      mockFs.restore();
+    });
+
+    it('reports an error when bad account credentials', async () => {
+      const mockConfig = new ConfigReader({
+        techdocs: {
+          requestUrl: 'http://localhost:7000',
+          publisher: {
+            type: 'azureBlobStorage',
+            azureBlobStorage: {
+              credentials: {
+                accountName: 'failupload',
+                accountKey: 'accountKey',
+              },
+              containerName: 'containerName',
+            },
+          },
+        },
+      });
+
+      publisher = await AzureBlobStoragePublish.fromConfig(mockConfig, logger);
+
+      const entity = createMockEntity();
+      const entityRootDir = getEntityRootDir(entity);
+
+      mockFs({
+        [entityRootDir]: {
+          'index.html': '',
+        },
+      });
+
+      let error;
+      try {
+        await publisher.publish({
+          entity,
+          directory: entityRootDir,
         });
+      } catch (e) {
+        error = e;
+      }
+
+      expect(error.message).toContain(
+        `Unable to upload file(s) to Azure Blob Storage.`,
+      );
+
+      expect(logger.error).toHaveBeenCalledWith(
+        expect.stringContaining(
+          `Unable to upload file(s) to Azure Blob Storage. Error: Upload failed for ${path.join(
+            entityRootDir,
+            'index.html',
+          )} with status code 500`,
+        ),
+      );
+
       mockFs.restore();
     });
   });
@@ -242,157 +331,76 @@ describe('publishing with valid credentials', () => {
       );
     });
   });
-});
 
-describe('error reporting', () => {
-  it('reports an error when unable to read container properties', async () => {
-    const mockConfig = new ConfigReader({
-      techdocs: {
-        requestUrl: 'http://localhost:7000',
-        publisher: {
-          type: 'azureBlobStorage',
-          azureBlobStorage: {
-            credentials: {
-              accountName: 'accountName',
-            },
-            containerName: 'bad_container',
-          },
-        },
-      },
-    });
-
-    const logger = createLogger();
-
-    let error;
-    try {
-      publisher = await AzureBlobStoragePublish.fromConfig(mockConfig, logger);
-    } catch (e) {
-      error = e;
-    }
-
-    expect(error).toBeInstanceOf(Error);
-
-    expect(logger.error).toHaveBeenCalledWith(
-      expect.stringContaining(
-        `Could not retrieve metadata about the Azure Blob Storage container bad_container.`,
-      ),
-    );
-  });
-
-  it('reports an error when bad account credentials', async () => {
-    const mockConfig = new ConfigReader({
-      techdocs: {
-        requestUrl: 'http://localhost:7000',
-        publisher: {
-          type: 'azureBlobStorage',
-          azureBlobStorage: {
-            credentials: {
-              accountName: 'failupload',
-              accountKey: 'accountKey',
-            },
-            containerName: 'containerName',
-          },
-        },
-      },
-    });
-
-    const logger = createLogger();
-
-    publisher = await AzureBlobStoragePublish.fromConfig(mockConfig, logger);
-
+  describe('docsRouter', () => {
+    let app: express.Express;
     const entity = createMockEntity();
     const entityRootDir = getEntityRootDir(entity);
 
-    mockFs({
-      [entityRootDir]: {
-        'index.html': '',
-      },
-    });
+    beforeEach(() => {
+      app = express().use(publisher.docsRouter());
 
-    let error;
-    try {
-      await publisher.publish({
-        entity,
-        directory: entityRootDir,
-      });
-    } catch (e) {
-      error = e;
-    }
-
-    expect(error.message).toContain(
-      `Unable to upload file(s) to Azure Blob Storage.`,
-    );
-
-    expect(logger.error).toHaveBeenCalledWith(
-      expect.stringContaining(
-        `Unable to upload file(s) to Azure Blob Storage. Error: Upload failed for ${path.join(
-          entityRootDir,
-          'index.html',
-        )} with status code 500`,
-      ),
-    );
-
-    mockFs.restore();
-  });
-
-  describe('fetchTechDocsMetadata', () => {
-    it('should return tech docs metadata', async () => {
-      const entityNameMock = createMockEntityName();
-      const entity = createMockEntity();
-      const entityRootDir = getEntityRootDir(entity);
-
+      mockFs.restore();
       mockFs({
         [entityRootDir]: {
-          'techdocs_metadata.json':
-            '{"site_name": "backstage", "site_description": "site_content", "etag": "etag"}',
+          html: {
+            'unsafe.html': '<html></html>',
+          },
+          img: {
+            'with spaces.png': 'found it',
+            'unsafe.svg': '<svg></svg>',
+          },
+          'some folder': {
+            'also with spaces.js': 'found it too',
+          },
         },
       });
-      const expectedMetadata: TechDocsMetadata = {
-        site_name: 'backstage',
-        site_description: 'site_content',
-        etag: 'etag',
-      };
-      expect(
-        await publisher.fetchTechDocsMetadata(entityNameMock),
-      ).toStrictEqual(expectedMetadata);
+    });
+
+    afterEach(() => {
       mockFs.restore();
     });
 
-    it('should return tech docs metadata when json encoded with single quotes', async () => {
-      const entityNameMock = createMockEntityName();
-      const entity = createMockEntity();
-      const entityRootDir = getEntityRootDir(entity);
+    it('should pass expected object path to bucket', async () => {
+      const {
+        kind,
+        metadata: { namespace, name },
+      } = entity;
 
-      mockFs({
-        [entityRootDir]: {
-          'techdocs_metadata.json': `{'site_name': 'backstage', 'site_description': 'site_content', 'etag': 'etag'}`,
-        },
-      });
-
-      const expectedMetadata: TechDocsMetadata = {
-        site_name: 'backstage',
-        site_description: 'site_content',
-        etag: 'etag',
-      };
-      expect(
-        await publisher.fetchTechDocsMetadata(entityNameMock),
-      ).toStrictEqual(expectedMetadata);
-      mockFs.restore();
-    });
-
-    it('should return an error if the techdocs_metadata.json file is not present', async () => {
-      const entityNameMock = createMockEntityName();
-
-      let error;
-      try {
-        await publisher.fetchTechDocsMetadata(entityNameMock);
-      } catch (e) {
-        error = e;
-      }
-
-      expect(error.message).toEqual(
-        expect.stringContaining('TechDocs metadata fetch'),
+      // Ensures leading slash is trimmed and encoded path is decoded.
+      const pngResponse = await request(app).get(
+        `/${namespace}/${kind}/${name}/img/with%20spaces.png`,
       );
+      expect(Buffer.from(pngResponse.body).toString('utf8')).toEqual(
+        'found it',
+      );
+      const jsResponse = await request(app).get(
+        `/${namespace}/${kind}/${name}/some%20folder/also%20with%20spaces.js`,
+      );
+      expect(jsResponse.text).toEqual('found it too');
+    });
+
+    it('should pass text/plain content-type for html', async () => {
+      const {
+        kind,
+        metadata: { namespace, name },
+      } = entity;
+
+      const htmlResponse = await request(app).get(
+        `/${namespace}/${kind}/${name}/html/unsafe.html`,
+      );
+      expect(htmlResponse.text).toEqual('<html></html>');
+      expect(htmlResponse.header).toMatchObject({
+        'content-type': 'text/plain; charset=utf-8',
+      });
+
+      const svgResponse = await request(app).get(
+        `/${namespace}/${kind}/${name}/img/unsafe.svg`,
+      );
+      expect(svgResponse.text).toEqual('<svg></svg>');
+      expect(svgResponse.header).toMatchObject({
+        'content-type': 'text/plain; charset=utf-8',
+      });
     });
   });
 });

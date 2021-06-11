@@ -88,6 +88,12 @@ export const MOCK_TEAM: Team = {
   isDefaultTeam: false,
 };
 
+export const MOCK_TEAM_NO_INCIDENTS: Team = {
+  ...MOCK_TEAM,
+  name: 'test-noincidents',
+  slug: 'team-O9SqT13fsnCstjMj',
+};
+
 export const ESCALATION_POLICIES: EscalationPolicyInfo[] = [
   {
     policy: {

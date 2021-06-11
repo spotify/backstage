@@ -15,12 +15,14 @@
  */
 
 import { GroupEntity, UserEntity } from '@backstage/catalog-model';
+import { GithubCredentialType } from '@backstage/integration';
 import { graphql } from '@octokit/graphql';
 
 // Graphql types
 
 export type QueryResponse = {
-  organization: Organization;
+  organization?: Organization;
+  repositoryOwner?: Organization | User;
 };
 
 export type Organization = {
@@ -41,6 +43,7 @@ export type User = {
   avatarUrl?: string;
   email?: string;
   name?: string;
+  repositories?: Connection<Repository>;
 };
 
 export type Team = {
@@ -56,6 +59,7 @@ export type Team = {
 export type Repository = {
   name: string;
   url: string;
+  isArchived: boolean;
 };
 
 export type Connection<T> = {
@@ -74,13 +78,20 @@ export type Connection<T> = {
 export async function getOrganizationUsers(
   client: typeof graphql,
   org: string,
+  tokenType: GithubCredentialType,
 ): Promise<{ users: UserEntity[] }> {
   const query = `
-    query users($org: String!, $cursor: String) {
+    query users($org: String!, $email: Boolean!, $cursor: String) {
       organization(login: $org) {
         membersWithRole(first: 100, after: $cursor) {
           pageInfo { hasNextPage, endCursor }
-          nodes { avatarUrl, bio, email, login, name }
+          nodes {
+            avatarUrl,
+            bio,
+            email @include(if: $email),
+            login,
+            name
+          }
         }
       }
     }`;
@@ -116,7 +127,7 @@ export async function getOrganizationUsers(
     query,
     r => r.organization?.membersWithRole,
     mapper,
-    { org },
+    { org, email: tokenType === 'token' },
   );
 
   return { users };
@@ -227,27 +238,27 @@ export async function getOrganizationRepositories(
   org: string,
 ): Promise<{ repositories: Repository[] }> {
   const query = `
-  query repositories($org: String!, $cursor: String) {
-    organization(login: $org) {
-      name
-      repositories(first: 100, after: $cursor) {
-        nodes {
-          name
-          url
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
+    query repositories($org: String!, $cursor: String) {
+      repositoryOwner(login: $org) {
+        login
+        repositories(first: 100, after: $cursor) {
+          nodes {
+            name
+            url
+            isArchived
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
         }
       }
-    }
-  }
-  `;
+    }`;
 
   const repositories = await queryWithPaging(
     client,
     query,
-    r => r.organization?.repositories,
+    r => r.repositoryOwner?.repositories,
     x => x,
     { org },
   );

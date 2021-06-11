@@ -1,10 +1,10 @@
 ---
 title: Argo CD
 author: roadie.io
-authorUrl: https://roadie.io
+authorUrl: https://roadie.io/?utm_source=backstage.io&utm_medium=marketplace&utm_campaign=argo-cd
 category: CI/CD
 description: View Argo CD status for your projects in Backstage.
-documentation: https://roadie.io/backstage/plugins/argo-cd
+documentation: https://roadie.io/backstage/plugins/argo-cd/?utm_source=backstage.io&utm_medium=marketplace&utm_campaign=argo-cd
 iconUrl: https://roadie.io/images/logos/argo.png
 npmPackageName: '@roadiehq/backstage-plugin-argo-cd'
 tags:

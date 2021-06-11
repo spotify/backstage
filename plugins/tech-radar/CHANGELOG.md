@@ -1,5 +1,79 @@
 # @backstage/plugin-tech-radar
 
+## 0.4.0
+
+### Minor Changes
+
+- 90a505a77: Migrating the Tech Radar to support using `ApiRefs` to load custom data.
+
+  If you had a `getData` function, you'll now need to encapsulate that logic in a class that can override the `techRadarApiRef`.
+
+  ```ts
+  // app/src/lib/MyClient.ts
+  import {
+    TechRadarApi,
+    TechRadarLoaderResponse,
+  } from '@backstage/plugin-tech-radar';
+
+  class MyOwnClient implements TechRadarApi {
+    async load(): Promise<TechRadarLoaderResponse> {
+      // here's where you would put you logic to load the response that was previously passed into getData
+    }
+  }
+
+  // app/src/apis.ts
+  import { MyOwnClient } from './lib/MyClient';
+  import { techRadarApiRef } from '@backstage/plugin-tech-radar';
+
+  export const apis: AnyApiFactory[] = [
+    /*
+    ...
+    */
+    createApiFactory(techRadarApiRef, new MyOwnClient()),
+  ];
+  ```
+
+### Patch Changes
+
+- Updated dependencies [e7c5e4b30]
+- Updated dependencies [1cf1d351f]
+  - @backstage/theme@0.2.8
+  - @backstage/core@0.7.12
+
+## 0.3.11
+
+### Patch Changes
+
+- 062bbf90f: chore: bump `@testing-library/user-event` from 12.8.3 to 13.1.8
+- 675a569a9: chore: bump `react-use` dependency in all packages
+- Updated dependencies [062bbf90f]
+- Updated dependencies [889d89b6e]
+- Updated dependencies [3f988cb63]
+- Updated dependencies [675a569a9]
+  - @backstage/core@0.7.9
+
+## 0.3.10
+
+### Patch Changes
+
+- b2e2ec753: Update README for composability
+- Updated dependencies [f65adcde7]
+- Updated dependencies [80888659b]
+- Updated dependencies [7b8272fb7]
+  - @backstage/core@0.7.8
+  - @backstage/theme@0.2.7
+
+## 0.3.9
+
+### Patch Changes
+
+- 184b02bef: Add markdown support for tech radar entry description
+- Updated dependencies [d0d1c2f7b]
+- Updated dependencies [5cafcf452]
+- Updated dependencies [86a95ba67]
+- Updated dependencies [e27cb6c45]
+  - @backstage/core@0.7.5
+
 ## 0.3.8
 
 ### Patch Changes

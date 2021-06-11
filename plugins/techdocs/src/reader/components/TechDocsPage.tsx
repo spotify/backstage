@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { Content, Page, useApi } from '@backstage/core';
-import { Reader } from './Reader';
+import React, { useCallback, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useAsync } from 'react-use';
-import { TechDocsPageHeader } from './TechDocsPageHeader';
 import { techdocsApiRef } from '../../api';
+import { Reader } from './Reader';
+import { TechDocsPageHeader } from './TechDocsPageHeader';
 
 export const TechDocsPage = () => {
   const [documentReady, setDocumentReady] = useState<boolean>(false);
@@ -33,16 +33,16 @@ export const TechDocsPage = () => {
       return techdocsApi.getTechDocsMetadata({ kind, namespace, name });
     }
 
-    return Promise.resolve({ loading: true });
+    return Promise.resolve(undefined);
   }, [kind, namespace, name, techdocsApi, documentReady]);
 
   const entityMetadataRequest = useAsync(() => {
     return techdocsApi.getEntityMetadata({ kind, namespace, name });
   }, [kind, namespace, name, techdocsApi]);
 
-  const onReady = () => {
+  const onReady = useCallback(() => {
     setDocumentReady(true);
-  };
+  }, [setDocumentReady]);
 
   return (
     <Page themeId="documentation">

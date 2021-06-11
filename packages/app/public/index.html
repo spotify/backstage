@@ -49,8 +49,8 @@
     </style>
     <title><%= app.title %></title>
 
-    <% if (app.googleAnalyticsTrackingId && typeof app.googleAnalyticsTrackingId
-    === 'string') { %>
+    <% if (app.googleAnalyticsTrackingId && typeof
+    app.googleAnalyticsTrackingId==='string' ) { %>
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=<%= app.googleAnalyticsTrackingId %>"
@@ -64,8 +64,43 @@
 
       gtag('config', '<%= app.googleAnalyticsTrackingId %>');
     </script>
+    <% } %> <% if (app.datadogRum.clientToken && app.datadogRum.applicationId )
+    { %>
+    <script>
+      (function (h, o, u, n, d) {
+        h = h[d] = h[d] || {
+          q: [],
+          onReady: function (c) {
+            h.q.push(c);
+          },
+        };
+        d = o.createElement(u);
+        d.async = 1;
+        d.src = n;
+        n = o.getElementsByTagName(u)[0];
+        n.parentNode.insertBefore(d, n);
+      })(
+        window,
+        document,
+        'script',
+        'https://www.datadoghq-browser-agent.com/datadog-rum.js',
+        'DD_RUM',
+      );
+      DD_RUM.onReady(function () {
+        DD_RUM.init({
+          clientToken: '<%= app.datadogRum.clientToken %>',
+          applicationId: '<%= app.datadogRum.applicationId %>',
+          site: '<%= app.datadogRum.site %>' || 'datadoghq.com',
+          service: 'backstage',
+          env: '<%= app.datadogRum.env %>',
+          sampleRate: 100,
+          trackInteractions: true,
+        });
+      });
+    </script>
     <% } %>
   </head>
+
   <body style="margin: 0">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+export * from './cache';
 export * from './config';
 export * from './database';
 export * from './discovery';

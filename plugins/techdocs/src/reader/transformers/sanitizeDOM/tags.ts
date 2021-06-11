@@ -153,7 +153,6 @@ export const svg = [
   'mask',
   'metadata',
   'mpath',
-  'object',
   'path',
   'pattern',
   'polygon',

@@ -16,21 +16,22 @@
 
 import {
   createServiceBuilder,
+  DockerContainerRunner,
   SingleHostDiscovery,
   UrlReader,
 } from '@backstage/backend-common';
+import { ConfigReader } from '@backstage/config';
+import {
+  DirectoryPreparer,
+  Generators,
+  Preparers,
+  Publisher,
+  TechdocsGenerator,
+} from '@backstage/techdocs-common';
+import Docker from 'dockerode';
 import { Server } from 'http';
 import { Logger } from 'winston';
 import { createRouter } from './router';
-import Docker from 'dockerode';
-import {
-  Preparers,
-  DirectoryPreparer,
-  Generators,
-  TechdocsGenerator,
-  Publisher,
-} from '@backstage/techdocs-common';
-import { ConfigReader } from '@backstage/config';
 
 export interface ServerOptions {
   port: number;
@@ -65,13 +66,18 @@ export async function startStandaloneServer(
   );
   preparers.register('dir', directoryPreparer);
 
+  const dockerClient = new Docker();
+  const containerRunner = new DockerContainerRunner({ dockerClient });
+
   const generators = new Generators();
-  const techdocsGenerator = new TechdocsGenerator(logger, config);
+  const techdocsGenerator = new TechdocsGenerator({
+    logger,
+    containerRunner,
+    config,
+  });
   generators.register('techdocs', techdocsGenerator);
 
   const publisher = await Publisher.fromConfig(config, { logger, discovery });
-
-  const dockerClient = new Docker();
 
   logger.debug('Starting application server...');
   const router = await createRouter({
@@ -79,7 +85,6 @@ export async function startStandaloneServer(
     generators,
     logger,
     publisher,
-    dockerClient,
     config,
     discovery,
   });

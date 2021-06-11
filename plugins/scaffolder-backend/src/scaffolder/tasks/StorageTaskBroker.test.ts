@@ -21,7 +21,7 @@ import {
 import { ConfigReader } from '@backstage/config';
 import { DatabaseTaskStore } from './DatabaseTaskStore';
 import { StorageTaskBroker, TaskAgent } from './StorageTaskBroker';
-import { TaskSpec, DbTaskEventRow } from './types';
+import { TaskSecrets, TaskSpec, DbTaskEventRow } from './types';
 
 async function createStore(): Promise<DatabaseTaskStore> {
   const manager = SingleConnectionDatabaseManager.fromConfig(
@@ -39,6 +39,7 @@ async function createStore(): Promise<DatabaseTaskStore> {
 
 describe('StorageTaskBroker', () => {
   let storage: DatabaseTaskStore;
+  const fakeSecrets = { token: 'secret' } as TaskSecrets;
 
   beforeAll(async () => {
     storage = await createStore();
@@ -78,6 +79,13 @@ describe('StorageTaskBroker', () => {
     await expect(taskC.spec.steps[0].id).toBe('c');
   });
 
+  it('should store secrets', async () => {
+    const broker = new StorageTaskBroker(storage, logger);
+    await broker.dispatch({} as TaskSpec, fakeSecrets);
+    const task = await broker.claim();
+    expect(task.secrets).toEqual(fakeSecrets);
+  }, 10000);
+
   it('should complete a task', async () => {
     const broker = new StorageTaskBroker(storage, logger);
     const dispatchResult = await broker.dispatch({} as TaskSpec);
@@ -87,6 +95,16 @@ describe('StorageTaskBroker', () => {
     expect(taskRow.status).toBe('completed');
   }, 10000);
 
+  it('should remove secrets after completing a task', async () => {
+    const broker = new StorageTaskBroker(storage, logger);
+    const dispatchResult = await broker.dispatch({} as TaskSpec, fakeSecrets);
+    const task = await broker.claim();
+    await task.complete('completed');
+    const taskRow = await storage.getTask(dispatchResult.taskId);
+    expect(taskRow.status).toBe('completed');
+    expect(taskRow.secrets).toBeUndefined();
+  }, 10000);
+
   it('should fail a task', async () => {
     const broker = new StorageTaskBroker(storage, logger);
     const dispatchResult = await broker.dispatch({} as TaskSpec);
@@ -94,6 +112,16 @@ describe('StorageTaskBroker', () => {
     await task.complete('failed');
     const taskRow = await storage.getTask(dispatchResult.taskId);
     expect(taskRow.status).toBe('failed');
+  });
+
+  it('should remove secrets after failing a task', async () => {
+    const broker = new StorageTaskBroker(storage, logger);
+    const dispatchResult = await broker.dispatch({} as TaskSpec, fakeSecrets);
+    const task = await broker.claim();
+    await task.complete('failed');
+    const taskRow = await storage.getTask(dispatchResult.taskId);
+    expect(taskRow.status).toBe('failed');
+    expect(taskRow.secrets).toBeUndefined();
   });
 
   it('multiple brokers should be able to observe a single task', async () => {

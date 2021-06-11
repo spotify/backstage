@@ -27,30 +27,30 @@ package.json. Backstage Apps are set up as monorepos with
 [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/). Since
 CircleCI is a frontend UI plugin, it goes in `app` rather than `backend`.
 
-2. Add the plugin itself to the App:
+2. Add the `EntityCircleCIContent` extension to the entity pages in the app:
 
-```js
-// packages/app/src/plugins.ts
-export { plugin as Circleci } from '@backstage/plugin-circleci';
+```diff
+ // packages/app/src/components/catalog/EntityPage.tsx
++import {
++  EntityCircleCIContent,
++  isCircleCIAvailable,
++} from '@backstage/plugin-circleci';
+
+...
+ const cicdContent = (
+   <EntitySwitch>
+     ...
++     <EntitySwitch.Case if={isCircleCIAvailable}>
++       <EntityCircleCIContent />
++     </EntitySwitch.Case>;
+   </EntitySwitch>
+ );
 ```
 
-3. Register the plugin router:
-
-```jsx
-// packages/app/src/components/catalog/EntityPage.tsx
-
-import { Router as CircleCIRouter } from '@backstage/plugin-circleci';
-
-// Then somewhere inside <EntityPageLayout>
-<EntityPageLayout.Content
-  path="/ci-cd/*"
-  title="CI/CD"
-  element={<CircleCIRouter />}
-/>;
-```
-
-Note that stand-alone plugins that are not "attached" to the Software Catalog
-would be added outside the `EntityPage`.
+This is just one example, but each Backstage instance may integrate content or
+cards to suit their needs on different pages, tabs, etc. Note that stand-alone
+plugins that are not "attached" to the Software Catalog would be added outside
+the `EntityPage`.
 
 4. [Optional] Add proxy config:
 
@@ -60,8 +60,7 @@ proxy:
   '/circleci/api':
     target: https://circleci.com/api/v1.1
     headers:
-      Circle-Token:
-        $env: CIRCLECI_AUTH_TOKEN
+      Circle-Token: ${CIRCLECI_AUTH_TOKEN}
 ```
 
 ### Adding a plugin page to the Sidebar

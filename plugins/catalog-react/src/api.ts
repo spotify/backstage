@@ -15,10 +15,8 @@
  */
 
 import { CatalogApi } from '@backstage/catalog-client';
-import { createApiRef } from '@backstage/core';
+import { createApiRef } from '@backstage/core-plugin-api';
 
 export const catalogApiRef = createApiRef<CatalogApi>({
   id: 'plugin.catalog.service',
-  description:
-    'Used by the Catalog plugin to make requests to accompanying backend',
 });

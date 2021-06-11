@@ -95,10 +95,13 @@ export function createCatalogRegisterAction(options: {
 
       ctx.logger.info(`Registering ${catalogInfoUrl} in the catalog`);
 
-      const result = await catalogClient.addLocation({
-        type: 'url',
-        target: catalogInfoUrl,
-      });
+      const result = await catalogClient.addLocation(
+        {
+          type: 'url',
+          target: catalogInfoUrl,
+        },
+        ctx.token ? { token: ctx.token } : {},
+      );
       if (result.entities.length >= 1) {
         const { kind, name, namespace } = getEntityName(result.entities[0]);
         ctx.output('entityRef', `${kind}:${namespace}/${name}`);

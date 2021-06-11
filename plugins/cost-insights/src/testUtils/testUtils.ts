@@ -93,10 +93,16 @@ export function changeOf(aggregation: DateAggregation[]): ChangeStatistic {
   const lastAmount = aggregation.length
     ? aggregation[aggregation.length - 1].amount
     : 0;
-  const ratio =
-    firstAmount !== 0 ? (lastAmount - firstAmount) / firstAmount : 0;
+
+  // if either the first or last amounts are zero, the rate of increase/decrease is infinite
+  if (!firstAmount || !lastAmount) {
+    return {
+      amount: lastAmount - firstAmount,
+    };
+  }
+
   return {
-    ratio: ratio,
+    ratio: (lastAmount - firstAmount) / firstAmount,
     amount: lastAmount - firstAmount,
   };
 }

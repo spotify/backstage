@@ -1,6 +1,7 @@
 # Kafka Backend
 
-This is the backend part of the Kafka plugin. It responds to Kafka requests from the frontend.
+This is the backend part of the Kafka plugin. It responds to Kafka requests
+from the frontend.
 
 ## Configuration
 
@@ -16,7 +17,9 @@ A list of the brokers' host names and ports to connect to.
 
 ### `ssl` (optional)
 
-Configure TLS connection to the Kafka cluster. The options are passed directly to [tls.connect] and used to create the TLS secure context. Normally these would include `key` and `cert`.
+Configure TLS connection to the Kafka cluster. The options are passed directly
+to [tls.connect] and used to create the TLS secure context. Normally these
+would include `key` and `cert`.
 
 Example:
 
@@ -39,7 +42,7 @@ kafka:
   clusters:
     - name: prod
       brokers:
-        - my-cluser:9092
+        - my-cluster:9092
       ssl: true
       sasl:
         mechanism: plain # or 'scram-sha-256' or 'scram-sha-512'

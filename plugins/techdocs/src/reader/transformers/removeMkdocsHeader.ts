@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Transformer } from './index';
+import type { Transformer } from './transformer';
 
 export const removeMkdocsHeader = (): Transformer => {
   return dom => {

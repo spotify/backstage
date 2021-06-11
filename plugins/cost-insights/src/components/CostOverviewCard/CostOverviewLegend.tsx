@@ -25,9 +25,9 @@ import {
   Metric,
 } from '../../types';
 import { useLastCompleteBillingDate, useFilters } from '../../hooks';
-import { getComparedChange } from '../../utils/change';
+import { getComparedChange, choose } from '../../utils/change';
 import { mapFiltersToProps } from './selector';
-import { formatPercent } from '../../utils/formatters';
+import { formatChange } from '../../utils/formatters';
 import { CostGrowth } from '../CostGrowth';
 
 type CostOverviewLegendProps = {
@@ -42,9 +42,8 @@ export const CostOverviewLegend = ({
   metricData,
 }: PropsWithChildren<CostOverviewLegendProps>) => {
   const theme = useTheme<CostInsightsTheme>();
-
-  const lastCompleteBillingDate = useLastCompleteBillingDate();
   const { duration } = useFilters(mapFiltersToProps);
+  const lastCompleteBillingDate = useLastCompleteBillingDate();
 
   const comparedChange = metricData
     ? getComparedChange(
@@ -57,23 +56,25 @@ export const CostOverviewLegend = ({
 
   return (
     <Box display="flex" flexDirection="row">
-      <Box mr={2}>
-        <LegendItem title="Cost Trend" markerColor={theme.palette.blue}>
-          {formatPercent(dailyCostData.change!.ratio)}
-        </LegendItem>
-      </Box>
-      {metric && metricData && comparedChange && (
+      {dailyCostData.change && (
+        <Box mr={2}>
+          <LegendItem title="Cost Trend" markerColor={theme.palette.blue}>
+            {formatChange(dailyCostData.change)}
+          </LegendItem>
+        </Box>
+      )}
+      {metricData && metric && comparedChange && (
         <>
           <Box mr={2}>
             <LegendItem
               title={`${metric.name} Trend`}
               markerColor={theme.palette.magenta}
             >
-              {formatPercent(metricData.change.ratio)}
+              {formatChange(metricData.change)}
             </LegendItem>
           </Box>
           <LegendItem
-            title={comparedChange.ratio <= 0 ? 'Your Savings' : 'Your Excess'}
+            title={choose(['Your Savings', 'Your Excess'], comparedChange)}
           >
             <CostGrowth change={comparedChange} duration={duration} />
           </LegendItem>

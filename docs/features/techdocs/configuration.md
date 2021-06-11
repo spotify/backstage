@@ -65,22 +65,23 @@ techdocs:
       # https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/loading-node-credentials-environment.html
       # https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/loading-node-credentials-shared.html
       credentials:
-        accessKeyId:
-          $env: TECHDOCS_AWSS3_ACCESS_KEY_ID_CREDENTIAL
-        secretAccessKey:
-          $env: TECHDOCS_AWSS3_SECRET_ACCESS_KEY_CREDENTIAL
+        accessKeyId: ${TECHDOCS_AWSS3_ACCESS_KEY_ID_CREDENTIAL}
+        secretAccessKey: ${TECHDOCS_AWSS3_SECRET_ACCESS_KEY_CREDENTIAL}
 
       # (Optional) AWS Region of the bucket.
       # If not set, AWS_REGION environment variable or aws config file will be used.
       # https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/setting-region.html
-      region:
-        $env: AWS_REGION
+      region: ${AWS_REGION}
 
       # (Optional) Endpoint URI to send requests to.
       # If not set, the default endpoint is built from the configured region.
       # https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property
-      endpoint:
-        $env: AWS_ENDPOINT
+      endpoint: ${AWS_ENDPOINT}
+
+      # (Optional) Whether to use path style URLs when communicating with S3.
+      # Defaults to false.
+      # This allows providers like LocalStack, Minio and Wasabi (and possibly others) to be used to host tech docs.
+      s3ForcePathStyle: false
 
     # Required when techdocs.publisher.type is set to 'azureBlobStorage'. Skip otherwise.
 
@@ -91,13 +92,11 @@ techdocs:
       # (Required) An account name is required to write to a storage blob container.
       # https://docs.microsoft.com/en-us/rest/api/storageservices/authorize-with-shared-key
       credentials:
-        accountName:
-          $env: TECHDOCS_AZURE_BLOB_STORAGE_ACCOUNT_NAME
+        accountName: ${TECHDOCS_AZURE_BLOB_STORAGE_ACCOUNT_NAME}
         # (Optional) An account key is required to write to a storage container.
         # If missing,AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET environment variable will be used.
         # https://docs.microsoft.com/en-us/azure/storage/common/storage-auth?toc=/azure/storage/blobs/toc.json
-        accountKey:
-          $env: TECHDOCS_AZURE_BLOB_STORAGE_ACCOUNT_KEY
+        accountKey: ${TECHDOCS_AZURE_BLOB_STORAGE_ACCOUNT_KEY}
 
   # (Optional and Legacy) TechDocs makes API calls to techdocs-backend using this URL. e.g. get docs of an entity, get metadata, etc.
   # You don't have to specify this anymore.

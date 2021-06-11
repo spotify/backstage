@@ -15,7 +15,7 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { storageApiRef, useApi } from '@backstage/core';
+import { storageApiRef, useApi } from '@backstage/core-plugin-api';
 import { useCallback, useEffect, useState } from 'react';
 import { useObservable } from 'react-use';
 

@@ -34,8 +34,8 @@ import {
 import ExternalLinkIcon from '@material-ui/icons/Launch';
 import React, { useEffect } from 'react';
 import { GITHUB_ACTIONS_ANNOTATION } from '../useProjectName';
-import { useWorkflowRuns } from '../useWorkflowRuns';
-import { WorkflowRun, WorkflowRunsTable } from '../WorkflowRunsTable';
+import { useWorkflowRuns, WorkflowRun } from '../useWorkflowRuns';
+import { WorkflowRunsTable } from '../WorkflowRunsTable';
 import { WorkflowRunStatus } from '../WorkflowRunStatus';
 
 const useStyles = makeStyles<Theme>({

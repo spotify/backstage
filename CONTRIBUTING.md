@@ -93,7 +93,7 @@ Which will look something like the following in the repo;
 ```
 Awesome commit message
 
-Signed-off-by: Jane Smith jane.smith@example.com
+Signed-off-by: Jane Smith <jane.smith@example.com>
 ```
 
 - In case you forgot to add it to the most recent commit, use `git commit --amend --signoff`

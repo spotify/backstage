@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { Writable } from 'stream';
-import Docker from 'dockerode';
+
 import gitUrlParse from 'git-url-parse';
+import type { Writable } from 'stream';
 
 /**
  * Currently the required template values. The owner
@@ -48,7 +48,6 @@ export type TemplaterRunOptions = {
   workspacePath: string;
   values: TemplaterValues;
   logStream?: Writable;
-  dockerClient: Docker;
 };
 
 export type TemplaterBase = {

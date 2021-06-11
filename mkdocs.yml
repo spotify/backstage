@@ -7,114 +7,156 @@ plugins:
 nav:
   - Overview:
       - What is Backstage?: 'overview/what-is-backstage.md'
-      - Backstage architecture: 'overview/architecture-overview.md'
-      - Roadmap: 'overview/roadmap.md'
+      - Architecture overview: 'overview/architecture-overview.md'
+      - Project Roadmap: 'overview/roadmap.md'
       - Vision: 'overview/vision.md'
-      - The Spotify story: 'overview/background.md'
+      - The Spotify Story: 'overview/background.md'
       - Strategies for adopting: 'overview/adopting.md'
+      - Stability Index: 'overview/stability-index.md'
       - Logo assets: 'overview/logos.md'
-  - Getting started:
+  - Getting Started:
       - Getting Started: 'getting-started/index.md'
+      - Create an App: 'getting-started/create-an-app.md'
       - Running Backstage locally: 'getting-started/running-backstage-locally.md'
+      - App configuration:
+          - Configuring App with plugins: 'getting-started/configure-app-with-plugins.md'
+          - Customize the look-and-feel of your App: 'getting-started/app-custom-theme.md'
+      - Keeping Backstage Updated: 'getting-started/keeping-backstage-updated.md'
+      - Key Concepts: 'getting-started/concepts.md'
       - Contributors: 'getting-started/contributors.md'
-      - Demo deployment: https://backstage-demo.roadie.io
-      - Production deployments:
-          - Create an App: 'getting-started/create-an-app.md'
-          - App configuration:
-              - Configuring App with plugins: 'getting-started/configure-app-with-plugins.md'
-              - Customize the look-and-feel of your App: 'getting-started/app-custom-theme.md'
-          - Deployment scenarios:
-              - Docker: 'getting-started/deployment-docker.md'
-              - Kubernetes: 'getting-started/deployment-k8s.md'
-              - Kubernetes and Helm: 'getting-started/deployment-helm.md'
-              - Other: 'getting-started/deployment-other.md'
-  - Features:
+  - CLI:
+      - Overview: 'cli/index.md'
+      - Commands: 'cli/commands.md'
+  - Core Features:
       - Software Catalog:
           - Overview: 'features/software-catalog/index.md'
-          - Installation: 'features/software-catalog/installation.md'
-          - Configuration: 'features/software-catalog/configuration.md'
-          - System model: 'features/software-catalog/system-model.md'
+          - Installing in your Backstage App: 'features/software-catalog/installation.md'
+          - Catalog Configuration: 'features/software-catalog/configuration.md'
+          - System Model: 'features/software-catalog/system-model.md'
           - YAML File Format: 'features/software-catalog/descriptor-format.md'
           - Entity References: 'features/software-catalog/references.md'
           - Well-known Annotations: 'features/software-catalog/well-known-annotations.md'
+          - Well-known Relations: 'features/software-catalog/well-known-relations.md'
+          - Well-known Statuses: 'features/software-catalog/well-known-statuses.md'
           - Extending the model: 'features/software-catalog/extending-the-model.md'
           - External integrations: 'features/software-catalog/external-integrations.md'
+          - Catalog Customization: 'features/software-catalog/catalog-customization.md'
           - API: 'features/software-catalog/api.md'
-      - Software creation templates:
+      - Kubernetes:
+          - Overview: 'features/kubernetes/index.md'
+          - Installation: 'features/kubernetes/installation.md'
+          - Configuration: 'features/kubernetes/configuration.md'
+          - Troubleshooting: 'features/kubernetes/troubleshooting.md'
+      - Software Templates:
           - Overview: 'features/software-templates/index.md'
-          - Installation: 'features/software-templates/installation.md'
-          - Adding templates: 'features/software-templates/adding-templates.md'
-          - Extending the Scaffolder:
-              - Overview: 'features/software-templates/extending/index.md'
-              - Create your own Templater: 'features/software-templates/extending/create-your-own-templater.md'
-              - Create your own Publisher: 'features/software-templates/extending/create-your-own-publisher.md'
-              - Create your own Preparer: 'features/software-templates/extending/create-your-own-preparer.md'
+          - Installing in your Backstage App: 'features/software-templates/installation.md'
+          - Adding your own Templates: 'features/software-templates/adding-templates.md'
+          - Writing Templates: 'features/software-templates/writing-templates.md'
+          - Builtin Actions: 'features/software-templates/builtin-actions.md'
+          - Writing Custom Actions: 'features/software-templates/writing-custom-actions.md'
+          - Writing Templates (Legacy): 'features/software-templates/legacy.md'
+          - Migrating from v1alpha1 to v1beta2 templates: 'features/software-templates/migrating-from-v1alpha1-to-v1beta2.md'
+
       - Backstage Search:
           - Overview: 'features/search/README.md'
-          - Architecture: 'features/search/architecture.md'
+          - Search Architecture: 'features/search/architecture.md'
       - TechDocs:
           - Overview: 'features/techdocs/README.md'
           - Getting Started: 'features/techdocs/getting-started.md'
           - Concepts: 'features/techdocs/concepts.md'
           - TechDocs Architecture: 'features/techdocs/architecture.md'
           - Creating and Publishing Documentation: 'features/techdocs/creating-and-publishing.md'
-          - Configuration: 'features/techdocs/configuration.md'
+          - TechDocs Configuration Options: 'features/techdocs/configuration.md'
           - Using Cloud Storage: 'features/techdocs/using-cloud-storage.md'
+          - Configuring CI/CD to generate and publish TechDocs sites: 'features/techdocs/configuring-ci-cd.md'
           - HOW TO guides: 'features/techdocs/how-to-guides.md'
           - Troubleshooting: 'features/techdocs/troubleshooting.md'
           - FAQ: 'features/techdocs/FAQ.md'
-      - Kubernetes:
-          - Overview: 'features/kubernetes/index.md'
   - Integrations:
+      - Overview: 'integrations/index.md'
+      - Azure DevOps:
+          - Locations: 'integrations/azure/locations.md'
+      - Bitbucket:
+          - Locations: 'integrations/bitbucket/locations.md'
+          - Discovery: 'integrations/bitbucket/discovery.md'
+      - Datadog:
+          - Installation: 'integrations/datadog-rum/installation.md'
       - GitHub:
+          - Locations: 'integrations/github/locations.md'
+          - Discovery: 'integrations/github/discovery.md'
           - Org Data: 'integrations/github/org.md'
-      - LDAP:
-          - Org Data: 'integrations/ldap/org.md'
+      - GitLab:
+          - Locations: 'integrations/gitlab/locations.md'
       - Google Analytics:
           - Installation: 'integrations/google-analytics/installation.md'
+      - Google GCS:
+          - Locations: 'integrations/google-cloud-storage/locations.md'
+      - LDAP:
+          - Org Data: 'integrations/ldap/org.md'
   - Plugins:
-      - Overview: 'plugins/index.md'
+      - Intro to plugins: 'plugins/index.md'
       - Existing plugins: 'plugins/existing-plugins.md'
-      - Creating a new plugin: 'plugins/create-a-plugin.md'
-      - Developing a plugin: 'plugins/plugin-development.md'
+      - Create a Backstage Plugin: 'plugins/create-a-plugin.md'
+      - Plugin Development: 'plugins/plugin-development.md'
       - Structure of a plugin: 'plugins/structure-of-a-plugin.md'
+      - Plugin Development: 'plugins/plugin-development.md'
+      - Integrate into the Service Catalog: 'plugins/integrating-plugin-into-service-catalog.md'
       - Composability System Migration: 'plugins/composability.md'
       - Backends and APIs:
           - Proxying: 'plugins/proxying.md'
-          - Backstage backend plugin: 'plugins/backend-plugin.md'
+          - Backend plugin: 'plugins/backend-plugin.md'
           - Call existing API: 'plugins/call-existing-api.md'
+          - GitHub Apps for Backend Authentication: 'plugins/github-apps.md'
       - Testing:
-          - Overview: 'plugins/testing.md'
+          - Testing with Jest: 'plugins/testing.md'
       - Publishing:
-          - Open source and npm: 'plugins/publishing.md'
-          - Private/internal (non-open source): 'plugins/publish-private.md'
+          - Publishing: 'plugins/publishing.md'
+          - Publish private: 'plugins/publish-private.md'
+          - Add to Marketplace: 'plugins/add-to-marketplace.md'
           - Observability: 'plugins/observability.md'
   - Configuration:
-      - Overview: 'conf/index.md'
-      - Reading Configuration: 'conf/reading.md'
-      - Writing Configuration: 'conf/writing.md'
-      - Defining Configuration: 'conf/defining.md'
+      - Static Configuration in Backstage: 'conf/index.md'
+      - Reading Backstage Configuration: 'conf/reading.md'
+      - Writing Backstage Configuration: 'conf/writing.md'
+      - Defining Configuration for your Plugin: 'conf/defining.md'
   - Authentication and identity:
-      - Overview: 'auth/index.md'
-      - Add auth provider: 'auth/add-auth-provider.md'
+      - Adding Authentication: 'auth/index.md'
+      - Included providers:
+          - Auth0: 'auth/auth0/provider.md'
+          - Azure: 'auth/microsoft/provider.md'
+          - GitHub: 'auth/github/provider.md'
+          - GitLab: 'auth/gitlab/provider.md'
+          - Google: 'auth/google/provider.md'
+          - Okta: 'auth/okta/provider.md'
+          - OneLogin: 'auth/onelogin/provider.md'
+      - Adding authentication providers: 'auth/add-auth-provider.md'
+      - Using authentication and identity: 'auth/using-auth.md'
       - Auth backend: 'auth/auth-backend.md'
-      - Auth backend class structure: 'auth/auth-backend-classes.md'
-      - OAuth: 'auth/oauth.md'
+      - OAuth and OpenID Connect: 'auth/oauth.md'
+      - Auth backend classes: 'auth/auth-backend-classes.md'
       - Glossary: 'auth/glossary.md'
+  - Deployment:
+      - Deploying Backstage: 'deployment/index.md'
+      - Docker: 'deployment/docker.md'
+      - Kubernetes: 'deployment/k8s.md'
+      - Helm: 'deployment/helm.md'
+      - Heroku: 'deployment/heroku.md'
   - Designing for Backstage:
-      - Backstage Design Language System (DLS): 'dls/design.md'
-      - Storybook -- reusable UI components: 'http://backstage.io/storybook'
+      - Design: 'dls/design.md'
       - Contributing to Storybook: 'dls/contributing-to-storybook.md'
-      - Figma resources: 'dls/figma.md'
+      - Figma: 'dls/figma.md'
   - API references:
-      - TypeScript APIs:
-          - Utilities: 'api/utility-apis.md'
+      - TypeScript API:
+          - Utility APIs: 'api/utility-apis.md'
+          - reference/utility-apis/README: 'reference/utility-apis/README.md'
           - createPlugin: 'reference/createPlugin.md'
-          - createPlugin-feature-flags: 'reference/createPlugin-feature-flags.md'
+          - createPlugin -feature flags: 'reference/createPlugin-feature-flags.md'
       - Backend APIs:
           - Backend: 'api/backend.md'
   - Tutorials:
-      - Overview: 'tutorials/index.md'
+      - Future developer journey: 'tutorials/journey.md'
+      - Adding Custom Plugin to Existing Monorepo App: 'tutorials/quickstart-app-plugin.md'
+      - Switching Backstage from SQLite to PostgreSQL: 'tutorials/switching-sqlite-postgres.md'
   - Architecture Decision Records (ADRs):
       - Overview: 'architecture-decisions/index.md'
       - ADR001 - Architecture Decision Record (ADR) log: 'architecture-decisions/adr001-add-adr-log.md'
@@ -129,7 +171,7 @@ nav:
       - ADR010 - Luxon Date Library: 'architecture-decisions/adr010-luxon-date-library.md'
       - ADR011 - Plugin Package Structure: 'architecture-decisions/adr011-plugin-package-structure.md'
   - Support:
-      - 'support/support.md'
-      - 'support/project-structure.md'
+      - Support and community: 'support/support.md'
+      - Backstage Project Structure: 'support/project-structure.md'
   - Glossary: glossary.md
   - FAQ: FAQ.md

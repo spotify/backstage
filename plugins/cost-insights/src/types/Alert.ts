@@ -34,8 +34,8 @@ import { Maybe } from './Maybe';
  */
 
 export type Alert = {
-  title: string;
-  subtitle: string;
+  title: string | JSX.Element;
+  subtitle: string | JSX.Element;
   element?: JSX.Element;
   status?: AlertStatus;
   url?: string;

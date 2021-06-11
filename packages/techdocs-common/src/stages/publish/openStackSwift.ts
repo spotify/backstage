@@ -15,16 +15,21 @@
  */
 import { Entity, EntityName } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
-import { storage } from 'pkgcloud';
 import express from 'express';
 import fs from 'fs-extra';
 import JSON5 from 'json5';
 import createLimiter from 'p-limit';
 import path from 'path';
+import { storage } from 'pkgcloud';
 import { Readable } from 'stream';
 import { Logger } from 'winston';
 import { getFileTreeRecursively, getHeadersForFileExtension } from './helpers';
-import { PublisherBase, PublishRequest, TechDocsMetadata } from './types';
+import {
+  PublisherBase,
+  PublishRequest,
+  ReadinessResponse,
+  TechDocsMetadata,
+} from './types';
 
 const streamToBuffer = (stream: Readable): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
@@ -70,25 +75,6 @@ export class OpenStackSwiftPublish implements PublisherBase {
       region: openStackSwiftConfig.getString('region'),
     });
 
-    // Check if the defined container exists. Being able to connect means the configuration is good
-    // and the storage client will work.
-    storageClient.getContainer(containerName, (err, container) => {
-      if (container) {
-        logger.info(
-          `Successfully connected to the OpenStack Swift container ${containerName}.`,
-        );
-      } else {
-        logger.error(
-          `Could not retrieve metadata about the OpenStack Swift container ${containerName}. ` +
-            'Make sure the container exists. Also make sure that authentication is setup either by ' +
-            'explicitly defining credentials and region in techdocs.publisher.openStackSwift in app config or ' +
-            'by using environment variables. Refer to https://backstage.io/docs/features/techdocs/using-cloud-storage',
-        );
-
-        logger.error(`from OpenStack client library: ${err.message}`);
-      }
-    });
-
     return new OpenStackSwiftPublish(storageClient, containerName, logger);
   }
 
@@ -100,6 +86,37 @@ export class OpenStackSwiftPublish implements PublisherBase {
     this.storageClient = storageClient;
     this.containerName = containerName;
     this.logger = logger;
+  }
+
+  /*
+   * Check if the defined container exists. Being able to connect means the configuration is good
+   * and the storage client will work.
+   */
+  getReadiness(): Promise<ReadinessResponse> {
+    return new Promise(resolve => {
+      this.storageClient.getContainer(this.containerName, (err, container) => {
+        if (container) {
+          this.logger.info(
+            `Successfully connected to the OpenStack Swift container ${this.containerName}.`,
+          );
+          resolve({
+            isAvailable: true,
+          });
+        } else {
+          this.logger.error(
+            `Could not retrieve metadata about the OpenStack Swift container ${this.containerName}. ` +
+              'Make sure the container exists. Also make sure that authentication is setup either by ' +
+              'explicitly defining credentials and region in techdocs.publisher.openStackSwift in app config or ' +
+              'by using environment variables. Refer to https://backstage.io/docs/features/techdocs/using-cloud-storage',
+          );
+
+          this.logger.error(`from OpenStack client library: ${err.message}`);
+          resolve({
+            isAvailable: false,
+          });
+        }
+      });
+    });
   }
 
   /**
@@ -204,10 +221,9 @@ export class OpenStackSwiftPublish implements PublisherBase {
    */
   docsRouter(): express.Handler {
     return async (req, res) => {
-      // Trim the leading forward slash
+      // Decode and trim the leading forward slash
       // filePath example - /default/Component/documented-component/index.html
-
-      const filePath = req.path.replace(/^\//, '');
+      const filePath = decodeURI(req.path.replace(/^\//, ''));
 
       // Files with different extensions (CSS, HTML) need to be served with different headers
       const fileExtension = path.extname(filePath);

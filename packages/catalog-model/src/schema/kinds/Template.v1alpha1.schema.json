@@ -66,7 +66,7 @@
           "properties": {
             "type": {
               "type": "string",
-              "description": "The type of component. This field is optional but recommended. The software catalog accepts any type value, but an organization should take great care to establish a proper taxonomy for these. Tools including Backstage itself may read this field and behave differently depending on its value. For example, a website type component may present tooling in the Backstage interface that is specific to just websites.",
+              "description": "The type of component created by the template. The software catalog accepts any type value, but an organization should take great care to establish a proper taxonomy for these. Tools including Backstage itself may read this field and behave differently depending on its value. For example, a website type component may present tooling in the Backstage interface that is specific to just websites.",
               "examples": ["service", "website", "library"],
               "minLength": 1
             },
@@ -85,6 +85,11 @@
             "schema": {
               "type": "object",
               "description": "The JSONSchema describing the inputs for the template."
+            },
+            "owner": {
+              "type": "string",
+              "description": "The user (or group) owner of the template",
+              "minLength": 1
             }
           }
         }

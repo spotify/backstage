@@ -14,37 +14,24 @@
  * limitations under the License.
  */
 
-import {
-  configApiRef,
-  Header,
-  HomepageTimer,
-  identityApiRef,
-  Page,
-  useApi,
-} from '@backstage/core';
+import { configApiRef, Header, Page, useApi } from '@backstage/core';
 import React from 'react';
-import { getTimeBasedGreeting } from './utils/timeUtil';
 
 type Props = {
   children?: React.ReactNode;
 };
 
 const CatalogLayout = ({ children }: Props) => {
-  const greeting = getTimeBasedGreeting();
-  const profile = useApi(identityApiRef).getProfile();
-  const userId = useApi(identityApiRef).getUserId();
-  const orgName = useApi(configApiRef).getOptionalString('organization.name');
+  const orgName =
+    useApi(configApiRef).getOptionalString('organization.name') ?? 'Backstage';
 
   return (
     <Page themeId="home">
       <Header
-        title={`${greeting.greeting}, ${profile.displayName || userId}!`}
-        subtitle={`${orgName || 'Backstage'} Service Catalog`}
-        tooltip={greeting.language}
+        title={`${orgName} Catalog`}
+        subtitle={`Catalog of software components at ${orgName}`}
         pageTitleOverride="Home"
-      >
-        <HomepageTimer />
-      </Header>
+      />
       {children}
     </Page>
   );

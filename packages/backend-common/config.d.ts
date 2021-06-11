@@ -57,7 +57,7 @@ export interface Config {
     database:
       | {
           client: 'sqlite3';
-          connection: ':memory:' | string;
+          connection: ':memory:' | string | { filename: string };
         }
       | {
           client: 'pg';
@@ -66,6 +66,20 @@ export interface Config {
            * @secret
            */
           connection: string | object;
+        };
+
+    /** Cache connection configuration, select cache type using the `store` field */
+    cache?:
+      | {
+          store: 'memory';
+        }
+      | {
+          store: 'memcache';
+          /**
+           * A memcache connection string in the form `user:pass@host:port`.
+           * @secret
+           */
+          connection: string;
         };
 
     cors?: {

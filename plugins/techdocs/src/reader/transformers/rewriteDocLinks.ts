@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Transformer } from './index';
+import type { Transformer } from './transformer';
 
 export const rewriteDocLinks = (): Transformer => {
   return dom => {
@@ -31,14 +31,19 @@ export const rewriteDocLinks = (): Transformer => {
             if (elemAttribute.match(/^https?:\/\//i)) {
               elem.setAttribute('target', '_blank');
             }
-            const normalizedWindowLocation = window.location.href.endsWith('/')
-              ? window.location.href
-              : `${window.location.href}/`;
 
-            elem.setAttribute(
-              attributeName,
-              new URL(elemAttribute, normalizedWindowLocation).toString(),
-            );
+            try {
+              const normalizedWindowLocation = normalizeUrl(
+                window.location.href,
+              );
+              elem.setAttribute(
+                attributeName,
+                new URL(elemAttribute, normalizedWindowLocation).toString(),
+              );
+            } catch (_e) {
+              // Non-parseable links should be re-written as plain text.
+              elem.replaceWith(elem.textContent || elemAttribute);
+            }
           }
         });
     };
@@ -48,3 +53,14 @@ export const rewriteDocLinks = (): Transformer => {
     return dom;
   };
 };
+
+/** Make sure that the input url always ends with a '/' */
+export function normalizeUrl(input: string): string {
+  const url = new URL(input);
+
+  if (!url.pathname.endsWith('/')) {
+    url.pathname += '/';
+  }
+
+  return url.toString();
+}

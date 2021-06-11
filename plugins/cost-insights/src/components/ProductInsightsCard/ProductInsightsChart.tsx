@@ -40,7 +40,7 @@ import {
   findAnyKey,
   assertAlways,
 } from '../../utils/assert';
-import { formatPeriod, formatPercent } from '../../utils/formatters';
+import { formatPeriod, formatChange } from '../../utils/formatters';
 import {
   titleOf,
   tooltipItemOf,
@@ -54,6 +54,7 @@ import {
   useBarChartLayoutStyles as useLayoutStyles,
 } from '../../utils/styles';
 import { Duration, Entity, Maybe } from '../../types';
+import { choose } from '../../utils/change';
 
 export type ProductInsightsChartProps = {
   billingDate: string;
@@ -86,7 +87,6 @@ export const ProductInsightsChart = ({
     return breakdowns.length > 0;
   }, [entities, activeLabel]);
 
-  const legendTitle = `Cost ${entity.change.ratio <= 0 ? 'Savings' : 'Growth'}`;
   const costStart = entity.aggregation[0];
   const costEnd = entity.aggregation[1];
   const resources = entities.map(resourceOf);
@@ -136,7 +136,6 @@ export const ProductInsightsChart = ({
     const items = payload.map(tooltipItemOf).filter(notEmpty);
 
     const activeEntity = findAlways(entities, e => e.id === id);
-    const ratio = activeEntity.change.ratio;
     const breakdowns = Object.keys(activeEntity.entities);
 
     if (breakdowns.length) {
@@ -148,11 +147,13 @@ export const ProductInsightsChart = ({
           title={title}
           subtitle={subtitle}
           topRight={
-            <CostGrowthIndicator
-              className={classes.indicator}
-              ratio={ratio}
-              formatter={formatPercent}
-            />
+            !!activeEntity.change.ratio && (
+              <CostGrowthIndicator
+                formatter={formatChange}
+                change={activeEntity.change}
+                className={classes.indicator}
+              />
+            )
           }
           actions={
             <Box className={classes.actions}>
@@ -173,11 +174,13 @@ export const ProductInsightsChart = ({
       <BarChartTooltip
         title={title}
         topRight={
-          <CostGrowthIndicator
-            className={classes.indicator}
-            ratio={ratio}
-            formatter={formatPercent}
-          />
+          !!activeEntity.change.ratio && (
+            <CostGrowthIndicator
+              formatter={formatChange}
+              change={activeEntity.change}
+              className={classes.indicator}
+            />
+          )
         }
         content={
           id
@@ -197,7 +200,9 @@ export const ProductInsightsChart = ({
   return (
     <Box className={layoutClasses.wrapper}>
       <BarChartLegend costStart={costStart} costEnd={costEnd} options={options}>
-        <LegendItem title={legendTitle}>
+        <LegendItem
+          title={choose(['Cost Savings', 'Cost Excess'], entity.change)}
+        >
           <CostGrowth change={entity.change} duration={duration} />
         </LegendItem>
       </BarChartLegend>

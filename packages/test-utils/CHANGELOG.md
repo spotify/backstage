@@ -1,5 +1,34 @@
 # @backstage/test-utils
 
+## 0.1.13
+
+### Patch Changes
+
+- 7af9cef07: Fix a bug in `MockStorageApi` where it unhelpfully returned new empty buckets every single time
+- e7c5e4b30: Update installation instructions in README.
+- Updated dependencies [e7c5e4b30]
+- Updated dependencies [0160678b1]
+  - @backstage/theme@0.2.8
+  - @backstage/core-api@0.2.21
+
+## 0.1.12
+
+### Patch Changes
+
+- 61c3f927c: Updated `MockErrorApi` to work with new `Observable` type in `@backstage/core`.
+- Updated dependencies [61c3f927c]
+- Updated dependencies [65e6c4541]
+  - @backstage/core-api@0.2.19
+
+## 0.1.11
+
+### Patch Changes
+
+- 062bbf90f: chore: bump `@testing-library/user-event` from 12.8.3 to 13.1.8
+- Updated dependencies [062bbf90f]
+- Updated dependencies [675a569a9]
+  - @backstage/core-api@0.2.18
+
 ## 0.1.10
 
 ### Patch Changes

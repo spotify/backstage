@@ -31,8 +31,8 @@ import {
   CatalogEntitiesRequest,
   CatalogListResponse,
   CatalogRequestOptions,
-  DiscoveryApi,
-} from './types';
+} from './types/api';
+import { DiscoveryApi } from './types/discovery';
 
 export class CatalogClient implements CatalogApi {
   private readonly discoveryApi: DiscoveryApi;
@@ -42,28 +42,41 @@ export class CatalogClient implements CatalogApi {
   }
 
   async getLocationById(
-    id: String,
+    id: string,
     options?: CatalogRequestOptions,
   ): Promise<Location | undefined> {
-    return await this.requestOptional('GET', `/locations/${id}`, options);
+    return await this.requestOptional(
+      'GET',
+      `/locations/${encodeURIComponent(id)}`,
+      options,
+    );
   }
 
   async getEntities(
     request?: CatalogEntitiesRequest,
     options?: CatalogRequestOptions,
   ): Promise<CatalogListResponse<Entity>> {
-    const { filter = {}, fields = [] } = request ?? {};
+    const { filter = [], fields = [] } = request ?? {};
+    const filterItems = [filter].flat();
     const params: string[] = [];
 
-    const filterParts: string[] = [];
-    for (const [key, value] of Object.entries(filter)) {
-      for (const v of [value].flat()) {
-        filterParts.push(`${encodeURIComponent(key)}=${encodeURIComponent(v)}`);
+    // filter param can occur multiple times, for example
+    // /api/catalog/entities?filter=metadata.name=wayback-search,kind=component&filter=metadata.name=www-artist,kind=component'
+    // the "outer array" defined by `filter` occurrences corresponds to "anyOf" filters
+    // the "inner array" defined within a `filter` param corresponds to "allOf" filters
+    for (const filterItem of filterItems) {
+      const filterParts: string[] = [];
+      for (const [key, value] of Object.entries(filterItem)) {
+        for (const v of [value].flat()) {
+          filterParts.push(
+            `${encodeURIComponent(key)}=${encodeURIComponent(v)}`,
+          );
+        }
       }
-    }
 
-    if (filterParts.length) {
-      params.push(`filter=${filterParts.join(',')}`);
+      if (filterParts.length) {
+        params.push(`filter=${filterParts.join(',')}`);
+      }
     }
 
     if (fields.length) {
@@ -86,7 +99,9 @@ export class CatalogClient implements CatalogApi {
     const { kind, namespace = 'default', name } = compoundName;
     return this.requestOptional(
       'GET',
-      `/entities/by-name/${kind}/${namespace}/${name}`,
+      `/entities/by-name/${encodeURIComponent(kind)}/${encodeURIComponent(
+        namespace,
+      )}/${encodeURIComponent(name)}`,
       options,
     );
   }
@@ -119,6 +134,7 @@ export class CatalogClient implements CatalogApi {
       throw new Error(`Location wasn't added: ${target}`);
     }
 
+    // TODO(jhaals): This will throw using the experimental catalog since all discovered entities are deferred.
     if (entities.length === 0) {
       throw new Error(
         `Location was added but has no entities specified yet: ${target}`,
@@ -171,14 +187,22 @@ export class CatalogClient implements CatalogApi {
     id: string,
     options?: CatalogRequestOptions,
   ): Promise<void> {
-    await this.requestIgnored('DELETE', `/locations/${id}`, options);
+    await this.requestIgnored(
+      'DELETE',
+      `/locations/${encodeURIComponent(id)}`,
+      options,
+    );
   }
 
   async removeEntityByUid(
     uid: string,
     options?: CatalogRequestOptions,
   ): Promise<void> {
-    await this.requestIgnored('DELETE', `/entities/by-uid/${uid}`, options);
+    await this.requestIgnored(
+      'DELETE',
+      `/entities/by-uid/${encodeURIComponent(uid)}`,
+      options,
+    );
   }
 
   //

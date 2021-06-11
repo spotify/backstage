@@ -20,20 +20,15 @@ The scaffolder frontend plugin should be installed in your `app` package, which
 is created as a part of `@backstage/create-app`. To install the package, run:
 
 ```bash
+# From your Backstage root directory
 cd packages/app
 yarn add @backstage/plugin-scaffolder
 ```
 
 ### Adding the Plugin to your `packages/app`
 
-Add the following entry to the head of your `packages/app/src/plugins.ts`:
-
-```ts
-export { scaffolderPlugin } from '@backstage/plugin-scaffolder';
-```
-
-Next we need to install the root page that the Scaffolder plugin provides. You
-can choose any path for the route, but we recommend the following:
+Add the root page that the Scaffolder plugin provides to your app. You can
+choose any path for the route, but we recommend the following:
 
 ```tsx
 import { ScaffolderPage } from '@backstage/plugin-scaffolder';
@@ -63,6 +58,7 @@ The scaffolder backend should be installed in your `backend` package, which is
 created as a part of `@backstage/create-app`. To install the package, run:
 
 ```bash
+# From your Backstage root directory
 cd packages/backend
 yarn add @backstage/plugin-scaffolder-backend
 ```
@@ -75,6 +71,10 @@ following contents to get you up and running quickly.
 
 ```ts
 import {
+  DockerContainerRunner,
+  SingleHostDiscovery,
+} from '@backstage/backend-common';
+import {
   CookieCutter,
   createRouter,
   Preparers,
@@ -82,7 +82,6 @@ import {
   CreateReactAppTemplater,
   Templaters,
 } from '@backstage/plugin-scaffolder-backend';
-import { SingleHostDiscovery } from '@backstage/backend-common';
 import type { PluginEnvironment } from '../types';
 import Docker from 'dockerode';
 import { CatalogClient } from '@backstage/catalog-client';
@@ -93,8 +92,11 @@ export default async function createPlugin({
   database,
   reader,
 }: PluginEnvironment) {
-  const cookiecutterTemplater = new CookieCutter();
-  const craTemplater = new CreateReactAppTemplater();
+  const dockerClient = new Docker();
+  const containerRunner = new DockerContainerRunner({ dockerClient });
+
+  const cookiecutterTemplater = new CookieCutter({ containerRunner });
+  const craTemplater = new CreateReactAppTemplater({ containerRunner });
   const templaters = new Templaters();
 
   templaters.register('cookiecutter', cookiecutterTemplater);
@@ -102,8 +104,6 @@ export default async function createPlugin({
 
   const preparers = await Preparers.fromConfig(config, { logger });
   const publishers = await Publishers.fromConfig(config, { logger });
-
-  const dockerClient = new Docker();
 
   const discovery = SingleHostDiscovery.fromConfig(config);
   const catalogClient = new CatalogClient({ discoveryApi: discovery });
@@ -114,7 +114,6 @@ export default async function createPlugin({
     publishers,
     logger,
     config,
-    dockerClient,
     database,
     catalogClient,
     reader,
@@ -189,8 +188,7 @@ public within the enterprise.
 integrations:
   github:
     - host: github.com
-      token:
-        $env: GITHUB_TOKEN
+      token: ${GITHUB_TOKEN}
 
 scaffolder:
   github:
@@ -207,8 +205,7 @@ instance:
 integrations:
   gitlab:
     - host: gitlab.com
-      token:
-        $env: GITLAB_TOKEN
+      token: ${GITLAB_TOKEN}
 ```
 
 #### Bitbucket
@@ -221,8 +218,7 @@ following:
 integrations:
   bitbucket:
     - host: bitbucket.org
-      token:
-        $env: BITBUCKET_TOKEN
+      token: ${BITBUCKET_TOKEN}
 ```
 
 or
@@ -231,10 +227,8 @@ or
 integrations:
   bitbucket:
     - host: bitbucket.org
-      appPassword:
-        $env: BITBUCKET_APP_PASSWORD
-      username:
-        $env: BITBUCKET_USERNAME
+      appPassword: ${BITBUCKET_APP_PASSWORD}
+      username: ${BITBUCKET_USERNAME}
 ```
 
 #### Azure DevOps
@@ -249,8 +243,7 @@ verified.
 integrations:
   azure:
     - host: dev.azure.com
-      token:
-        $env: AZURE_TOKEN
+      token: ${AZURE_TOKEN}
 ```
 
 ### Running the Backend
@@ -271,9 +264,9 @@ the templates at [localhost:3000/create](http://localhost:3000/create) now!
 Software Templates use
 [Cookiecutter](https://github.com/cookiecutter/cookiecutter) as templating
 library. By default it will use the
-[spotify/backstage-cookiecutter](<[spotify/backstage-cookiecutter](https://github.com/backstage/backstage/blob/37e35b910afc7d1270855aed0ec4718aba366c91/plugins/scaffolder-backend/scripts/Cookiecutter.dockerfile)>)
+[spotify/backstage-cookiecutter](https://github.com/backstage/backstage/blob/37e35b910afc7d1270855aed0ec4718aba366c91/plugins/scaffolder-backend/scripts/Cookiecutter.dockerfile)
 docker image.
 
-If you are running backstage from a Docker container and you want to avoid
+If you are running Backstage from a Docker container and you want to avoid
 calling a container inside a container, you can set up Cookiecutter in your own
 image, this will use the local installation instead.

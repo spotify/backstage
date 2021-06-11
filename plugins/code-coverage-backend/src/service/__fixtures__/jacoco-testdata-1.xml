@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<report name="example">
+  <sessioninfo id="743a5357362a-f32e3def" start="1575926125817" dump="1575926133882"/>
+  <package name="com/example">
+    <sourcefile name="Main.kt">
+      <line nr="28" mi="6" ci="0" mb="0" cb="0"/>
+      <line nr="31" mi="7" ci="0" mb="0" cb="0"/>
+      <line nr="36" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="37" mi="12" ci="0" mb="0" cb="0"/>
+      <line nr="38" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="39" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="40" mi="5" ci="0" mb="0" cb="0"/>
+      <line nr="41" mi="5" ci="0" mb="0" cb="0"/>
+      <line nr="42" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="43" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="44" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="45" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="46" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="47" mi="4" ci="0" mb="0" cb="0"/>
+      <line nr="48" mi="4" ci="0" mb="0" cb="0"/>
+      <line nr="49" mi="4" ci="0" mb="0" cb="0"/>
+      <line nr="50" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="52" mi="8" ci="0" mb="0" cb="0"/>
+      <line nr="53" mi="19" ci="0" mb="0" cb="0"/>
+      <line nr="56" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="57" mi="8" ci="0" mb="0" cb="0"/>
+      <line nr="58" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="59" mi="24" ci="0" mb="0" cb="0"/>
+      <line nr="60" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="62" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="65" mi="5" ci="0" mb="0" cb="0"/>
+      <line nr="66" mi="5" ci="0" mb="0" cb="0"/>
+      <line nr="67" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="69" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="70" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="71" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="72" mi="7" ci="0" mb="0" cb="0"/>
+      <line nr="74" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="76" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="77" mi="7" ci="0" mb="0" cb="0"/>
+      <line nr="78" mi="5" ci="0" mb="0" cb="0"/>
+      <line nr="79" mi="5" ci="0" mb="0" cb="0"/>
+      <line nr="81" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="82" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="83" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="84" mi="9" ci="0" mb="0" cb="0"/>
+      <line nr="85" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="86" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="87" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="88" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="89" mi="6" ci="0" mb="0" cb="0"/>
+      <line nr="92" mi="6" ci="0" mb="0" cb="0"/>
+      <line nr="93" mi="1" ci="0" mb="0" cb="0"/>
+      <counter type="INSTRUCTION" missed="219" covered="0"/>
+      <counter type="LINE" missed="48" covered="0"/>
+      <counter type="COMPLEXITY" missed="8" covered="0"/>
+      <counter type="METHOD" missed="8" covered="0"/>
+      <counter type="CLASS" missed="6" covered="0"/>
+    </sourcefile>
+    <sourcefile name="Parser.kt">
+      <line nr="5" mi="0" ci="9" mb="0" cb="0"/>
+      <line nr="10" mi="0" ci="7" mb="0" cb="0"/>
+      <line nr="12" mi="1" ci="8" mb="1" cb="1"/>
+      <line nr="13" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="14" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="16" mi="2" ci="28" mb="2" cb="2"/>
+      <line nr="17" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="19" mi="0" ci="4" mb="0" cb="0"/>
+      <line nr="20" mi="0" ci="16" mb="0" cb="0"/>
+      <line nr="21" mi="0" ci="18" mb="0" cb="0"/>
+      <line nr="22" mi="0" ci="12" mb="0" cb="0"/>
+      <line nr="23" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="24" mi="0" ci="14" mb="0" cb="2"/>
+      <line nr="25" mi="1" ci="22" mb="2" cb="6"/>
+      <line nr="26" mi="0" ci="9" mb="0" cb="0"/>
+      <line nr="28" mi="0" ci="7" mb="0" cb="0"/>
+      <line nr="29" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="32" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="34" mi="0" ci="13" mb="0" cb="0"/>
+      <line nr="36" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="37" mi="9" ci="0" mb="0" cb="0"/>
+      <line nr="38" mi="37" ci="0" mb="4" cb="0"/>
+      <line nr="39" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="40" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="43" mi="0" ci="7" mb="1" cb="1"/>
+      <line nr="44" mi="20" ci="0" mb="2" cb="0"/>
+      <line nr="46" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="49" mi="0" ci="7" mb="0" cb="0"/>
+      <line nr="50" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="53" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="54" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="55" mi="0" ci="18" mb="0" cb="4"/>
+      <line nr="56" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="57" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="58" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="59" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="60" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="62" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="64" mi="0" ci="6" mb="0" cb="0"/>
+      <line nr="65" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="69" mi="2" ci="5" mb="0" cb="0"/>
+      <line nr="70" mi="17" ci="14" mb="3" cb="1"/>
+      <line nr="71" mi="1" ci="8" mb="0" cb="0"/>
+      <line nr="72" mi="0" ci="20" mb="0" cb="0"/>
+      <line nr="73" mi="0" ci="16" mb="0" cb="2"/>
+      <line nr="74" mi="0" ci="22" mb="0" cb="0"/>
+      <line nr="75" mi="2" ci="3" mb="1" cb="1"/>
+      <line nr="76" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="77" mi="0" ci="19" mb="0" cb="2"/>
+      <line nr="78" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="79" mi="0" ci="13" mb="0" cb="2"/>
+      <line nr="80" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="81" mi="0" ci="4" mb="0" cb="0"/>
+      <line nr="83" mi="0" ci="4" mb="0" cb="0"/>
+      <line nr="84" mi="0" ci="12" mb="0" cb="0"/>
+      <line nr="85" mi="0" ci="10" mb="0" cb="2"/>
+      <line nr="86" mi="0" ci="7" mb="0" cb="0"/>
+      <line nr="87" mi="0" ci="9" mb="0" cb="0"/>
+      <line nr="94" mi="0" ci="10" mb="0" cb="2"/>
+      <line nr="95" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="96" mi="0" ci="4" mb="0" cb="0"/>
+      <line nr="98" mi="0" ci="9" mb="0" cb="0"/>
+      <line nr="99" mi="0" ci="12" mb="0" cb="0"/>
+      <line nr="100" mi="0" ci="10" mb="0" cb="2"/>
+      <line nr="101" mi="0" ci="7" mb="0" cb="0"/>
+      <line nr="102" mi="0" ci="4" mb="0" cb="0"/>
+      <line nr="103" mi="0" ci="9" mb="0" cb="0"/>
+      <line nr="104" mi="0" ci="10" mb="0" cb="2"/>
+      <line nr="105" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="106" mi="0" ci="10" mb="0" cb="0"/>
+      <line nr="107" mi="0" ci="4" mb="0" cb="0"/>
+      <line nr="108" mi="0" ci="3" mb="0" cb="2"/>
+      <line nr="109" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="110" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="111" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="113" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="114" mi="0" ci="7" mb="0" cb="0"/>
+      <line nr="116" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="117" mi="0" ci="12" mb="0" cb="0"/>
+      <line nr="118" mi="0" ci="26" mb="0" cb="0"/>
+      <line nr="119" mi="0" ci="10" mb="0" cb="2"/>
+      <line nr="120" mi="0" ci="7" mb="0" cb="0"/>
+      <line nr="122" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="123" mi="0" ci="9" mb="0" cb="0"/>
+      <line nr="124" mi="0" ci="14" mb="0" cb="2"/>
+      <line nr="125" mi="0" ci="2" mb="0" cb="0"/>
+      <line nr="126" mi="0" ci="3" mb="0" cb="0"/>
+      <counter type="INSTRUCTION" missed="98" covered="642"/>
+      <counter type="BRANCH" missed="16" covered="38"/>
+      <counter type="LINE" missed="6" covered="81"/>
+      <counter type="COMPLEXITY" missed="15" covered="20"/>
+      <counter type="METHOD" missed="3" covered="5"/>
+      <counter type="CLASS" missed="2" covered="2"/>
+    </sourcefile>
+  </package>
+  <package name="com/example/models">
+    <sourcefile name="Thing.kt">
+      <line nr="9" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="10" mi="4" ci="3" mb="0" cb="0"/>
+      <line nr="11" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="14" mi="0" ci="8" mb="0" cb="2"/>
+      <line nr="15" mi="9" ci="3" mb="1" cb="1"/>
+      <line nr="16" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="19" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="20" mi="4" ci="3" mb="0" cb="0"/>
+      <line nr="21" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="24" mi="5" ci="3" mb="1" cb="1"/>
+      <line nr="25" mi="9" ci="3" mb="1" cb="1"/>
+      <line nr="26" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="29" mi="0" ci="11" mb="0" cb="0"/>
+      <line nr="30" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="31" mi="4" ci="3" mb="0" cb="0"/>
+      <line nr="32" mi="4" ci="3" mb="0" cb="0"/>
+      <line nr="35" mi="0" ci="12" mb="0" cb="2"/>
+      <line nr="36" mi="0" ci="12" mb="0" cb="2"/>
+      <line nr="37" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="40" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="41" mi="4" ci="3" mb="0" cb="0"/>
+      <line nr="44" mi="9" ci="3" mb="1" cb="1"/>
+      <line nr="45" mi="0" ci="1" mb="0" cb="0"/>
+      <line nr="48" mi="0" ci="12" mb="0" cb="0"/>
+      <line nr="49" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="50" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="51" mi="3" ci="0" mb="0" cb="0"/>
+      <counter type="INSTRUCTION" missed="61" covered="119"/>
+      <counter type="BRANCH" missed="4" covered="10"/>
+      <counter type="LINE" missed="3" covered="24"/>
+      <counter type="COMPLEXITY" missed="12" covered="16"/>
+      <counter type="METHOD" missed="8" covered="13"/>
+      <counter type="CLASS" missed="0" covered="5"/>
+    </sourcefile>
+  </package>
+  <package name="com/example/generated">
+    <sourcefile name="Untracked.kt">
+      <line nr="12" mi="8" ci="0" mb="0" cb="0"/>
+      <line nr="17" mi="6" ci="0" mb="0" cb="0"/>
+      <line nr="20" mi="8" ci="0" mb="0" cb="0"/>
+      <line nr="21" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="22" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="23" mi="4" ci="0" mb="0" cb="0"/>
+      <line nr="24" mi="13" ci="0" mb="0" cb="0"/>
+      <line nr="27" mi="7" ci="0" mb="0" cb="0"/>
+      <line nr="28" mi="5" ci="0" mb="4" cb="0"/>
+      <line nr="29" mi="19" ci="0" mb="0" cb="0"/>
+      <line nr="30" mi="4" ci="0" mb="0" cb="0"/>
+      <line nr="31" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="32" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="33" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="34" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="35" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="39" mi="23" ci="0" mb="0" cb="0"/>
+      <line nr="40" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="41" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="42" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="43" mi="5" ci="0" mb="0" cb="0"/>
+      <line nr="44" mi="3" ci="0" mb="2" cb="0"/>
+      <line nr="45" mi="21" ci="0" mb="0" cb="0"/>
+      <line nr="46" mi="13" ci="0" mb="0" cb="0"/>
+      <line nr="48" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="51" mi="9" ci="0" mb="0" cb="0"/>
+      <line nr="52" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="53" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="54" mi="4" ci="0" mb="0" cb="0"/>
+      <line nr="55" mi="13" ci="0" mb="0" cb="0"/>
+      <line nr="58" mi="7" ci="0" mb="0" cb="0"/>
+      <line nr="59" mi="5" ci="0" mb="4" cb="0"/>
+      <line nr="60" mi="19" ci="0" mb="0" cb="0"/>
+      <line nr="61" mi="4" ci="0" mb="0" cb="0"/>
+      <line nr="62" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="63" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="64" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="65" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="66" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="70" mi="23" ci="0" mb="0" cb="0"/>
+      <line nr="71" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="72" mi="2" ci="0" mb="0" cb="0"/>
+      <line nr="73" mi="3" ci="0" mb="0" cb="0"/>
+      <line nr="74" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="75" mi="5" ci="0" mb="0" cb="0"/>
+      <line nr="76" mi="3" ci="0" mb="2" cb="0"/>
+      <line nr="77" mi="21" ci="0" mb="0" cb="0"/>
+      <line nr="78" mi="13" ci="0" mb="0" cb="0"/>
+      <line nr="80" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="82" mi="1" ci="0" mb="0" cb="0"/>
+      <line nr="84" mi="15" ci="0" mb="0" cb="0"/>
+      <line nr="87" mi="1" ci="5" mb="0" cb="0"/>
+      <line nr="89" mi="0" ci="5" mb="0" cb="0"/>
+      <line nr="90" mi="0" ci="6" mb="0" cb="0"/>
+      <line nr="91" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="92" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="93" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="94" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="95" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="96" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="97" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="98" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="99" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="100" mi="0" ci="9" mb="0" cb="0"/>
+      <line nr="101" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="102" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="103" mi="0" ci="7" mb="0" cb="0"/>
+      <line nr="107" mi="2" ci="8" mb="0" cb="0"/>
+      <line nr="108" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="109" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="110" mi="0" ci="3" mb="0" cb="0"/>
+      <line nr="113" mi="2" ci="9" mb="0" cb="0"/>
+      <line nr="114" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="115" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="116" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="117" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="118" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="119" mi="0" ci="8" mb="0" cb="0"/>
+      <line nr="120" mi="0" ci="3" mb="0" cb="0"/>
+      <counter type="INSTRUCTION" missed="345" covered="212"/>
+      <counter type="BRANCH" missed="12" covered="0"/>
+      <counter type="LINE" missed="51" covered="28"/>
+      <counter type="COMPLEXITY" missed="19" covered="1"/>
+      <counter type="METHOD" missed="13" covered="1"/>
+      <counter type="CLASS" missed="9" covered="1"/>
+    </sourcefile>
+  </package>
+</report>

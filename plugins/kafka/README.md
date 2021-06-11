@@ -7,7 +7,9 @@
 1. Run:
 
 ```bash
-yarn add @backstage/plugin-kafka @backstage/plugin-kafka-backend
+# From your Backstage root directory
+yarn --cwd packages/app add @backstage/plugin-kafka
+yarn --cwd packages/backend add @backstage/plugin-kafka-backend
 ```
 
 2. Add the plugin backend:
@@ -29,41 +31,31 @@ export default async function createPlugin({
 And then add to `packages/backend/src/index.ts`:
 
 ```js
-// ...
+// In packages/backend/src/index.ts
 import kafka from './plugins/kafka';
 // ...
 async function main() {
   // ...
   const kafkaEnv = useHotMemoize(module, () => createEnv('kafka'));
   // ...
-
-  const apiRouter = Router();
-  // ...
   apiRouter.use('/kafka', await kafka(kafkaEnv));
-  // ...
 ```
 
-3. Add the plugin frontend to `packages/app/src/plugin.ts`:
-
-```js
-export { plugin as Kafka } from '@backstage/plugin-kafka';
-```
-
-4. Register the plugin frontend router in `packages/app/src/components/catalog/EntityPage.tsx`:
+3. Add the plugin as a tab to your service entities:
 
 ```jsx
-import { Router as KafkaRouter } from '@backstage/plugin-kafka';
+// In packages/app/src/components/catalog/EntityPage.tsx
+import { EntityKafkaContent } from '@backstage/plugin-kafka';
 
-// Then, somewhere inside <EntityPageLayout>
-
-<EntityPageLayout.Content
-  path="/kafka/*"
-  title="Kafka"
-  element={<KafkaRouter entity={entity} />}
-/>;
+const serviceEntityPage = (
+  <EntityLayout>
+    {/* other tabs... */}
+    <EntityLayout.Route path="/kafka" title="Kafka">
+      <EntityKafkaContent />
+    </EntityLayout.Route>
 ```
 
-5. Add broker configs for the backend in your `app-config.yaml` (see
+4. Add broker configs for the backend in your `app-config.yaml` (see
    [kafka-backend](https://github.com/backstage/backstage/blob/master/plugins/kafka-backend/README.md)
    for more options):
 
@@ -76,7 +68,7 @@ kafka:
         - localhost:9092
 ```
 
-6. Add `kafka.apache.org/consumer-groups` annotation to your services:
+5. Add the `kafka.apache.org/consumer-groups` annotation to your services:
 
 ```yaml
 apiVersion: backstage.io/v1alpha1

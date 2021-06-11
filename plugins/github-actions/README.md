@@ -11,15 +11,15 @@ TBD
 ### Generic Requirements
 
 1. Provide OAuth credentials:
-   1. [Create an OAuth App](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/) with callback URL set to `http://localhost:7000/api/auth/github`.
-   2. Take Client ID and Client Secret from the newly created app's settings page and put them into `AUTH_GITHUB_CLIENT_ID` and `AUTH_GITHUB_CLIENT_SECRET` env variables.
+   1. [Create an OAuth App](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/) with the callback URL set to `http://localhost:7000/api/auth/github`.
+   2. Take the Client ID and Client Secret from the newly created app's settings page and put them into `AUTH_GITHUB_CLIENT_ID` and `AUTH_GITHUB_CLIENT_SECRET` environment variables.
 2. Annotate your component with a correct GitHub Actions repository and owner:
 
    The annotation key is `github.com/project-slug`.
 
    Example:
 
-   ```
+   ```yaml
    apiVersion: backstage.io/v1alpha1
    kind: Component
    metadata:
@@ -30,25 +30,40 @@ TBD
    spec:
      type: website
      lifecycle: production
-     owner: guest
+     owner: user:guest
    ```
 
 ### Standalone app requirements
 
-If you didn't clone this repo you have to do some extra work.
-
-1. Add plugin API to your Backstage instance:
+1. Install the plugin dependency in your Backstage app package:
 
 ```bash
+# From your Backstage root directory
+cd packages/app
 yarn add @backstage/plugin-github-actions
 ```
 
-```js
-// packages/app/src/plugins.ts
-export { plugin as GithubActions } from '@backstage/plugin-github-actions';
+2. Add to the app `EntityPage` component:
+
+```tsx
+// In packages/app/src/components/catalog/EntityPage.tsx
+import {
+  EntityGithubActionsContent,
+  isGithubActionsAvailable,
+} from '@backstage/plugin-github-actions';
+
+// You can add the tab to any number of pages, the service page is shown as an
+// example here
+const serviceEntityPage = (
+  <EntityLayout>
+    {/* other tabs... */}
+    <EntityLayout.Route path="/github-actions" title="GitHub Actions">
+      <EntityGithubActionsContent />
+    </EntityLayout.Route>
 ```
 
-2. Run the app with `yarn start` and the backend with `yarn --cwd packages/backend start`, navigate to `/github-actions/`.
+3. Run the app with `yarn start` and the backend with `yarn start-backend`.
+   Then navigate to `/github-actions/` under any entity.
 
 ## Features
 

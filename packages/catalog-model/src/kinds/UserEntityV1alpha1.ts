@@ -16,17 +16,11 @@
 
 import type { Entity } from '../entity/Entity';
 import schema from '../schema/kinds/User.v1alpha1.schema.json';
-import entitySchema from '../schema/Entity.schema.json';
-import entityMetaSchema from '../schema/EntityMeta.schema.json';
-import commonSchema from '../schema/shared/common.schema.json';
 import { ajvCompiledJsonSchemaValidator } from './util';
 
-const API_VERSION = ['backstage.io/v1alpha1', 'backstage.io/v1beta1'] as const;
-const KIND = 'User' as const;
-
 export interface UserEntityV1alpha1 extends Entity {
-  apiVersion: typeof API_VERSION[number];
-  kind: typeof KIND;
+  apiVersion: 'backstage.io/v1alpha1' | 'backstage.io/v1beta1';
+  kind: 'User';
   spec: {
     profile?: {
       displayName?: string;
@@ -38,8 +32,5 @@ export interface UserEntityV1alpha1 extends Entity {
 }
 
 export const userEntityV1alpha1Validator = ajvCompiledJsonSchemaValidator(
-  KIND,
-  API_VERSION,
   schema,
-  [commonSchema, entityMetaSchema, entitySchema],
 );

@@ -32,15 +32,17 @@ import lodash, { Dictionary } from 'lodash';
 import { Logger } from 'winston';
 import {
   ClusterDetails,
-  FetchResponse,
   FetchResponseWrapper,
-  KubernetesErrorTypes,
   KubernetesFetcher,
-  KubernetesFetchError,
   KubernetesObjectTypes,
   ObjectFetchParams,
   CustomResource,
 } from '../types/types';
+import {
+  FetchResponse,
+  KubernetesFetchError,
+  KubernetesErrorTypes,
+} from '@backstage/plugin-kubernetes-common';
 import { KubernetesClientProvider } from './KubernetesClientProvider';
 
 export interface Clients {

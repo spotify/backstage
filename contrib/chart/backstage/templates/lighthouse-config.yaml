@@ -1,3 +1,4 @@
+{{- if .Values.lighthouse.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,3 +9,4 @@ data:
   PGPORT: {{ include "lighthouse.postgresql.port" . | quote }}
   PGHOST: {{ include "lighthouse.postgresql.host" . | quote }}
   PGPATH_TO_CA: {{ include "backstage.lighthouse.postgresCaFilename" . | quote }}
+{{- end }}

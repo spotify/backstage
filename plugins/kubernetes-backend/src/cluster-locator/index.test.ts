@@ -53,12 +53,14 @@ describe('getCombinedClusterDetails', () => {
         serviceAccountToken: 'token',
         url: 'http://localhost:8080',
         authProvider: 'serviceAccount',
+        skipTLSVerify: false,
       },
       {
         name: 'cluster2',
         serviceAccountToken: undefined,
         url: 'http://localhost:8081',
         authProvider: 'google',
+        skipTLSVerify: false,
       },
     ]);
   });

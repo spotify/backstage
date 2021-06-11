@@ -1,5 +1,115 @@
 # @backstage/plugin-techdocs-backend
 
+## 0.8.2
+
+### Patch Changes
+
+- Updated dependencies [8cefadca0]
+- Updated dependencies [add62a455]
+- Updated dependencies [704875e26]
+  - @backstage/techdocs-common@0.6.3
+  - @backstage/catalog-model@0.8.0
+
+## 0.8.1
+
+### Patch Changes
+
+- Updated dependencies [22fd8ce2a]
+- Updated dependencies [10c008a3a]
+- Updated dependencies [f9fb4a205]
+- Updated dependencies [16be1d093]
+- Updated dependencies [e04f1ccfb]
+  - @backstage/backend-common@0.8.0
+  - @backstage/catalog-model@0.7.9
+  - @backstage/techdocs-common@0.6.1
+
+## 0.8.0
+
+### Minor Changes
+
+- e0bfd3d44: Migrate the plugin to use the `ContainerRunner` interface instead of `runDockerContainer(…)`.
+  It also provides the `ContainerRunner` to the generators instead of to the `createRouter` function.
+
+  To apply this change to an existing backend application, add the following to `src/plugins/techdocs.ts`:
+
+  ```diff
+  + import { DockerContainerRunner } from '@backstage/backend-common';
+
+    // ...
+
+    export default async function createPlugin({
+      logger,
+      config,
+      discovery,
+      reader,
+    }: PluginEnvironment): Promise<Router> {
+      // Preparers are responsible for fetching source files for documentation.
+      const preparers = await Preparers.fromConfig(config, {
+        logger,
+        reader,
+      });
+
+  +   // Docker client (conditionally) used by the generators, based on techdocs.generators config.
+  +   const dockerClient = new Docker();
+  +   const containerRunner = new DockerContainerRunner({ dockerClient });
+
+      // Generators are used for generating documentation sites.
+      const generators = await Generators.fromConfig(config, {
+        logger,
+  +     containerRunner,
+      });
+
+      // Publisher is used for
+      // 1. Publishing generated files to storage
+      // 2. Fetching files from storage and passing them to TechDocs frontend.
+      const publisher = await Publisher.fromConfig(config, {
+        logger,
+        discovery,
+      });
+
+      // checks if the publisher is working and logs the result
+      await publisher.getReadiness();
+
+  -   // Docker client (conditionally) used by the generators, based on techdocs.generators config.
+  -   const dockerClient = new Docker();
+
+      return await createRouter({
+        preparers,
+        generators,
+        publisher,
+  -     dockerClient,
+        logger,
+        config,
+        discovery,
+      });
+    }
+  ```
+
+### Patch Changes
+
+- Updated dependencies [e0bfd3d44]
+- Updated dependencies [38ca05168]
+- Updated dependencies [e0bfd3d44]
+- Updated dependencies [d8b81fd28]
+- Updated dependencies [e9e56b01a]
+  - @backstage/backend-common@0.7.0
+  - @backstage/techdocs-common@0.6.0
+  - @backstage/catalog-model@0.7.8
+  - @backstage/config@0.1.5
+
+## 0.7.1
+
+### Patch Changes
+
+- cba5944fc: Change the response status of metadata endpoints in case a documentation is not
+  available to `404 NOT FOUND`. This also introduces the JSON based error messages
+  used by other backends.
+- Updated dependencies [bc9d62f4f]
+- Updated dependencies [bb5055aee]
+- Updated dependencies [5d0740563]
+  - @backstage/techdocs-common@0.5.0
+  - @backstage/catalog-model@0.7.7
+
 ## 0.7.0
 
 ### Minor Changes

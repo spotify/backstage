@@ -18,6 +18,7 @@ import { JsonObject } from '@backstage/config';
 export interface SearchQuery {
   term: string;
   filters?: JsonObject;
+  types?: string[];
   pageCursor: string;
 }
 

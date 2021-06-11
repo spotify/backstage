@@ -15,7 +15,7 @@
  */
 
 import { OAuthApi } from '@backstage/core';
-import { KubernetesRequestBody } from '@backstage/plugin-kubernetes-backend';
+import { KubernetesRequestBody } from '@backstage/plugin-kubernetes-common';
 import { KubernetesAuthProvider, KubernetesAuthProvidersApi } from './types';
 import { GoogleKubernetesAuthProvider } from './GoogleKubernetesAuthProvider';
 import { ServiceAccountKubernetesAuthProvider } from './ServiceAccountKubernetesAuthProvider';

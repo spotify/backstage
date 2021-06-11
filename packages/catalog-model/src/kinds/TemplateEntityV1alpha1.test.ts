@@ -48,6 +48,7 @@ describe('templateEntityV1alpha1Validator', () => {
             },
           },
         },
+        owner: 'team-a@example.com',
       },
     };
   });
@@ -89,5 +90,17 @@ describe('templateEntityV1alpha1Validator', () => {
   it('rejects missing templater', async () => {
     (entity as any).spec.templater = '';
     await expect(validator.check(entity)).rejects.toThrow(/templater/);
+  });
+  it('accepts missing owner', async () => {
+    delete (entity as any).spec.owner;
+    await expect(validator.check(entity)).resolves.toBe(true);
+  });
+  it('rejects empty owner', async () => {
+    (entity as any).spec.owner = '';
+    await expect(validator.check(entity)).rejects.toThrow(/owner/);
+  });
+  it('rejects wrong type owner', async () => {
+    (entity as any).spec.owner = 5;
+    await expect(validator.check(entity)).rejects.toThrow(/owner/);
   });
 });

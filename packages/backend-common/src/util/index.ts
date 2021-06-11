@@ -14,4 +14,5 @@
  * limitations under the License.
  */
 
-export { runDockerContainer } from './docker';
+export type { ContainerRunner, RunContainerOptions } from './ContainerRunner';
+export { DockerContainerRunner } from './DockerContainerRunner';

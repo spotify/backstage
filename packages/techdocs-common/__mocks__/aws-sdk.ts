@@ -80,10 +80,16 @@ export class S3 {
     };
   }
 
-  headBucket() {
-    return new Promise(resolve => {
-      resolve('');
-    });
+  headBucket({ Bucket }) {
+    return {
+      promise: async () => {
+        if (Bucket === 'errorBucket') {
+          throw new Error('Bucket does not exist');
+        }
+
+        return {};
+      },
+    };
   }
 
   upload({ Key }: { Key: string }) {

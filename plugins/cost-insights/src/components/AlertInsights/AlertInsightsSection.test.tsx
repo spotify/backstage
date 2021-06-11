@@ -41,12 +41,31 @@ describe('<AlertInsightsSection/>', () => {
         onAccept={jest.fn()}
       />,
     );
-    expect(getByText(mockAlert.title)).toBeInTheDocument();
-    expect(getByText(mockAlert.subtitle)).toBeInTheDocument();
+    expect(getByText(mockAlert.title as string)).toBeInTheDocument();
+    expect(getByText(mockAlert.subtitle as string)).toBeInTheDocument();
     expect(getByText('View Instructions')).toBeInTheDocument();
     expect(queryByText('Snooze')).not.toBeInTheDocument();
     expect(queryByText('Accept')).not.toBeInTheDocument();
     expect(queryByText('Dismiss')).not.toBeInTheDocument();
+  });
+
+  it('renders custom title elements', () => {
+    const { getByText } = renderInContext(
+      <AlertInsightsSection
+        alert={{
+          ...mockAlert,
+          title: <span>Foo</span>,
+          subtitle: <span>Bar</span>,
+        }}
+        number={1}
+        onSnooze={jest.fn()}
+        onDismiss={jest.fn()}
+        onAccept={jest.fn()}
+      />,
+    );
+
+    expect(getByText('Foo')).toBeInTheDocument();
+    expect(getByText('Bar')).toBeInTheDocument();
   });
 
   it('Hides instructions button if url is not provided', () => {

@@ -37,6 +37,13 @@ The locations added through static configuration cannot be removed through the
 catalog locations API. To remove these locations, you must remove them from the
 configuration.
 
+Syntax errors or other types of errors present in `catalog-info.yaml` files will
+be logged for investigation. Errors do not cause processing to abort.
+
+When multiple `catalog-info.yaml` files with the same `metadata.name` property
+are discovered, one will be processed and all others will be skipped. This
+action is logged for further investigation.
+
 ### Integration Processors
 
 Integrations may simply provide a mechanism to handle `url` location type for an
@@ -111,8 +118,7 @@ catalog:
 > deleting entities will not work in this mode.**
 
 A common use case for this configuration is when organizations have a remote
-source that should be mirrored into backstage. If we want backstage to be a
-mirror of this remote source we cannot allow users to also register entities
-with e.g.
+source that should be mirrored into Backstage. To make Backstage a mirror of
+this remote source, users cannot also register new entities with e.g. the
 [catalog-import](https://github.com/backstage/backstage/tree/master/plugins/catalog-import)
 plugin.

@@ -35,8 +35,8 @@ title: Adding Custom Plugin to Existing Monorepo App
 1. When the process finishes, let's start the backend:
    `yarn --cwd packages/backend start`
 1. If you see errors starting, refer to
-   [Auth Configuration](https://backstage.io/docs/tutorials/quickstart-app-auth#the-auth-configuration)
-   for more information on environment variables.
+   [Auth Configuration](https://backstage.io/docs/auth/) for more information on
+   environment variables.
 1. And now the frontend, from a new terminal window and the root of your
    project: `yarn start`
 1. As usual, a browser window should popup loading the App.

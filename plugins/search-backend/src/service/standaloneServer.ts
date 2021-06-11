@@ -18,6 +18,10 @@ import { createServiceBuilder } from '@backstage/backend-common';
 import { Server } from 'http';
 import { Logger } from 'winston';
 import { createRouter } from './router';
+import {
+  LunrSearchEngine,
+  IndexBuilder,
+} from '@backstage/plugin-search-backend-node';
 
 export interface ServerOptions {
   port: number;
@@ -29,8 +33,14 @@ export async function startStandaloneServer(
   options: ServerOptions,
 ): Promise<Server> {
   const logger = options.logger.child({ service: 'search-backend' });
+  const searchEngine = new LunrSearchEngine({ logger });
+  const indexBuilder = new IndexBuilder({ logger, searchEngine });
   logger.debug('Starting application server...');
+
+  // TODO: stub out some documents/indices?
+
   const router = await createRouter({
+    engine: indexBuilder.getSearchEngine(),
     logger,
   });
 

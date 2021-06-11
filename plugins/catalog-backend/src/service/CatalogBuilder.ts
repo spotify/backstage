@@ -228,6 +228,7 @@ export class CatalogBuilder {
     locationAnalyzer: LocationAnalyzer;
   }> {
     const { config, database, logger } = this.env;
+    const integrations = ScmIntegrations.fromConfig(config);
 
     const policy = this.buildEntityPolicy();
     const processors = this.buildProcessors();
@@ -255,7 +256,7 @@ export class CatalogBuilder {
       locationReader,
       logger,
     );
-    const locationAnalyzer = new RepoLocationAnalyzer(logger);
+    const locationAnalyzer = new RepoLocationAnalyzer(logger, integrations);
 
     return {
       entitiesCatalog,

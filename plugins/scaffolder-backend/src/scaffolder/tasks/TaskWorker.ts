@@ -23,8 +23,9 @@ import { TaskBroker, Task } from './types';
 import fs from 'fs-extra';
 import path from 'path';
 import { TemplateActionRegistry } from '../actions/TemplateActionRegistry';
-import * as handlebars from 'handlebars';
+import * as Handlebars from 'handlebars';
 import { InputError } from '@backstage/errors';
+import { parseRepoUrl } from '../actions/builtin/publish/util';
 
 type Options = {
   logger: Logger;
@@ -34,7 +35,20 @@ type Options = {
 };
 
 export class TaskWorker {
-  constructor(private readonly options: Options) {}
+  private readonly handlebars: typeof Handlebars;
+
+  constructor(private readonly options: Options) {
+    this.handlebars = Handlebars.create();
+
+    // TODO(blam): this should be a public facing API but it's a little
+    // scary right now, so we're going to lock it off like the component API is
+    // in the frontend until we can work out a nice way to do it.
+    this.handlebars.registerHelper('parseRepoUrl', repoUrl => {
+      return JSON.stringify(parseRepoUrl(repoUrl));
+    });
+
+    this.handlebars.registerHelper('json', obj => JSON.stringify(obj));
+  }
 
   start() {
     (async () => {
@@ -102,20 +116,37 @@ export class TaskWorker {
             step.input &&
             JSON.parse(JSON.stringify(step.input), (_key, value) => {
               if (typeof value === 'string') {
-                return handlebars.compile(value, {
+                const templated = this.handlebars.compile(value, {
                   noEscape: true,
                   strict: true,
                   data: false,
                   preventIndent: true,
                 })(templateCtx);
+
+                // If it smells like a JSON object then give it a parse as an object and if it fails return the string
+                if (
+                  (templated.startsWith('{') && templated.endsWith('}')) ||
+                  (templated.startsWith('[') && templated.endsWith(']'))
+                ) {
+                  try {
+                    // Don't recursively JSON parse the values of this string.
+                    // Shouldn't need to, don't want to encourage the use of returning handlebars from somewhere else
+                    return JSON.parse(templated);
+                  } catch {
+                    return templated;
+                  }
+                }
+                return templated;
               }
+
               return value;
             });
 
           if (action.schema?.input) {
-            const validateResult = validateJsonSchema(input, action.schema, {
-              propertyName: 'input',
-            });
+            const validateResult = validateJsonSchema(
+              input,
+              action.schema.input,
+            );
             if (!validateResult.valid) {
               const errors = validateResult.errors.join(', ');
               throw new InputError(
@@ -134,6 +165,7 @@ export class TaskWorker {
             logger: taskLogger,
             logStream: stream,
             input,
+            token: task.secrets?.token,
             workspacePath,
             async createTemporaryDirectory() {
               const tmpDir = await fs.mkdtemp(
@@ -171,7 +203,7 @@ export class TaskWorker {
         JSON.stringify(task.spec.output),
         (_key, value) => {
           if (typeof value === 'string') {
-            return handlebars.compile(value, {
+            return this.handlebars.compile(value, {
               noEscape: true,
               strict: true,
               data: false,

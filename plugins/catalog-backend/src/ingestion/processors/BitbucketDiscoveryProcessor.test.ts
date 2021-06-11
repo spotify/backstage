@@ -14,26 +14,75 @@
  * limitations under the License.
  */
 import { getVoidLogger } from '@backstage/backend-common';
-import {
-  BitbucketDiscoveryProcessor,
-  readBitbucketOrg,
-} from './BitbucketDiscoveryProcessor';
+import { BitbucketDiscoveryProcessor } from './BitbucketDiscoveryProcessor';
 import { ConfigReader } from '@backstage/config';
 import { LocationSpec } from '@backstage/catalog-model';
-import { BitbucketClient, PagedResponse } from './bitbucket';
+import { BitbucketRepositoryParser, PagedResponse } from './bitbucket';
+import { results } from './index';
+import { RequestHandler, rest } from 'msw';
+import { setupServer } from 'msw/node';
 
-function pagedResponse(values: any): PagedResponse<any> {
-  return {
-    values: values,
-    isLastPage: true,
-  } as PagedResponse<any>;
+const server = setupServer();
+
+function setupStubs(projects: any[]) {
+  function pagedResponse(values: any): PagedResponse<any> {
+    return {
+      values: values,
+      isLastPage: true,
+    } as PagedResponse<any>;
+  }
+
+  function stubbedProject(
+    project: string,
+    repos: string[],
+  ): RequestHandler<any, any> {
+    return rest.get(
+      `https://bitbucket.mycompany.com/api/rest/1.0/projects/${project}/repos`,
+      (_, res, ctx) => {
+        const response = [];
+        for (const repo of repos) {
+          response.push({
+            slug: repo,
+            links: {
+              self: [
+                {
+                  href: `https://bitbucket.mycompany.com/projects/${project}/repos/${repo}/browse`,
+                },
+              ],
+            },
+          });
+        }
+        return res(ctx.json(pagedResponse(response)));
+      },
+    );
+  }
+
+  server.use(
+    rest.get(
+      `https://bitbucket.mycompany.com/api/rest/1.0/projects`,
+      (_, res, ctx) => {
+        return res(
+          ctx.json(
+            pagedResponse(
+              projects.map(p => {
+                return { key: p.key };
+              }),
+            ),
+          ),
+        );
+      },
+    ),
+  );
+
+  for (const project of projects) {
+    server.use(stubbedProject(project.key, project.repos));
+  }
 }
 
 describe('BitbucketDiscoveryProcessor', () => {
-  const client: jest.Mocked<BitbucketClient> = {
-    listProjects: jest.fn(),
-    listRepositories: jest.fn(),
-  } as any;
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
   afterEach(() => jest.resetAllMocks());
 
@@ -81,137 +130,149 @@ describe('BitbucketDiscoveryProcessor', () => {
   });
 
   describe('handles repositories', () => {
+    const processor = BitbucketDiscoveryProcessor.fromConfig(
+      new ConfigReader({
+        integrations: {
+          bitbucket: [
+            {
+              host: 'bitbucket.mycompany.com',
+              token: 'blob',
+              apiBaseUrl: 'https://bitbucket.mycompany.com/api/rest/1.0',
+            },
+          ],
+        },
+      }),
+      { logger: getVoidLogger() },
+    );
+
     it('output all repositories', async () => {
-      const target =
-        'https://bitbucket.mycompany.com/projects/*/repos/*/catalog.yaml';
-
-      client.listProjects.mockResolvedValue(
-        pagedResponse([{ key: 'backstage' }, { key: 'demo' }]),
-      );
-      client.listRepositories.mockResolvedValueOnce(
-        pagedResponse([
-          {
-            slug: 'backstage',
-            links: {
-              self: [
-                {
-                  href:
-                    'https://bitbucket.mycompany.com/projects/backstage/repos/backstage/browse',
-                },
-              ],
-            },
-          },
-        ]),
-      );
-      client.listRepositories.mockResolvedValueOnce(
-        pagedResponse([
-          {
-            slug: 'demo',
-            links: {
-              self: [
-                {
-                  href:
-                    'https://bitbucket.mycompany.com/projects/demo/repos/demo/browse',
-                },
-              ],
-            },
-          },
-        ]),
-      );
-
-      const actual = await readBitbucketOrg(client, target);
-      expect(actual.scanned).toBe(2);
-      expect(actual.matches).toContainEqual({
-        type: 'url',
+      setupStubs([
+        { key: 'backstage', repos: ['backstage'] },
+        { key: 'demo', repos: ['demo'] },
+      ]);
+      const location: LocationSpec = {
+        type: 'bitbucket-discovery',
         target:
-          'https://bitbucket.mycompany.com/projects/backstage/repos/backstage/browse/catalog.yaml',
+          'https://bitbucket.mycompany.com/projects/*/repos/*/catalog.yaml',
+      };
+
+      const emitter = jest.fn();
+
+      await processor.readLocation(location, false, emitter);
+
+      expect(emitter).toHaveBeenCalledWith({
+        type: 'location',
+        location: {
+          type: 'url',
+          target:
+            'https://bitbucket.mycompany.com/projects/backstage/repos/backstage/browse/catalog.yaml',
+        },
+        optional: true,
       });
-      expect(actual.matches).toContainEqual({
-        type: 'url',
-        target:
-          'https://bitbucket.mycompany.com/projects/demo/repos/demo/browse/catalog.yaml',
+      expect(emitter).toHaveBeenCalledWith({
+        type: 'location',
+        location: {
+          type: 'url',
+          target:
+            'https://bitbucket.mycompany.com/projects/demo/repos/demo/browse/catalog.yaml',
+        },
+        optional: true,
       });
     });
 
     it('output repositories with wildcards', async () => {
-      const target =
-        'https://bitbucket.mycompany.com/projects/backstage/repos/techdocs-*/catalog.yaml';
-
-      client.listProjects.mockResolvedValue(
-        pagedResponse([{ key: 'backstage' }]),
-      );
-      client.listRepositories.mockResolvedValueOnce(
-        pagedResponse([
-          { slug: 'backstage' },
-          {
-            slug: 'techdocs-cli',
-            links: {
-              self: [
-                {
-                  href:
-                    'https://bitbucket.mycompany.com/projects/backstage/repos/techdocs-cli/browse',
-                },
-              ],
-            },
-          },
-          {
-            slug: 'techdocs-container',
-            links: {
-              self: [
-                {
-                  href:
-                    'https://bitbucket.mycompany.com/projects/backstage/repos/techdocs-container/browse',
-                },
-              ],
-            },
-          },
-        ]),
-      );
-
-      const actual = await readBitbucketOrg(client, target);
-      expect(actual.scanned).toBe(3);
-      expect(actual.matches).toContainEqual({
-        type: 'url',
+      setupStubs([
+        { key: 'backstage', repos: ['backstage', 'techdocs-cli'] },
+        { key: 'demo', repos: ['demo'] },
+      ]);
+      const location: LocationSpec = {
+        type: 'bitbucket-discovery',
         target:
-          'https://bitbucket.mycompany.com/projects/backstage/repos/techdocs-cli/browse/catalog.yaml',
-      });
-      expect(actual.matches).toContainEqual({
-        type: 'url',
-        target:
-          'https://bitbucket.mycompany.com/projects/backstage/repos/techdocs-container/browse/catalog.yaml',
+          'https://bitbucket.mycompany.com/projects/backstage/repos/techdocs-*/catalog.yaml',
+      };
+
+      const emitter = jest.fn();
+      await processor.readLocation(location, false, emitter);
+
+      expect(emitter).toHaveBeenCalledWith({
+        type: 'location',
+        location: {
+          type: 'url',
+          target:
+            'https://bitbucket.mycompany.com/projects/backstage/repos/techdocs-cli/browse/catalog.yaml',
+        },
+        optional: true,
       });
     });
     it('filter unrelated repositories', async () => {
-      const target =
-        'https://bitbucket.mycompany.com/projects/backstage/repos/test/catalog.yaml';
-
-      client.listProjects.mockResolvedValue(
-        pagedResponse([{ key: 'backstage' }]),
-      );
-      client.listRepositories.mockResolvedValue(
-        pagedResponse([
-          { slug: 'abstest' },
-          { slug: 'testxyz' },
-          {
-            slug: 'test',
-            links: {
-              self: [
-                {
-                  href:
-                    'https://bitbucket.mycompany.com/projects/backstage/repos/test',
-                },
-              ],
-            },
-          },
-        ]),
-      );
-
-      const actual = await readBitbucketOrg(client, target);
-      expect(actual.scanned).toBe(3);
-      expect(actual.matches).toContainEqual({
-        type: 'url',
+      setupStubs([{ key: 'backstage', repos: ['test', 'abctest', 'testxyz'] }]);
+      const location: LocationSpec = {
+        type: 'bitbucket-discovery',
         target:
           'https://bitbucket.mycompany.com/projects/backstage/repos/test/catalog.yaml',
+      };
+
+      const emitter = jest.fn();
+      await processor.readLocation(location, false, emitter);
+
+      expect(emitter).toHaveBeenCalledWith({
+        type: 'location',
+        location: {
+          type: 'url',
+          target:
+            'https://bitbucket.mycompany.com/projects/backstage/repos/test/browse/catalog.yaml',
+        },
+        optional: true,
+      });
+    });
+  });
+
+  describe('Custom repository parser', () => {
+    const customRepositoryParser: BitbucketRepositoryParser = async function* customRepositoryParser({}) {
+      yield results.location(
+        {
+          type: 'custom-location-type',
+          target: 'custom-target',
+        },
+        true,
+      );
+    };
+
+    const processor = BitbucketDiscoveryProcessor.fromConfig(
+      new ConfigReader({
+        integrations: {
+          bitbucket: [
+            {
+              host: 'bitbucket.mycompany.com',
+              token: 'blob',
+              apiBaseUrl: 'https://bitbucket.mycompany.com/api/rest/1.0',
+            },
+          ],
+        },
+      }),
+      { parser: customRepositoryParser, logger: getVoidLogger() },
+    );
+
+    it('use custom repository parser', async () => {
+      setupStubs([{ key: 'backstage', repos: ['test'] }]);
+
+      const location: LocationSpec = {
+        type: 'bitbucket-discovery',
+        target:
+          'https://bitbucket.mycompany.com/projects/backstage/repos/test/catalog.yaml',
+      };
+
+      const emitter = jest.fn();
+      await processor.readLocation(location, false, emitter);
+
+      expect(emitter).toHaveBeenCalledTimes(1);
+      expect(emitter).toHaveBeenCalledWith({
+        type: 'location',
+        location: {
+          type: 'custom-location-type',
+          target: 'custom-target',
+        },
+        optional: true,
       });
     });
   });

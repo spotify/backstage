@@ -85,6 +85,9 @@ jobs:
       - name: type checking and declarations
         run: yarn tsc:full
 
+      - name: check api reports
+        run: yarn build:api-reports:only --ci
+
       - name: build changed packages
         if: ${{ steps.yarn-lock.outcome == 'success' }}
         run: yarn lerna -- run build --since origin/master --include-dependencies

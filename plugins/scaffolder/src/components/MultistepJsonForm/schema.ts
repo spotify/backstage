@@ -22,40 +22,63 @@ function isObject(value: unknown): value is JsonObject {
 }
 
 function extractUiSchema(schema: JsonObject, uiSchema: JsonObject) {
-  const { properties } = schema;
-  if (!isObject(properties)) {
+  if (!isObject(schema)) {
     return;
   }
-  for (const propName in properties) {
-    if (!properties.hasOwnProperty(propName)) {
-      continue;
-    }
-    const schemaNode = properties[propName];
-    if (!isObject(schemaNode)) {
+
+  const { properties, anyOf, oneOf, allOf } = schema;
+
+  for (const propName in schema) {
+    if (!schema.hasOwnProperty(propName)) {
       continue;
     }
 
-    if (schemaNode.type === 'object') {
+    if (propName.startsWith('ui:')) {
+      uiSchema[propName] = schema[propName];
+      delete schema[propName];
+    }
+  }
+
+  if (isObject(properties)) {
+    for (const propName in properties) {
+      if (!properties.hasOwnProperty(propName)) {
+        continue;
+      }
+
+      const schemaNode = properties[propName];
+      if (!isObject(schemaNode)) {
+        continue;
+      }
       const innerUiSchema = {};
       uiSchema[propName] = innerUiSchema;
       extractUiSchema(schemaNode, innerUiSchema);
-    } else {
-      for (const innerKey in schemaNode) {
-        if (!schemaNode.hasOwnProperty(innerKey)) {
-          continue;
-        }
-        const innerValue = schemaNode[innerKey];
-        if (innerKey.startsWith('ui:')) {
-          const innerUiSchema = uiSchema[propName] || {};
-          if (!isObject(innerUiSchema)) {
-            throw new TypeError('Unexpected non-object in uiSchema');
-          }
-          uiSchema[propName] = innerUiSchema;
+    }
+  }
 
-          innerUiSchema[innerKey] = innerValue;
-          delete schemaNode[innerKey];
-        }
+  if (Array.isArray(anyOf)) {
+    for (const schemaNode of anyOf) {
+      if (!isObject(schemaNode)) {
+        continue;
       }
+      extractUiSchema(schemaNode, uiSchema);
+    }
+  }
+
+  if (Array.isArray(oneOf)) {
+    for (const schemaNode of oneOf) {
+      if (!isObject(schemaNode)) {
+        continue;
+      }
+      extractUiSchema(schemaNode, uiSchema);
+    }
+  }
+
+  if (Array.isArray(allOf)) {
+    for (const schemaNode of allOf) {
+      if (!isObject(schemaNode)) {
+        continue;
+      }
+      extractUiSchema(schemaNode, uiSchema);
     }
   }
 }

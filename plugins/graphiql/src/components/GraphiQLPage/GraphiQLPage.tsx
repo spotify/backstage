@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 import React from 'react';
-import {
-  Content,
-  Header,
-  HeaderLabel,
-  Page,
-  Progress,
-  useApi,
-} from '@backstage/core';
+import { Content, Header, HeaderLabel, Page, Progress } from '@backstage/core';
+import { useApi } from '@backstage/core-plugin-api';
 import { useAsync } from 'react-use';
 import 'graphiql/graphiql.css';
 import { graphQlBrowseApiRef } from '../../lib/api';

@@ -33,6 +33,7 @@ export class ConfigClusterLocator implements KubernetesClustersSupplier {
           name: c.getString('name'),
           url: c.getString('url'),
           serviceAccountToken: c.getOptionalString('serviceAccountToken'),
+          skipTLSVerify: c.getOptionalBoolean('skipTLSVerify') ?? false,
           authProvider: c.getString('authProvider'),
         };
       }),

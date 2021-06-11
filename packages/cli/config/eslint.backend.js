@@ -19,7 +19,6 @@ module.exports = {
     '@spotify/eslint-config-base',
     '@spotify/eslint-config-typescript',
     'prettier',
-    'prettier/@typescript-eslint',
     'plugin:jest/recommended',
     'plugin:monorepo/recommended',
   ],

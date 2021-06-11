@@ -25,9 +25,9 @@ import parseGitUrl from 'git-url-parse';
 import { Minimatch } from 'minimatch';
 import { Readable } from 'stream';
 import { NotFoundError, NotModifiedError } from '@backstage/errors';
-import { ReadTreeResponseFactory } from './tree';
 import { stripFirstDirectoryFromPath } from './tree/util';
 import {
+  ReadTreeResponseFactory,
   ReaderFactory,
   ReadTreeOptions,
   ReadTreeResponse,
@@ -106,25 +106,30 @@ export class GitlabUrlReader implements UrlReader {
     // ref is an empty string if no branch is set in provided url to readTree.
     const branch = ref || projectGitlabResponseJson.default_branch;
 
-    // Fetch the latest commit in the provided or default branch to compare against
-    // the provided sha.
-    const branchGitlabResponse = await fetch(
+    // Fetch the latest commit that modifies the the filepath in the provided or default branch
+    // to compare against the provided sha.
+    const commitsReqParams = new URLSearchParams();
+    commitsReqParams.set('ref_name', branch);
+    if (!!filepath) {
+      commitsReqParams.set('path', filepath);
+    }
+    const commitsGitlabResponse = await fetch(
       new URL(
         `${this.integration.config.apiBaseUrl}/projects/${encodeURIComponent(
           full_name,
-        )}/repository/branches/${branch}`,
+        )}/repository/commits?${commitsReqParams.toString()}`,
       ).toString(),
       getGitLabRequestOptions(this.integration.config),
     );
-    if (!branchGitlabResponse.ok) {
-      const message = `Failed to read tree (branch) from ${url}, ${branchGitlabResponse.status} ${branchGitlabResponse.statusText}`;
-      if (branchGitlabResponse.status === 404) {
+    if (!commitsGitlabResponse.ok) {
+      const message = `Failed to read tree (branch) from ${url}, ${commitsGitlabResponse.status} ${commitsGitlabResponse.statusText}`;
+      if (commitsGitlabResponse.status === 404) {
         throw new NotFoundError(message);
       }
       throw new Error(message);
     }
 
-    const commitSha = (await branchGitlabResponse.json()).commit.id;
+    const commitSha = (await commitsGitlabResponse.json())[0].id;
 
     if (options?.etag && options.etag === commitSha) {
       throw new NotModifiedError();

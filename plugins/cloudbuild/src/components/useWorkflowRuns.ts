@@ -15,10 +15,23 @@
  */
 import { useState } from 'react';
 import { useAsyncRetry } from 'react-use';
-import { WorkflowRun } from './WorkflowRunsTable/WorkflowRunsTable';
 import { cloudbuildApiRef } from '../api/CloudbuildApi';
 import { useApi, errorApiRef } from '@backstage/core';
-import { ActionsListWorkflowRunsForRepoResponseData } from '../api/types';
+import {
+  ActionsListWorkflowRunsForRepoResponseData,
+  Substitutions,
+} from '../api/types';
+
+export type WorkflowRun = {
+  id: string;
+  message: string;
+  url?: string;
+  googleUrl?: string;
+  status: string;
+  substitutions: Substitutions;
+  createTime: string;
+  rerun: () => void;
+};
 
 export function useWorkflowRuns({ projectId }: { projectId: string }) {
   const api = useApi(cloudbuildApiRef);

@@ -100,8 +100,7 @@ There are three things needed for a Backstage app to start making use of a
 plugin.
 
 1. Add plugin as dependency in `app/package.json`
-2. `import` plugin in `app/src/plugins.ts`
-3. Import and use one or more plugin extensions, for example in
+2. Import and use one or more plugin extensions, for example in
    `app/src/App.tsx`.
 
 Luckily these three steps happen automatically when you create a plugin with the

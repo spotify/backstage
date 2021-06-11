@@ -17,6 +17,7 @@
 import globby from 'globby';
 import { Logger } from 'winston';
 import { Git } from '@backstage/backend-common';
+import { Octokit } from '@octokit/rest';
 
 export async function initRepoAndPush({
   dir,
@@ -67,3 +68,65 @@ export async function initRepoAndPush({
     remote: 'origin',
   });
 }
+
+type BranchProtectionOptions = {
+  client: Octokit;
+  owner: string;
+  repoName: string;
+  logger: Logger;
+};
+
+export const enableBranchProtectionOnDefaultRepoBranch = async ({
+  repoName,
+  client,
+  owner,
+  logger,
+}: BranchProtectionOptions): Promise<void> => {
+  const tryOnce = async () => {
+    try {
+      await client.repos.updateBranchProtection({
+        mediaType: {
+          /**
+           * 👇 we need this preview because allowing a custom
+           * reviewer count on branch protection is a preview
+           * feature
+           *
+           * More here: https://docs.github.com/en/rest/overview/api-previews#require-multiple-approving-reviews
+           */
+          previews: ['luke-cage-preview'],
+        },
+        owner,
+        repo: repoName,
+        branch: 'master',
+        required_status_checks: { strict: true, contexts: [] },
+        restrictions: null,
+        enforce_admins: true,
+        required_pull_request_reviews: { required_approving_review_count: 1 },
+      });
+    } catch (e) {
+      if (
+        e.message.includes(
+          'Upgrade to GitHub Pro or make this repository public to enable this feature',
+        )
+      ) {
+        logger.warn(
+          'Branch protection was not enabled as it requires GitHub Pro for private repositories',
+        );
+      } else {
+        throw e;
+      }
+    }
+  };
+
+  try {
+    await tryOnce();
+  } catch (e) {
+    if (!e.message.includes('Branch not found')) {
+      throw e;
+    }
+
+    // GitHub has eventual consistency. Fail silently, wait, and try again.
+    await new Promise(resolve => setTimeout(resolve, 600));
+    await tryOnce();
+  }
+};

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { JsonObject, JsonValue } from '@backstage/config';
 import {
   Content,
   errorApiRef,
@@ -24,17 +25,16 @@ import {
   useRouteRef,
 } from '@backstage/core';
 import { LinearProgress } from '@material-ui/core';
-import { FormValidation, IChangeEvent } from '@rjsf/core';
+import { FieldValidation, FormValidation, IChangeEvent } from '@rjsf/core';
 import parseGitUrl from 'git-url-parse';
 import React, { useCallback, useState } from 'react';
-import { generatePath, useNavigate, Navigate } from 'react-router';
+import { generatePath, Navigate, useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { useAsync } from 'react-use';
 import { scaffolderApiRef } from '../../api';
+import { FieldExtensionOptions } from '../../extensions';
 import { rootRouteRef } from '../../routes';
 import { MultistepJsonForm } from '../MultistepJsonForm';
-import { RepoUrlPicker, OwnerPicker } from '../fields';
-import { JsonObject } from '@backstage/config';
 
 const useTemplateParameterSchema = (templateName: string) => {
   const scaffolderApi = useApi(scaffolderApiRef);
@@ -54,7 +54,13 @@ function isObject(obj: unknown): obj is JsonObject {
   return typeof obj === 'object' && obj !== null && !Array.isArray(obj);
 }
 
-export const createValidator = (rootSchema: JsonObject) => {
+export const createValidator = (
+  rootSchema: JsonObject,
+  validators: Record<
+    string,
+    undefined | ((value: JsonValue, validation: FieldValidation) => void)
+  >,
+) => {
   function validate(
     schema: JsonObject,
     formData: JsonObject,
@@ -66,7 +72,7 @@ export const createValidator = (rootSchema: JsonObject) => {
     }
 
     for (const [key, propData] of Object.entries(formData)) {
-      const propErrors = errors[key];
+      const propValidation = errors[key];
 
       if (isObject(propData)) {
         const propSchemaProps = schemaProps[key];
@@ -74,53 +80,15 @@ export const createValidator = (rootSchema: JsonObject) => {
           validate(
             propSchemaProps,
             propData as JsonObject,
-            propErrors as FormValidation,
+            propValidation as FormValidation,
           );
         }
       } else {
         const propSchema = schemaProps[key];
-        if (
-          isObject(propSchema) &&
-          propSchema['ui:field'] === 'RepoUrlPicker'
-        ) {
-          try {
-            const { host, searchParams } = new URL(`https://${propData}`);
-            const type = searchParams.get('type');
-            if (!host || !type) {
-              propErrors.addError('Incomplete repository location provided, host required');
-            }
-            if (type === 'bitbucket') {
-              // Bitbucket cloud needs workspace variable
-              if (host === 'bitbucket.org') {
-                if (
-                  !searchParams.get('workspace') ||
-                  !searchParams.get('project') ||
-                  !searchParams.get('repo')
-                ) {
-                  propErrors.addError('Incomplete repository location provided, workspace, project and repo required');
-                }
-              }
-              // Bitbucket server does not need workspace variable
-              else {
-                if (
-                  !searchParams.get('project') ||
-                  !searchParams.get('repo')
-                ) {
-                  propErrors.addError('Incomplete repository location provided, project and repo required');
-                }
-              }
-            }
-            else {
-              if (
-                !searchParams.get('owner') ||
-                !searchParams.get('repo')
-              ) {
-                propErrors.addError('Incomplete repository location provided');
-              }
-            }
-          } catch {
-            propErrors.addError('Unable to parse the Repository URL');
-          }
+        const fieldName =
+          isObject(propSchema) && (propSchema['ui:field'] as string);
+        if (fieldName && typeof validators[fieldName] === 'function') {
+          validators[fieldName]!(propData as JsonValue, propValidation);
         }
       }
     }
@@ -165,7 +133,11 @@ const storePathValidator = (
   return errors;
 };
 
-export const TemplatePage = () => {
+export const TemplatePage = ({
+  customFieldExtensions = [],
+}: {
+  customFieldExtensions?: FieldExtensionOptions[];
+}) => {
   const errorApi = useApi(errorApiRef);
   const scaffolderApi = useApi(scaffolderApiRef);
   const { templateName } = useParams();
@@ -174,10 +146,9 @@ export const TemplatePage = () => {
   const { schema, loading, error } = useTemplateParameterSchema(templateName);
   const [formState, setFormState] = useState({});
   const handleFormReset = () => setFormState({});
-
   const handleChange = useCallback(
-    (e: IChangeEvent) => setFormState({ ...formState, ...e.formData }),
-    [setFormState, formState],
+    (e: IChangeEvent) => setFormState(e.formData),
+    [setFormState],
   );
 
   const handleCreate = async () => {
@@ -199,6 +170,14 @@ export const TemplatePage = () => {
     return <Navigate to={rootLink()} />;
   }
 
+  const customFieldComponents = Object.fromEntries(
+    customFieldExtensions.map(({ name, component }) => [name, component]),
+  );
+
+  const customFieldValidators = Object.fromEntries(
+    customFieldExtensions.map(({ name, validation }) => [name, validation]),
+  );
+
   return (
     <Page themeId="home">
       <Header
@@ -213,10 +192,14 @@ export const TemplatePage = () => {
       <Content>
         {loading && <LinearProgress data-testid="loading-progress" />}
         {schema && (
-          <InfoCard title={schema.title} noPadding>
+          <InfoCard
+            title={schema.title}
+            noPadding
+            titleTypographyProps={{ component: 'h2' }}
+          >
             <MultistepJsonForm
               formData={formState}
-              fields={{ RepoUrlPicker, OwnerPicker }}
+              fields={customFieldComponents}
               onChange={handleChange}
               onReset={handleFormReset}
               onFinish={handleCreate}
@@ -232,7 +215,7 @@ export const TemplatePage = () => {
 
                 return {
                   ...step,
-                  validate: createValidator(step.schema),
+                  validate: createValidator(step.schema, customFieldValidators),
                 };
               })}
             />

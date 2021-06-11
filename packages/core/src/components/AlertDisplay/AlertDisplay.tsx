@@ -19,6 +19,7 @@ import { Snackbar, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { Alert } from '@material-ui/lab';
 import { AlertMessage, useApi, alertApiRef } from '@backstage/core-api';
+import pluralize from 'pluralize';
 
 // TODO: improve on this and promote to a shared component for use by all apps.
 export const AlertDisplay = () => {
@@ -46,11 +47,7 @@ export const AlertDisplay = () => {
   };
 
   return (
-    <Snackbar
-      open
-      message={firstMessage.message.toString()}
-      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-    >
+    <Snackbar open anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
       <Alert
         action={
           <IconButton
@@ -64,7 +61,15 @@ export const AlertDisplay = () => {
         }
         severity={firstMessage.severity}
       >
-        {firstMessage.message.toString()}
+        <span>
+          {firstMessage.message.toString()}
+          {messages.length > 1 && (
+            <em>{` (${messages.length - 1} older ${pluralize(
+              'message',
+              messages.length - 1,
+            )})`}</em>
+          )}
+        </span>
       </Alert>
     </Snackbar>
   );

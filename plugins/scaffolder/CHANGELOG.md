@@ -1,5 +1,198 @@
 # @backstage/plugin-scaffolder
 
+## 0.9.7
+
+### Patch Changes
+
+- 497f4ce18: Scaffolder Field Extensions are here! This means you'll now the ability to create custom field extensions and have the Scaffolder use the components when collecting information from the user in the wizard. By default we supply the `RepoUrlPicker` and the `OwnerPicker`, but if you want to provide some more extensions or override the built on ones you will have to change how the `ScaffolderPage` is wired up in your `app/src/App.tsx` to pass in the custom fields to the Scaffolder.
+
+  You'll need to move this:
+
+  ```tsx
+  <Route path="/create" element={<ScaffolderPage />} />
+  ```
+
+  To this:
+
+  ```tsx
+  import {
+    ScaffolderFieldExtensions,
+    RepoUrlPickerFieldExtension,
+    OwnerPickerFieldExtension,
+  } from '@backstage/plugin-scaffolder';
+
+  <Route path="/create" element={<ScaffolderPage />}>
+    <ScaffolderFieldExtensions>
+      <RepoUrlPickerFieldExtension />
+      <OwnerPickerFieldExtension />
+
+      {/*Any other extensions you want to provide*/}
+    </ScaffolderFieldExtensions>
+  </Route>;
+  ```
+
+  More documentation on how to write your own `FieldExtensions` to follow.
+
+- 3772de8ba: Remove the trailing space from a the aria-label of the Template "CHOOSE" button.
+- f430b6c6f: Don't merge with previous from state on form changes.
+- 76f99a1a0: Export `createScaffolderFieldExtension` to enable the creation of new field extensions.
+- 1157fa307: Add a `<EntityPicker>` field to the scaffolder to pick arbitrary entity kinds, like systems.
+- Updated dependencies [e7c5e4b30]
+- Updated dependencies [ebe802bc4]
+- Updated dependencies [49d7ec169]
+- Updated dependencies [1cf1d351f]
+- Updated dependencies [deaba2e13]
+- Updated dependencies [8e919a6f8]
+  - @backstage/theme@0.2.8
+  - @backstage/catalog-model@0.8.1
+  - @backstage/integration@0.5.5
+  - @backstage/core@0.7.12
+  - @backstage/plugin-catalog-react@0.2.1
+
+## 0.9.6
+
+### Patch Changes
+
+- Updated dependencies [0fd4ea443]
+- Updated dependencies [add62a455]
+- Updated dependencies [cc592248b]
+- Updated dependencies [17c497b81]
+- Updated dependencies [704875e26]
+  - @backstage/integration@0.5.4
+  - @backstage/catalog-client@0.3.12
+  - @backstage/catalog-model@0.8.0
+  - @backstage/core@0.7.11
+  - @backstage/plugin-catalog-react@0.2.0
+
+## 0.9.5
+
+### Patch Changes
+
+- f7f7783a3: Add Owner field in template card and new data distribution
+  Add spec.owner as optional field into TemplateV1Alpha and TemplateV1Beta Schema
+  Add relations ownedBy and ownerOf into Template entity
+  Template documentation updated
+- 81d7b9c6f: Added deprecation warnings for `v1alpha1` templates
+- Updated dependencies [f7f7783a3]
+- Updated dependencies [65e6c4541]
+- Updated dependencies [68fdbf014]
+- Updated dependencies [5da6a561d]
+  - @backstage/catalog-model@0.7.10
+  - @backstage/core@0.7.10
+  - @backstage/integration@0.5.3
+
+## 0.9.4
+
+### Patch Changes
+
+- 062bbf90f: chore: bump `@testing-library/user-event` from 12.8.3 to 13.1.8
+- 81ef1d57b: Show error on task page if task does not exist.
+- 675a569a9: chore: bump `react-use` dependency in all packages
+- Updated dependencies [062bbf90f]
+- Updated dependencies [10c008a3a]
+- Updated dependencies [889d89b6e]
+- Updated dependencies [16be1d093]
+- Updated dependencies [3f988cb63]
+- Updated dependencies [675a569a9]
+  - @backstage/core@0.7.9
+  - @backstage/integration-react@0.1.2
+  - @backstage/plugin-catalog-react@0.1.6
+  - @backstage/catalog-model@0.7.9
+
+## 0.9.3
+
+### Patch Changes
+
+- 9314a8592: Close eventSource upon completion of a scaffolder task
+- d8b81fd28: Bump `json-schema` dependency from `0.2.5` to `0.3.0`.
+- Updated dependencies [38ca05168]
+- Updated dependencies [f65adcde7]
+- Updated dependencies [81c54d1f2]
+- Updated dependencies [80888659b]
+- Updated dependencies [7b8272fb7]
+- Updated dependencies [d8b81fd28]
+- Updated dependencies [d1b1306d9]
+  - @backstage/integration@0.5.2
+  - @backstage/core@0.7.8
+  - @backstage/plugin-catalog-react@0.1.5
+  - @backstage/theme@0.2.7
+  - @backstage/catalog-model@0.7.8
+  - @backstage/config@0.1.5
+  - @backstage/catalog-client@0.3.11
+
+## 0.9.2
+
+### Patch Changes
+
+- f6efa71ee: Enable starred templates on Scaffolder frontend
+- 19a4dd710: Removed unused `swr` dependency.
+- 23769512a: Support `anyOf`, `oneOf` and `allOf` schemas in the scaffolder template.
+- Updated dependencies [9afcac5af]
+- Updated dependencies [e0c9ed759]
+- Updated dependencies [6eaecbd81]
+  - @backstage/core@0.7.7
+
+## 0.9.1
+
+### Patch Changes
+
+- 99fbef232: Adding Headings for Accessibility on the Scaffolder Plugin
+- cb0206b2b: Respect top-level UI schema keys in scaffolder forms. Allows more advanced RJSF features such as explicit field ordering.
+- Updated dependencies [94da20976]
+- Updated dependencies [d8cc7e67a]
+- Updated dependencies [99fbef232]
+- Updated dependencies [ab07d77f6]
+- Updated dependencies [931b21a12]
+- Updated dependencies [937ed39ce]
+- Updated dependencies [9a9e7a42f]
+- Updated dependencies [50ce875a0]
+  - @backstage/core@0.7.6
+  - @backstage/theme@0.2.6
+
+## 0.9.0
+
+### Minor Changes
+
+- a360f9478: Expose the catalog-import route as an external route from the scaffolder.
+
+  This will make it possible to hide the "Register Existing Component" button
+  when you for example are running backstage with `catalog.readonly=true`.
+
+  As a consequence of this change you need add a new binding to your createApp call to
+  keep the button visible. However, if you instead want to hide the button you can safely
+  ignore the following example.
+
+  To bind the external route from the catalog-import plugin to the scaffolder template
+  index page, make sure you have the appropriate imports and add the following
+  to the createApp call:
+
+  ```typescript
+  import { catalogImportPlugin } from '@backstage/plugin-catalog-import';
+
+  const app = createApp({
+    // ...
+    bindRoutes({ bind }) {
+      // ...
+      bind(scaffolderPlugin.externalRoutes, {
+        registerComponent: catalogImportPlugin.routes.importPage,
+      });
+    },
+  });
+  ```
+
+### Patch Changes
+
+- Updated dependencies [bb5055aee]
+- Updated dependencies [d0d1c2f7b]
+- Updated dependencies [5d0740563]
+- Updated dependencies [5cafcf452]
+- Updated dependencies [86a95ba67]
+- Updated dependencies [442f34b87]
+- Updated dependencies [e27cb6c45]
+  - @backstage/catalog-model@0.7.7
+  - @backstage/core@0.7.5
+  - @backstage/catalog-client@0.3.10
+
 ## 0.8.2
 
 ### Patch Changes

@@ -88,18 +88,10 @@ const useStyles = makeStyles(theme => ({
     '& .asyncapi__enum': {
       color: theme.palette.secondary.main,
     },
-    '& .asyncapi__toggle-arrow:before': {
-      content: '">"',
-      'font-family': 'inherit',
-    },
-    '& .asyncapi__anchor-icon:before': {
-      content: '"🔗"',
-      'font-family': 'inherit',
-    },
     '& .asyncapi__info, .asyncapi__channel, .asyncapi__channels > div, .asyncapi__schema, .asyncapi__channel-operations-list .asyncapi__messages-list-item .asyncapi__message, .asyncapi__message, .asyncapi__server, .asyncapi__servers > div, .asyncapi__messages > div, .asyncapi__schemas > div': {
       'background-color': 'inherit',
     },
-    '& .asyncapi__channel-parameters-header, .asyncapi__channel-operations-header, .asyncapi__channel-operation-oneOf-subscribe-header, .asyncapi__channel-operation-oneOf-publish-header': {
+    '& .asyncapi__channel-parameters-header, .asyncapi__channel-operations-header, .asyncapi__channel-operation-oneOf-subscribe-header, .asyncapi__channel-operation-oneOf-publish-header, .asyncapi__channel-operation-message-header,  .asyncapi__message-header, .asyncapi__message-header-title, .asyncapi__message-header-title > h3, .asyncapi__bindings, .asyncapi__bindings-header, .asyncapi__bindings-header > h4': {
       'background-color': 'inherit',
       color: theme.palette.text.primary,
     },

@@ -108,7 +108,7 @@ export const StepInitAnalyzeUrl = ({
           }
         }
       } catch (e) {
-        setError(e.message);
+        setError(e.data?.error?.message ?? e.message);
         setSubmitted(false);
       }
     },
@@ -132,8 +132,8 @@ export const StepInitAnalyzeUrl = ({
           validate: {
             httpsValidator: (value: any) =>
               (typeof value === 'string' &&
-                value.match(/^https:\/\//) !== null) ||
-              'Must start with https://.',
+                value.match(/^http[s]?:\/\//) !== null) ||
+              'Must start with http:// or https://.',
           },
         })}
         required

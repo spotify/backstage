@@ -15,7 +15,7 @@
  */
 
 import { AppThemeApi, AppTheme } from '../../definitions';
-import { BehaviorSubject } from '../../../lib';
+import { BehaviorSubject } from '../../../lib/subjects';
 import { Observable } from '../../../types';
 
 const STORAGE_KEY = 'theme';

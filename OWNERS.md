@@ -27,5 +27,5 @@ People that have made significant contributions to the project and earned write 
 - Andrew Thauer - Wealthsimple (GitHub: [andrewthauer](https://github.com/andrewthauer))
 - Oliver Sand - SDA SE (GitHub: [Fox32](https://github.com/Fox32))
 - David Tuite - Roadie (GitHub: [dtuite](https://github.com/dtuite))
-- Adam Harvey - DXC Technology (GitHub: [adamdmharvey](https://github.com/adamdmharvey))
+- Adam Harvey - Cisco (GitHub: [adamdmharvey](https://github.com/adamdmharvey))
 - Dominik Henneke - SDA SE (GitHub: [dhenneke](https://github.com/dhenneke))

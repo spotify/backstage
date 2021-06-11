@@ -1,4 +1,7 @@
-import { SingleHostDiscovery } from '@backstage/backend-common';
+import {
+  DockerContainerRunner,
+  SingleHostDiscovery,
+} from '@backstage/backend-common';
 import { CatalogClient } from '@backstage/catalog-client';
 import {
   CookieCutter,
@@ -6,7 +9,7 @@ import {
   createRouter,
   Preparers,
   Publishers,
-  Templaters
+  Templaters,
 } from '@backstage/plugin-scaffolder-backend';
 import Docker from 'dockerode';
 import { Router } from 'express';
@@ -18,8 +21,11 @@ export default async function createPlugin({
   database,
   reader,
 }: PluginEnvironment): Promise<Router> {
-  const cookiecutterTemplater = new CookieCutter();
-  const craTemplater = new CreateReactAppTemplater();
+  const dockerClient = new Docker();
+  const containerRunner = new DockerContainerRunner({ dockerClient });
+
+  const cookiecutterTemplater = new CookieCutter({ containerRunner });
+  const craTemplater = new CreateReactAppTemplater({ containerRunner });
   const templaters = new Templaters();
 
   templaters.register('cookiecutter', cookiecutterTemplater);
@@ -27,8 +33,6 @@ export default async function createPlugin({
 
   const preparers = await Preparers.fromConfig(config, { logger });
   const publishers = await Publishers.fromConfig(config, { logger });
-
-  const dockerClient = new Docker();
 
   const discovery = SingleHostDiscovery.fromConfig(config);
   const catalogClient = new CatalogClient({ discoveryApi: discovery });
@@ -39,9 +43,8 @@ export default async function createPlugin({
     publishers,
     logger,
     config,
-    dockerClient,
     database,
     catalogClient,
-    reader
+    reader,
   });
 }

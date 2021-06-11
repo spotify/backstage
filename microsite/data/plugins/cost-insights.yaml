@@ -5,7 +5,7 @@ authorUrl: https://github.com/spotify
 category: Discovery
 description: Visualize, understand and optimize your team's cloud costs.
 documentation: https://github.com/backstage/backstage/tree/master/plugins/cost-insights
-iconUrl: https://www.materialui.co/materialIcons/editor/monetization_on_white_192x192.png
+iconUrl: img/cost-insights.png
 npmPackageName: '@backstage/plugin-cost-insights'
 tags:
   - web

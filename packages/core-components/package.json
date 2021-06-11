@@ -1,0 +1,92 @@
+{
+  "name": "@backstage/core-components",
+  "description": "Core components used by Backstage plugins and apps",
+  "version": "0.1.1",
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.esm.js",
+    "types": "dist/index.d.ts"
+  },
+  "homepage": "https://backstage.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/backstage/backstage",
+    "directory": "packages/core-components"
+  },
+  "keywords": [
+    "backstage"
+  ],
+  "license": "Apache-2.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "backstage-cli build --outputs types,esm",
+    "lint": "backstage-cli lint",
+    "test": "backstage-cli test",
+    "prepack": "backstage-cli prepack",
+    "postpack": "backstage-cli postpack",
+    "clean": "backstage-cli clean"
+  },
+  "dependencies": {
+    "@backstage/config": "^0.1.5",
+    "@backstage/core-plugin-api": "^0.1.1",
+    "@backstage/errors": "^0.1.1",
+    "@backstage/theme": "^0.2.8",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "4.0.0-alpha.45",
+    "@testing-library/react-hooks": "^3.4.2",
+    "@types/dagre": "^0.7.44",
+    "@types/prop-types": "^15.7.3",
+    "@types/react": "^16.9",
+    "@types/react-sparklines": "^1.7.0",
+    "@types/react-text-truncate": "^0.14.0",
+    "classnames": "^2.2.6",
+    "clsx": "^1.1.0",
+    "d3-selection": "^2.0.0",
+    "d3-shape": "^2.0.0",
+    "d3-zoom": "^2.0.0",
+    "dagre": "^0.8.5",
+    "immer": "^9.0.1",
+    "lodash": "^4.17.15",
+    "material-table": "^1.69.1",
+    "pluralize": "^8.0.0",
+    "prop-types": "^15.7.2",
+    "qs": "^6.9.4",
+    "rc-progress": "^3.0.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-helmet": "6.1.0",
+    "react-hook-form": "^6.15.4",
+    "react-markdown": "^5.0.2",
+    "react-router": "6.0.0-beta.0",
+    "react-router-dom": "6.0.0-beta.0",
+    "react-sparklines": "^1.7.0",
+    "react-syntax-highlighter": "^15.4.3",
+    "react-text-truncate": "^0.16.0",
+    "react-use": "^17.2.4",
+    "remark-gfm": "^1.0.0",
+    "zen-observable": "^0.8.15"
+  },
+  "devDependencies": {
+    "@backstage/core-app-api": "^0.1.1",
+    "@backstage/cli": "^0.6.14",
+    "@backstage/test-utils": "^0.1.13",
+    "@testing-library/jest-dom": "^5.10.1",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^13.1.8",
+    "@types/classnames": "^2.2.9",
+    "@types/d3-selection": "^2.0.0",
+    "@types/d3-shape": "^2.0.0",
+    "@types/d3-zoom": "^2.0.0",
+    "@types/google-protobuf": "^3.7.2",
+    "@types/jest": "^26.0.7",
+    "@types/node": "^14.14.32",
+    "@types/react-helmet": "^6.1.0",
+    "@types/zen-observable": "^0.8.0"
+  },
+  "files": [
+    "dist"
+  ]
+}

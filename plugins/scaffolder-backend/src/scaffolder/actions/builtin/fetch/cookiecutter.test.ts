@@ -15,16 +15,16 @@
  */
 jest.mock('./helpers');
 
+import { getVoidLogger, UrlReader } from '@backstage/backend-common';
+import { ConfigReader } from '@backstage/config';
+import { ScmIntegrations } from '@backstage/integration';
+import mock from 'mock-fs';
 import os from 'os';
 import { resolve as resolvePath } from 'path';
-import { createFetchCookiecutterAction } from './cookiecutter';
-import { ScmIntegrations } from '@backstage/integration';
-import { ConfigReader } from '@backstage/config';
-import { Templaters } from '../../../stages/templater';
 import { PassThrough } from 'stream';
-import { getVoidLogger, UrlReader } from '@backstage/backend-common';
+import { Templaters } from '../../../stages/templater';
+import { createFetchCookiecutterAction } from './cookiecutter';
 import { fetchContents } from './helpers';
-import mock from 'mock-fs';
 
 describe('fetch:cookiecutter', () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -40,7 +40,6 @@ describe('fetch:cookiecutter', () => {
 
   const templaters = new Templaters();
   const cookiecutterTemplater = { run: jest.fn() };
-  const mockDockerClient = {};
   const mockTmpDir = os.tmpdir();
   const mockContext = {
     input: {
@@ -67,7 +66,6 @@ describe('fetch:cookiecutter', () => {
   const action = createFetchCookiecutterAction({
     integrations,
     templaters,
-    dockerClient: mockDockerClient as any,
     reader: mockReader,
   });
 
@@ -102,7 +100,6 @@ describe('fetch:cookiecutter', () => {
 
     expect(cookiecutterTemplater.run).toHaveBeenCalledWith({
       workspacePath: mockTmpDir,
-      dockerClient: mockDockerClient,
       logStream: mockContext.logStream,
       values: mockContext.input.values,
     });
@@ -123,7 +120,6 @@ describe('fetch:cookiecutter', () => {
 
     expect(cookiecutterTemplater.run).toHaveBeenCalledWith({
       workspacePath: mockTmpDir,
-      dockerClient: mockDockerClient,
       logStream: mockContext.logStream,
       values: {
         ...mockContext.input.values,
@@ -166,7 +162,6 @@ describe('fetch:cookiecutter', () => {
     const newAction = createFetchCookiecutterAction({
       integrations,
       templaters: templatersWithoutCookiecutter,
-      dockerClient: mockDockerClient as any,
       reader: mockReader,
     });
 

@@ -1,9 +1,9 @@
 ---
 title: AWS Lambda
 author: roadie.io
-authorUrl: https://roadie.io
+authorUrl: https://roadie.io/?utm_source=backstage.io&utm_medium=marketplace&utm_campaign=aws-lambda
 category: Infrastructure
 description: View AWS Lambda functions for your components in Backstage.
-documentation: https://roadie.io/backstage/plugins/aws-lambda
+documentation: https://roadie.io/backstage/plugins/aws-lambda/?utm_source=backstage.io&utm_medium=marketplace&utm_campaign=aws-lambda
 iconUrl: https://roadie.io/images/logos/lambda.png
 npmPackageName: '@roadiehq/backstage-plugin-aws-lambda'

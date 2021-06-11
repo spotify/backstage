@@ -39,3 +39,29 @@ The target is composed of four parts:
 - The path within each repository to find the catalog YAML file. This will
   usually be `/catalog-info.yaml` or a similar variation for catalog files
   stored in the root directory of each repository.
+
+## Custom repository processing
+
+The Bitbucket Discovery Processor will by default emit a location for each
+matching repository for further processing by other processors. However, it is
+possible to override this functionality and take full control of how each
+matching repository is processed.
+
+`BitbucketDiscoveryProcessor.fromConfig` takes an optional parameter
+`options.parser` where you can set your own parser to be used for each matched
+repository.
+
+```typescript
+const customRepositoryParser: BitbucketRepositoryParser = async function* customRepositoryParser({
+  client,
+  repository,
+}) {
+  // Custom logic for interpret the matching repository.
+  // See defaultRepositoryParser for an example
+};
+
+const processor = BitbucketDiscoveryProcessor.fromConfig(env.config, {
+  parser: customRepositoryParser,
+  logger: env.logger,
+});
+```

@@ -192,9 +192,12 @@ export class GithubAppCredentialsMux {
   }
 }
 
+export type GithubCredentialType = 'app' | 'token';
+
 export type GithubCredentials = {
   headers?: { [name: string]: string };
   token?: string;
+  type: GithubCredentialType;
 };
 
 // TODO: Possibly move this to a backend only package so that it's not used in the frontend by mistake
@@ -226,8 +229,10 @@ export class GithubCredentialsProvider {
     const owner = parsed.owner || parsed.name;
     const repo = parsed.owner ? parsed.name : undefined;
 
+    let type: GithubCredentialType = 'app';
     let token = await this.githubAppCredentialsMux.getAppToken(owner, repo);
     if (!token) {
+      type = 'token';
       token = this.token;
     }
 
@@ -238,6 +243,7 @@ export class GithubCredentialsProvider {
           }
         : undefined,
       token,
+      type,
     };
   }
 }

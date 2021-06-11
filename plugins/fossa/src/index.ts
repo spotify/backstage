@@ -15,4 +15,4 @@
  */
 
 export { fossaPlugin } from './plugin';
-export { EntityFossaCard } from './extensions';
+export { EntityFossaCard, FossaPage } from './extensions';

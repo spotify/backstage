@@ -23,11 +23,13 @@ import React, {
   ReactNode,
 } from 'react';
 import { RoutedTabs } from './RoutedTabs';
+import { TabProps } from '@material-ui/core';
 
 type SubRoute = {
   path: string;
   title: string;
   children: JSX.Element;
+  tabProps?: TabProps<React.ElementType, { component?: React.ElementType }>;
 };
 
 const Route: (props: SubRoute) => null = () => null;
@@ -60,8 +62,8 @@ export function createSubRoutesFromChildren(
       throw new Error('Child of TabbedLayout must be an TabbedLayout.Route');
     }
 
-    const { path, title, children } = child.props;
-    return [{ path, title, children }];
+    const { path, title, children, tabProps } = child.props;
+    return [{ path, title, children, tabProps }];
   });
 }
 

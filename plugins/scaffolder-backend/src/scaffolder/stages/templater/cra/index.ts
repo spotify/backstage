@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { runDockerContainer } from '@backstage/backend-common';
+import { ContainerRunner } from '@backstage/backend-common';
 import fs from 'fs-extra';
 import path from 'path';
 import * as yaml from 'yaml';
@@ -25,11 +25,16 @@ import { TemplaterBase, TemplaterRunOptions } from '../types';
 const GITHUB_ACTIONS_ANNOTATION = 'github.com/project-slug';
 
 export class CreateReactAppTemplater implements TemplaterBase {
+  private readonly containerRunner: ContainerRunner;
+
+  constructor({ containerRunner }: { containerRunner: ContainerRunner }) {
+    this.containerRunner = containerRunner;
+  }
+
   public async run({
     workspacePath,
     values,
     logStream,
-    dockerClient,
   }: TemplaterRunOptions): Promise<void> {
     const {
       component_id: componentName,
@@ -46,23 +51,20 @@ export class CreateReactAppTemplater implements TemplaterBase {
       [intermediateDir]: '/result',
     };
 
-    await runDockerContainer({
+    await this.containerRunner.runContainer({
       imageName: 'node:lts-alpine',
+      command: ['npx'],
       args: [
         'create-react-app',
         componentName as string,
         withTypescript ? ' --template typescript' : '',
       ],
       mountDirs,
+      workingDir: '/result',
       logStream: logStream,
-      dockerClient: dockerClient,
       // Set the home directory inside the container as something that applications can
       // write to, otherwise they will just fail trying to write to /
       envVars: { HOME: '/tmp' },
-      createOptions: {
-        Entrypoint: ['npx'],
-        WorkingDir: '/result',
-      },
     });
 
     // if cookiecutter was successful, intermediateDir will contain

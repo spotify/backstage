@@ -1,0 +1,297 @@
+[
+  {
+    "filename": "src/atoms/BoxShadow/box-shadow.ts",
+    "lineHits": {
+      "4": 5
+    },
+    "branchHits": {}
+  },
+  {
+    "filename": "src/atoms/Button/button.tsx",
+    "lineHits": {
+      "17": 41,
+      "34": 41,
+      "70": 82,
+      "72": 82,
+      "74": 41,
+      "31": 41,
+      "32": 41,
+      "35": 0,
+      "36": 0,
+      "37": 0,
+      "38": 0,
+      "39": 0,
+      "40": 0,
+      "41": 0,
+      "42": 0,
+      "43": 0,
+      "47": 41,
+      "68": 10,
+      "75": 41
+    },
+    "branchHits": {
+      "35": {
+        "covered": 0,
+        "missed": 4,
+        "available": 4
+      },
+      "70": {
+        "covered": 1,
+        "missed": 0,
+        "available": 1
+      },
+      "72": {
+        "covered": 3,
+        "missed": 0,
+        "available": 3
+      },
+      "75": {
+        "covered": 2,
+        "missed": 0,
+        "available": 2
+      }
+    }
+  },
+  {
+    "filename": "src/atoms/Container/components.ts",
+    "lineHits": {
+      "5": 70,
+      "19": 70,
+      "20": 70,
+      "23": 70,
+      "4": 13,
+      "13": 13
+    },
+    "branchHits": {}
+  },
+  {
+    "filename": "src/atoms/Container/container.tsx",
+    "lineHits": {
+      "12": 35,
+      "20": 35
+    },
+    "branchHits": {}
+  },
+  {
+    "filename": "src/atoms/DownArrow/down-arrow.tsx",
+    "lineHits": {
+      "3": 28,
+      "4": 28
+    },
+    "branchHits": {}
+  },
+  {
+    "filename": "src/molecules/Hero/components.ts",
+    "lineHits": {
+      "26": 20,
+      "28": 10,
+      "94": 10,
+      "103": 20,
+      "121": 10,
+      "182": 20,
+      "203": 5,
+      "218": 5,
+      "236": 10,
+      "241": 10,
+      "249": 8,
+      "254": 4,
+      "264": 4,
+      "277": 8,
+      "282": 4,
+      "294": 8,
+      "299": 6,
+      "25": 2,
+      "29": 10,
+      "37": 3,
+      "39": 3,
+      "40": 3,
+      "42": 3,
+      "43": 1,
+      "44": 1,
+      "45": 0,
+      "46": 0,
+      "48": 1,
+      "52": 0,
+      "53": 1,
+      "57": 0,
+      "59": 1,
+      "60": 1,
+      "63": 3,
+      "95": 10,
+      "112": 2,
+      "122": 10,
+      "125": 9,
+      "134": 0,
+      "151": 1,
+      "170": 2,
+      "181": 2,
+      "194": 2,
+      "204": 5,
+      "207": 3,
+      "209": 0,
+      "211": 1,
+      "213": 1,
+      "219": 5,
+      "222": 3,
+      "224": 0,
+      "226": 0,
+      "228": 1,
+      "230": 1,
+      "245": 2,
+      "255": 4,
+      "258": 3,
+      "260": 1,
+      "265": 4,
+      "268": 2,
+      "270": 1,
+      "272": 1,
+      "283": 4,
+      "286": 2,
+      "288": 1,
+      "290": 1,
+      "298": 2,
+      "304": 2,
+      "311": 2,
+      "319": 2,
+      "329": 2,
+      "361": 2,
+      "371": 2
+    },
+    "branchHits": {
+      "29": {
+        "covered": 2,
+        "missed": 0,
+        "available": 2
+      },
+      "39": {
+        "covered": 2,
+        "missed": 0,
+        "available": 2
+      },
+      "42": {
+        "covered": 2,
+        "missed": 0,
+        "available": 2
+      },
+      "43": {
+        "covered": 3,
+        "missed": 1,
+        "available": 4
+      },
+      "45": {
+        "covered": 0,
+        "missed": 4,
+        "available": 4
+      },
+      "48": {
+        "covered": 1,
+        "missed": 1,
+        "available": 2
+      },
+      "53": {
+        "covered": 1,
+        "missed": 1,
+        "available": 2
+      },
+      "59": {
+        "covered": 1,
+        "missed": 1,
+        "available": 2
+      },
+      "60": {
+        "covered": 1,
+        "missed": 1,
+        "available": 2
+      },
+      "95": {
+        "covered": 1,
+        "missed": 1,
+        "available": 2
+      },
+      "122": {
+        "covered": 2,
+        "missed": 2,
+        "available": 4
+      },
+      "182": {
+        "covered": 2,
+        "missed": 0,
+        "available": 2
+      },
+      "204": {
+        "covered": 4,
+        "missed": 1,
+        "available": 5
+      },
+      "219": {
+        "covered": 4,
+        "missed": 2,
+        "available": 6
+      },
+      "236": {
+        "covered": 1,
+        "missed": 0,
+        "available": 1
+      },
+      "241": {
+        "covered": 1,
+        "missed": 0,
+        "available": 1
+      },
+      "249": {
+        "covered": 1,
+        "missed": 1,
+        "available": 2
+      },
+      "255": {
+        "covered": 3,
+        "missed": 0,
+        "available": 3
+      },
+      "265": {
+        "covered": 4,
+        "missed": 0,
+        "available": 4
+      },
+      "277": {
+        "covered": 1,
+        "missed": 0,
+        "available": 1
+      },
+      "283": {
+        "covered": 4,
+        "missed": 0,
+        "available": 4
+      },
+      "294": {
+        "covered": 1,
+        "missed": 1,
+        "available": 2
+      },
+      "299": {
+        "covered": 1,
+        "missed": 1,
+        "available": 2
+      }
+    }
+  },
+  {
+    "filename": "src/molecules/Hero/hero.tsx",
+    "lineHits": {
+      "40": 10,
+      "72": 0,
+      "127": 3,
+      "56": 10,
+      "58": 10,
+      "73": 0,
+      "128": 3
+    },
+    "branchHits": {
+      "73": {
+        "covered": 0,
+        "missed": 2,
+        "available": 2
+      }
+    }
+  }
+]

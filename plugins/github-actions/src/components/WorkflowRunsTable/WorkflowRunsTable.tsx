@@ -32,31 +32,13 @@ import {
   configApiRef,
   useApi,
 } from '@backstage/core';
-import { useWorkflowRuns } from '../useWorkflowRuns';
+import { useWorkflowRuns, WorkflowRun } from '../useWorkflowRuns';
 import { WorkflowRunStatus } from '../WorkflowRunStatus';
 import SyncIcon from '@material-ui/icons/Sync';
-import { buildRouteRef } from '../../plugin';
+import { buildRouteRef } from '../../routes';
 import { useProjectName } from '../useProjectName';
 import { Entity } from '@backstage/catalog-model';
 import { readGitHubIntegrationConfigs } from '@backstage/integration';
-
-export type WorkflowRun = {
-  workflowName: string;
-  id: string;
-  message: string;
-  url?: string;
-  githubUrl?: string;
-  source: {
-    branchName: string;
-    commit: {
-      hash: string;
-      url?: string;
-    };
-  };
-  status: string;
-  conclusion: string;
-  onReRunClick: () => void;
-};
 
 const generatedColumns: TableColumn[] = [
   {

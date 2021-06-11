@@ -16,6 +16,7 @@
 
 import { createTestShadowDom, getSample } from '../../test-utils';
 import { rewriteDocLinks } from '../transformers';
+import { normalizeUrl } from './rewriteDocLinks';
 
 describe('rewriteDocLinks', () => {
   it('should not do anything', () => {
@@ -54,5 +55,34 @@ describe('rewriteDocLinks', () => {
       'http://localhost/example-docs',
       'http://localhost/example-docs/example-page',
     ]);
+  });
+
+  it('should rewrite non-parseable URLs as text', () => {
+    const expectedText = `www.my-internet.[top-level-domain]/pathname/[URLkey]`;
+    const shadowDom = createTestShadowDom(
+      `<a href="http://${expectedText}">${expectedText}</a>`,
+      {
+        preTransformers: [rewriteDocLinks()],
+        postTransformers: [],
+      },
+    );
+
+    // There should be no <a> tags, but the link text should remain.
+    expect(getSample(shadowDom, 'a', 'href')).toEqual([]);
+    expect(shadowDom.innerHTML).toContain(expectedText);
+  });
+});
+
+describe('normalizeUrl', () => {
+  it.each([
+    ['http://example.org', 'http://example.org/'],
+    ['http://example.org/', 'http://example.org/'],
+    ['http://example.org/folder', 'http://example.org/folder/'],
+    ['http://example.org/folder/', 'http://example.org/folder/'],
+    ['http://example.org/folder#intro', 'http://example.org/folder/#intro'],
+    ['http://example.org/folder/#intro', 'http://example.org/folder/#intro'],
+    ['http://example.org/folder#', 'http://example.org/folder/#'],
+  ])('should handle %s', (url, expected) => {
+    expect(normalizeUrl(url)).toEqual(expected);
   });
 });

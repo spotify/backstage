@@ -20,7 +20,7 @@ export function notEmpty<TValue>(
   return !isNull(value) && !isUndefined(value);
 }
 
-export function isUndefined(value: any): boolean {
+export function isUndefined(value: any): value is undefined {
   return value === undefined;
 }
 

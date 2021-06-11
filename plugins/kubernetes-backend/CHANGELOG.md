@@ -1,5 +1,56 @@
 # @backstage/plugin-kubernetes-backend
 
+## 0.3.8
+
+### Patch Changes
+
+- Updated dependencies [add62a455]
+- Updated dependencies [704875e26]
+  - @backstage/catalog-model@0.8.0
+  - @backstage/plugin-kubernetes-common@0.1.1
+
+## 0.3.7
+
+### Patch Changes
+
+- f9f9d633d: Add possibility to configure TLS verification for `gke` type clusters
+- Updated dependencies [22fd8ce2a]
+- Updated dependencies [10c008a3a]
+- Updated dependencies [f9fb4a205]
+- Updated dependencies [16be1d093]
+  - @backstage/backend-common@0.8.0
+  - @backstage/catalog-model@0.7.9
+
+## 0.3.6
+
+### Patch Changes
+
+- f53fba29f: Adds @backstage/plugin-kubernetes-common library to share types between kubernetes frontend and backend.
+- Updated dependencies [e0bfd3d44]
+- Updated dependencies [38ca05168]
+- Updated dependencies [d8b81fd28]
+  - @backstage/backend-common@0.7.0
+  - @backstage/catalog-model@0.7.8
+  - @backstage/config@0.1.5
+
+## 0.3.5
+
+### Patch Changes
+
+- c42cd1daa: Kubernetes client TLS verification is now configurable and defaults to true
+- Updated dependencies [d367f63b5]
+- Updated dependencies [b42531cfe]
+  - @backstage/backend-common@0.6.3
+
+## 0.3.4
+
+### Patch Changes
+
+- 7fd46f26d: Use `string` TypeScript type instead of `String`.
+- Updated dependencies [bb5055aee]
+- Updated dependencies [5d0740563]
+  - @backstage/catalog-model@0.7.7
+
 ## 0.3.3
 
 ### Patch Changes
