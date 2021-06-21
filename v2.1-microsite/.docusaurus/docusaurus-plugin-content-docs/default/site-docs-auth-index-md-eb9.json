@@ -1,0 +1,30 @@
+{
+  "unversionedId": "auth/index",
+  "id": "auth/index",
+  "isDocsHomePage": false,
+  "title": "Adding Authentication",
+  "description": "How to add authentication to a Backstage application",
+  "source": "@site/../docs/auth/index.md",
+  "sourceDirName": "auth",
+  "slug": "/auth/index",
+  "permalink": "/docs/auth/index",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/index.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "index",
+    "title": "Adding Authentication",
+    "description": "How to add authentication to a Backstage application"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Defining Configuration for your Plugin",
+    "permalink": "/docs/conf/defining"
+  },
+  "next": {
+    "title": "Auth0 Authentication Provider",
+    "permalink": "/docs/auth/auth0/provider"
+  }
+}

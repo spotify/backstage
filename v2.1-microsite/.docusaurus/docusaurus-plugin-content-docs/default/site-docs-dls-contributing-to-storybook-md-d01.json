@@ -1,0 +1,30 @@
+{
+  "unversionedId": "dls/contributing-to-storybook",
+  "id": "dls/contributing-to-storybook",
+  "isDocsHomePage": false,
+  "title": "Contributing to Storybook",
+  "description": "Documentation on How to Contribute to Storybook",
+  "source": "@site/../docs/dls/contributing-to-storybook.md",
+  "sourceDirName": "dls",
+  "slug": "/dls/contributing-to-storybook",
+  "permalink": "/docs/dls/contributing-to-storybook",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/dls/contributing-to-storybook.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "contributing-to-storybook",
+    "title": "Contributing to Storybook",
+    "description": "Documentation on How to Contribute to Storybook"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Design",
+    "permalink": "/docs/dls/design"
+  },
+  "next": {
+    "title": "Figma",
+    "permalink": "/docs/dls/figma"
+  }
+}

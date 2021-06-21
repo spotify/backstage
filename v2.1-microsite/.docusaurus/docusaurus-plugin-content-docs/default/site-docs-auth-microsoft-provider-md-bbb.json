@@ -1,0 +1,32 @@
+{
+  "unversionedId": "auth/microsoft/provider",
+  "id": "auth/microsoft/provider",
+  "isDocsHomePage": false,
+  "title": "Microsoft Azure Authentication Provider",
+  "description": "Adding Microsoft Azure as an authentication provider in Backstage",
+  "source": "@site/../docs/auth/microsoft/provider.md",
+  "sourceDirName": "auth/microsoft",
+  "slug": "/auth/microsoft/provider",
+  "permalink": "/docs/auth/microsoft/provider",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/microsoft/provider.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Azure",
+  "frontMatter": {
+    "id": "provider",
+    "title": "Microsoft Azure Authentication Provider",
+    "sidebar_label": "Azure",
+    "description": "Adding Microsoft Azure as an authentication provider in Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Auth0 Authentication Provider",
+    "permalink": "/docs/auth/auth0/provider"
+  },
+  "next": {
+    "title": "GitHub Authentication Provider",
+    "permalink": "/docs/auth/github/provider"
+  }
+}

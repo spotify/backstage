@@ -1,0 +1,17 @@
+{
+  "unversionedId": "README",
+  "id": "README",
+  "isDocsHomePage": false,
+  "title": "Documentation",
+  "description": "The Backstage documentation is available at https:",
+  "source": "@site/../docs/README.md",
+  "sourceDirName": ".",
+  "slug": "/README",
+  "permalink": "/docs/README",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/README.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {}
+}

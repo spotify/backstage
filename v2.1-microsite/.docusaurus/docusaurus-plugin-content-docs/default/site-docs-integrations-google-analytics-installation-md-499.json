@@ -1,0 +1,32 @@
+{
+  "unversionedId": "integrations/google-analytics/installation",
+  "id": "integrations/google-analytics/installation",
+  "isDocsHomePage": false,
+  "title": "Google Analytics Installation",
+  "description": "Adding Google Analytics to Your App",
+  "source": "@site/../docs/integrations/google-analytics/installation.md",
+  "sourceDirName": "integrations/google-analytics",
+  "slug": "/integrations/google-analytics/installation",
+  "permalink": "/docs/integrations/google-analytics/installation",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/integrations/google-analytics/installation.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Installation",
+  "frontMatter": {
+    "id": "installation",
+    "title": "Google Analytics Installation",
+    "sidebar_label": "Installation",
+    "description": "Adding Google Analytics to Your App"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "GitLab Locations",
+    "permalink": "/docs/integrations/gitlab/locations"
+  },
+  "next": {
+    "title": "Google Cloud Storage Locations",
+    "permalink": "/docs/integrations/google-cloud-storage/locations"
+  }
+}

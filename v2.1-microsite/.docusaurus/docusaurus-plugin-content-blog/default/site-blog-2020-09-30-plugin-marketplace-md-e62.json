@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/09/30/plugin-marketplace",
+  "source": "@site/blog/2020-09-30-plugin-marketplace.md",
+  "title": "The Plugin Marketplace is open",
+  "description": "Backstage has an ambitious goal: to provide engineers with the best possible developer experience.",
+  "date": "2020-09-30T00:00:00.000Z",
+  "formattedDate": "September 30, 2020",
+  "tags": [],
+  "readingTime": 3.66,
+  "truncated": true,
+  "prevItem": {
+    "title": "How to design for Backstage (even if you’re not a designer)",
+    "permalink": "/blog/2020/09/30/backstage-design-system"
+  },
+  "nextItem": {
+    "title": "Backstage has been accepted into the CNCF Sandbox",
+    "permalink": "/blog/2020/09/23/backstage-cncf-sandbox"
+  }
+}

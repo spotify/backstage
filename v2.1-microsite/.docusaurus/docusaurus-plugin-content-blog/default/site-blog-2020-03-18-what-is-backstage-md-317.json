@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/03/18/what-is-backstage",
+  "source": "@site/blog/2020-03-18-what-is-backstage.md",
+  "title": "What the heck is Backstage anyway?",
+  "description": "img",
+  "date": "2020-03-18T00:00:00.000Z",
+  "formattedDate": "March 18, 2020",
+  "tags": [],
+  "readingTime": 4.975,
+  "truncated": true,
+  "prevItem": {
+    "title": "Introducing Lighthouse for Backstage",
+    "permalink": "/blog/2020/04/06/lighthouse-plugin"
+  },
+  "nextItem": {
+    "title": "Announcing Backstage",
+    "permalink": "/blog/2020/03/16/announcing-backstage"
+  }
+}

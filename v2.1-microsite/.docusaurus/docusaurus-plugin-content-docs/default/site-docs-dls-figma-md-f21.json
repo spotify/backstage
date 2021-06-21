@@ -1,0 +1,30 @@
+{
+  "unversionedId": "dls/figma",
+  "id": "dls/figma",
+  "isDocsHomePage": false,
+  "title": "Figma",
+  "description": "Documentation on using Figma to build your own plugins for Backstage",
+  "source": "@site/../docs/dls/figma.md",
+  "sourceDirName": "dls",
+  "slug": "/dls/figma",
+  "permalink": "/docs/dls/figma",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/dls/figma.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "figma",
+    "title": "Figma",
+    "description": "Documentation on using Figma to build your own plugins for Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Contributing to Storybook",
+    "permalink": "/docs/dls/contributing-to-storybook"
+  },
+  "next": {
+    "title": "Utility APIs",
+    "permalink": "/docs/api/utility-apis"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "unversionedId": "reference/utility-apis/StorageApi",
+  "id": "reference/utility-apis/StorageApi",
+  "isDocsHomePage": false,
+  "title": "StorageApi",
+  "description": "The StorageApi type is defined at",
+  "source": "@site/../docs/reference/utility-apis/StorageApi.md",
+  "sourceDirName": "reference/utility-apis",
+  "slug": "/reference/utility-apis/StorageApi",
+  "permalink": "/docs/reference/utility-apis/StorageApi",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/utility-apis/StorageApi.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {}
+}

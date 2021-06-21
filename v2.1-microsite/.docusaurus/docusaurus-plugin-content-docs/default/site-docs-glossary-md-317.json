@@ -1,0 +1,30 @@
+{
+  "unversionedId": "glossary",
+  "id": "glossary",
+  "isDocsHomePage": false,
+  "title": "Backstage Glossary",
+  "description": "List of all the terms, abbreviations, and phrases used in Backstage, together with their explanations.",
+  "source": "@site/../docs/glossary.md",
+  "sourceDirName": ".",
+  "slug": "/glossary",
+  "permalink": "/docs/glossary",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/glossary.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "glossary",
+    "title": "Backstage Glossary",
+    "description": "List of all the terms, abbreviations, and phrases used in Backstage, together with their explanations."
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Backstage Project Structure",
+    "permalink": "/docs/support/project-structure"
+  },
+  "next": {
+    "title": "FAQ",
+    "permalink": "/docs/FAQ"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/techdocs/how-to-guides",
+  "id": "features/techdocs/how-to-guides",
+  "isDocsHomePage": false,
+  "title": "TechDocs \"HOW TO\" guides",
+  "description": "TechDocs \"HOW TO\" guides related to TechDocs",
+  "source": "@site/../docs/features/techdocs/how-to-guides.md",
+  "sourceDirName": "features/techdocs",
+  "slug": "/features/techdocs/how-to-guides",
+  "permalink": "/docs/features/techdocs/how-to-guides",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/techdocs/how-to-guides.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "\"HOW TO\" guides",
+  "frontMatter": {
+    "id": "how-to-guides",
+    "title": "TechDocs \"HOW TO\" guides",
+    "sidebar_label": "\"HOW TO\" guides",
+    "description": "TechDocs \"HOW TO\" guides related to TechDocs"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Configuring CI/CD to generate and publish TechDocs sites",
+    "permalink": "/docs/features/techdocs/configuring-ci-cd"
+  },
+  "next": {
+    "title": "Troubleshooting TechDocs",
+    "permalink": "/docs/features/techdocs/troubleshooting"
+  }
+}

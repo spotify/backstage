@@ -1,0 +1,30 @@
+{
+  "unversionedId": "overview/roadmap",
+  "id": "overview/roadmap",
+  "isDocsHomePage": false,
+  "title": "Project roadmap",
+  "description": "Roadmap of Backstage Project",
+  "source": "@site/../docs/overview/roadmap.md",
+  "sourceDirName": "overview",
+  "slug": "/overview/roadmap",
+  "permalink": "/docs/overview/roadmap",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/overview/roadmap.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "roadmap",
+    "title": "Project roadmap",
+    "description": "Roadmap of Backstage Project"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Architecture overview",
+    "permalink": "/docs/overview/architecture-overview"
+  },
+  "next": {
+    "title": "Vision",
+    "permalink": "/docs/overview/vision"
+  }
+}

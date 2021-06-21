@@ -1,9 +1,8 @@
 ---
 id: adrs-adr011
-title: ADR011: Plugin Package Structure
+title: "ADR011: Plugin Package Structure"
 description: Architecture Decision Record (ADR) for Plugin Package Structure
 ---
-
 ## Context
 
 A core feature of Backstage is the extensibility via plugins. The Backstage
@@ -19,8 +18,8 @@ different frontend plugins
 This results in emerging plugin packages with shared code, like
 `packages/catalog-client` or `packages/techdocs-common`.
 
-> There is a common phrase in software development:
-> [Naming things is hard](https://martinfowler.com/bliki/TwoHardThings.html)
+&gt; There is a common phrase in software development:
+&gt; [Naming things is hard](https://martinfowler.com/bliki/TwoHardThings.html)
 
 To keep the contributed plugins consistent, this Architecture Decision Record
 provides rules for naming plugin packages.
@@ -33,15 +32,15 @@ We will place all plugin related code in the `plugins/` directory. The
 We follow this structure for plugin packages (where `x` is the plugin name, for
 example `catalog` or `techdocs`):
 
-- `x`: Contains the main frontend code of the plugin.
-- `x-backend`: Contains the main backend code of the plugin.
-- `x-react`: Contains shared widgets, hooks and similar that both the plugin
-  itself (`x`) and third-party frontend plugins can depend on.
-- `x-node`: Contains utilities for backends that both the plugin backend itself
-  (`x-backend`) and third-party backend plugins can depend on.
-- `x-common`: An isomorphic package with platform agnostic models, clients, and
-  utilities that all packages above or any third-party plugin package can depend
-  on.
+-   `x`: Contains the main frontend code of the plugin.
+-   `x-backend`: Contains the main backend code of the plugin.
+-   `x-react`: Contains shared widgets, hooks and similar that both the plugin
+    itself (`x`) and third-party frontend plugins can depend on.
+-   `x-node`: Contains utilities for backends that both the plugin backend itself
+    (`x-backend`) and third-party backend plugins can depend on.
+-   `x-common`: An isomorphic package with platform agnostic models, clients, and
+    utilities that all packages above or any third-party plugin package can depend
+    on.
 
 We prefix the package names with `@backstage/plugin-`.
 
@@ -53,13 +52,13 @@ This structure is based on a
 We will actively migrate existing packages that are part of a plugin to the
 `plugins/` folder. This affects packages like:
 
-- `packages/techdocs-common` which should be moved to `plugins/techdocs-node`
-  and named `@backstage/plugin-techdocs-node`.
-- `packages/catalog-client` which will be part of a future
-  `plugins/catalog-common` and named `@backstage/plugin-catalog-common`.
-- While the new location of `packages/catalog-model` should be
-  `plugins/catalog-common` we might want to do an exception here, as it's a very
-  central package.
+-   `packages/techdocs-common` which should be moved to `plugins/techdocs-node`
+    and named `@backstage/plugin-techdocs-node`.
+-   `packages/catalog-client` which will be part of a future
+    `plugins/catalog-common` and named `@backstage/plugin-catalog-common`.
+-   While the new location of `packages/catalog-model` should be
+    `plugins/catalog-common` we might want to do an exception here, as it's a very
+    central package.
 
 The limited set of rules might not be sufficient in the future. If additional
 packages are required, we will revisit this decision and extend the pattern.

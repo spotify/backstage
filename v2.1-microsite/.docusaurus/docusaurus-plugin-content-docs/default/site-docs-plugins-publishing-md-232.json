@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/publishing",
+  "id": "plugins/publishing",
+  "isDocsHomePage": false,
+  "title": "Publishing",
+  "description": "Documentation on Publishing npm packages",
+  "source": "@site/../docs/plugins/publishing.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/publishing",
+  "permalink": "/docs/plugins/publishing",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/publishing.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "publishing",
+    "title": "Publishing",
+    "description": "Documentation on Publishing npm packages"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Testing with Jest",
+    "permalink": "/docs/plugins/testing"
+  },
+  "next": {
+    "title": "Publish private",
+    "permalink": "/docs/plugins/publish-private"
+  }
+}

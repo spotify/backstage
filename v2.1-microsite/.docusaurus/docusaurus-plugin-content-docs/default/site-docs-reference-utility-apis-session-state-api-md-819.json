@@ -1,0 +1,17 @@
+{
+  "unversionedId": "reference/utility-apis/SessionStateApi",
+  "id": "reference/utility-apis/SessionStateApi",
+  "isDocsHomePage": false,
+  "title": "SessionStateApi",
+  "description": "The SessionStateApi type is defined at",
+  "source": "@site/../docs/reference/utility-apis/SessionStateApi.md",
+  "sourceDirName": "reference/utility-apis",
+  "slug": "/reference/utility-apis/SessionStateApi",
+  "permalink": "/docs/reference/utility-apis/SessionStateApi",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/utility-apis/SessionStateApi.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {}
+}

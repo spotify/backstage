@@ -1,0 +1,26 @@
+{
+  "unversionedId": "reference/utility-apis/README",
+  "id": "reference/utility-apis/README",
+  "isDocsHomePage": false,
+  "title": "Backstage Core Utility APIs",
+  "description": "The following is a list of all Utility APIs defined by @backstage/core. They",
+  "source": "@site/../docs/reference/utility-apis/README.md",
+  "sourceDirName": "reference/utility-apis",
+  "slug": "/reference/utility-apis/README",
+  "permalink": "/docs/reference/utility-apis/README",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/utility-apis/README.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {},
+  "sidebar": "docs",
+  "previous": {
+    "title": "Utility APIs",
+    "permalink": "/docs/api/utility-apis"
+  },
+  "next": {
+    "title": "createPlugin",
+    "permalink": "/docs/reference/createPlugin"
+  }
+}

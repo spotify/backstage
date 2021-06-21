@@ -1,0 +1,32 @@
+{
+  "unversionedId": "auth/google/provider",
+  "id": "auth/google/provider",
+  "isDocsHomePage": false,
+  "title": "Google Authentication Provider",
+  "description": "Adding Google OAuth as an authentication provider in Backstage",
+  "source": "@site/../docs/auth/google/provider.md",
+  "sourceDirName": "auth/google",
+  "slug": "/auth/google/provider",
+  "permalink": "/docs/auth/google/provider",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/google/provider.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Google",
+  "frontMatter": {
+    "id": "provider",
+    "title": "Google Authentication Provider",
+    "sidebar_label": "Google",
+    "description": "Adding Google OAuth as an authentication provider in Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "GitLab Authentication Provider",
+    "permalink": "/docs/auth/gitlab/provider"
+  },
+  "next": {
+    "title": "Okta Authentication Provider",
+    "permalink": "/docs/auth/okta/provider"
+  }
+}

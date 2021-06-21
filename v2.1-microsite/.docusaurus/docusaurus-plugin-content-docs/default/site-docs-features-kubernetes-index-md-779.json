@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/kubernetes/overview",
+  "id": "features/kubernetes/overview",
+  "isDocsHomePage": false,
+  "title": "Kubernetes",
+  "description": "Monitoring Kubernetes based services with the service catalog",
+  "source": "@site/../docs/features/kubernetes/index.md",
+  "sourceDirName": "features/kubernetes",
+  "slug": "/features/kubernetes/overview",
+  "permalink": "/docs/features/kubernetes/overview",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/kubernetes/index.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Overview",
+  "frontMatter": {
+    "id": "overview",
+    "title": "Kubernetes",
+    "sidebar_label": "Overview",
+    "description": "Monitoring Kubernetes based services with the service catalog"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "API",
+    "permalink": "/docs/features/software-catalog/software-catalog-api"
+  },
+  "next": {
+    "title": "Installation",
+    "permalink": "/docs/features/kubernetes/installation"
+  }
+}

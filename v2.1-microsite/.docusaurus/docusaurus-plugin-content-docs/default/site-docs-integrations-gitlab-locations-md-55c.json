@@ -1,0 +1,32 @@
+{
+  "unversionedId": "integrations/gitlab/locations",
+  "id": "integrations/gitlab/locations",
+  "isDocsHomePage": false,
+  "title": "GitLab Locations",
+  "description": "Integrating source code stored in GitLab into the Backstage catalog",
+  "source": "@site/../docs/integrations/gitlab/locations.md",
+  "sourceDirName": "integrations/gitlab",
+  "slug": "/integrations/gitlab/locations",
+  "permalink": "/docs/integrations/gitlab/locations",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/integrations/gitlab/locations.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Locations",
+  "frontMatter": {
+    "id": "locations",
+    "title": "GitLab Locations",
+    "sidebar_label": "Locations",
+    "description": "Integrating source code stored in GitLab into the Backstage catalog"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "GitHub Organizational Data",
+    "permalink": "/docs/integrations/github/org"
+  },
+  "next": {
+    "title": "Google Analytics Installation",
+    "permalink": "/docs/integrations/google-analytics/installation"
+  }
+}

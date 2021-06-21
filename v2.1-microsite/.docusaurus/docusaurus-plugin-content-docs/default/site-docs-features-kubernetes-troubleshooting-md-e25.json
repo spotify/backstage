@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/kubernetes/troubleshooting",
+  "id": "features/kubernetes/troubleshooting",
+  "isDocsHomePage": false,
+  "title": "Troubleshooting Kubernetes",
+  "description": "Troubleshooting for Kubernetes",
+  "source": "@site/../docs/features/kubernetes/troubleshooting.md",
+  "sourceDirName": "features/kubernetes",
+  "slug": "/features/kubernetes/troubleshooting",
+  "permalink": "/docs/features/kubernetes/troubleshooting",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/kubernetes/troubleshooting.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Troubleshooting",
+  "frontMatter": {
+    "id": "troubleshooting",
+    "title": "Troubleshooting Kubernetes",
+    "sidebar_label": "Troubleshooting",
+    "description": "Troubleshooting for Kubernetes"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Configuring Kubernetes integration",
+    "permalink": "/docs/features/kubernetes/configuration"
+  },
+  "next": {
+    "title": "Backstage Software Templates",
+    "permalink": "/docs/features/software-templates/software-templates-index"
+  }
+}

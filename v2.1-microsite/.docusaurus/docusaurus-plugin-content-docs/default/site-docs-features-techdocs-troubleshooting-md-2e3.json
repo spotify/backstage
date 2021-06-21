@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/techdocs/troubleshooting",
+  "id": "features/techdocs/troubleshooting",
+  "isDocsHomePage": false,
+  "title": "Troubleshooting TechDocs",
+  "description": "Troubleshooting for TechDocs",
+  "source": "@site/../docs/features/techdocs/troubleshooting.md",
+  "sourceDirName": "features/techdocs",
+  "slug": "/features/techdocs/troubleshooting",
+  "permalink": "/docs/features/techdocs/troubleshooting",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/techdocs/troubleshooting.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Troubleshooting",
+  "frontMatter": {
+    "id": "troubleshooting",
+    "title": "Troubleshooting TechDocs",
+    "sidebar_label": "Troubleshooting",
+    "description": "Troubleshooting for TechDocs"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "TechDocs \"HOW TO\" guides",
+    "permalink": "/docs/features/techdocs/how-to-guides"
+  },
+  "next": {
+    "title": "TechDocs FAQ",
+    "permalink": "/docs/features/techdocs/faqs"
+  }
+}

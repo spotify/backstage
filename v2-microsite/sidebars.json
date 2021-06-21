@@ -1,0 +1,266 @@
+{
+  "docs": {
+    "Overview": [
+      "overview/what-is-backstage",
+      "overview/architecture-overview",
+      "overview/roadmap",
+      "overview/vision",
+      "overview/background",
+      "overview/adopting",
+      "overview/stability-index",
+      "overview/logos"
+    ],
+    "Getting Started": [
+      "getting-started/index",
+      "getting-started/create-an-app",
+      "getting-started/running-backstage-locally",
+      {
+        "type": "category",
+        "label": "App configuration",
+        "items": [
+          "getting-started/configure-app-with-plugins",
+          "getting-started/app-custom-theme"
+        ]
+      },
+      "getting-started/keeping-backstage-updated",
+      "getting-started/concepts",
+      "getting-started/contributors"
+    ],
+    "CLI": ["cli/index", "cli/commands"],
+    "Core Features": [
+      {
+        "type": "category",
+        "label": "Software Catalog",
+        "items": [
+          "features/software-catalog/software-catalog-overview",
+          "features/software-catalog/installation",
+          "features/software-catalog/configuration",
+          "features/software-catalog/system-model",
+          "features/software-catalog/descriptor-format",
+          "features/software-catalog/references",
+          "features/software-catalog/well-known-annotations",
+          "features/software-catalog/well-known-relations",
+          "features/software-catalog/well-known-statuses",
+          "features/software-catalog/extending-the-model",
+          "features/software-catalog/external-integrations",
+          "features/software-catalog/catalog-customization",
+          "features/software-catalog/software-catalog-api"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Kubernetes",
+        "items": [
+          "features/kubernetes/overview",
+          "features/kubernetes/installation",
+          "features/kubernetes/configuration",
+          "features/kubernetes/troubleshooting"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Software Templates",
+        "items": [
+          "features/software-templates/software-templates-index",
+          "features/software-templates/installation",
+          "features/software-templates/adding-templates",
+          "features/software-templates/writing-templates",
+          "features/software-templates/builtin-actions",
+          "features/software-templates/writing-custom-actions",
+          "features/software-templates/template-legacy",
+          "features/software-templates/migrating-from-v1alpha1-to-v1beta2"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Backstage Search",
+        "items": [
+          "features/search/search-overview",
+          "features/search/getting-started",
+          "features/search/concepts",
+          "features/search/architecture"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "TechDocs",
+        "items": [
+          "features/techdocs/techdocs-overview",
+          "features/techdocs/getting-started",
+          "features/techdocs/concepts",
+          "features/techdocs/architecture",
+          "features/techdocs/creating-and-publishing",
+          "features/techdocs/configuration",
+          "features/techdocs/using-cloud-storage",
+          "features/techdocs/configuring-ci-cd",
+          "features/techdocs/how-to-guides",
+          "features/techdocs/troubleshooting",
+          "features/techdocs/faqs"
+        ]
+      }
+    ],
+    "Integrations": [
+      "integrations/index",
+      {
+        "type": "category",
+        "label": "Azure DevOps",
+        "items": ["integrations/azure/locations"]
+      },
+      {
+        "type": "category",
+        "label": "Bitbucket",
+        "items": [
+          "integrations/bitbucket/locations",
+          "integrations/bitbucket/discovery"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Datadog",
+        "items": ["integrations/datadog-rum/installation"]
+      },
+      {
+        "type": "category",
+        "label": "GitHub",
+        "items": [
+          "integrations/github/locations",
+          "integrations/github/discovery",
+          "integrations/github/org"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "GitLab",
+        "items": ["integrations/gitlab/locations"]
+      },
+      {
+        "type": "category",
+        "label": "Google Analytics",
+        "items": ["integrations/google-analytics/installation"]
+      },
+      {
+        "type": "category",
+        "label": "Google GCS",
+        "items": ["integrations/google-cloud-storage/locations"]
+      },
+      {
+        "type": "category",
+        "label": "LDAP",
+        "items": ["integrations/ldap/org"]
+      }
+    ],
+    "Plugins": [
+      "plugins/index",
+      "plugins/existing-plugins",
+      "plugins/create-a-plugin",
+      "plugins/plugin-development",
+      "plugins/structure-of-a-plugin",
+      "plugins/integrating-plugin-into-service-catalog",
+      "plugins/composability",
+      {
+        "type": "category",
+        "label": "Backends and APIs",
+        "items": [
+          "plugins/proxying",
+          "plugins/backend-plugin",
+          "plugins/call-existing-api",
+          "plugins/github-apps"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Testing",
+        "items": ["plugins/testing"]
+      },
+      {
+        "type": "category",
+        "label": "Publishing",
+        "items": [
+          "plugins/publishing",
+          "plugins/publish-private",
+          "plugins/add-to-marketplace",
+          "plugins/observability"
+        ]
+      }
+    ],
+    "Configuration": [
+      "conf/index",
+      "conf/reading",
+      "conf/writing",
+      "conf/defining"
+    ],
+    "Auth and identity": [
+      "auth/index",
+      {
+        "type": "category",
+        "label": "Included providers",
+        "items": [
+          "auth/auth0/provider",
+          "auth/microsoft/provider",
+          "auth/github/provider",
+          "auth/gitlab/provider",
+          "auth/google/provider",
+          "auth/okta/provider",
+          "auth/onelogin/provider"
+        ]
+      },
+      "auth/add-auth-provider",
+      "auth/using-auth",
+      "auth/auth-backend",
+      "auth/oauth",
+      "auth/auth-backend-classes",
+      "auth/glossary"
+    ],
+    "Deployment": [
+      "deployment/index",
+      "deployment/docker",
+      "deployment/k8s",
+      "deployment/helm",
+      "deployment/heroku"
+    ],
+    "Designing for Backstage": [
+      "dls/design",
+      "dls/contributing-to-storybook",
+      "dls/figma"
+    ],
+    "API references": [
+      {
+        "type": "category",
+        "label": "TypeScript API",
+        "items": [
+          "api/utility-apis",
+          "reference/utility-apis/README",
+          "reference/createPlugin",
+          "reference/createPlugin-feature-flags"
+        ]
+      },
+      {
+        "type": "category",
+        "label": "Backend APIs",
+        "items": ["api/backend"]
+      }
+    ],
+    "Tutorials": [
+      "tutorials/journey",
+      "tutorials/quickstart-app-plugin",
+      "tutorials/switching-sqlite-postgres"
+    ],
+    "Architecture Decision Records (ADRs)": [
+      "architecture-decisions/adrs-overview",
+      "architecture-decisions/adrs-adr001",
+      "architecture-decisions/adrs-adr002",
+      "architecture-decisions/adrs-adr003",
+      "architecture-decisions/adrs-adr004",
+      "architecture-decisions/adrs-adr005",
+      "architecture-decisions/adrs-adr006",
+      "architecture-decisions/adrs-adr007",
+      "architecture-decisions/adrs-adr008",
+      "architecture-decisions/adrs-adr009",
+      "architecture-decisions/adrs-adr010",
+      "architecture-decisions/adrs-adr011"
+    ],
+    "Support": ["support/support", "support/project-structure"],
+    "Glossary": ["glossary"],
+    "FAQ": ["FAQ"]
+  }
+}

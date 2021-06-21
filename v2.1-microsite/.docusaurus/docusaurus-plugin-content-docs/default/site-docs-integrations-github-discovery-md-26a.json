@@ -1,0 +1,32 @@
+{
+  "unversionedId": "integrations/github/discovery",
+  "id": "integrations/github/discovery",
+  "isDocsHomePage": false,
+  "title": "GitHub Discovery",
+  "description": "Automatically discovering catalog entities from repositories in a GitHub organization",
+  "source": "@site/../docs/integrations/github/discovery.md",
+  "sourceDirName": "integrations/github",
+  "slug": "/integrations/github/discovery",
+  "permalink": "/docs/integrations/github/discovery",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/integrations/github/discovery.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Discovery",
+  "frontMatter": {
+    "id": "discovery",
+    "title": "GitHub Discovery",
+    "sidebar_label": "Discovery",
+    "description": "Automatically discovering catalog entities from repositories in a GitHub organization"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "GitHub Locations",
+    "permalink": "/docs/integrations/github/locations"
+  },
+  "next": {
+    "title": "GitHub Organizational Data",
+    "permalink": "/docs/integrations/github/org"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-catalog/installation",
+  "id": "features/software-catalog/installation",
+  "isDocsHomePage": false,
+  "title": "Installing in your Backstage App",
+  "description": "Documentation on How to install Backstage Plugin",
+  "source": "@site/../docs/features/software-catalog/installation.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/installation",
+  "permalink": "/docs/features/software-catalog/installation",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/installation.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "installation",
+    "title": "Installing in your Backstage App",
+    "description": "Documentation on How to install Backstage Plugin"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Backstage Service Catalog (alpha)",
+    "permalink": "/docs/features/software-catalog/software-catalog-overview"
+  },
+  "next": {
+    "title": "Catalog Configuration",
+    "permalink": "/docs/features/software-catalog/configuration"
+  }
+}

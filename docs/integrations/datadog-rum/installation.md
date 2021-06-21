@@ -2,7 +2,7 @@
 id: installation
 title: Datadog RUM Installation
 sidebar_label: Installation
-# prettier-ignore
+# prettier-ignore: ""
 description: Adding Datadog Real User Monitoring (RUM) to Your App
 ---
 

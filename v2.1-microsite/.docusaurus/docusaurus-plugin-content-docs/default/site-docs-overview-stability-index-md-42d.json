@@ -1,0 +1,30 @@
+{
+  "unversionedId": "overview/stability-index",
+  "id": "overview/stability-index",
+  "isDocsHomePage": false,
+  "title": "Stability Index",
+  "description": "An overview of the commitment to stability for different parts of the Backstage codebase.",
+  "source": "@site/../docs/overview/stability-index.md",
+  "sourceDirName": "overview",
+  "slug": "/overview/stability-index",
+  "permalink": "/docs/overview/stability-index",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/overview/stability-index.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "stability-index",
+    "title": "Stability Index",
+    "description": "An overview of the commitment to stability for different parts of the Backstage codebase."
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Strategies for adopting",
+    "permalink": "/docs/overview/adopting"
+  },
+  "next": {
+    "title": "Logos",
+    "permalink": "/docs/overview/logos"
+  }
+}

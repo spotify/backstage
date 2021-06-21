@@ -1,0 +1,32 @@
+{
+  "unversionedId": "deployment/heroku",
+  "id": "deployment/heroku",
+  "isDocsHomePage": false,
+  "title": "Deploying with Heroku",
+  "description": "How to deploy Backstage to Heroku",
+  "source": "@site/../docs/deployment/heroku.md",
+  "sourceDirName": "deployment",
+  "slug": "/deployment/heroku",
+  "permalink": "/docs/deployment/heroku",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/deployment/heroku.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Heroku",
+  "frontMatter": {
+    "id": "heroku",
+    "title": "Deploying with Heroku",
+    "sidebar_label": "Heroku",
+    "description": "How to deploy Backstage to Heroku"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Deploying with Helm",
+    "permalink": "/docs/deployment/helm"
+  },
+  "next": {
+    "title": "Design",
+    "permalink": "/docs/dls/design"
+  }
+}

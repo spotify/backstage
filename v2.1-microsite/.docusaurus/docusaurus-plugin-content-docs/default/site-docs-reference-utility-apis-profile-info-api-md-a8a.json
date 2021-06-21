@@ -1,0 +1,17 @@
+{
+  "unversionedId": "reference/utility-apis/ProfileInfoApi",
+  "id": "reference/utility-apis/ProfileInfoApi",
+  "isDocsHomePage": false,
+  "title": "ProfileInfoApi",
+  "description": "The ProfileInfoApi type is defined at",
+  "source": "@site/../docs/reference/utility-apis/ProfileInfoApi.md",
+  "sourceDirName": "reference/utility-apis",
+  "slug": "/reference/utility-apis/ProfileInfoApi",
+  "permalink": "/docs/reference/utility-apis/ProfileInfoApi",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/utility-apis/ProfileInfoApi.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {}
+}

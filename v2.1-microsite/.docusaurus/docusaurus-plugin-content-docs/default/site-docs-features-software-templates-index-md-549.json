@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/software-templates/software-templates-index",
+  "id": "features/software-templates/software-templates-index",
+  "isDocsHomePage": false,
+  "title": "Backstage Software Templates",
+  "description": "The Software Templates part of Backstage is a tool that can help you create Components inside Backstage",
+  "source": "@site/../docs/features/software-templates/index.md",
+  "sourceDirName": "features/software-templates",
+  "slug": "/features/software-templates/software-templates-index",
+  "permalink": "/docs/features/software-templates/software-templates-index",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-templates/index.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Overview",
+  "frontMatter": {
+    "id": "software-templates-index",
+    "title": "Backstage Software Templates",
+    "sidebar_label": "Overview",
+    "description": "The Software Templates part of Backstage is a tool that can help you create Components inside Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Troubleshooting Kubernetes",
+    "permalink": "/docs/features/kubernetes/troubleshooting"
+  },
+  "next": {
+    "title": "Installing in your Backstage App",
+    "permalink": "/docs/features/software-templates/installation"
+  }
+}

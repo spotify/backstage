@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/05/14/tech-radar-plugin",
+  "source": "@site/blog/2020-05-14-tech-radar-plugin.md",
+  "title": "Introducing Tech Radar for Backstage",
+  "description": "image illustrating the Tech Radar plugin for Backstage",
+  "date": "2020-05-14T00:00:00.000Z",
+  "formattedDate": "May 14, 2020",
+  "tags": [],
+  "readingTime": 2.76,
+  "truncated": true,
+  "prevItem": {
+    "title": "Starting Phase 2: The Service Catalog",
+    "permalink": "/blog/2020/05/22/phase-2-service-catalog"
+  },
+  "nextItem": {
+    "title": "Weaveworks’ COVID-19 app uses Backstage UI",
+    "permalink": "/blog/2020/05/14/weaveworks-covid-19-app-uses-backstage-ui"
+  }
+}

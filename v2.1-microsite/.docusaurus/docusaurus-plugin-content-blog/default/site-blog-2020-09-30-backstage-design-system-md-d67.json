@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/09/30/backstage-design-system",
+  "source": "@site/blog/2020-09-30-backstage-design-system.md",
+  "title": "How to design for Backstage (even if you’re not a designer)",
+  "description": "img",
+  "date": "2020-09-30T00:00:00.000Z",
+  "formattedDate": "September 30, 2020",
+  "tags": [],
+  "readingTime": 5.83,
+  "truncated": true,
+  "prevItem": {
+    "title": "New Cost Insights plugin: The engineer’s solution to taming cloud costs",
+    "permalink": "/blog/2020/10/22/cost-insights-plugin"
+  },
+  "nextItem": {
+    "title": "The Plugin Marketplace is open",
+    "permalink": "/blog/2020/09/30/plugin-marketplace"
+  }
+}

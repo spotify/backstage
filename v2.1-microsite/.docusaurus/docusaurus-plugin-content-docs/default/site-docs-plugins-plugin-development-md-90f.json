@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/plugin-development",
+  "id": "plugins/plugin-development",
+  "isDocsHomePage": false,
+  "title": "Plugin Development",
+  "description": "Documentation on Plugin Development",
+  "source": "@site/../docs/plugins/plugin-development.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/plugin-development",
+  "permalink": "/docs/plugins/plugin-development",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/plugin-development.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "plugin-development",
+    "title": "Plugin Development",
+    "description": "Documentation on Plugin Development"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Create a Backstage Plugin",
+    "permalink": "/docs/plugins/create-a-plugin"
+  },
+  "next": {
+    "title": "Structure of a Plugin",
+    "permalink": "/docs/plugins/structure-of-a-plugin"
+  }
+}

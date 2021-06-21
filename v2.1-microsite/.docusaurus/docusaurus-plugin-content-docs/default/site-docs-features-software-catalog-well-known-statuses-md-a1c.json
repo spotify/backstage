@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/software-catalog/well-known-statuses",
+  "id": "features/software-catalog/well-known-statuses",
+  "isDocsHomePage": false,
+  "title": "Well-known Status fields of Catalog Entities",
+  "description": "Lists a number of well known entity statuses, that have defined semantics. They can be attached to catalog entities and consumed by plugins as needed.",
+  "source": "@site/../docs/features/software-catalog/well-known-statuses.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/well-known-statuses",
+  "permalink": "/docs/features/software-catalog/well-known-statuses",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/well-known-statuses.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Well-known Statuses",
+  "frontMatter": {
+    "id": "well-known-statuses",
+    "title": "Well-known Status fields of Catalog Entities",
+    "sidebar_label": "Well-known Statuses",
+    "description": "Lists a number of well known entity statuses, that have defined semantics. They can be attached to catalog entities and consumed by plugins as needed."
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Well-known Relations between Catalog Entities",
+    "permalink": "/docs/features/software-catalog/well-known-relations"
+  },
+  "next": {
+    "title": "Extending the model",
+    "permalink": "/docs/features/software-catalog/extending-the-model"
+  }
+}

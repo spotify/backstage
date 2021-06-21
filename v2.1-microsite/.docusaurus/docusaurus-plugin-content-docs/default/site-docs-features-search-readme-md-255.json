@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/search/search-overview",
+  "id": "features/search/search-overview",
+  "isDocsHomePage": false,
+  "title": "Backstage Search",
+  "description": "Backstage Search lets you find the right information you are looking for in the Backstage ecosystem.",
+  "source": "@site/../docs/features/search/README.md",
+  "sourceDirName": "features/search",
+  "slug": "/features/search/search-overview",
+  "permalink": "/docs/features/search/search-overview",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/search/README.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Overview",
+  "frontMatter": {
+    "id": "search-overview",
+    "title": "Search Documentation",
+    "sidebar_label": "Overview",
+    "description": "Backstage Search lets you find the right information you are looking for in the Backstage ecosystem."
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "What's new?",
+    "permalink": "/docs/features/software-templates/migrating-from-v1alpha1-to-v1beta2"
+  },
+  "next": {
+    "title": "Getting Started",
+    "permalink": "/docs/features/search/getting-started"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "unversionedId": "overview/vision",
+  "id": "overview/vision",
+  "isDocsHomePage": false,
+  "title": "Vision",
+  "description": "Goal is to provide engineers with the best developer experience in the world",
+  "source": "@site/../docs/overview/vision.md",
+  "sourceDirName": "overview",
+  "slug": "/overview/vision",
+  "permalink": "/docs/overview/vision",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/overview/vision.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "vision",
+    "title": "Vision",
+    "description": "Goal is to provide engineers with the best developer experience in the world"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Project roadmap",
+    "permalink": "/docs/overview/roadmap"
+  },
+  "next": {
+    "title": "The Spotify Story",
+    "permalink": "/docs/overview/background"
+  }
+}

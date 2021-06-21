@@ -2,7 +2,7 @@
 id: locations
 title: Azure DevOps Locations
 sidebar_label: Locations
-# prettier-ignore
+# prettier-ignore: ""
 description: Integrating source code stored in Azure DevOps into the Backstage catalog
 ---
 

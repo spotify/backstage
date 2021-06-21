@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/search/concepts",
+  "id": "features/search/concepts",
+  "isDocsHomePage": false,
+  "title": "Search Concepts",
+  "description": "Documentation on Backstage Search Concepts",
+  "source": "@site/../docs/features/search/concepts.md",
+  "sourceDirName": "features/search",
+  "slug": "/features/search/concepts",
+  "permalink": "/docs/features/search/concepts",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/search/concepts.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "concepts",
+    "title": "Search Concepts",
+    "description": "Documentation on Backstage Search Concepts"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Getting Started",
+    "permalink": "/docs/features/search/getting-started"
+  },
+  "next": {
+    "title": "Search Architecture",
+    "permalink": "/docs/features/search/architecture"
+  }
+}

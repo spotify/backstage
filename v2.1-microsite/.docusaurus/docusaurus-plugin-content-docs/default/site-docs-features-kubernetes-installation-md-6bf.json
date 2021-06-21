@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/kubernetes/installation",
+  "id": "features/kubernetes/installation",
+  "isDocsHomePage": false,
+  "title": "Installation",
+  "description": "Installing Kubernetes plugin into Backstage",
+  "source": "@site/../docs/features/kubernetes/installation.md",
+  "sourceDirName": "features/kubernetes",
+  "slug": "/features/kubernetes/installation",
+  "permalink": "/docs/features/kubernetes/installation",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/kubernetes/installation.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "installation",
+    "title": "Installation",
+    "description": "Installing Kubernetes plugin into Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Kubernetes",
+    "permalink": "/docs/features/kubernetes/overview"
+  },
+  "next": {
+    "title": "Configuring Kubernetes integration",
+    "permalink": "/docs/features/kubernetes/configuration"
+  }
+}

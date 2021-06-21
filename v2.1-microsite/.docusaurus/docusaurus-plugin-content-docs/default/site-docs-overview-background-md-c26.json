@@ -1,0 +1,30 @@
+{
+  "unversionedId": "overview/background",
+  "id": "overview/background",
+  "isDocsHomePage": false,
+  "title": "The Spotify Story",
+  "description": "Backstage was born out of necessity at Spotify. We found that as we grew, our infrastructure was becoming more fragmented, our engineers less productive.",
+  "source": "@site/../docs/overview/background.md",
+  "sourceDirName": "overview",
+  "slug": "/overview/background",
+  "permalink": "/docs/overview/background",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/overview/background.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "background",
+    "title": "The Spotify Story",
+    "description": "Backstage was born out of necessity at Spotify. We found that as we grew, our infrastructure was becoming more fragmented, our engineers less productive."
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Vision",
+    "permalink": "/docs/overview/vision"
+  },
+  "next": {
+    "title": "Strategies for adopting",
+    "permalink": "/docs/overview/adopting"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2021/01/12/new-backstage-feature-kubernetes-for-service-owners",
+  "source": "@site/blog/2021-01-12-new-backstage-feature-kubernetes-for-service-owners.md",
+  "title": "New Backstage feature: Kubernetes for Service owners",
+  "description": "Animation of Kubernetes and cloud provider icons becoming the Backstage logo",
+  "date": "2021-01-12T00:00:00.000Z",
+  "formattedDate": "January 12, 2021",
+  "tags": [],
+  "readingTime": 3.59,
+  "truncated": true,
+  "prevItem": {
+    "title": "Where do you start when adopting Backstage?",
+    "permalink": "/blog/2021/05/20/adopting-backstage"
+  },
+  "nextItem": {
+    "title": "Announcing the Backstage Stability Index",
+    "permalink": "/blog/2020/12/22/stability-index"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "unversionedId": "tutorials/switching-sqlite-postgres",
+  "id": "tutorials/switching-sqlite-postgres",
+  "isDocsHomePage": false,
+  "title": "Switching Backstage from SQLite to PostgreSQL",
+  "description": "How to get ready for deploying Backstage to production with PostgreSQL",
+  "source": "@site/../docs/tutorials/switching-sqlite-postgres.md",
+  "sourceDirName": "tutorials",
+  "slug": "/tutorials/switching-sqlite-postgres",
+  "permalink": "/docs/tutorials/switching-sqlite-postgres",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/tutorials/switching-sqlite-postgres.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "switching-sqlite-postgres",
+    "title": "Switching Backstage from SQLite to PostgreSQL",
+    "description": "How to get ready for deploying Backstage to production with PostgreSQL"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Adding Custom Plugin to Existing Monorepo App",
+    "permalink": "/docs/tutorials/quickstart-app-plugin"
+  },
+  "next": {
+    "title": "Architecture Decision Records (ADR)",
+    "permalink": "/docs/architecture-decisions/adrs-overview"
+  }
+}

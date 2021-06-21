@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/techdocs/faqs",
+  "id": "features/techdocs/faqs",
+  "isDocsHomePage": false,
+  "title": "TechDocs FAQ",
+  "description": "This page answers frequently asked questions about TechDocs",
+  "source": "@site/../docs/features/techdocs/FAQ.md",
+  "sourceDirName": "features/techdocs",
+  "slug": "/features/techdocs/faqs",
+  "permalink": "/docs/features/techdocs/faqs",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/techdocs/FAQ.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "FAQ",
+  "frontMatter": {
+    "id": "faqs",
+    "title": "TechDocs FAQ",
+    "sidebar_label": "FAQ",
+    "description": "This page answers frequently asked questions about TechDocs"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Troubleshooting TechDocs",
+    "permalink": "/docs/features/techdocs/troubleshooting"
+  },
+  "next": {
+    "title": "Integrations",
+    "permalink": "/docs/integrations/index"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "unversionedId": "reference/utility-apis/AlertApi",
+  "id": "reference/utility-apis/AlertApi",
+  "isDocsHomePage": false,
+  "title": "AlertApi",
+  "description": "The AlertApi type is defined at",
+  "source": "@site/../docs/reference/utility-apis/AlertApi.md",
+  "sourceDirName": "reference/utility-apis",
+  "slug": "/reference/utility-apis/AlertApi",
+  "permalink": "/docs/reference/utility-apis/AlertApi",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/utility-apis/AlertApi.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {}
+}

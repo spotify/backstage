@@ -1,7 +1,7 @@
 ---
 id: composability
 title: Composability System Migration
-# prettier-ignore
+# prettier-ignore: ""
 description: Documentation and migration instructions for new composability APIs.
 ---
 

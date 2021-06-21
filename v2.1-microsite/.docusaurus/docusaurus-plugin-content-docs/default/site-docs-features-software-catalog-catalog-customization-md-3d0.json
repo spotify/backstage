@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-catalog/catalog-customization",
+  "id": "features/software-catalog/catalog-customization",
+  "isDocsHomePage": false,
+  "title": "Catalog Customization",
+  "description": "How to add custom filters or interface elements to the Backstage software catalog",
+  "source": "@site/../docs/features/software-catalog/catalog-customization.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/catalog-customization",
+  "permalink": "/docs/features/software-catalog/catalog-customization",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/catalog-customization.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "catalog-customization",
+    "title": "Catalog Customization",
+    "description": "How to add custom filters or interface elements to the Backstage software catalog"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "External integrations",
+    "permalink": "/docs/features/software-catalog/external-integrations"
+  },
+  "next": {
+    "title": "API",
+    "permalink": "/docs/features/software-catalog/software-catalog-api"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "unversionedId": "auth/auth0/provider",
+  "id": "auth/auth0/provider",
+  "isDocsHomePage": false,
+  "title": "Auth0 Authentication Provider",
+  "description": "Adding Auth0 as an authentication provider in Backstage",
+  "source": "@site/../docs/auth/auth0/provider.md",
+  "sourceDirName": "auth/auth0",
+  "slug": "/auth/auth0/provider",
+  "permalink": "/docs/auth/auth0/provider",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/auth0/provider.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Auth0",
+  "frontMatter": {
+    "id": "provider",
+    "title": "Auth0 Authentication Provider",
+    "sidebar_label": "Auth0",
+    "description": "Adding Auth0 as an authentication provider in Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Adding Authentication",
+    "permalink": "/docs/auth/index"
+  },
+  "next": {
+    "title": "Microsoft Azure Authentication Provider",
+    "permalink": "/docs/auth/microsoft/provider"
+  }
+}

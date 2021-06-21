@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/techdocs/creating-and-publishing",
+  "id": "features/techdocs/creating-and-publishing",
+  "isDocsHomePage": false,
+  "title": "Creating and publishing your docs",
+  "description": "Guidance on how to create and publish documentation",
+  "source": "@site/../docs/features/techdocs/creating-and-publishing.md",
+  "sourceDirName": "features/techdocs",
+  "slug": "/features/techdocs/creating-and-publishing",
+  "permalink": "/docs/features/techdocs/creating-and-publishing",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/techdocs/creating-and-publishing.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Creating and Publishing Documentation",
+  "frontMatter": {
+    "id": "creating-and-publishing",
+    "title": "Creating and publishing your docs",
+    "sidebar_label": "Creating and Publishing Documentation",
+    "description": "Guidance on how to create and publish documentation"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "TechDocs Architecture",
+    "permalink": "/docs/features/techdocs/architecture"
+  },
+  "next": {
+    "title": "TechDocs Configuration Options",
+    "permalink": "/docs/features/techdocs/configuration"
+  }
+}

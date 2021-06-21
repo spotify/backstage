@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-templates/writing-custom-actions",
+  "id": "features/software-templates/writing-custom-actions",
+  "isDocsHomePage": false,
+  "title": "Writing Custom Actions",
+  "description": "How to write your own actions",
+  "source": "@site/../docs/features/software-templates/writing-custom-actions.md",
+  "sourceDirName": "features/software-templates",
+  "slug": "/features/software-templates/writing-custom-actions",
+  "permalink": "/docs/features/software-templates/writing-custom-actions",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-templates/writing-custom-actions.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "writing-custom-actions",
+    "title": "Writing Custom Actions",
+    "description": "How to write your own actions"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Builtin actions",
+    "permalink": "/docs/features/software-templates/builtin-actions"
+  },
+  "next": {
+    "title": "Writing Templates (Legacy)",
+    "permalink": "/docs/features/software-templates/template-legacy"
+  }
+}

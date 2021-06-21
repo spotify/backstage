@@ -1,0 +1,32 @@
+{
+  "unversionedId": "integrations/ldap/org",
+  "id": "integrations/ldap/org",
+  "isDocsHomePage": false,
+  "title": "LDAP Organizational Data",
+  "description": "Setting up ingestion of organizational data from LDAP",
+  "source": "@site/../docs/integrations/ldap/org.md",
+  "sourceDirName": "integrations/ldap",
+  "slug": "/integrations/ldap/org",
+  "permalink": "/docs/integrations/ldap/org",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/integrations/ldap/org.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Org Data",
+  "frontMatter": {
+    "id": "org",
+    "title": "LDAP Organizational Data",
+    "sidebar_label": "Org Data",
+    "description": "Setting up ingestion of organizational data from LDAP"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Google Cloud Storage Locations",
+    "permalink": "/docs/integrations/google-cloud-storage/locations"
+  },
+  "next": {
+    "title": "Intro to plugins",
+    "permalink": "/docs/plugins/index"
+  }
+}

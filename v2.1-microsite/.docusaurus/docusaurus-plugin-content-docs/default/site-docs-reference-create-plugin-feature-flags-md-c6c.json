@@ -1,0 +1,30 @@
+{
+  "unversionedId": "reference/createPlugin-feature-flags",
+  "id": "reference/createPlugin-feature-flags",
+  "isDocsHomePage": false,
+  "title": "createPlugin - feature flags",
+  "description": "Documentation on createPlugin - feature flags",
+  "source": "@site/../docs/reference/createPlugin-feature-flags.md",
+  "sourceDirName": "reference",
+  "slug": "/reference/createPlugin-feature-flags",
+  "permalink": "/docs/reference/createPlugin-feature-flags",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/createPlugin-feature-flags.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "createPlugin-feature-flags",
+    "title": "createPlugin - feature flags",
+    "description": "Documentation on createPlugin - feature flags"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "createPlugin",
+    "permalink": "/docs/reference/createPlugin"
+  },
+  "next": {
+    "title": "Backend",
+    "permalink": "/docs/api/backend"
+  }
+}

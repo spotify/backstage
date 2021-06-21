@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-catalog/configuration",
+  "id": "features/software-catalog/configuration",
+  "isDocsHomePage": false,
+  "title": "Catalog Configuration",
+  "description": "Documentation on Software Catalog Configuration",
+  "source": "@site/../docs/features/software-catalog/configuration.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/configuration",
+  "permalink": "/docs/features/software-catalog/configuration",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/configuration.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "configuration",
+    "title": "Catalog Configuration",
+    "description": "Documentation on Software Catalog Configuration"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Installing in your Backstage App",
+    "permalink": "/docs/features/software-catalog/installation"
+  },
+  "next": {
+    "title": "System Model",
+    "permalink": "/docs/features/software-catalog/system-model"
+  }
+}

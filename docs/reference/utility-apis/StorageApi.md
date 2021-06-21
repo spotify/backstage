@@ -1,3 +1,5 @@
+---
+---
 # StorageApi
 
 The StorageApi type is defined at
@@ -12,43 +14,43 @@ The following Utility API implements this type:
 
 Create a bucket to store data in.
 
-<pre>
+```tsx
 forBucket(name: string): <a href="#storageapi">StorageApi</a>
-</pre>
+```
 
 ### get()
 
 Get the current value for persistent data, use observe\$ to be notified of
 updates.
 
-<pre>
+```tsx
 get&lt;T&gt;(key: string): T | undefined
-</pre>
+```
 
 ### remove()
 
 Remove persistent data.
 
-<pre>
+```tsx
 remove(key: string): Promise&lt;void&gt;
-</pre>
+```
 
 ### set()
 
 Save persistent data, and emit messages to anyone that is using observe\$ for
 this key
 
-<pre>
+```tsx
 set(key: string, data: any): Promise&lt;void&gt;
-</pre>
+```
 
 ### observe\$()
 
 Observe changes on a particular key in the bucket
 
-<pre>
-observe$&lt;T&gt;(key: string): <a href="#observable">Observable</a>&lt;<a href="#storagevaluechange">StorageValueChange</a>&lt;T&gt;&gt;
-</pre>
+```tsx
+observe$&lt;T&gt;(key, string): <a href="#observable">Observable</a>&lt;<a href="#storagevaluechange">StorageValueChange</a>&lt;T&gt;&gt;
+```
 
 ## Supporting types
 
@@ -64,7 +66,7 @@ This is used as a common return type for observable values and can be created
 using many different observable implementations, such as zen-observable or
 RxJS 5.
 
-<pre>
+```tsx
 export type Observable&lt;T&gt; = {
   /**
    * Subscribes to this observable to start receiving new values.
@@ -76,7 +78,7 @@ export type Observable&lt;T&gt; = {
     onComplete?: () =&gt; void,
   ): <a href="#subscription">Subscription</a>;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:53](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L53).
@@ -89,13 +91,13 @@ This file contains non-react related core types used throughout Backstage.
 
 Observer interface for consuming an Observer, see TC39.
 
-<pre>
+```tsx
 export type Observer&lt;T&gt; = {
   next?(value: T): void;
   error?(error: Error): void;
   complete?(): void;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:24](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L24).
@@ -104,7 +106,7 @@ Referenced by: [Observable](#observable).
 
 ### StorageApi
 
-<pre>
+```tsx
 export interface StorageApi {
   /**
    * Create a bucket to store data in.
@@ -141,7 +143,7 @@ export interface StorageApi {
    */
   observe$&lt;T&gt;(key: string): <a href="#observable">Observable</a>&lt;<a href="#storagevaluechange">StorageValueChange</a>&lt;T&gt;&gt;;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/StorageApi.ts:31](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/StorageApi.ts#L31).
@@ -150,12 +152,12 @@ Referenced by: [forBucket](#forbucket).
 
 ### StorageValueChange
 
-<pre>
+```tsx
 export type StorageValueChange&lt;T = any&gt; = {
   key: string;
   newValue?: T;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/StorageApi.ts:21](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/StorageApi.ts#L21).
@@ -166,7 +168,7 @@ Referenced by: [observe\$](#observe), [StorageApi](#storageapi).
 
 Subscription returned when subscribing to an Observable, see TC39.
 
-<pre>
+```tsx
 export type Subscription = {
   /**
    * Cancels the subscription
@@ -178,7 +180,7 @@ export type Subscription = {
    */
   readonly closed: Boolean;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:33](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L33).

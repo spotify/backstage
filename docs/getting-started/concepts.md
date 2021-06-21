@@ -1,7 +1,7 @@
 ---
 id: concepts
 title: Key Concepts
-# prettier-ignore
+# prettier-ignore: ""
 description: High level key concepts used in the Backstage project
 ---
 

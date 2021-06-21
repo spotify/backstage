@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-catalog/references",
+  "id": "features/software-catalog/references",
+  "isDocsHomePage": false,
+  "title": "Entity References",
+  "description": "How to express references between entities",
+  "source": "@site/../docs/features/software-catalog/references.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/references",
+  "permalink": "/docs/features/software-catalog/references",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/references.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "references",
+    "title": "Entity References",
+    "description": "How to express references between entities"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Descriptor Format of Catalog Entities",
+    "permalink": "/docs/features/software-catalog/descriptor-format"
+  },
+  "next": {
+    "title": "Well-known Annotations on Catalog Entities",
+    "permalink": "/docs/features/software-catalog/well-known-annotations"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "unversionedId": "deployment/helm",
+  "id": "deployment/helm",
+  "isDocsHomePage": false,
+  "title": "Deploying with Helm",
+  "description": "How to deploy Backstage with Helm and Kubernetes",
+  "source": "@site/../docs/deployment/helm.md",
+  "sourceDirName": "deployment",
+  "slug": "/deployment/helm",
+  "permalink": "/docs/deployment/helm",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/deployment/helm.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Helm",
+  "frontMatter": {
+    "id": "helm",
+    "title": "Deploying with Helm",
+    "description": "How to deploy Backstage with Helm and Kubernetes",
+    "sidebar_label": "Helm"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Deploying with Kubernetes",
+    "permalink": "/docs/deployment/k8s"
+  },
+  "next": {
+    "title": "Deploying with Heroku",
+    "permalink": "/docs/deployment/heroku"
+  }
+}

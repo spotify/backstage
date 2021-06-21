@@ -1,7 +1,7 @@
 ---
 id: switching-sqlite-postgres
 title: Switching Backstage from SQLite to PostgreSQL
-# prettier-ignore
+# prettier-ignore: ""
 description: How to get ready for deploying Backstage to production with PostgreSQL
 ---
 

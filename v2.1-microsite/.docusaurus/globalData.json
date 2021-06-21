@@ -1,0 +1,766 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/docs",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/docs",
+          "mainDocId": "overview/what-is-backstage",
+          "docs": [
+            {
+              "id": "api/backend",
+              "path": "/docs/api/backend",
+              "sidebar": "docs"
+            },
+            {
+              "id": "api/utility-apis",
+              "path": "/docs/api/utility-apis",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture-decisions/adrs-adr000",
+              "path": "/docs/architecture-decisions/adrs-adr000"
+            },
+            {
+              "id": "architecture-decisions/adrs-adr001",
+              "path": "/docs/architecture-decisions/adrs-adr001",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture-decisions/adrs-adr002",
+              "path": "/docs/architecture-decisions/adrs-adr002",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture-decisions/adrs-adr003",
+              "path": "/docs/architecture-decisions/adrs-adr003",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture-decisions/adrs-adr004",
+              "path": "/docs/architecture-decisions/adrs-adr004",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture-decisions/adrs-adr005",
+              "path": "/docs/architecture-decisions/adrs-adr005",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture-decisions/adrs-adr006",
+              "path": "/docs/architecture-decisions/adrs-adr006",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture-decisions/adrs-adr007",
+              "path": "/docs/architecture-decisions/adrs-adr007",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture-decisions/adrs-adr008",
+              "path": "/docs/architecture-decisions/adrs-adr008",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture-decisions/adrs-adr009",
+              "path": "/docs/architecture-decisions/adrs-adr009",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture-decisions/adrs-adr010",
+              "path": "/docs/architecture-decisions/adrs-adr010",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture-decisions/adrs-adr011",
+              "path": "/docs/architecture-decisions/adrs-adr011",
+              "sidebar": "docs"
+            },
+            {
+              "id": "architecture-decisions/adrs-overview",
+              "path": "/docs/architecture-decisions/adrs-overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/add-auth-provider",
+              "path": "/docs/auth/add-auth-provider",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/auth-backend",
+              "path": "/docs/auth/auth-backend",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/auth-backend-classes",
+              "path": "/docs/auth/auth-backend-classes",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/auth0/provider",
+              "path": "/docs/auth/auth0/provider",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/github/provider",
+              "path": "/docs/auth/github/provider",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/gitlab/provider",
+              "path": "/docs/auth/gitlab/provider",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/glossary",
+              "path": "/docs/auth/glossary",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/google/provider",
+              "path": "/docs/auth/google/provider",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/index",
+              "path": "/docs/auth/index",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/microsoft/provider",
+              "path": "/docs/auth/microsoft/provider",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/oauth",
+              "path": "/docs/auth/oauth",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/okta/provider",
+              "path": "/docs/auth/okta/provider",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/onelogin/provider",
+              "path": "/docs/auth/onelogin/provider",
+              "sidebar": "docs"
+            },
+            {
+              "id": "auth/using-auth",
+              "path": "/docs/auth/using-auth",
+              "sidebar": "docs"
+            },
+            {
+              "id": "cli/commands",
+              "path": "/docs/cli/commands",
+              "sidebar": "docs"
+            },
+            {
+              "id": "cli/index",
+              "path": "/docs/cli/index",
+              "sidebar": "docs"
+            },
+            {
+              "id": "conf/defining",
+              "path": "/docs/conf/defining",
+              "sidebar": "docs"
+            },
+            {
+              "id": "conf/index",
+              "path": "/docs/conf/index",
+              "sidebar": "docs"
+            },
+            {
+              "id": "conf/reading",
+              "path": "/docs/conf/reading",
+              "sidebar": "docs"
+            },
+            {
+              "id": "conf/writing",
+              "path": "/docs/conf/writing",
+              "sidebar": "docs"
+            },
+            {
+              "id": "deployment/docker",
+              "path": "/docs/deployment/docker",
+              "sidebar": "docs"
+            },
+            {
+              "id": "deployment/helm",
+              "path": "/docs/deployment/helm",
+              "sidebar": "docs"
+            },
+            {
+              "id": "deployment/heroku",
+              "path": "/docs/deployment/heroku",
+              "sidebar": "docs"
+            },
+            {
+              "id": "deployment/index",
+              "path": "/docs/deployment/index",
+              "sidebar": "docs"
+            },
+            {
+              "id": "deployment/k8s",
+              "path": "/docs/deployment/k8s",
+              "sidebar": "docs"
+            },
+            {
+              "id": "dls/contributing-to-storybook",
+              "path": "/docs/dls/contributing-to-storybook",
+              "sidebar": "docs"
+            },
+            {
+              "id": "dls/design",
+              "path": "/docs/dls/design",
+              "sidebar": "docs"
+            },
+            {
+              "id": "dls/figma",
+              "path": "/docs/dls/figma",
+              "sidebar": "docs"
+            },
+            {
+              "id": "FAQ",
+              "path": "/docs/FAQ",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/kubernetes/configuration",
+              "path": "/docs/features/kubernetes/configuration",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/kubernetes/installation",
+              "path": "/docs/features/kubernetes/installation",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/kubernetes/overview",
+              "path": "/docs/features/kubernetes/overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/kubernetes/troubleshooting",
+              "path": "/docs/features/kubernetes/troubleshooting",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/search/architecture",
+              "path": "/docs/features/search/architecture",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/search/concepts",
+              "path": "/docs/features/search/concepts",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/search/getting-started",
+              "path": "/docs/features/search/getting-started",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/search/search-overview",
+              "path": "/docs/features/search/search-overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/catalog-customization",
+              "path": "/docs/features/software-catalog/catalog-customization",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/configuration",
+              "path": "/docs/features/software-catalog/configuration",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/descriptor-format",
+              "path": "/docs/features/software-catalog/descriptor-format",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/extending-the-model",
+              "path": "/docs/features/software-catalog/extending-the-model",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/external-integrations",
+              "path": "/docs/features/software-catalog/external-integrations",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/installation",
+              "path": "/docs/features/software-catalog/installation",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/references",
+              "path": "/docs/features/software-catalog/references",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/software-catalog-api",
+              "path": "/docs/features/software-catalog/software-catalog-api",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/software-catalog-overview",
+              "path": "/docs/features/software-catalog/software-catalog-overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/system-model",
+              "path": "/docs/features/software-catalog/system-model",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/well-known-annotations",
+              "path": "/docs/features/software-catalog/well-known-annotations",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/well-known-relations",
+              "path": "/docs/features/software-catalog/well-known-relations",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-catalog/well-known-statuses",
+              "path": "/docs/features/software-catalog/well-known-statuses",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-templates/adding-templates",
+              "path": "/docs/features/software-templates/adding-templates",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-templates/builtin-actions",
+              "path": "/docs/features/software-templates/builtin-actions",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-templates/installation",
+              "path": "/docs/features/software-templates/installation",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-templates/migrating-from-v1alpha1-to-v1beta2",
+              "path": "/docs/features/software-templates/migrating-from-v1alpha1-to-v1beta2",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-templates/software-templates-index",
+              "path": "/docs/features/software-templates/software-templates-index",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-templates/template-legacy",
+              "path": "/docs/features/software-templates/template-legacy",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-templates/writing-custom-actions",
+              "path": "/docs/features/software-templates/writing-custom-actions",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/software-templates/writing-templates",
+              "path": "/docs/features/software-templates/writing-templates",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/techdocs/architecture",
+              "path": "/docs/features/techdocs/architecture",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/techdocs/concepts",
+              "path": "/docs/features/techdocs/concepts",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/techdocs/configuration",
+              "path": "/docs/features/techdocs/configuration",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/techdocs/configuring-ci-cd",
+              "path": "/docs/features/techdocs/configuring-ci-cd",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/techdocs/creating-and-publishing",
+              "path": "/docs/features/techdocs/creating-and-publishing",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/techdocs/faqs",
+              "path": "/docs/features/techdocs/faqs",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/techdocs/getting-started",
+              "path": "/docs/features/techdocs/getting-started",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/techdocs/how-to-guides",
+              "path": "/docs/features/techdocs/how-to-guides",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/techdocs/techdocs-overview",
+              "path": "/docs/features/techdocs/techdocs-overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/techdocs/troubleshooting",
+              "path": "/docs/features/techdocs/troubleshooting",
+              "sidebar": "docs"
+            },
+            {
+              "id": "features/techdocs/using-cloud-storage",
+              "path": "/docs/features/techdocs/using-cloud-storage",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/app-custom-theme",
+              "path": "/docs/getting-started/app-custom-theme",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/concepts",
+              "path": "/docs/getting-started/concepts",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/configure-app-with-plugins",
+              "path": "/docs/getting-started/configure-app-with-plugins",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/contributors",
+              "path": "/docs/getting-started/contributors",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/create-an-app",
+              "path": "/docs/getting-started/create-an-app",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/index",
+              "path": "/docs/getting-started/index",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/keeping-backstage-updated",
+              "path": "/docs/getting-started/keeping-backstage-updated",
+              "sidebar": "docs"
+            },
+            {
+              "id": "getting-started/running-backstage-locally",
+              "path": "/docs/getting-started/running-backstage-locally",
+              "sidebar": "docs"
+            },
+            {
+              "id": "glossary",
+              "path": "/docs/glossary",
+              "sidebar": "docs"
+            },
+            {
+              "id": "integrations/azure/locations",
+              "path": "/docs/integrations/azure/locations",
+              "sidebar": "docs"
+            },
+            {
+              "id": "integrations/bitbucket/discovery",
+              "path": "/docs/integrations/bitbucket/discovery",
+              "sidebar": "docs"
+            },
+            {
+              "id": "integrations/bitbucket/locations",
+              "path": "/docs/integrations/bitbucket/locations",
+              "sidebar": "docs"
+            },
+            {
+              "id": "integrations/datadog-rum/installation",
+              "path": "/docs/integrations/datadog-rum/installation",
+              "sidebar": "docs"
+            },
+            {
+              "id": "integrations/github/discovery",
+              "path": "/docs/integrations/github/discovery",
+              "sidebar": "docs"
+            },
+            {
+              "id": "integrations/github/locations",
+              "path": "/docs/integrations/github/locations",
+              "sidebar": "docs"
+            },
+            {
+              "id": "integrations/github/org",
+              "path": "/docs/integrations/github/org",
+              "sidebar": "docs"
+            },
+            {
+              "id": "integrations/gitlab/locations",
+              "path": "/docs/integrations/gitlab/locations",
+              "sidebar": "docs"
+            },
+            {
+              "id": "integrations/google-analytics/installation",
+              "path": "/docs/integrations/google-analytics/installation",
+              "sidebar": "docs"
+            },
+            {
+              "id": "integrations/google-cloud-storage/locations",
+              "path": "/docs/integrations/google-cloud-storage/locations",
+              "sidebar": "docs"
+            },
+            {
+              "id": "integrations/index",
+              "path": "/docs/integrations/index",
+              "sidebar": "docs"
+            },
+            {
+              "id": "integrations/ldap/org",
+              "path": "/docs/integrations/ldap/org",
+              "sidebar": "docs"
+            },
+            {
+              "id": "overview/adopting",
+              "path": "/docs/overview/adopting",
+              "sidebar": "docs"
+            },
+            {
+              "id": "overview/architecture-overview",
+              "path": "/docs/overview/architecture-overview",
+              "sidebar": "docs"
+            },
+            {
+              "id": "overview/background",
+              "path": "/docs/overview/background",
+              "sidebar": "docs"
+            },
+            {
+              "id": "overview/logos",
+              "path": "/docs/overview/logos",
+              "sidebar": "docs"
+            },
+            {
+              "id": "overview/roadmap",
+              "path": "/docs/overview/roadmap",
+              "sidebar": "docs"
+            },
+            {
+              "id": "overview/stability-index",
+              "path": "/docs/overview/stability-index",
+              "sidebar": "docs"
+            },
+            {
+              "id": "overview/vision",
+              "path": "/docs/overview/vision",
+              "sidebar": "docs"
+            },
+            {
+              "id": "overview/what-is-backstage",
+              "path": "/docs/",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/add-to-marketplace",
+              "path": "/docs/plugins/add-to-marketplace",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/backend-plugin",
+              "path": "/docs/plugins/backend-plugin",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/call-existing-api",
+              "path": "/docs/plugins/call-existing-api",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/composability",
+              "path": "/docs/plugins/composability",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/create-a-plugin",
+              "path": "/docs/plugins/create-a-plugin",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/existing-plugins",
+              "path": "/docs/plugins/existing-plugins",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/github-apps",
+              "path": "/docs/plugins/github-apps",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/index",
+              "path": "/docs/plugins/index",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/integrating-plugin-into-service-catalog",
+              "path": "/docs/plugins/integrating-plugin-into-service-catalog",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/observability",
+              "path": "/docs/plugins/observability",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/plugin-development",
+              "path": "/docs/plugins/plugin-development",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/proxying",
+              "path": "/docs/plugins/proxying",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/publish-private",
+              "path": "/docs/plugins/publish-private",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/publishing",
+              "path": "/docs/plugins/publishing",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/structure-of-a-plugin",
+              "path": "/docs/plugins/structure-of-a-plugin",
+              "sidebar": "docs"
+            },
+            {
+              "id": "plugins/testing",
+              "path": "/docs/plugins/testing",
+              "sidebar": "docs"
+            },
+            {
+              "id": "README",
+              "path": "/docs/README"
+            },
+            {
+              "id": "reference/createPlugin",
+              "path": "/docs/reference/createPlugin",
+              "sidebar": "docs"
+            },
+            {
+              "id": "reference/createPlugin-feature-flags",
+              "path": "/docs/reference/createPlugin-feature-flags",
+              "sidebar": "docs"
+            },
+            {
+              "id": "reference/utility-apis/AlertApi",
+              "path": "/docs/reference/utility-apis/AlertApi"
+            },
+            {
+              "id": "reference/utility-apis/AppThemeApi",
+              "path": "/docs/reference/utility-apis/AppThemeApi"
+            },
+            {
+              "id": "reference/utility-apis/BackstageIdentityApi",
+              "path": "/docs/reference/utility-apis/BackstageIdentityApi"
+            },
+            {
+              "id": "reference/utility-apis/Config",
+              "path": "/docs/reference/utility-apis/Config"
+            },
+            {
+              "id": "reference/utility-apis/DiscoveryApi",
+              "path": "/docs/reference/utility-apis/DiscoveryApi"
+            },
+            {
+              "id": "reference/utility-apis/ErrorApi",
+              "path": "/docs/reference/utility-apis/ErrorApi"
+            },
+            {
+              "id": "reference/utility-apis/FeatureFlagsApi",
+              "path": "/docs/reference/utility-apis/FeatureFlagsApi"
+            },
+            {
+              "id": "reference/utility-apis/IdentityApi",
+              "path": "/docs/reference/utility-apis/IdentityApi"
+            },
+            {
+              "id": "reference/utility-apis/OAuthApi",
+              "path": "/docs/reference/utility-apis/OAuthApi"
+            },
+            {
+              "id": "reference/utility-apis/OAuthRequestApi",
+              "path": "/docs/reference/utility-apis/OAuthRequestApi"
+            },
+            {
+              "id": "reference/utility-apis/OpenIdConnectApi",
+              "path": "/docs/reference/utility-apis/OpenIdConnectApi"
+            },
+            {
+              "id": "reference/utility-apis/ProfileInfoApi",
+              "path": "/docs/reference/utility-apis/ProfileInfoApi"
+            },
+            {
+              "id": "reference/utility-apis/README",
+              "path": "/docs/reference/utility-apis/README",
+              "sidebar": "docs"
+            },
+            {
+              "id": "reference/utility-apis/SessionApi",
+              "path": "/docs/reference/utility-apis/SessionApi"
+            },
+            {
+              "id": "reference/utility-apis/SessionStateApi",
+              "path": "/docs/reference/utility-apis/SessionStateApi"
+            },
+            {
+              "id": "reference/utility-apis/StorageApi",
+              "path": "/docs/reference/utility-apis/StorageApi"
+            },
+            {
+              "id": "support/project-structure",
+              "path": "/docs/support/project-structure",
+              "sidebar": "docs"
+            },
+            {
+              "id": "support/support",
+              "path": "/docs/support/support",
+              "sidebar": "docs"
+            },
+            {
+              "id": "tutorials/journey",
+              "path": "/docs/tutorials/journey",
+              "sidebar": "docs"
+            },
+            {
+              "id": "tutorials/quickstart-app-plugin",
+              "path": "/docs/tutorials/quickstart-app-plugin",
+              "sidebar": "docs"
+            },
+            {
+              "id": "tutorials/switching-sqlite-postgres",
+              "path": "/docs/tutorials/switching-sqlite-postgres",
+              "sidebar": "docs"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-templates/adding-templates",
+  "id": "features/software-templates/adding-templates",
+  "isDocsHomePage": false,
+  "title": "Adding your own Templates",
+  "description": "Documentation on Adding your own Templates",
+  "source": "@site/../docs/features/software-templates/adding-templates.md",
+  "sourceDirName": "features/software-templates",
+  "slug": "/features/software-templates/adding-templates",
+  "permalink": "/docs/features/software-templates/adding-templates",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-templates/adding-templates.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "adding-templates",
+    "title": "Adding your own Templates",
+    "description": "Documentation on Adding your own Templates"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Installing in your Backstage App",
+    "permalink": "/docs/features/software-templates/installation"
+  },
+  "next": {
+    "title": "Writing Templates",
+    "permalink": "/docs/features/software-templates/writing-templates"
+  }
+}

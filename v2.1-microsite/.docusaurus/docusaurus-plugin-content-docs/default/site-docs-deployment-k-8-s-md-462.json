@@ -1,0 +1,32 @@
+{
+  "unversionedId": "deployment/k8s",
+  "id": "deployment/k8s",
+  "isDocsHomePage": false,
+  "title": "Deploying with Kubernetes",
+  "description": "How to deploy Backstage to a Kubernetes cluster",
+  "source": "@site/../docs/deployment/k8s.md",
+  "sourceDirName": "deployment",
+  "slug": "/deployment/k8s",
+  "permalink": "/docs/deployment/k8s",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/deployment/k8s.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Kubernetes",
+  "frontMatter": {
+    "id": "k8s",
+    "title": "Deploying with Kubernetes",
+    "sidebar_label": "Kubernetes",
+    "description": "How to deploy Backstage to a Kubernetes cluster"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Building a Docker image",
+    "permalink": "/docs/deployment/docker"
+  },
+  "next": {
+    "title": "Deploying with Helm",
+    "permalink": "/docs/deployment/helm"
+  }
+}

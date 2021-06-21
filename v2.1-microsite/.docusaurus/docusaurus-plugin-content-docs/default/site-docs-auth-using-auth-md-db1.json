@@ -1,0 +1,30 @@
+{
+  "unversionedId": "auth/using-auth",
+  "id": "auth/using-auth",
+  "isDocsHomePage": false,
+  "title": "Using authentication and identity",
+  "description": "How to use authentication and identity in Backstage",
+  "source": "@site/../docs/auth/using-auth.md",
+  "sourceDirName": "auth",
+  "slug": "/auth/using-auth",
+  "permalink": "/docs/auth/using-auth",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/using-auth.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "using-auth",
+    "title": "Using authentication and identity",
+    "description": "How to use authentication and identity in Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Adding authentication providers",
+    "permalink": "/docs/auth/add-auth-provider"
+  },
+  "next": {
+    "title": "Auth backend",
+    "permalink": "/docs/auth/auth-backend"
+  }
+}

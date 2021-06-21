@@ -1,7 +1,7 @@
 ---
 id: project-structure
 title: Backstage Project Structure
-# prettier-ignore
+# prettier-ignore: ""
 description: Introduction to files and folders in the Backstage Project repository
 ---
 

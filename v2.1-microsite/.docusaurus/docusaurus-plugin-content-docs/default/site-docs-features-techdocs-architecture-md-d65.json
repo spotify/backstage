@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/techdocs/architecture",
+  "id": "features/techdocs/architecture",
+  "isDocsHomePage": false,
+  "title": "TechDocs Architecture",
+  "description": "Documentation on TechDocs Architecture",
+  "source": "@site/../docs/features/techdocs/architecture.md",
+  "sourceDirName": "features/techdocs",
+  "slug": "/features/techdocs/architecture",
+  "permalink": "/docs/features/techdocs/architecture",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/techdocs/architecture.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "architecture",
+    "title": "TechDocs Architecture",
+    "description": "Documentation on TechDocs Architecture"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Concepts",
+    "permalink": "/docs/features/techdocs/concepts"
+  },
+  "next": {
+    "title": "Creating and publishing your docs",
+    "permalink": "/docs/features/techdocs/creating-and-publishing"
+  }
+}

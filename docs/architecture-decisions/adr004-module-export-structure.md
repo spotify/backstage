@@ -1,19 +1,18 @@
 ---
 id: adrs-adr004
-title: ADR004: Module Export Structure
+title: "ADR004: Module Export Structure"
 description: Architecture Decision Record (ADR) log on Module Export Structure
 ---
-
 ## Context
 
 With a growing number of exports of packages like `@backstage/core`, it is
 becoming more and more difficult to answer questions such as
 
-> Is the export in this module also exported by the package?
+&gt; Is the export in this module also exported by the package?
 
 or
 
-> What is exported from this directory?
+&gt; What is exported from this directory?
 
 We currently do not use any pattern for how to structure exports. There is a mix
 of package-level re-exports deep into the directory tree, shallow re-exports for
@@ -30,6 +29,7 @@ from its own immediate directory children, and only index files will have
 re-exports. This gives a file tree similar to this:
 
 ```text
+
 index.ts
 components/index.ts
           /ComponentX/index.ts
@@ -39,6 +39,7 @@ lib/index.ts
    /UtilityX/index.ts
             /UtilityX.ts
             /helper.ts
+
 ```
 
 To check whether for example `SubComponentY` is exported from the package, it
@@ -54,33 +55,41 @@ In addition, index files that are re-exporting other index files should always
 use wildcard form, that is:
 
 ```ts
+
 // in components/index.ts
 export * from './ComponentX';
+
 ```
 
 Index files that are re-exporting symbols from non-index files should always
 enumerate all exports, that is:
 
 ```ts
+
 // in components/ComponentX/index.ts
 export { ComponentX } from './ComponentX';
 export type { ComponentXProps } from './ComponentX';
+
 ```
 
 Internal cross-directory imports are allowed from non-index modules to index
 modules, for example:
 
 ```ts
+
 // in components/ComponentX/ComponentX.tsx
 import { UtilityX } from '../../lib/UtilityX';
+
 ```
 
 Imports that bypass an index file are discouraged, but may sometimes be
 necessary, for example:
 
 ```ts
+
 // in components/ComponentX/ComponentX.tsx
 import { helperFunc } from '../../lib/UtilityX/helper';
+
 ```
 
 ## Consequences

@@ -1,3 +1,5 @@
+---
+---
 # SessionApi
 
 The SessionApi type is defined at
@@ -31,26 +33,26 @@ The following Utility APIs implement this type:
 
 Sign in with a minimum set of permissions.
 
-<pre>
+```tsx
 signIn(): Promise&lt;void&gt;
-</pre>
+```
 
 ### signOut()
 
 Sign out from the current session. This will reload the page.
 
-<pre>
+```tsx
 signOut(): Promise&lt;void&gt;
-</pre>
+```
 
 ### sessionState\$()
 
 Observe the current state of the auth session. Emits the current state on
 subscription.
 
-<pre>
+```tsx
 sessionState$(): <a href="#observable">Observable</a>&lt;<a href="#sessionstate">SessionState</a>&gt;
-</pre>
+```
 
 ## Supporting types
 
@@ -66,7 +68,7 @@ This is used as a common return type for observable values and can be created
 using many different observable implementations, such as zen-observable or
 RxJS 5.
 
-<pre>
+```tsx
 export type Observable&lt;T&gt; = {
   /**
    * Subscribes to this observable to start receiving new values.
@@ -78,7 +80,7 @@ export type Observable&lt;T&gt; = {
     onComplete?: () =&gt; void,
   ): <a href="#subscription">Subscription</a>;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:53](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L53).
@@ -91,13 +93,13 @@ This file contains non-react related core types used throughout Backstage.
 
 Observer interface for consuming an Observer, see TC39.
 
-<pre>
+```tsx
 export type Observer&lt;T&gt; = {
   next?(value: T): void;
   error?(error: Error): void;
   complete?(): void;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:24](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L24).
@@ -108,12 +110,12 @@ Referenced by: [Observable](#observable).
 
 Session state values passed to subscribers of the SessionApi.
 
-<pre>
+```tsx
 export enum SessionState {
   SignedIn = 'SignedIn',
   SignedOut = 'SignedOut',
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/auth.ts:182](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/auth.ts#L182).
@@ -124,7 +126,7 @@ Referenced by: [sessionState\$](#sessionstate).
 
 Subscription returned when subscribing to an Observable, see TC39.
 
-<pre>
+```tsx
 export type Subscription = {
   /**
    * Cancels the subscription
@@ -136,7 +138,7 @@ export type Subscription = {
    */
   readonly closed: Boolean;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:33](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L33).

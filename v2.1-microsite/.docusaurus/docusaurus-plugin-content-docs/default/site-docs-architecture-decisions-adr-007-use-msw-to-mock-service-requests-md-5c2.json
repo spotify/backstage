@@ -1,0 +1,30 @@
+{
+  "unversionedId": "architecture-decisions/adrs-adr007",
+  "id": "architecture-decisions/adrs-adr007",
+  "isDocsHomePage": false,
+  "title": "ADR007: Use MSW to mock http requests",
+  "description": "Architecture Decision Record (ADR) log on Use MSW to mock http requests",
+  "source": "@site/../docs/architecture-decisions/adr007-use-msw-to-mock-service-requests.md",
+  "sourceDirName": "architecture-decisions",
+  "slug": "/architecture-decisions/adrs-adr007",
+  "permalink": "/docs/architecture-decisions/adrs-adr007",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/architecture-decisions/adr007-use-msw-to-mock-service-requests.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "adrs-adr007",
+    "title": "ADR007: Use MSW to mock http requests",
+    "description": "Architecture Decision Record (ADR) log on Use MSW to mock http requests"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "ADR006: Avoid React.FC and React.SFC",
+    "permalink": "/docs/architecture-decisions/adrs-adr006"
+  },
+  "next": {
+    "title": "ADR008: Default Catalog File Name",
+    "permalink": "/docs/architecture-decisions/adrs-adr008"
+  }
+}

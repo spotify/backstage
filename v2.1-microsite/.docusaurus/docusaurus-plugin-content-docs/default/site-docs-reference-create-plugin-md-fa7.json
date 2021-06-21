@@ -1,0 +1,30 @@
+{
+  "unversionedId": "reference/createPlugin",
+  "id": "reference/createPlugin",
+  "isDocsHomePage": false,
+  "title": "createPlugin",
+  "description": "Documentation on createPlugin",
+  "source": "@site/../docs/reference/createPlugin.md",
+  "sourceDirName": "reference",
+  "slug": "/reference/createPlugin",
+  "permalink": "/docs/reference/createPlugin",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/createPlugin.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "createPlugin",
+    "title": "createPlugin",
+    "description": "Documentation on createPlugin"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Backstage Core Utility APIs",
+    "permalink": "/docs/reference/utility-apis/README"
+  },
+  "next": {
+    "title": "createPlugin - feature flags",
+    "permalink": "/docs/reference/createPlugin-feature-flags"
+  }
+}

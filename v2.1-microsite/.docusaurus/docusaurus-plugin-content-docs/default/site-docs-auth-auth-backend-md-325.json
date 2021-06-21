@@ -1,0 +1,30 @@
+{
+  "unversionedId": "auth/auth-backend",
+  "id": "auth/auth-backend",
+  "isDocsHomePage": false,
+  "title": "Auth backend",
+  "description": "Documentation on Auth backend",
+  "source": "@site/../docs/auth/auth-backend.md",
+  "sourceDirName": "auth",
+  "slug": "/auth/auth-backend",
+  "permalink": "/docs/auth/auth-backend",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/auth-backend.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "auth-backend",
+    "title": "Auth backend",
+    "description": "Documentation on Auth backend"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Using authentication and identity",
+    "permalink": "/docs/auth/using-auth"
+  },
+  "next": {
+    "title": "OAuth and OpenID Connect",
+    "permalink": "/docs/auth/oauth"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/09/08/announcing-tech-docs",
+  "source": "@site/blog/2020-09-08-announcing-tech-docs.md",
+  "title": "Announcing TechDocs: Spotify’s docs-like-code plugin for Backstage",
+  "description": "Since we open sourced Backstage, one of the most requested features has been for a technical documentation plugin. Well, good news. The first open source version of TechDocs is here. Now let’s start collaborating and making it better, together.",
+  "date": "2020-09-08T00:00:00.000Z",
+  "formattedDate": "September 8, 2020",
+  "tags": [],
+  "readingTime": 10.955,
+  "truncated": true,
+  "prevItem": {
+    "title": "Backstage has been accepted into the CNCF Sandbox",
+    "permalink": "/blog/2020/09/23/backstage-cncf-sandbox"
+  },
+  "nextItem": {
+    "title": "Announcing Backstage Software Templates",
+    "permalink": "/blog/2020/08/05/announcing-backstage-software-templates"
+  }
+}

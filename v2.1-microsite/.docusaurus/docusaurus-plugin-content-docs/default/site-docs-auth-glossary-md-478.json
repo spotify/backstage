@@ -1,0 +1,30 @@
+{
+  "unversionedId": "auth/glossary",
+  "id": "auth/glossary",
+  "isDocsHomePage": false,
+  "title": "Glossary",
+  "description": "All Glossaries related to auth",
+  "source": "@site/../docs/auth/glossary.md",
+  "sourceDirName": "auth",
+  "slug": "/auth/glossary",
+  "permalink": "/docs/auth/glossary",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/glossary.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "glossary",
+    "title": "Glossary",
+    "description": "All Glossaries related to auth"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Auth backend classes",
+    "permalink": "/docs/auth/auth-backend-classes"
+  },
+  "next": {
+    "title": "Deploying Backstage",
+    "permalink": "/docs/deployment/index"
+  }
+}

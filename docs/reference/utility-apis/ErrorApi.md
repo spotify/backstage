@@ -1,3 +1,5 @@
+---
+---
 # ErrorApi
 
 The ErrorApi type is defined at
@@ -19,9 +21,9 @@ post(error: <a href="#error">Error</a>, context?: <a href="#errorcontext">ErrorC
 
 Observe errors posted by other parts of the application.
 
-<pre>
+```tsx
 error$(): <a href="#observable">Observable</a>&lt;{ error: <a href="#error">Error</a>; context?: <a href="#errorcontext">ErrorContext</a> }&gt;
-</pre>
+```
 
 ## Supporting types
 
@@ -32,13 +34,13 @@ These types are part of the API declaration, but may not be unique to this API.
 Mirrors the JavaScript Error class, for the purpose of providing documentation
 and optional fields.
 
-<pre>
+```ts
 type Error = {
   name: string;
   message: string;
   stack?: string;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/ErrorApi.ts:24](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/ErrorApi.ts#L24).
@@ -50,12 +52,12 @@ Referenced by: [post](#post), [error\$](#error).
 Provides additional information about an error that was posted to the
 application.
 
-<pre>
+```tsx
 export type ErrorContext = {
   // If set to true, this error should not be displayed to the user. Defaults to false.
   hidden?: boolean;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/ErrorApi.ts:33](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/ErrorApi.ts#L33).
@@ -72,7 +74,7 @@ This is used as a common return type for observable values and can be created
 using many different observable implementations, such as zen-observable or
 RxJS 5.
 
-<pre>
+```tsx
 export type Observable&lt;T&gt; = {
   /**
    * Subscribes to this observable to start receiving new values.
@@ -84,7 +86,7 @@ export type Observable&lt;T&gt; = {
     onComplete?: () =&gt; void,
   ): <a href="#subscription">Subscription</a>;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:53](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L53).
@@ -97,13 +99,13 @@ This file contains non-react related core types used throughout Backstage.
 
 Observer interface for consuming an Observer, see TC39.
 
-<pre>
+```ts
 export type Observer&lt;T&gt; = {
   next?(value: T): void;
   error?(error: Error): void;
   complete?(): void;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:24](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L24).
@@ -114,7 +116,7 @@ Referenced by: [Observable](#observable).
 
 Subscription returned when subscribing to an Observable, see TC39.
 
-<pre>
+```ts
 export type Subscription = {
   /**
    * Cancels the subscription
@@ -126,7 +128,7 @@ export type Subscription = {
    */
   readonly closed: Boolean;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:33](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L33).

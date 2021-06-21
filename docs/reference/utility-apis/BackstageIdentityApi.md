@@ -1,3 +1,5 @@
+---
+---
 # BackstageIdentityApi
 
 The BackstageIdentityApi type is defined at
@@ -48,7 +50,7 @@ These types are part of the API declaration, but may not be unique to this API.
 
 ### AuthRequestOptions
 
-<pre>
+```ts
 export type AuthRequestOptions = {
   /**
    * If this is set to true, the user will not be prompted to log in,
@@ -71,7 +73,7 @@ export type AuthRequestOptions = {
    */
   instantPopup?: boolean;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/auth.ts:40](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/auth.ts#L40).
@@ -80,7 +82,7 @@ Referenced by: [getBackstageIdentity](#getbackstageidentity).
 
 ### BackstageIdentity
 
-<pre>
+```ts
 export type BackstageIdentity = {
   /**
    * The backstage user ID.
@@ -92,7 +94,7 @@ export type BackstageIdentity = {
    */
   idToken: string;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/auth.ts:147](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/auth.ts#L147).

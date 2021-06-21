@@ -1,0 +1,30 @@
+{
+  "unversionedId": "auth/add-auth-provider",
+  "id": "auth/add-auth-provider",
+  "isDocsHomePage": false,
+  "title": "Adding authentication providers",
+  "description": "Documentation on Adding authentication providers",
+  "source": "@site/../docs/auth/add-auth-provider.md",
+  "sourceDirName": "auth",
+  "slug": "/auth/add-auth-provider",
+  "permalink": "/docs/auth/add-auth-provider",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/add-auth-provider.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "add-auth-provider",
+    "title": "Adding authentication providers",
+    "description": "Documentation on Adding authentication providers"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "OneLogin Authentication Provider",
+    "permalink": "/docs/auth/onelogin/provider"
+  },
+  "next": {
+    "title": "Using authentication and identity",
+    "permalink": "/docs/auth/using-auth"
+  }
+}

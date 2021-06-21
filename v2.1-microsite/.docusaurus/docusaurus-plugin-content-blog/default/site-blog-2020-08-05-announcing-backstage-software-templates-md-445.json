@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/08/05/announcing-backstage-software-templates",
+  "source": "@site/blog/2020-08-05-announcing-backstage-software-templates.md",
+  "title": "Announcing Backstage Software Templates",
+  "description": "TL;DR Today we are announcing a new Backstage feature: Software Templates. Simplify setup, standardize tooling, and deploy with the click of a button. Using automated templates, your engineers can spin up a new microservice, website, or other software component with your organization’s best practices built-in, right from the start.",
+  "date": "2020-08-05T00:00:00.000Z",
+  "formattedDate": "August 5, 2020",
+  "tags": [],
+  "readingTime": 3.885,
+  "truncated": true,
+  "prevItem": {
+    "title": "Announcing TechDocs: Spotify’s docs-like-code plugin for Backstage",
+    "permalink": "/blog/2020/09/08/announcing-tech-docs"
+  },
+  "nextItem": {
+    "title": "How to enable authentication in Backstage using Passport",
+    "permalink": "/blog/2020/07/01/how-to-enable-authentication-in-backstage-using-passport"
+  }
+}

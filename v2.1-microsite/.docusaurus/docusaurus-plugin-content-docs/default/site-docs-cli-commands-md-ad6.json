@@ -1,0 +1,30 @@
+{
+  "unversionedId": "cli/commands",
+  "id": "cli/commands",
+  "isDocsHomePage": false,
+  "title": "Commands",
+  "description": "Descriptions of all commands available in the CLI.",
+  "source": "@site/../docs/cli/commands.md",
+  "sourceDirName": "cli",
+  "slug": "/cli/commands",
+  "permalink": "/docs/cli/commands",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/cli/commands.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "commands",
+    "title": "Commands",
+    "description": "Descriptions of all commands available in the CLI."
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Overview",
+    "permalink": "/docs/cli/index"
+  },
+  "next": {
+    "title": "Backstage Service Catalog (alpha)",
+    "permalink": "/docs/features/software-catalog/software-catalog-overview"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "unversionedId": "architecture-decisions/adrs-adr000",
+  "id": "architecture-decisions/adrs-adr000",
+  "isDocsHomePage": false,
+  "title": "ADR000: [TITLE]",
+  "description": "Architecture Decision Record (ADR) for [TITLE] [DESCRIPTION]",
+  "source": "@site/../docs/architecture-decisions/adr000-template.md",
+  "sourceDirName": "architecture-decisions",
+  "slug": "/architecture-decisions/adrs-adr000",
+  "permalink": "/docs/architecture-decisions/adrs-adr000",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/architecture-decisions/adr000-template.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "adrs-adr000",
+    "title": "ADR000: [TITLE]",
+    "description": "Architecture Decision Record (ADR) for [TITLE] [DESCRIPTION]"
+  }
+}

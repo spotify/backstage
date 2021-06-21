@@ -1,3 +1,5 @@
+---
+---
 # AppThemeApi
 
 The AppThemeApi type is defined at
@@ -51,7 +53,7 @@ These types are part of the API declaration, but may not be unique to this API.
 
 Describes a theme provided by the app.
 
-<pre>
+```tsx
 export type AppTheme = {
   /**
    * ID used to remember theme selections.
@@ -78,7 +80,7 @@ export type AppTheme = {
    */
   icon?: React.ReactElement&lt;SvgIconProps&gt;;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/AppThemeApi.ts:25](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/AppThemeApi.ts#L25).
@@ -98,13 +100,13 @@ Referenced by: [BackstageTheme](#backstagetheme).
 
 ### BackstageTheme
 
-<pre>
+```tsx
 export interface BackstageTheme extends Theme {
   palette: <a href="#backstagepalette">BackstagePalette</a>;
   page: <a href="#pagetheme">PageTheme</a>;
   getPageTheme: ({ themeId }: <a href="#pagethemeselector">PageThemeSelector</a>) =&gt; <a href="#pagetheme">PageTheme</a>;
 }
-</pre>
+```
 
 Defined at
 [packages/theme/src/types.ts:81](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/theme/src/types.ts#L81).
@@ -121,7 +123,7 @@ This is used as a common return type for observable values and can be created
 using many different observable implementations, such as zen-observable or
 RxJS 5.
 
-<pre>
+```tsx
 export type Observable&lt;T&gt; = {
   /**
    * Subscribes to this observable to start receiving new values.
@@ -133,7 +135,7 @@ export type Observable&lt;T&gt; = {
     onComplete?: () =&gt; void,
   ): <a href="#subscription">Subscription</a>;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:53](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L53).
@@ -146,13 +148,13 @@ This file contains non-react related core types used throughout Backstage.
 
 Observer interface for consuming an Observer, see TC39.
 
-<pre>
+```ts
 export type Observer&lt;T&gt; = {
   next?(value: T): void;
   error?(error: Error): void;
   complete?(): void;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:24](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L24).
@@ -161,13 +163,13 @@ Referenced by: [Observable](#observable).
 
 ### PageTheme
 
-<pre>
+```ts
 export type PageTheme = {
   colors: string[];
   shape: string;
   backgroundImage: string;
 }
-</pre>
+```
 
 Defined at
 [packages/theme/src/types.ts:103](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/theme/src/types.ts#L103).
@@ -176,11 +178,11 @@ Referenced by: [BackstageTheme](#backstagetheme).
 
 ### PageThemeSelector
 
-<pre>
+```ts
 export type PageThemeSelector = {
   themeId: string;
 }
-</pre>
+```
 
 Defined at
 [packages/theme/src/types.ts:77](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/theme/src/types.ts#L77).
@@ -189,7 +191,7 @@ Referenced by: [BackstageTheme](#backstagetheme).
 
 ### PaletteAdditions
 
-<pre>
+```ts
 type PaletteAdditions = {
   status: {
     ok: string;
@@ -240,7 +242,7 @@ type PaletteAdditions = {
     link: string;
   };
 }
-</pre>
+```
 
 Defined at
 [packages/theme/src/types.ts:23](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/theme/src/types.ts#L23).
@@ -251,7 +253,7 @@ Referenced by: [BackstagePalette](#backstagepalette).
 
 Subscription returned when subscribing to an Observable, see TC39.
 
-<pre>
+```ts
 export type Subscription = {
   /**
    * Cancels the subscription
@@ -263,7 +265,7 @@ export type Subscription = {
    */
   readonly closed: Boolean;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:33](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L33).

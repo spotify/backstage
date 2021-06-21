@@ -1,0 +1,30 @@
+{
+  "unversionedId": "getting-started/keeping-backstage-updated",
+  "id": "getting-started/keeping-backstage-updated",
+  "isDocsHomePage": false,
+  "title": "Keeping Backstage Updated",
+  "description": "How to keep your Backstage App updated",
+  "source": "@site/../docs/getting-started/keeping-backstage-updated.md",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/keeping-backstage-updated",
+  "permalink": "/docs/getting-started/keeping-backstage-updated",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/getting-started/keeping-backstage-updated.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "keeping-backstage-updated",
+    "title": "Keeping Backstage Updated",
+    "description": "How to keep your Backstage App updated"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Customize the look-and-feel of your App",
+    "permalink": "/docs/getting-started/app-custom-theme"
+  },
+  "next": {
+    "title": "Key Concepts",
+    "permalink": "/docs/getting-started/concepts"
+  }
+}

@@ -1,3 +1,5 @@
+---
+---
 # AlertApi
 
 The AlertApi type is defined at
@@ -11,9 +13,9 @@ The following Utility API implements this type: [alertApiRef](./README.md#alert)
 
 Post an alert for handling by the application.
 
-<pre>
+```tsx
 post(alert: <a href="#alertmessage">AlertMessage</a>): void
-</pre>
+```
 
 ### alert\$()
 
@@ -29,13 +31,13 @@ These types are part of the API declaration, but may not be unique to this API.
 
 ### AlertMessage
 
-<pre>
+```tsx
 export type AlertMessage = {
   message: string;
   // Severity will default to success since that is what material ui defaults the value to.
   severity?: 'success' | 'info' | 'warning' | 'error';
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/AlertApi.ts:19](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/AlertApi.ts#L19).
@@ -52,7 +54,7 @@ This is used as a common return type for observable values and can be created
 using many different observable implementations, such as zen-observable or
 RxJS 5.
 
-<pre>
+```tsx
 export type Observable&lt;T&gt; = {
   /**
    * Subscribes to this observable to start receiving new values.
@@ -64,7 +66,7 @@ export type Observable&lt;T&gt; = {
     onComplete?: () =&gt; void,
   ): <a href="#subscription">Subscription</a>;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:53](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L53).
@@ -77,13 +79,13 @@ This file contains non-react related core types used throughout Backstage.
 
 Observer interface for consuming an Observer, see TC39.
 
-<pre>
+```ts
 export type Observer&lt;T&gt; = {
   next?(value: T): void;
   error?(error: Error): void;
   complete?(): void;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:24](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L24).
@@ -94,7 +96,7 @@ Referenced by: [Observable](#observable).
 
 Subscription returned when subscribing to an Observable, see TC39.
 
-<pre>
+```ts
 export type Subscription = {
   /**
    * Cancels the subscription
@@ -106,7 +108,7 @@ export type Subscription = {
    */
   readonly closed: Boolean;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:33](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L33).

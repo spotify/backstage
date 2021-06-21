@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/software-catalog/descriptor-format",
+  "id": "features/software-catalog/descriptor-format",
+  "isDocsHomePage": false,
+  "title": "Descriptor Format of Catalog Entities",
+  "description": "Documentation on Descriptor Format of Catalog Entities which describes the default data shape and semantics of catalog entities",
+  "source": "@site/../docs/features/software-catalog/descriptor-format.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/descriptor-format",
+  "permalink": "/docs/features/software-catalog/descriptor-format",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/descriptor-format.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "YAML File Format",
+  "frontMatter": {
+    "id": "descriptor-format",
+    "title": "Descriptor Format of Catalog Entities",
+    "sidebar_label": "YAML File Format",
+    "description": "Documentation on Descriptor Format of Catalog Entities which describes the default data shape and semantics of catalog entities"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "System Model",
+    "permalink": "/docs/features/software-catalog/system-model"
+  },
+  "next": {
+    "title": "Entity References",
+    "permalink": "/docs/features/software-catalog/references"
+  }
+}

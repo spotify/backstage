@@ -1,0 +1,32 @@
+{
+  "unversionedId": "integrations/github/org",
+  "id": "integrations/github/org",
+  "isDocsHomePage": false,
+  "title": "GitHub Organizational Data",
+  "description": "Importing users and groups from a GitHub organization into Backstage",
+  "source": "@site/../docs/integrations/github/org.md",
+  "sourceDirName": "integrations/github",
+  "slug": "/integrations/github/org",
+  "permalink": "/docs/integrations/github/org",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/integrations/github/org.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Org Data",
+  "frontMatter": {
+    "id": "org",
+    "title": "GitHub Organizational Data",
+    "sidebar_label": "Org Data",
+    "description": "Importing users and groups from a GitHub organization into Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "GitHub Discovery",
+    "permalink": "/docs/integrations/github/discovery"
+  },
+  "next": {
+    "title": "GitLab Locations",
+    "permalink": "/docs/integrations/gitlab/locations"
+  }
+}

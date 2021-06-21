@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/proxying",
+  "id": "plugins/proxying",
+  "isDocsHomePage": false,
+  "title": "Proxying",
+  "description": "Documentation on Proxying",
+  "source": "@site/../docs/plugins/proxying.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/proxying",
+  "permalink": "/docs/plugins/proxying",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/proxying.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "proxying",
+    "title": "Proxying",
+    "description": "Documentation on Proxying"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Composability System Migration",
+    "permalink": "/docs/plugins/composability"
+  },
+  "next": {
+    "title": "Backend plugins",
+    "permalink": "/docs/plugins/backend-plugin"
+  }
+}

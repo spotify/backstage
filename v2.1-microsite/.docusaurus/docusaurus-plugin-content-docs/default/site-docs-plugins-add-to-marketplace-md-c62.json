@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/add-to-marketplace",
+  "id": "plugins/add-to-marketplace",
+  "isDocsHomePage": false,
+  "title": "Add to Marketplace",
+  "description": "Documentation on Adding Plugin to Marketplace",
+  "source": "@site/../docs/plugins/add-to-marketplace.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/add-to-marketplace",
+  "permalink": "/docs/plugins/add-to-marketplace",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/add-to-marketplace.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "add-to-marketplace",
+    "title": "Add to Marketplace",
+    "description": "Documentation on Adding Plugin to Marketplace"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Publish private",
+    "permalink": "/docs/plugins/publish-private"
+  },
+  "next": {
+    "title": "Observability",
+    "permalink": "/docs/plugins/observability"
+  }
+}

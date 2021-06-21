@@ -1,0 +1,30 @@
+{
+  "unversionedId": "conf/reading",
+  "id": "conf/reading",
+  "isDocsHomePage": false,
+  "title": "Reading Backstage Configuration",
+  "description": "Documentation on Reading Backstage Configuration",
+  "source": "@site/../docs/conf/reading.md",
+  "sourceDirName": "conf",
+  "slug": "/conf/reading",
+  "permalink": "/docs/conf/reading",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/conf/reading.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "reading",
+    "title": "Reading Backstage Configuration",
+    "description": "Documentation on Reading Backstage Configuration"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Static Configuration in Backstage",
+    "permalink": "/docs/conf/index"
+  },
+  "next": {
+    "title": "Writing Backstage Configuration Files",
+    "permalink": "/docs/conf/writing"
+  }
+}

@@ -1,7 +1,7 @@
 ---
 id: observability
 title: Observability
-# prettier-ignore
+# prettier-ignore: ""
 description: Adding Observability to Your Plugin
 ---
 

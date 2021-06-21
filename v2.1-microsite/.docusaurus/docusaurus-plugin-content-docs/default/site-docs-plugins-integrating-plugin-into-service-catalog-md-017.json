@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/integrating-plugin-into-service-catalog",
+  "id": "plugins/integrating-plugin-into-service-catalog",
+  "isDocsHomePage": false,
+  "title": "Integrate into the Service Catalog",
+  "description": "How to integrate a plugin into service catalog",
+  "source": "@site/../docs/plugins/integrating-plugin-into-service-catalog.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/integrating-plugin-into-service-catalog",
+  "permalink": "/docs/plugins/integrating-plugin-into-service-catalog",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/integrating-plugin-into-service-catalog.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "integrating-plugin-into-service-catalog",
+    "title": "Integrate into the Service Catalog",
+    "description": "How to integrate a plugin into service catalog"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Structure of a Plugin",
+    "permalink": "/docs/plugins/structure-of-a-plugin"
+  },
+  "next": {
+    "title": "Composability System Migration",
+    "permalink": "/docs/plugins/composability"
+  }
+}

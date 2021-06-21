@@ -1,9 +1,9 @@
 ---
 id: migrating-from-v1alpha1-to-v1beta2
 title: Migrating to v1beta2 templates
-# prettier-ignore
-description:
-  How to move your old templates from v1alpha1 to the more declarative v1beta2
+# prettier-ignore: ""
+description: ""
+How to move your old templates from v1alpha1 to the more declarative v1beta2: ""
 ---
 
 # What's new?

@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/software-catalog/well-known-annotations",
+  "id": "features/software-catalog/well-known-annotations",
+  "isDocsHomePage": false,
+  "title": "Well-known Annotations on Catalog Entities",
+  "description": "Documentation that lists a number of well known Annotations, that have defined semantics. They can be attached to catalog entities and consumed by plugins as needed.",
+  "source": "@site/../docs/features/software-catalog/well-known-annotations.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/well-known-annotations",
+  "permalink": "/docs/features/software-catalog/well-known-annotations",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/well-known-annotations.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Well-known Annotations",
+  "frontMatter": {
+    "id": "well-known-annotations",
+    "title": "Well-known Annotations on Catalog Entities",
+    "sidebar_label": "Well-known Annotations",
+    "description": "Documentation that lists a number of well known Annotations, that have defined semantics. They can be attached to catalog entities and consumed by plugins as needed."
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Entity References",
+    "permalink": "/docs/features/software-catalog/references"
+  },
+  "next": {
+    "title": "Well-known Relations between Catalog Entities",
+    "permalink": "/docs/features/software-catalog/well-known-relations"
+  }
+}

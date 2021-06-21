@@ -1,0 +1,35 @@
+{
+  "version": "0.0.0",
+  "name": "backstage-microsite",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "examples": "docusaurus-examples",
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "prettier:check": "prettier --check .",
+    "publish-gh-pages": "docusaurus-publish",
+    "write-translations": "docusaurus-write-translations",
+    "version": "docusaurus-version",
+    "rename-version": "docusaurus-rename-version",
+    "verify:sidebars": "node ./scripts/verify-sidebars",
+    "lock:check": "yarn-lock-check",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy",
+    "docusaurus": "docusaurus"
+  },
+  "devDependencies": {
+    "@spotify/prettier-config": "^10.0.0",
+    "js-yaml": "^4.1.0",
+    "prettier": "^2.3.1",
+    "yarn-lock-check": "^1.0.4"
+  },
+  "prettier": "@spotify/prettier-config",
+  "dependencies": {
+    "@docusaurus/core": "2.0.0-beta.0",
+    "@docusaurus/preset-classic": "2.0.0-beta.0",
+    "clsx": "^1.1.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  }
+}

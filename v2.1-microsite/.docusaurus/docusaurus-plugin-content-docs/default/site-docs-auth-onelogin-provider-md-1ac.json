@@ -1,0 +1,32 @@
+{
+  "unversionedId": "auth/onelogin/provider",
+  "id": "auth/onelogin/provider",
+  "isDocsHomePage": false,
+  "title": "OneLogin Authentication Provider",
+  "description": "Adding OneLogin OIDC as an authentication provider in Backstage",
+  "source": "@site/../docs/auth/onelogin/provider.md",
+  "sourceDirName": "auth/onelogin",
+  "slug": "/auth/onelogin/provider",
+  "permalink": "/docs/auth/onelogin/provider",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/onelogin/provider.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "OneLogin",
+  "frontMatter": {
+    "id": "provider",
+    "title": "OneLogin Authentication Provider",
+    "sidebar_label": "OneLogin",
+    "description": "Adding OneLogin OIDC as an authentication provider in Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Okta Authentication Provider",
+    "permalink": "/docs/auth/okta/provider"
+  },
+  "next": {
+    "title": "Adding authentication providers",
+    "permalink": "/docs/auth/add-auth-provider"
+  }
+}

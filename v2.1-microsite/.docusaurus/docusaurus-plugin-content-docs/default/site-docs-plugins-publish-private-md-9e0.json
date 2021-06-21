@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/publish-private",
+  "id": "plugins/publish-private",
+  "isDocsHomePage": false,
+  "title": "Publish private",
+  "description": "Documentation on How to Publish private",
+  "source": "@site/../docs/plugins/publish-private.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/publish-private",
+  "permalink": "/docs/plugins/publish-private",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/publish-private.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "publish-private",
+    "title": "Publish private",
+    "description": "Documentation on How to Publish private"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Publishing",
+    "permalink": "/docs/plugins/publishing"
+  },
+  "next": {
+    "title": "Add to Marketplace",
+    "permalink": "/docs/plugins/add-to-marketplace"
+  }
+}

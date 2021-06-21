@@ -1,0 +1,30 @@
+{
+  "unversionedId": "getting-started/contributors",
+  "id": "getting-started/contributors",
+  "isDocsHomePage": false,
+  "title": "Contributors",
+  "description": "Documentation on how to get set up for doing development on the Backstage repository",
+  "source": "@site/../docs/getting-started/contributors.md",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/contributors",
+  "permalink": "/docs/getting-started/contributors",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/getting-started/contributors.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "contributors",
+    "title": "Contributors",
+    "description": "Documentation on how to get set up for doing development on the Backstage repository"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Key Concepts",
+    "permalink": "/docs/getting-started/concepts"
+  },
+  "next": {
+    "title": "Overview",
+    "permalink": "/docs/cli/index"
+  }
+}

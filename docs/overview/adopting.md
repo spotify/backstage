@@ -1,7 +1,7 @@
 ---
 id: adopting
 title: Strategies for adopting
-# prettier-ignore
+# prettier-ignore: ""
 description: Documentation on some general best practices that have been key to Backstage's success inside Spotify
 ---
 

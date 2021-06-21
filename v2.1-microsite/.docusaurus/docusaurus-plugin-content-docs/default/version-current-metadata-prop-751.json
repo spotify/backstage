@@ -1,0 +1,1080 @@
+{
+  "pluginId": "default",
+  "version": "current",
+  "label": "Next",
+  "isLast": true,
+  "docsSidebars": {
+    "docs": [
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Overview",
+        "items": [
+          {
+            "type": "link",
+            "label": "What is Backstage?",
+            "href": "/docs/"
+          },
+          {
+            "type": "link",
+            "label": "Architecture overview",
+            "href": "/docs/overview/architecture-overview"
+          },
+          {
+            "type": "link",
+            "label": "Project roadmap",
+            "href": "/docs/overview/roadmap"
+          },
+          {
+            "type": "link",
+            "label": "Vision",
+            "href": "/docs/overview/vision"
+          },
+          {
+            "type": "link",
+            "label": "The Spotify Story",
+            "href": "/docs/overview/background"
+          },
+          {
+            "type": "link",
+            "label": "Strategies for adopting",
+            "href": "/docs/overview/adopting"
+          },
+          {
+            "type": "link",
+            "label": "Stability Index",
+            "href": "/docs/overview/stability-index"
+          },
+          {
+            "type": "link",
+            "label": "Logo assets",
+            "href": "/docs/overview/logos"
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Getting Started",
+        "items": [
+          {
+            "type": "link",
+            "label": "Getting Started",
+            "href": "/docs/getting-started/index"
+          },
+          {
+            "type": "link",
+            "label": "Create an App",
+            "href": "/docs/getting-started/create-an-app"
+          },
+          {
+            "type": "link",
+            "label": "Running Backstage Locally",
+            "href": "/docs/getting-started/running-backstage-locally"
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "App configuration",
+            "items": [
+              {
+                "type": "link",
+                "label": "Configuring App with plugins",
+                "href": "/docs/getting-started/configure-app-with-plugins"
+              },
+              {
+                "type": "link",
+                "label": "Customize the look-and-feel of your App",
+                "href": "/docs/getting-started/app-custom-theme"
+              }
+            ]
+          },
+          {
+            "type": "link",
+            "label": "Keeping Backstage Updated",
+            "href": "/docs/getting-started/keeping-backstage-updated"
+          },
+          {
+            "type": "link",
+            "label": "Key Concepts",
+            "href": "/docs/getting-started/concepts"
+          },
+          {
+            "type": "link",
+            "label": "Contributors",
+            "href": "/docs/getting-started/contributors"
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "CLI",
+        "items": [
+          {
+            "type": "link",
+            "label": "Overview",
+            "href": "/docs/cli/index"
+          },
+          {
+            "type": "link",
+            "label": "Commands",
+            "href": "/docs/cli/commands"
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Core Features",
+        "items": [
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Software Catalog",
+            "items": [
+              {
+                "type": "link",
+                "label": "Overview",
+                "href": "/docs/features/software-catalog/software-catalog-overview"
+              },
+              {
+                "type": "link",
+                "label": "Installing in your Backstage App",
+                "href": "/docs/features/software-catalog/installation"
+              },
+              {
+                "type": "link",
+                "label": "Catalog Configuration",
+                "href": "/docs/features/software-catalog/configuration"
+              },
+              {
+                "type": "link",
+                "label": "System Model",
+                "href": "/docs/features/software-catalog/system-model"
+              },
+              {
+                "type": "link",
+                "label": "YAML File Format",
+                "href": "/docs/features/software-catalog/descriptor-format"
+              },
+              {
+                "type": "link",
+                "label": "Entity References",
+                "href": "/docs/features/software-catalog/references"
+              },
+              {
+                "type": "link",
+                "label": "Well-known Annotations",
+                "href": "/docs/features/software-catalog/well-known-annotations"
+              },
+              {
+                "type": "link",
+                "label": "Well-known Relations",
+                "href": "/docs/features/software-catalog/well-known-relations"
+              },
+              {
+                "type": "link",
+                "label": "Well-known Statuses",
+                "href": "/docs/features/software-catalog/well-known-statuses"
+              },
+              {
+                "type": "link",
+                "label": "Extending the model",
+                "href": "/docs/features/software-catalog/extending-the-model"
+              },
+              {
+                "type": "link",
+                "label": "External integrations",
+                "href": "/docs/features/software-catalog/external-integrations"
+              },
+              {
+                "type": "link",
+                "label": "Catalog Customization",
+                "href": "/docs/features/software-catalog/catalog-customization"
+              },
+              {
+                "type": "link",
+                "label": "API",
+                "href": "/docs/features/software-catalog/software-catalog-api"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Kubernetes",
+            "items": [
+              {
+                "type": "link",
+                "label": "Overview",
+                "href": "/docs/features/kubernetes/overview"
+              },
+              {
+                "type": "link",
+                "label": "Installation",
+                "href": "/docs/features/kubernetes/installation"
+              },
+              {
+                "type": "link",
+                "label": "Configuration",
+                "href": "/docs/features/kubernetes/configuration"
+              },
+              {
+                "type": "link",
+                "label": "Troubleshooting",
+                "href": "/docs/features/kubernetes/troubleshooting"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Software Templates",
+            "items": [
+              {
+                "type": "link",
+                "label": "Overview",
+                "href": "/docs/features/software-templates/software-templates-index"
+              },
+              {
+                "type": "link",
+                "label": "Installing in your Backstage App",
+                "href": "/docs/features/software-templates/installation"
+              },
+              {
+                "type": "link",
+                "label": "Adding your own Templates",
+                "href": "/docs/features/software-templates/adding-templates"
+              },
+              {
+                "type": "link",
+                "label": "Writing Templates",
+                "href": "/docs/features/software-templates/writing-templates"
+              },
+              {
+                "type": "link",
+                "label": "Builtin actions",
+                "href": "/docs/features/software-templates/builtin-actions"
+              },
+              {
+                "type": "link",
+                "label": "Writing Custom Actions",
+                "href": "/docs/features/software-templates/writing-custom-actions"
+              },
+              {
+                "type": "link",
+                "label": "Writing Templates (Legacy)",
+                "href": "/docs/features/software-templates/template-legacy"
+              },
+              {
+                "type": "link",
+                "label": "What's new?",
+                "href": "/docs/features/software-templates/migrating-from-v1alpha1-to-v1beta2"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Backstage Search",
+            "items": [
+              {
+                "type": "link",
+                "label": "Overview",
+                "href": "/docs/features/search/search-overview"
+              },
+              {
+                "type": "link",
+                "label": "Getting Started",
+                "href": "/docs/features/search/getting-started"
+              },
+              {
+                "type": "link",
+                "label": "Search Concepts",
+                "href": "/docs/features/search/concepts"
+              },
+              {
+                "type": "link",
+                "label": "Search Architecture",
+                "href": "/docs/features/search/architecture"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "TechDocs",
+            "items": [
+              {
+                "type": "link",
+                "label": "Overview",
+                "href": "/docs/features/techdocs/techdocs-overview"
+              },
+              {
+                "type": "link",
+                "label": "Getting Started",
+                "href": "/docs/features/techdocs/getting-started"
+              },
+              {
+                "type": "link",
+                "label": "Concepts",
+                "href": "/docs/features/techdocs/concepts"
+              },
+              {
+                "type": "link",
+                "label": "TechDocs Architecture",
+                "href": "/docs/features/techdocs/architecture"
+              },
+              {
+                "type": "link",
+                "label": "Creating and Publishing Documentation",
+                "href": "/docs/features/techdocs/creating-and-publishing"
+              },
+              {
+                "type": "link",
+                "label": "TechDocs Configuration Options",
+                "href": "/docs/features/techdocs/configuration"
+              },
+              {
+                "type": "link",
+                "label": "Using Cloud Storage for TechDocs generated files",
+                "href": "/docs/features/techdocs/using-cloud-storage"
+              },
+              {
+                "type": "link",
+                "label": "Configuring CI/CD to generate and publish TechDocs sites",
+                "href": "/docs/features/techdocs/configuring-ci-cd"
+              },
+              {
+                "type": "link",
+                "label": "\"HOW TO\" guides",
+                "href": "/docs/features/techdocs/how-to-guides"
+              },
+              {
+                "type": "link",
+                "label": "Troubleshooting",
+                "href": "/docs/features/techdocs/troubleshooting"
+              },
+              {
+                "type": "link",
+                "label": "FAQ",
+                "href": "/docs/features/techdocs/faqs"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Integrations",
+        "items": [
+          {
+            "type": "link",
+            "label": "Overview",
+            "href": "/docs/integrations/index"
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Azure DevOps",
+            "items": [
+              {
+                "type": "link",
+                "label": "Locations",
+                "href": "/docs/integrations/azure/locations"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Bitbucket",
+            "items": [
+              {
+                "type": "link",
+                "label": "Locations",
+                "href": "/docs/integrations/bitbucket/locations"
+              },
+              {
+                "type": "link",
+                "label": "Discovery",
+                "href": "/docs/integrations/bitbucket/discovery"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Datadog",
+            "items": [
+              {
+                "type": "link",
+                "label": "Installation",
+                "href": "/docs/integrations/datadog-rum/installation"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "GitHub",
+            "items": [
+              {
+                "type": "link",
+                "label": "Locations",
+                "href": "/docs/integrations/github/locations"
+              },
+              {
+                "type": "link",
+                "label": "Discovery",
+                "href": "/docs/integrations/github/discovery"
+              },
+              {
+                "type": "link",
+                "label": "Org Data",
+                "href": "/docs/integrations/github/org"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "GitLab",
+            "items": [
+              {
+                "type": "link",
+                "label": "Locations",
+                "href": "/docs/integrations/gitlab/locations"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Google Analytics",
+            "items": [
+              {
+                "type": "link",
+                "label": "Installation",
+                "href": "/docs/integrations/google-analytics/installation"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Google GCS",
+            "items": [
+              {
+                "type": "link",
+                "label": "Locations",
+                "href": "/docs/integrations/google-cloud-storage/locations"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "LDAP",
+            "items": [
+              {
+                "type": "link",
+                "label": "Org Data",
+                "href": "/docs/integrations/ldap/org"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Plugins",
+        "items": [
+          {
+            "type": "link",
+            "label": "Intro to plugins",
+            "href": "/docs/plugins/index"
+          },
+          {
+            "type": "link",
+            "label": "Existing plugins",
+            "href": "/docs/plugins/existing-plugins"
+          },
+          {
+            "type": "link",
+            "label": "Create a Backstage Plugin",
+            "href": "/docs/plugins/create-a-plugin"
+          },
+          {
+            "type": "link",
+            "label": "Plugin Development",
+            "href": "/docs/plugins/plugin-development"
+          },
+          {
+            "type": "link",
+            "label": "Structure of a Plugin",
+            "href": "/docs/plugins/structure-of-a-plugin"
+          },
+          {
+            "type": "link",
+            "label": "Integrate into the Service Catalog",
+            "href": "/docs/plugins/integrating-plugin-into-service-catalog"
+          },
+          {
+            "type": "link",
+            "label": "Composability System Migration",
+            "href": "/docs/plugins/composability"
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Backends and APIs",
+            "items": [
+              {
+                "type": "link",
+                "label": "Proxying",
+                "href": "/docs/plugins/proxying"
+              },
+              {
+                "type": "link",
+                "label": "Backend plugins",
+                "href": "/docs/plugins/backend-plugin"
+              },
+              {
+                "type": "link",
+                "label": "Call Existing API",
+                "href": "/docs/plugins/call-existing-api"
+              },
+              {
+                "type": "link",
+                "label": "GitHub Apps for Backend Authentication",
+                "href": "/docs/plugins/github-apps"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Testing",
+            "items": [
+              {
+                "type": "link",
+                "label": "Testing with Jest",
+                "href": "/docs/plugins/testing"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Publishing",
+            "items": [
+              {
+                "type": "link",
+                "label": "Publishing",
+                "href": "/docs/plugins/publishing"
+              },
+              {
+                "type": "link",
+                "label": "Publish private",
+                "href": "/docs/plugins/publish-private"
+              },
+              {
+                "type": "link",
+                "label": "Add to Marketplace",
+                "href": "/docs/plugins/add-to-marketplace"
+              },
+              {
+                "type": "link",
+                "label": "Observability",
+                "href": "/docs/plugins/observability"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Configuration",
+        "items": [
+          {
+            "type": "link",
+            "label": "Static Configuration in Backstage",
+            "href": "/docs/conf/index"
+          },
+          {
+            "type": "link",
+            "label": "Reading Backstage Configuration",
+            "href": "/docs/conf/reading"
+          },
+          {
+            "type": "link",
+            "label": "Writing Backstage Configuration Files",
+            "href": "/docs/conf/writing"
+          },
+          {
+            "type": "link",
+            "label": "Defining Configuration for your Plugin",
+            "href": "/docs/conf/defining"
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Auth and identity",
+        "items": [
+          {
+            "type": "link",
+            "label": "Adding Authentication",
+            "href": "/docs/auth/index"
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Included providers",
+            "items": [
+              {
+                "type": "link",
+                "label": "Auth0",
+                "href": "/docs/auth/auth0/provider"
+              },
+              {
+                "type": "link",
+                "label": "Azure",
+                "href": "/docs/auth/microsoft/provider"
+              },
+              {
+                "type": "link",
+                "label": "GitHub",
+                "href": "/docs/auth/github/provider"
+              },
+              {
+                "type": "link",
+                "label": "GitLab",
+                "href": "/docs/auth/gitlab/provider"
+              },
+              {
+                "type": "link",
+                "label": "Google",
+                "href": "/docs/auth/google/provider"
+              },
+              {
+                "type": "link",
+                "label": "Okta",
+                "href": "/docs/auth/okta/provider"
+              },
+              {
+                "type": "link",
+                "label": "OneLogin",
+                "href": "/docs/auth/onelogin/provider"
+              }
+            ]
+          },
+          {
+            "type": "link",
+            "label": "Adding authentication providers",
+            "href": "/docs/auth/add-auth-provider"
+          },
+          {
+            "type": "link",
+            "label": "Using authentication and identity",
+            "href": "/docs/auth/using-auth"
+          },
+          {
+            "type": "link",
+            "label": "Auth backend",
+            "href": "/docs/auth/auth-backend"
+          },
+          {
+            "type": "link",
+            "label": "OAuth and OpenID Connect",
+            "href": "/docs/auth/oauth"
+          },
+          {
+            "type": "link",
+            "label": "Auth backend classes",
+            "href": "/docs/auth/auth-backend-classes"
+          },
+          {
+            "type": "link",
+            "label": "Glossary",
+            "href": "/docs/auth/glossary"
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Deployment",
+        "items": [
+          {
+            "type": "link",
+            "label": "Deploying Backstage",
+            "href": "/docs/deployment/index"
+          },
+          {
+            "type": "link",
+            "label": "Docker",
+            "href": "/docs/deployment/docker"
+          },
+          {
+            "type": "link",
+            "label": "Kubernetes",
+            "href": "/docs/deployment/k8s"
+          },
+          {
+            "type": "link",
+            "label": "Helm",
+            "href": "/docs/deployment/helm"
+          },
+          {
+            "type": "link",
+            "label": "Heroku",
+            "href": "/docs/deployment/heroku"
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Designing for Backstage",
+        "items": [
+          {
+            "type": "link",
+            "label": "Design",
+            "href": "/docs/dls/design"
+          },
+          {
+            "type": "link",
+            "label": "Contributing to Storybook",
+            "href": "/docs/dls/contributing-to-storybook"
+          },
+          {
+            "type": "link",
+            "label": "Figma",
+            "href": "/docs/dls/figma"
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "API references",
+        "items": [
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "TypeScript API",
+            "items": [
+              {
+                "type": "link",
+                "label": "Utility APIs",
+                "href": "/docs/api/utility-apis"
+              },
+              {
+                "type": "link",
+                "label": "Backstage Core Utility APIs",
+                "href": "/docs/reference/utility-apis/README"
+              },
+              {
+                "type": "link",
+                "label": "createPlugin",
+                "href": "/docs/reference/createPlugin"
+              },
+              {
+                "type": "link",
+                "label": "createPlugin - feature flags",
+                "href": "/docs/reference/createPlugin-feature-flags"
+              }
+            ]
+          },
+          {
+            "collapsed": true,
+            "type": "category",
+            "label": "Backend APIs",
+            "items": [
+              {
+                "type": "link",
+                "label": "Backend",
+                "href": "/docs/api/backend"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Tutorials",
+        "items": [
+          {
+            "type": "link",
+            "label": "Future developer journey",
+            "href": "/docs/tutorials/journey"
+          },
+          {
+            "type": "link",
+            "label": "Adding Custom Plugin to Existing Monorepo App",
+            "href": "/docs/tutorials/quickstart-app-plugin"
+          },
+          {
+            "type": "link",
+            "label": "Switching Backstage from SQLite to PostgreSQL",
+            "href": "/docs/tutorials/switching-sqlite-postgres"
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Architecture Decision Records (ADRs)",
+        "items": [
+          {
+            "type": "link",
+            "label": "Overview",
+            "href": "/docs/architecture-decisions/adrs-overview"
+          },
+          {
+            "type": "link",
+            "label": "ADR001: Architecture Decision Record (ADR) log",
+            "href": "/docs/architecture-decisions/adrs-adr001"
+          },
+          {
+            "type": "link",
+            "label": "ADR002: Default Software Catalog File Format",
+            "href": "/docs/architecture-decisions/adrs-adr002"
+          },
+          {
+            "type": "link",
+            "label": "ADR003: Avoid Default Exports and Prefer Named Exports",
+            "href": "/docs/architecture-decisions/adrs-adr003"
+          },
+          {
+            "type": "link",
+            "label": "ADR004: Module Export Structure",
+            "href": "/docs/architecture-decisions/adrs-adr004"
+          },
+          {
+            "type": "link",
+            "label": "ADR005: Catalog Core Entities",
+            "href": "/docs/architecture-decisions/adrs-adr005"
+          },
+          {
+            "type": "link",
+            "label": "ADR006: Avoid React.FC and React.SFC",
+            "href": "/docs/architecture-decisions/adrs-adr006"
+          },
+          {
+            "type": "link",
+            "label": "ADR007: Use MSW to mock http requests",
+            "href": "/docs/architecture-decisions/adrs-adr007"
+          },
+          {
+            "type": "link",
+            "label": "ADR008: Default Catalog File Name",
+            "href": "/docs/architecture-decisions/adrs-adr008"
+          },
+          {
+            "type": "link",
+            "label": "ADR009: Entity References",
+            "href": "/docs/architecture-decisions/adrs-adr009"
+          },
+          {
+            "type": "link",
+            "label": "ADR010: Use the Luxon Date Library",
+            "href": "/docs/architecture-decisions/adrs-adr010"
+          },
+          {
+            "type": "link",
+            "label": "ADR011: Plugin Package Structure",
+            "href": "/docs/architecture-decisions/adrs-adr011"
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Support",
+        "items": [
+          {
+            "type": "link",
+            "label": "Support and community",
+            "href": "/docs/support/support"
+          },
+          {
+            "type": "link",
+            "label": "Backstage Project Structure",
+            "href": "/docs/support/project-structure"
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Glossary",
+        "items": [
+          {
+            "type": "link",
+            "label": "Backstage Glossary",
+            "href": "/docs/glossary"
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "FAQ",
+        "items": [
+          {
+            "type": "link",
+            "label": "FAQ",
+            "href": "/docs/FAQ"
+          }
+        ]
+      }
+    ]
+  },
+  "permalinkToSidebar": {
+    "/docs/api/backend": "docs",
+    "/docs/api/utility-apis": "docs",
+    "/docs/architecture-decisions/adrs-adr001": "docs",
+    "/docs/architecture-decisions/adrs-adr002": "docs",
+    "/docs/architecture-decisions/adrs-adr003": "docs",
+    "/docs/architecture-decisions/adrs-adr004": "docs",
+    "/docs/architecture-decisions/adrs-adr005": "docs",
+    "/docs/architecture-decisions/adrs-adr006": "docs",
+    "/docs/architecture-decisions/adrs-adr007": "docs",
+    "/docs/architecture-decisions/adrs-adr008": "docs",
+    "/docs/architecture-decisions/adrs-adr009": "docs",
+    "/docs/architecture-decisions/adrs-adr010": "docs",
+    "/docs/architecture-decisions/adrs-adr011": "docs",
+    "/docs/architecture-decisions/adrs-overview": "docs",
+    "/docs/auth/add-auth-provider": "docs",
+    "/docs/auth/auth-backend": "docs",
+    "/docs/auth/auth-backend-classes": "docs",
+    "/docs/auth/auth0/provider": "docs",
+    "/docs/auth/github/provider": "docs",
+    "/docs/auth/gitlab/provider": "docs",
+    "/docs/auth/glossary": "docs",
+    "/docs/auth/google/provider": "docs",
+    "/docs/auth/index": "docs",
+    "/docs/auth/microsoft/provider": "docs",
+    "/docs/auth/oauth": "docs",
+    "/docs/auth/okta/provider": "docs",
+    "/docs/auth/onelogin/provider": "docs",
+    "/docs/auth/using-auth": "docs",
+    "/docs/cli/commands": "docs",
+    "/docs/cli/index": "docs",
+    "/docs/conf/defining": "docs",
+    "/docs/conf/index": "docs",
+    "/docs/conf/reading": "docs",
+    "/docs/conf/writing": "docs",
+    "/docs/deployment/docker": "docs",
+    "/docs/deployment/helm": "docs",
+    "/docs/deployment/heroku": "docs",
+    "/docs/deployment/index": "docs",
+    "/docs/deployment/k8s": "docs",
+    "/docs/dls/contributing-to-storybook": "docs",
+    "/docs/dls/design": "docs",
+    "/docs/dls/figma": "docs",
+    "/docs/FAQ": "docs",
+    "/docs/features/kubernetes/configuration": "docs",
+    "/docs/features/kubernetes/installation": "docs",
+    "/docs/features/kubernetes/overview": "docs",
+    "/docs/features/kubernetes/troubleshooting": "docs",
+    "/docs/features/search/architecture": "docs",
+    "/docs/features/search/concepts": "docs",
+    "/docs/features/search/getting-started": "docs",
+    "/docs/features/search/search-overview": "docs",
+    "/docs/features/software-catalog/catalog-customization": "docs",
+    "/docs/features/software-catalog/configuration": "docs",
+    "/docs/features/software-catalog/descriptor-format": "docs",
+    "/docs/features/software-catalog/extending-the-model": "docs",
+    "/docs/features/software-catalog/external-integrations": "docs",
+    "/docs/features/software-catalog/installation": "docs",
+    "/docs/features/software-catalog/references": "docs",
+    "/docs/features/software-catalog/software-catalog-api": "docs",
+    "/docs/features/software-catalog/software-catalog-overview": "docs",
+    "/docs/features/software-catalog/system-model": "docs",
+    "/docs/features/software-catalog/well-known-annotations": "docs",
+    "/docs/features/software-catalog/well-known-relations": "docs",
+    "/docs/features/software-catalog/well-known-statuses": "docs",
+    "/docs/features/software-templates/adding-templates": "docs",
+    "/docs/features/software-templates/builtin-actions": "docs",
+    "/docs/features/software-templates/installation": "docs",
+    "/docs/features/software-templates/migrating-from-v1alpha1-to-v1beta2": "docs",
+    "/docs/features/software-templates/software-templates-index": "docs",
+    "/docs/features/software-templates/template-legacy": "docs",
+    "/docs/features/software-templates/writing-custom-actions": "docs",
+    "/docs/features/software-templates/writing-templates": "docs",
+    "/docs/features/techdocs/architecture": "docs",
+    "/docs/features/techdocs/concepts": "docs",
+    "/docs/features/techdocs/configuration": "docs",
+    "/docs/features/techdocs/configuring-ci-cd": "docs",
+    "/docs/features/techdocs/creating-and-publishing": "docs",
+    "/docs/features/techdocs/faqs": "docs",
+    "/docs/features/techdocs/getting-started": "docs",
+    "/docs/features/techdocs/how-to-guides": "docs",
+    "/docs/features/techdocs/techdocs-overview": "docs",
+    "/docs/features/techdocs/troubleshooting": "docs",
+    "/docs/features/techdocs/using-cloud-storage": "docs",
+    "/docs/getting-started/app-custom-theme": "docs",
+    "/docs/getting-started/concepts": "docs",
+    "/docs/getting-started/configure-app-with-plugins": "docs",
+    "/docs/getting-started/contributors": "docs",
+    "/docs/getting-started/create-an-app": "docs",
+    "/docs/getting-started/index": "docs",
+    "/docs/getting-started/keeping-backstage-updated": "docs",
+    "/docs/getting-started/running-backstage-locally": "docs",
+    "/docs/glossary": "docs",
+    "/docs/integrations/azure/locations": "docs",
+    "/docs/integrations/bitbucket/discovery": "docs",
+    "/docs/integrations/bitbucket/locations": "docs",
+    "/docs/integrations/datadog-rum/installation": "docs",
+    "/docs/integrations/github/discovery": "docs",
+    "/docs/integrations/github/locations": "docs",
+    "/docs/integrations/github/org": "docs",
+    "/docs/integrations/gitlab/locations": "docs",
+    "/docs/integrations/google-analytics/installation": "docs",
+    "/docs/integrations/google-cloud-storage/locations": "docs",
+    "/docs/integrations/index": "docs",
+    "/docs/integrations/ldap/org": "docs",
+    "/docs/overview/adopting": "docs",
+    "/docs/overview/architecture-overview": "docs",
+    "/docs/overview/background": "docs",
+    "/docs/overview/logos": "docs",
+    "/docs/overview/roadmap": "docs",
+    "/docs/overview/stability-index": "docs",
+    "/docs/overview/vision": "docs",
+    "/docs/": "docs",
+    "/docs/plugins/add-to-marketplace": "docs",
+    "/docs/plugins/backend-plugin": "docs",
+    "/docs/plugins/call-existing-api": "docs",
+    "/docs/plugins/composability": "docs",
+    "/docs/plugins/create-a-plugin": "docs",
+    "/docs/plugins/existing-plugins": "docs",
+    "/docs/plugins/github-apps": "docs",
+    "/docs/plugins/index": "docs",
+    "/docs/plugins/integrating-plugin-into-service-catalog": "docs",
+    "/docs/plugins/observability": "docs",
+    "/docs/plugins/plugin-development": "docs",
+    "/docs/plugins/proxying": "docs",
+    "/docs/plugins/publish-private": "docs",
+    "/docs/plugins/publishing": "docs",
+    "/docs/plugins/structure-of-a-plugin": "docs",
+    "/docs/plugins/testing": "docs",
+    "/docs/reference/createPlugin": "docs",
+    "/docs/reference/createPlugin-feature-flags": "docs",
+    "/docs/reference/utility-apis/README": "docs",
+    "/docs/support/project-structure": "docs",
+    "/docs/support/support": "docs",
+    "/docs/tutorials/journey": "docs",
+    "/docs/tutorials/quickstart-app-plugin": "docs",
+    "/docs/tutorials/switching-sqlite-postgres": "docs"
+  }
+}

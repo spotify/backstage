@@ -1,0 +1,30 @@
+{
+  "unversionedId": "getting-started/app-custom-theme",
+  "id": "getting-started/app-custom-theme",
+  "isDocsHomePage": false,
+  "title": "Customize the look-and-feel of your App",
+  "description": "Documentation on Customizing look and feel of the App",
+  "source": "@site/../docs/getting-started/app-custom-theme.md",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/app-custom-theme",
+  "permalink": "/docs/getting-started/app-custom-theme",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/getting-started/app-custom-theme.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "app-custom-theme",
+    "title": "Customize the look-and-feel of your App",
+    "description": "Documentation on Customizing look and feel of the App"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Configuring App with plugins",
+    "permalink": "/docs/getting-started/configure-app-with-plugins"
+  },
+  "next": {
+    "title": "Keeping Backstage Updated",
+    "permalink": "/docs/getting-started/keeping-backstage-updated"
+  }
+}

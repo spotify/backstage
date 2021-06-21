@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-catalog/software-catalog-api",
+  "id": "features/software-catalog/software-catalog-api",
+  "isDocsHomePage": false,
+  "title": "API",
+  "description": "Documentation on Software Catalog API",
+  "source": "@site/../docs/features/software-catalog/api.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/software-catalog-api",
+  "permalink": "/docs/features/software-catalog/software-catalog-api",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/api.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "software-catalog-api",
+    "title": "API",
+    "description": "Documentation on Software Catalog API"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Catalog Customization",
+    "permalink": "/docs/features/software-catalog/catalog-customization"
+  },
+  "next": {
+    "title": "Kubernetes",
+    "permalink": "/docs/features/kubernetes/overview"
+  }
+}

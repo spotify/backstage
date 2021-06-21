@@ -1,0 +1,30 @@
+{
+  "unversionedId": "getting-started/running-backstage-locally",
+  "id": "getting-started/running-backstage-locally",
+  "isDocsHomePage": false,
+  "title": "Running Backstage Locally",
+  "description": "Documentation on How to run Backstage Locally",
+  "source": "@site/../docs/getting-started/running-backstage-locally.md",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/running-backstage-locally",
+  "permalink": "/docs/getting-started/running-backstage-locally",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/getting-started/running-backstage-locally.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "running-backstage-locally",
+    "title": "Running Backstage Locally",
+    "description": "Documentation on How to run Backstage Locally"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Create an App",
+    "permalink": "/docs/getting-started/create-an-app"
+  },
+  "next": {
+    "title": "Configuring App with plugins",
+    "permalink": "/docs/getting-started/configure-app-with-plugins"
+  }
+}

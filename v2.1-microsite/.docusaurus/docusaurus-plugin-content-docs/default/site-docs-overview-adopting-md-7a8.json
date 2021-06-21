@@ -1,0 +1,30 @@
+{
+  "unversionedId": "overview/adopting",
+  "id": "overview/adopting",
+  "isDocsHomePage": false,
+  "title": "Strategies for adopting",
+  "description": "Documentation on some general best practices that have been key to Backstage's success inside Spotify",
+  "source": "@site/../docs/overview/adopting.md",
+  "sourceDirName": "overview",
+  "slug": "/overview/adopting",
+  "permalink": "/docs/overview/adopting",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/overview/adopting.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "adopting",
+    "title": "Strategies for adopting",
+    "description": "Documentation on some general best practices that have been key to Backstage's success inside Spotify"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "The Spotify Story",
+    "permalink": "/docs/overview/background"
+  },
+  "next": {
+    "title": "Stability Index",
+    "permalink": "/docs/overview/stability-index"
+  }
+}

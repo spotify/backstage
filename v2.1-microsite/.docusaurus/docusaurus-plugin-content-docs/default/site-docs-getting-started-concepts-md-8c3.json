@@ -1,0 +1,30 @@
+{
+  "unversionedId": "getting-started/concepts",
+  "id": "getting-started/concepts",
+  "isDocsHomePage": false,
+  "title": "Key Concepts",
+  "description": "High level key concepts used in the Backstage project",
+  "source": "@site/../docs/getting-started/concepts.md",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/concepts",
+  "permalink": "/docs/getting-started/concepts",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/getting-started/concepts.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "concepts",
+    "title": "Key Concepts",
+    "description": "High level key concepts used in the Backstage project"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Keeping Backstage Updated",
+    "permalink": "/docs/getting-started/keeping-backstage-updated"
+  },
+  "next": {
+    "title": "Contributors",
+    "permalink": "/docs/getting-started/contributors"
+  }
+}

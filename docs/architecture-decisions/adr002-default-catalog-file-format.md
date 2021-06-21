@@ -1,9 +1,8 @@
 ---
 id: adrs-adr002
-title: ADR002: Default Software Catalog File Format
+title: "ADR002: Default Software Catalog File Format"
 description: Architecture Decision Record (ADR) log on Default Software Catalog File Format
 ---
-
 ## Background
 
 Backstage comes with a software catalog functionality, that you can use to track
@@ -51,6 +50,7 @@ describes a single entity.
 This is an example entity definition with some mocked data.
 
 ```yaml
+
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -67,6 +67,7 @@ metadata:
     circleci.com/project-slug: github/example-org/frobs-awesome
 spec:
   type: service
+
 ```
 
 The root fields `apiVersion`, `kind`, `metadata`, and `spec` are part of the
@@ -133,9 +134,9 @@ rules will not be accepted for registration in the catalog. The ruleset is
 configurable to fit your organization's needs, but the default behavior is as
 follows.
 
-- Strings of length at least 1, and at most 63
-- Must consist of sequences of `[a-z0-9A-Z]` possibly separated by one of
-  `[-_.]`
+-   Strings of length at least 1, and at most 63
+-   Must consist of sequences of `[a-z0-9A-Z]` possibly separated by one of
+    `[-_.]`
 
 Example: `visits-tracking-service`, `CircleciBuildsDs_avro_gcs`
 
@@ -201,13 +202,13 @@ Values can be of any length, but are limited to being strings.
 
 ## Component
 
-| Field        | Value                   |
-| ------------ | ----------------------- |
+| Field               | Value                          |
+| ------------------- | ------------------------------ |
 | `apiVersion` | `backstage.io/v1alpha1` |
 | `kind`       | `Component`             |
 
 The `spec` object for this kind is as follows:
 
-| Field  | Type   | Required | Description                            |
-| ------ | ------ | -------- | -------------------------------------- |
+| Field         | Type   | Required | Description                                   |
+| ------------- | ------ | -------- | --------------------------------------------- |
 | `type` | String | Yes      | The type of component, e.g. `service`. |

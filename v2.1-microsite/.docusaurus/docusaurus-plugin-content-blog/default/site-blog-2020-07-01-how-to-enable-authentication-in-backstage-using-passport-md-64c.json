@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/07/01/how-to-enable-authentication-in-backstage-using-passport",
+  "source": "@site/blog/2020-07-01-how-to-enable-authentication-in-backstage-using-passport.md",
+  "title": "How to enable authentication in Backstage using Passport",
+  "description": "auth-landing-page",
+  "date": "2020-07-01T00:00:00.000Z",
+  "formattedDate": "July 1, 2020",
+  "tags": [],
+  "readingTime": 2.01,
+  "truncated": true,
+  "prevItem": {
+    "title": "Announcing Backstage Software Templates",
+    "permalink": "/blog/2020/08/05/announcing-backstage-software-templates"
+  },
+  "nextItem": {
+    "title": "Backstage Service Catalog released in alpha",
+    "permalink": "/blog/2020/06/22/backstage-service-catalog-alpha"
+  }
+}

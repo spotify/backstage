@@ -2,7 +2,7 @@
 id: org
 title: GitHub Organizational Data
 sidebar_label: Org Data
-# prettier-ignore
+# prettier-ignore: ""
 description: Importing users and groups from a GitHub organization into Backstage
 ---
 

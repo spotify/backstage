@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/observability",
+  "id": "plugins/observability",
+  "isDocsHomePage": false,
+  "title": "Observability",
+  "description": "Adding Observability to Your Plugin",
+  "source": "@site/../docs/plugins/observability.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/observability",
+  "permalink": "/docs/plugins/observability",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/observability.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "observability",
+    "title": "Observability",
+    "description": "Adding Observability to Your Plugin"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Add to Marketplace",
+    "permalink": "/docs/plugins/add-to-marketplace"
+  },
+  "next": {
+    "title": "Static Configuration in Backstage",
+    "permalink": "/docs/conf/index"
+  }
+}

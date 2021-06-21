@@ -2,8 +2,8 @@
 id: index
 title: Integrations
 sidebar_label: Overview
-# prettier-ignore
-description:  Configuring Backstage to read or publish data with external providers using integrations
+# prettier-ignore: ""
+description: Configuring Backstage to read or publish data with external providers using integrations
 ---
 
 Integrations allow Backstage to read or publish data using external providers

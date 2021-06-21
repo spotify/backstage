@@ -1,0 +1,30 @@
+{
+  "unversionedId": "auth/oauth",
+  "id": "auth/oauth",
+  "isDocsHomePage": false,
+  "title": "OAuth and OpenID Connect",
+  "description": "This section describes how Backstage allows plugins to request OAuth Access Tokens and OpenID Connect ID Tokens on behalf of the user, to be used for auth to various third party APIs",
+  "source": "@site/../docs/auth/oauth.md",
+  "sourceDirName": "auth",
+  "slug": "/auth/oauth",
+  "permalink": "/docs/auth/oauth",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/oauth.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "oauth",
+    "title": "OAuth and OpenID Connect",
+    "description": "This section describes how Backstage allows plugins to request OAuth Access Tokens and OpenID Connect ID Tokens on behalf of the user, to be used for auth to various third party APIs"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Auth backend",
+    "permalink": "/docs/auth/auth-backend"
+  },
+  "next": {
+    "title": "Auth backend classes",
+    "permalink": "/docs/auth/auth-backend-classes"
+  }
+}

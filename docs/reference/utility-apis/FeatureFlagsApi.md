@@ -1,3 +1,5 @@
+---
+---
 # FeatureFlagsApi
 
 The FeatureFlagsApi type is defined at
@@ -60,12 +62,12 @@ incomplete or unstable upcoming features. Although there will be a common
 interface for users to enable and disable feature flags, this API acts as
 another way to enable/disable.
 
-<pre>
+```ts
 export type FeatureFlag = {
   name: string;
   pluginId: string;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/FeatureFlagsApi.ts:31](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/FeatureFlagsApi.ts#L31).
@@ -75,12 +77,12 @@ Referenced by: [registerFlag](#registerflag),
 
 ### FeatureFlagState
 
-<pre>
+```ts
 export enum FeatureFlagState {
   None = 0,
   Active = 1,
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/FeatureFlagsApi.ts:36](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/FeatureFlagsApi.ts#L36).
@@ -91,7 +93,7 @@ Referenced by: [FeatureFlagsSaveOptions](#featureflagssaveoptions).
 
 Options to use when saving feature flags.
 
-<pre>
+```tsx
 export type FeatureFlagsSaveOptions = {
   /**
    * The new feature flag states to save.
@@ -105,7 +107,7 @@ export type FeatureFlagsSaveOptions = {
    */
   merge?: boolean;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/FeatureFlagsApi.ts:44](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/FeatureFlagsApi.ts#L44).

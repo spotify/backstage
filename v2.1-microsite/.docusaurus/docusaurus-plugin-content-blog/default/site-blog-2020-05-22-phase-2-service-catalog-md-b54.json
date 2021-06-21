@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/05/22/phase-2-service-catalog",
+  "source": "@site/blog/2020-05-22-phase-2-service-catalog.md",
+  "title": "Starting Phase 2: The Service Catalog",
+  "description": "TL;DR Thanks to the help from the Backstage community, we’ve made excellent progress and are now moving into Phase 2 of Backstage — building out a Service Catalog and the surrounding systems that will help unify the tools you use to manage your software.",
+  "date": "2020-05-22T00:00:00.000Z",
+  "formattedDate": "May 22, 2020",
+  "tags": [],
+  "readingTime": 3.615,
+  "truncated": true,
+  "prevItem": {
+    "title": "Backstage Service Catalog released in alpha",
+    "permalink": "/blog/2020/06/22/backstage-service-catalog-alpha"
+  },
+  "nextItem": {
+    "title": "Introducing Tech Radar for Backstage",
+    "permalink": "/blog/2020/05/14/tech-radar-plugin"
+  }
+}

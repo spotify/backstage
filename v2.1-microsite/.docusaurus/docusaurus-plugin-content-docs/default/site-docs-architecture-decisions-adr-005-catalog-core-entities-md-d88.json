@@ -1,0 +1,30 @@
+{
+  "unversionedId": "architecture-decisions/adrs-adr005",
+  "id": "architecture-decisions/adrs-adr005",
+  "isDocsHomePage": false,
+  "title": "ADR005: Catalog Core Entities",
+  "description": "Architecture Decision Record (ADR) log on Catalog Core Entities",
+  "source": "@site/../docs/architecture-decisions/adr005-catalog-core-entities.md",
+  "sourceDirName": "architecture-decisions",
+  "slug": "/architecture-decisions/adrs-adr005",
+  "permalink": "/docs/architecture-decisions/adrs-adr005",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/architecture-decisions/adr005-catalog-core-entities.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "adrs-adr005",
+    "title": "ADR005: Catalog Core Entities",
+    "description": "Architecture Decision Record (ADR) log on Catalog Core Entities"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "ADR004: Module Export Structure",
+    "permalink": "/docs/architecture-decisions/adrs-adr004"
+  },
+  "next": {
+    "title": "ADR006: Avoid React.FC and React.SFC",
+    "permalink": "/docs/architecture-decisions/adrs-adr006"
+  }
+}

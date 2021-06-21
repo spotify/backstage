@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/06/22/backstage-service-catalog-alpha",
+  "source": "@site/blog/2020-06-22-backstage-service-catalog-alpha.md",
+  "title": "Backstage Service Catalog released in alpha",
+  "description": "TL;DR Today we are announcing the availability of the Backstage Service Catalog in alpha. This has been the community’s most requested feature. Even if the catalog is not ready for production yet, we think this release already demonstrates how Backstage can provide value for your company right out of the box. With your early input and feedback, we hope to create a stronger generally available product.",
+  "date": "2020-06-22T00:00:00.000Z",
+  "formattedDate": "June 22, 2020",
+  "tags": [],
+  "readingTime": 3.7,
+  "truncated": true,
+  "prevItem": {
+    "title": "How to enable authentication in Backstage using Passport",
+    "permalink": "/blog/2020/07/01/how-to-enable-authentication-in-backstage-using-passport"
+  },
+  "nextItem": {
+    "title": "Starting Phase 2: The Service Catalog",
+    "permalink": "/blog/2020/05/22/phase-2-service-catalog"
+  }
+}

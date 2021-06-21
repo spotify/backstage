@@ -1,0 +1,30 @@
+{
+  "unversionedId": "architecture-decisions/adrs-adr008",
+  "id": "architecture-decisions/adrs-adr008",
+  "isDocsHomePage": false,
+  "title": "ADR008: Default Catalog File Name",
+  "description": "Architecture Decision Record (ADR) log on Default Catalog File Name",
+  "source": "@site/../docs/architecture-decisions/adr008-default-catalog-file-name.md",
+  "sourceDirName": "architecture-decisions",
+  "slug": "/architecture-decisions/adrs-adr008",
+  "permalink": "/docs/architecture-decisions/adrs-adr008",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/architecture-decisions/adr008-default-catalog-file-name.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "adrs-adr008",
+    "title": "ADR008: Default Catalog File Name",
+    "description": "Architecture Decision Record (ADR) log on Default Catalog File Name"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "ADR007: Use MSW to mock http requests",
+    "permalink": "/docs/architecture-decisions/adrs-adr007"
+  },
+  "next": {
+    "title": "ADR009: Entity References",
+    "permalink": "/docs/architecture-decisions/adrs-adr009"
+  }
+}

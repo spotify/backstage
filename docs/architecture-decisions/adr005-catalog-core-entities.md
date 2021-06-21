@@ -1,9 +1,8 @@
 ---
 id: adrs-adr005
-title: ADR005: Catalog Core Entities
+title: "ADR005: Catalog Core Entities"
 description: Architecture Decision Record (ADR) log on Catalog Core Entities
 ---
-
 ## Context
 
 We want to standardize on a few core entities that we are tracking in the
@@ -13,10 +12,10 @@ Backstage catalog. This allows us to build specific plugins around them.
 
 Backstage should eventually support the following core entities:
 
-- **Components** are individual pieces of software
-- **APIs** are the boundaries between different components
-- **Resources** are physical or virtual infrastructure needed to operate a
-  component
+-   **Components** are individual pieces of software
+-   **APIs** are the boundaries between different components
+-   **Resources** are physical or virtual infrastructure needed to operate a
+    component
 
 ![Catalog Core Entities](../assets/architecture-decisions/catalog-core-entities.png)
 
@@ -37,12 +36,14 @@ Component entities are typically defined in YAML descriptor files next to the
 code of the component, and could look like this (actual schema will evolve):
 
 ```yaml
+
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: my-component-name
 spec:
   type: service
+
 ```
 
 ### API
@@ -63,6 +64,7 @@ wouldn't need their own descriptor files, but would be stored in the catalog
 somewhat like this (actual schema will evolve):
 
 ```yaml
+
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
@@ -81,6 +83,7 @@ spec:
     message HelloResponse {
       string reply = 1;
     }
+
 ```
 
 ### Resource
@@ -97,6 +100,7 @@ files, but would be stored in the catalog somewhat like this (actual schema will
 evolve):
 
 ```yaml
+
 apiVersion: backstage.io/v1alpha1
 kind: Resource
 metadata:
@@ -104,6 +108,7 @@ metadata:
 spec:
   type: gcp-spanner
   url: spanner.googleapis.com/projects/prj/instances/my-component-db/databases/my-db
+
 ```
 
 ## Consequences

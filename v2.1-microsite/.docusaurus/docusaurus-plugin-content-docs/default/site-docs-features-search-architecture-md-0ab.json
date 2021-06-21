@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/search/architecture",
+  "id": "features/search/architecture",
+  "isDocsHomePage": false,
+  "title": "Search Architecture",
+  "description": "Documentation on Search Architecture",
+  "source": "@site/../docs/features/search/architecture.md",
+  "sourceDirName": "features/search",
+  "slug": "/features/search/architecture",
+  "permalink": "/docs/features/search/architecture",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/search/architecture.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "architecture",
+    "title": "Search Architecture",
+    "description": "Documentation on Search Architecture"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Search Concepts",
+    "permalink": "/docs/features/search/concepts"
+  },
+  "next": {
+    "title": "TechDocs Documentation",
+    "permalink": "/docs/features/techdocs/techdocs-overview"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "unversionedId": "overview/logos",
+  "id": "overview/logos",
+  "isDocsHomePage": false,
+  "title": "Logos",
+  "description": "Guidelines for how to use the Backstage logos and icons",
+  "source": "@site/../docs/overview/logos.md",
+  "sourceDirName": "overview",
+  "slug": "/overview/logos",
+  "permalink": "/docs/overview/logos",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/overview/logos.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Logo assets",
+  "frontMatter": {
+    "id": "logos",
+    "title": "Logos",
+    "sidebar_label": "Logo assets",
+    "description": "Guidelines for how to use the Backstage logos and icons"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Stability Index",
+    "permalink": "/docs/overview/stability-index"
+  },
+  "next": {
+    "title": "Getting Started",
+    "permalink": "/docs/getting-started/index"
+  }
+}

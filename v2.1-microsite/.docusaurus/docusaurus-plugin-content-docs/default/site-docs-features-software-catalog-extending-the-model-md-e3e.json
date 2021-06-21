@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-catalog/extending-the-model",
+  "id": "features/software-catalog/extending-the-model",
+  "isDocsHomePage": false,
+  "title": "Extending the model",
+  "description": "Documentation on extending the catalog model",
+  "source": "@site/../docs/features/software-catalog/extending-the-model.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/extending-the-model",
+  "permalink": "/docs/features/software-catalog/extending-the-model",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/extending-the-model.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "extending-the-model",
+    "title": "Extending the model",
+    "description": "Documentation on extending the catalog model"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Well-known Status fields of Catalog Entities",
+    "permalink": "/docs/features/software-catalog/well-known-statuses"
+  },
+  "next": {
+    "title": "External integrations",
+    "permalink": "/docs/features/software-catalog/external-integrations"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/kubernetes/configuration",
+  "id": "features/kubernetes/configuration",
+  "isDocsHomePage": false,
+  "title": "Configuring Kubernetes integration",
+  "description": "Configuring the Kubernetes integration for Backstage expose your entity's objects",
+  "source": "@site/../docs/features/kubernetes/configuration.md",
+  "sourceDirName": "features/kubernetes",
+  "slug": "/features/kubernetes/configuration",
+  "permalink": "/docs/features/kubernetes/configuration",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/kubernetes/configuration.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Configuration",
+  "frontMatter": {
+    "id": "configuration",
+    "title": "Configuring Kubernetes integration",
+    "sidebar_label": "Configuration",
+    "description": "Configuring the Kubernetes integration for Backstage expose your entity's objects"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Installation",
+    "permalink": "/docs/features/kubernetes/installation"
+  },
+  "next": {
+    "title": "Troubleshooting Kubernetes",
+    "permalink": "/docs/features/kubernetes/troubleshooting"
+  }
+}

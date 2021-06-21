@@ -1,0 +1,15 @@
+{
+  "permalink": "/blog/2021/05/20/adopting-backstage",
+  "source": "@site/blog/2021-05-20-adopting-backstage.md",
+  "title": "Where do you start when adopting Backstage?",
+  "description": "Create, Manage, Explore",
+  "date": "2021-05-20T00:00:00.000Z",
+  "formattedDate": "May 20, 2021",
+  "tags": [],
+  "readingTime": 9.595,
+  "truncated": true,
+  "nextItem": {
+    "title": "New Backstage feature: Kubernetes for Service owners",
+    "permalink": "/blog/2021/01/12/new-backstage-feature-kubernetes-for-service-owners"
+  }
+}

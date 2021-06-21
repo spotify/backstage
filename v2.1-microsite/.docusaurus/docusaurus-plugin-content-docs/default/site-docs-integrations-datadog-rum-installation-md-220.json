@@ -1,0 +1,32 @@
+{
+  "unversionedId": "integrations/datadog-rum/installation",
+  "id": "integrations/datadog-rum/installation",
+  "isDocsHomePage": false,
+  "title": "Datadog RUM Installation",
+  "description": "Adding Datadog Real User Monitoring (RUM) to Your App",
+  "source": "@site/../docs/integrations/datadog-rum/installation.md",
+  "sourceDirName": "integrations/datadog-rum",
+  "slug": "/integrations/datadog-rum/installation",
+  "permalink": "/docs/integrations/datadog-rum/installation",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/integrations/datadog-rum/installation.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Installation",
+  "frontMatter": {
+    "id": "installation",
+    "title": "Datadog RUM Installation",
+    "sidebar_label": "Installation",
+    "description": "Adding Datadog Real User Monitoring (RUM) to Your App"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Bitbucket Discovery",
+    "permalink": "/docs/integrations/bitbucket/discovery"
+  },
+  "next": {
+    "title": "GitHub Locations",
+    "permalink": "/docs/integrations/github/locations"
+  }
+}

@@ -1,7 +1,7 @@
 ---
 id: configuration
 title: TechDocs Configuration Options
-# prettier-ignore
+# prettier-ignore: ""
 description: Reference documentation for configuring TechDocs using app-config.yaml
 ---
 

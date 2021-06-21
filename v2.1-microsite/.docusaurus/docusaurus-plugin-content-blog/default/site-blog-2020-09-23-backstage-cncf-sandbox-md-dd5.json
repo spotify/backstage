@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/09/23/backstage-cncf-sandbox",
+  "source": "@site/blog/2020-09-23-backstage-cncf-sandbox.md",
+  "title": "Backstage has been accepted into the CNCF Sandbox",
+  "description": "TL;DR The Cloud Native Computing Foundation (CNCF) announced that Backstage can begin incubating as an early stage project in the CNCF Sandbox. Released open source in March, the platform is built around an advanced service catalog and is designed to streamline software development from end to end.",
+  "date": "2020-09-23T00:00:00.000Z",
+  "formattedDate": "September 23, 2020",
+  "tags": [],
+  "readingTime": 2.065,
+  "truncated": true,
+  "prevItem": {
+    "title": "The Plugin Marketplace is open",
+    "permalink": "/blog/2020/09/30/plugin-marketplace"
+  },
+  "nextItem": {
+    "title": "Announcing TechDocs: Spotify’s docs-like-code plugin for Backstage",
+    "permalink": "/blog/2020/09/08/announcing-tech-docs"
+  }
+}

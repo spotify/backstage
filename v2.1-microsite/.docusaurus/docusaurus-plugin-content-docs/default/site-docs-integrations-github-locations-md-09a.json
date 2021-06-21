@@ -1,0 +1,32 @@
+{
+  "unversionedId": "integrations/github/locations",
+  "id": "integrations/github/locations",
+  "isDocsHomePage": false,
+  "title": "GitHub Locations",
+  "description": "Integrating source code stored in GitHub into the Backstage catalog",
+  "source": "@site/../docs/integrations/github/locations.md",
+  "sourceDirName": "integrations/github",
+  "slug": "/integrations/github/locations",
+  "permalink": "/docs/integrations/github/locations",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/integrations/github/locations.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Locations",
+  "frontMatter": {
+    "id": "locations",
+    "title": "GitHub Locations",
+    "sidebar_label": "Locations",
+    "description": "Integrating source code stored in GitHub into the Backstage catalog"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Datadog RUM Installation",
+    "permalink": "/docs/integrations/datadog-rum/installation"
+  },
+  "next": {
+    "title": "GitHub Discovery",
+    "permalink": "/docs/integrations/github/discovery"
+  }
+}

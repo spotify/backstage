@@ -1,0 +1,30 @@
+{
+  "unversionedId": "auth/auth-backend-classes",
+  "id": "auth/auth-backend-classes",
+  "isDocsHomePage": false,
+  "title": "Auth backend classes",
+  "description": "Documentation on Auth backend classes",
+  "source": "@site/../docs/auth/auth-backend-classes.md",
+  "sourceDirName": "auth",
+  "slug": "/auth/auth-backend-classes",
+  "permalink": "/docs/auth/auth-backend-classes",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/auth-backend-classes.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "auth-backend-classes",
+    "title": "Auth backend classes",
+    "description": "Documentation on Auth backend classes"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "OAuth and OpenID Connect",
+    "permalink": "/docs/auth/oauth"
+  },
+  "next": {
+    "title": "Glossary",
+    "permalink": "/docs/auth/glossary"
+  }
+}

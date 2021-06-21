@@ -1,7 +1,7 @@
 ---
 id: what-is-backstage
 title: What is Backstage?
-# prettier-ignore
+# prettier-ignore: ""
 description: Backstage is an open platform for building developer portals. Powered by a centralized service catalog, Backstage restores order to your microservices and infrastructure
 ---
 

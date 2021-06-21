@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/index",
+  "id": "plugins/index",
+  "isDocsHomePage": false,
+  "title": "Intro to plugins",
+  "description": "Documentation on Introduction to Plugins",
+  "source": "@site/../docs/plugins/index.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/index",
+  "permalink": "/docs/plugins/index",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/index.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "index",
+    "title": "Intro to plugins",
+    "description": "Documentation on Introduction to Plugins"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "LDAP Organizational Data",
+    "permalink": "/docs/integrations/ldap/org"
+  },
+  "next": {
+    "title": "Existing plugins",
+    "permalink": "/docs/plugins/existing-plugins"
+  }
+}

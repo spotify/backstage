@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/composability",
+  "id": "plugins/composability",
+  "isDocsHomePage": false,
+  "title": "Composability System Migration",
+  "description": "Documentation and migration instructions for new composability APIs.",
+  "source": "@site/../docs/plugins/composability.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/composability",
+  "permalink": "/docs/plugins/composability",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/composability.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "composability",
+    "title": "Composability System Migration",
+    "description": "Documentation and migration instructions for new composability APIs."
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Integrate into the Service Catalog",
+    "permalink": "/docs/plugins/integrating-plugin-into-service-catalog"
+  },
+  "next": {
+    "title": "Proxying",
+    "permalink": "/docs/plugins/proxying"
+  }
+}

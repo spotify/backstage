@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/software-catalog/well-known-relations",
+  "id": "features/software-catalog/well-known-relations",
+  "isDocsHomePage": false,
+  "title": "Well-known Relations between Catalog Entities",
+  "description": "Documentation that lists a number of well known Relations, that have defined semantics. They can be attached to catalog entities and consumed by plugins as needed.",
+  "source": "@site/../docs/features/software-catalog/well-known-relations.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/well-known-relations",
+  "permalink": "/docs/features/software-catalog/well-known-relations",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/well-known-relations.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Well-known Relations",
+  "frontMatter": {
+    "id": "well-known-relations",
+    "title": "Well-known Relations between Catalog Entities",
+    "sidebar_label": "Well-known Relations",
+    "description": "Documentation that lists a number of well known Relations, that have defined semantics. They can be attached to catalog entities and consumed by plugins as needed."
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Well-known Annotations on Catalog Entities",
+    "permalink": "/docs/features/software-catalog/well-known-annotations"
+  },
+  "next": {
+    "title": "Well-known Status fields of Catalog Entities",
+    "permalink": "/docs/features/software-catalog/well-known-statuses"
+  }
+}

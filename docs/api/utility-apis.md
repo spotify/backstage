@@ -3,7 +3,6 @@ id: utility-apis
 title: Utility APIs
 description: Backstage Utility APIs
 ---
-
 ## Introduction
 
 Backstage Plugins strive to be self-contained, with as much functionality as
@@ -33,6 +32,7 @@ hook exported by `@backstage/core`, or the `withApis` HOC if you prefer class
 components. For example, the `ErrorApi` can be accessed like this:
 
 ```tsx
+
 import React from 'react';
 import { useApi, errorApiRef } from '@backstage/core';
 
@@ -46,6 +46,7 @@ export const MyComponent = () => {
 
   // the rest of the component ...
 };
+
 ```
 
 Note that there is no explicit type given for `ErrorApi`. This is because the
@@ -68,12 +69,14 @@ that returns a new API instance.
 For example, this is the default `ApiFactory` for the `ErrorApi`:
 
 ```ts
+
 createApiFactory({
   api: errorApiRef,
   deps: { alertApi: alertApiRef },
   factory: ({ alertApi }) =>
     new ErrorAlerter(alertApi, new ErrorApiForwarder()),
 });
+
 ```
 
 In this example the `errorApiRef` is our API, which encapsulates the `ErrorApi`
@@ -119,6 +122,7 @@ Plugins supply their APIs through the `apis` option of `createPlugin`, for
 example:
 
 ```ts
+
 export const techdocsPlugin = createPlugin({
   id: 'techdocs',
   apis: [
@@ -133,6 +137,7 @@ export const techdocsPlugin = createPlugin({
     }),
   ],
 });
+
 ```
 
 ### App APIs
@@ -151,12 +156,14 @@ requirements on for example backend storage and surrounding environment.
 Supplying APIs to the app works just like for plugins:
 
 ```ts
+
 const app = createApp({
   apis: [
     /* ApiFactories */
   ],
   // ... other options
 });
+
 ```
 
 A common pattern is to export a list of all APIs from `apis.ts`, next to
@@ -170,17 +177,20 @@ Defining a custom implementation of a utility API is easy, you simply need to
 export a class that `implements` the target API, for example:
 
 ```ts
+
 export class IgnoringErrorApi implements ErrorApi {
   post(error: Error, context?: ErrorContext) {
     // ignore error
   }
 }
+
 ```
 
 The `IgnoringErrorApi` would then be imported in the app, and wired up like
 this:
 
 ```ts
+
 const app = createApp({
   apis: [
     /* ApiFactories */
@@ -200,6 +210,7 @@ const app = createApp({
   ],
   // ... other options
 });
+
 ```
 
 Note that the above line will cause an error if `IgnoreErrorApi` does not fully
@@ -247,15 +258,15 @@ contract established by an `ApiRef`, they are free to choose any implementation
 they want.
 
 The figure below shows the relationship between
-<span style="color: #82b366">different Apps</span>, that provide
-<span style="color: #6c8ebf">different implementations</span> of the
-<span style="color: #9673a6">FooApi</span>.
-<span style="color: #d6b656">Components</span> within Plugins then access the
-<span style="color: #9673a6">FooApi</span> via the
-<span style="color: #b85450">fooApiRef</span>.
+<span style={{color: "#82b366"}}>different Apps</span>, that provide
+<span style={{color: "#6c8ebf"}}>different implementations</span> of the
+<span style={{color: "#9673a6"}}>FooApi</span>.
+<span style={{color: "#d6b656"}}>Components</span> within Plugins then access the
+<span style={{color: "#9673a6"}}>FooApi</span> via the
+<span style={{color: "#b85450"}}>fooApiRef</span>.
 
-<div style="text-align:center">
-<img src="../assets/utility-apis-fig1.svg" alt="Figure showing the relationship between utility APIs, the apps that provide them, and the plugins that consume them">
+<div style={{textAlign: "center"}}>
+<img src="../assets/utility-apis-fig1.svg" alt="Figure showing the relationship between utility APIs, the apps that provide them, and the plugins that consume them" />
 </div>
 
 The current method for connecting Utility API providers and consumers is via the

@@ -1,0 +1,30 @@
+{
+  "unversionedId": "dls/design",
+  "id": "dls/design",
+  "isDocsHomePage": false,
+  "title": "Design",
+  "description": "Documentation on Design",
+  "source": "@site/../docs/dls/design.md",
+  "sourceDirName": "dls",
+  "slug": "/dls/design",
+  "permalink": "/docs/dls/design",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/dls/design.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "design",
+    "title": "Design",
+    "description": "Documentation on Design"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Deploying with Heroku",
+    "permalink": "/docs/deployment/heroku"
+  },
+  "next": {
+    "title": "Contributing to Storybook",
+    "permalink": "/docs/dls/contributing-to-storybook"
+  }
+}

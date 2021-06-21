@@ -1,0 +1,17 @@
+{
+  "unversionedId": "reference/utility-apis/DiscoveryApi",
+  "id": "reference/utility-apis/DiscoveryApi",
+  "isDocsHomePage": false,
+  "title": "DiscoveryApi",
+  "description": "The DiscoveryApi type is defined at",
+  "source": "@site/../docs/reference/utility-apis/DiscoveryApi.md",
+  "sourceDirName": "reference/utility-apis",
+  "slug": "/reference/utility-apis/DiscoveryApi",
+  "permalink": "/docs/reference/utility-apis/DiscoveryApi",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/utility-apis/DiscoveryApi.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {}
+}

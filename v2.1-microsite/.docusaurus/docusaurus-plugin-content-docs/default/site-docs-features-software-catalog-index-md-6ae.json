@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/software-catalog/software-catalog-overview",
+  "id": "features/software-catalog/software-catalog-overview",
+  "isDocsHomePage": false,
+  "title": "Backstage Service Catalog (alpha)",
+  "description": "The Backstage Service Catalog — actually, a software catalog, since it includes more than just services",
+  "source": "@site/../docs/features/software-catalog/index.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/software-catalog-overview",
+  "permalink": "/docs/features/software-catalog/software-catalog-overview",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/index.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Overview",
+  "frontMatter": {
+    "id": "software-catalog-overview",
+    "title": "Backstage Service Catalog (alpha)",
+    "sidebar_label": "Overview",
+    "description": "The Backstage Service Catalog — actually, a software catalog, since it includes more than just services"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Commands",
+    "permalink": "/docs/cli/commands"
+  },
+  "next": {
+    "title": "Installing in your Backstage App",
+    "permalink": "/docs/features/software-catalog/installation"
+  }
+}

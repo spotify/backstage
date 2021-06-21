@@ -1,3 +1,5 @@
+---
+---
 #!/bin/bash
 
 # This script uses plantuml to generate SVG images from inline plantuml descriptions.

@@ -1,0 +1,30 @@
+{
+  "unversionedId": "architecture-decisions/adrs-adr002",
+  "id": "architecture-decisions/adrs-adr002",
+  "isDocsHomePage": false,
+  "title": "ADR002: Default Software Catalog File Format",
+  "description": "Architecture Decision Record (ADR) log on Default Software Catalog File Format",
+  "source": "@site/../docs/architecture-decisions/adr002-default-catalog-file-format.md",
+  "sourceDirName": "architecture-decisions",
+  "slug": "/architecture-decisions/adrs-adr002",
+  "permalink": "/docs/architecture-decisions/adrs-adr002",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/architecture-decisions/adr002-default-catalog-file-format.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "adrs-adr002",
+    "title": "ADR002: Default Software Catalog File Format",
+    "description": "Architecture Decision Record (ADR) log on Default Software Catalog File Format"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "ADR001: Architecture Decision Record (ADR) log",
+    "permalink": "/docs/architecture-decisions/adrs-adr001"
+  },
+  "next": {
+    "title": "ADR003: Avoid Default Exports and Prefer Named Exports",
+    "permalink": "/docs/architecture-decisions/adrs-adr003"
+  }
+}

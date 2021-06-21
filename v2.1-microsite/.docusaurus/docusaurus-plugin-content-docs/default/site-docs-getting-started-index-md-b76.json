@@ -1,0 +1,30 @@
+{
+  "unversionedId": "getting-started/index",
+  "id": "getting-started/index",
+  "isDocsHomePage": false,
+  "title": "Getting Started",
+  "description": "Documentation on How to get started with Backstage",
+  "source": "@site/../docs/getting-started/index.md",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/index",
+  "permalink": "/docs/getting-started/index",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/getting-started/index.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "index",
+    "title": "Getting Started",
+    "description": "Documentation on How to get started with Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Logos",
+    "permalink": "/docs/overview/logos"
+  },
+  "next": {
+    "title": "Create an App",
+    "permalink": "/docs/getting-started/create-an-app"
+  }
+}

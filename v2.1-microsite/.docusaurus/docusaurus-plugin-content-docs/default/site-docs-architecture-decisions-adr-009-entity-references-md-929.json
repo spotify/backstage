@@ -1,0 +1,30 @@
+{
+  "unversionedId": "architecture-decisions/adrs-adr009",
+  "id": "architecture-decisions/adrs-adr009",
+  "isDocsHomePage": false,
+  "title": "ADR009: Entity References",
+  "description": "Architecture Decision Record (ADR) log on Entity References",
+  "source": "@site/../docs/architecture-decisions/adr009-entity-references.md",
+  "sourceDirName": "architecture-decisions",
+  "slug": "/architecture-decisions/adrs-adr009",
+  "permalink": "/docs/architecture-decisions/adrs-adr009",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/architecture-decisions/adr009-entity-references.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "adrs-adr009",
+    "title": "ADR009: Entity References",
+    "description": "Architecture Decision Record (ADR) log on Entity References"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "ADR008: Default Catalog File Name",
+    "permalink": "/docs/architecture-decisions/adrs-adr008"
+  },
+  "next": {
+    "title": "ADR010: Use the Luxon Date Library",
+    "permalink": "/docs/architecture-decisions/adrs-adr010"
+  }
+}

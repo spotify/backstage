@@ -1,3 +1,5 @@
+---
+---
 # OAuthRequestApi
 
 The OAuthRequestApi type is defined at
@@ -58,7 +60,7 @@ Information about the auth provider that we're requesting a login towards.
 This should be shown to the user so that they can be informed about what login
 is being requested before a popup is shown.
 
-<pre>
+```ts
 export type AuthProvider = {
   /**
    * Title for the auth provider, for example "GitHub"
@@ -70,7 +72,7 @@ export type AuthProvider = {
    */
   icon: IconComponent;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/OAuthRequestApi.ts:27](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/OAuthRequestApi.ts#L27).
@@ -106,7 +108,7 @@ Referenced by: [createAuthRequester](#createauthrequester).
 Describes how to handle auth requests. Both how to show them to the user, and
 what to do when the user accesses the auth request.
 
-<pre>
+```tsx
 export type AuthRequesterOptions&lt;AuthResponse&gt; = {
   /**
    * Information about the auth provider, which will be forwarded to auth requests.
@@ -119,7 +121,7 @@ export type AuthRequesterOptions&lt;AuthResponse&gt; = {
    */
   onAuthRequest(scopes: Set&lt;string&gt;): Promise&lt;AuthResponse&gt;;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/OAuthRequestApi.ts:43](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/OAuthRequestApi.ts#L43).
@@ -136,7 +138,7 @@ This is used as a common return type for observable values and can be created
 using many different observable implementations, such as zen-observable or
 RxJS 5.
 
-<pre>
+```tsx
 export type Observable&lt;T&gt; = {
   /**
    * Subscribes to this observable to start receiving new values.
@@ -148,7 +150,7 @@ export type Observable&lt;T&gt; = {
     onComplete?: () =&gt; void,
   ): <a href="#subscription">Subscription</a>;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:53](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L53).
@@ -161,13 +163,13 @@ This file contains non-react related core types used throughout Backstage.
 
 Observer interface for consuming an Observer, see TC39.
 
-<pre>
+```ts
 export type Observer&lt;T&gt; = {
   next?(value: T): void;
   error?(error: Error): void;
   complete?(): void;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:24](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L24).
@@ -183,7 +185,7 @@ Any new requests for the same provider are merged into the existing pending
 request, meaning there will only ever be a single pending request for a given
 provider.
 
-<pre>
+```tsx
 export type PendingAuthRequest = {
   /**
    * Information about the auth provider, as given in the AuthRequesterOptions
@@ -202,7 +204,7 @@ export type PendingAuthRequest = {
    */
   trigger(): Promise&lt;void&gt;;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/OAuthRequestApi.ts:77](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/OAuthRequestApi.ts#L77).
@@ -213,7 +215,7 @@ Referenced by: [authRequest\$](#authrequest).
 
 Subscription returned when subscribing to an Observable, see TC39.
 
-<pre>
+```ts
 export type Subscription = {
   /**
    * Cancels the subscription
@@ -225,7 +227,7 @@ export type Subscription = {
    */
   readonly closed: Boolean;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/types.ts:33](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/types.ts#L33).

@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/techdocs/getting-started",
+  "id": "features/techdocs/getting-started",
+  "isDocsHomePage": false,
+  "title": "Getting Started",
+  "description": "Getting Started Documentation",
+  "source": "@site/../docs/features/techdocs/getting-started.md",
+  "sourceDirName": "features/techdocs",
+  "slug": "/features/techdocs/getting-started",
+  "permalink": "/docs/features/techdocs/getting-started",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/techdocs/getting-started.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "getting-started",
+    "title": "Getting Started",
+    "description": "Getting Started Documentation"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "TechDocs Documentation",
+    "permalink": "/docs/features/techdocs/techdocs-overview"
+  },
+  "next": {
+    "title": "Concepts",
+    "permalink": "/docs/features/techdocs/concepts"
+  }
+}

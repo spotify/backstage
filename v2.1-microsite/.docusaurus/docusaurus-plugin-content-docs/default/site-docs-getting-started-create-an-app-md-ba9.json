@@ -1,0 +1,30 @@
+{
+  "unversionedId": "getting-started/create-an-app",
+  "id": "getting-started/create-an-app",
+  "isDocsHomePage": false,
+  "title": "Create an App",
+  "description": "Documentation on Creating an App",
+  "source": "@site/../docs/getting-started/create-an-app.md",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/create-an-app",
+  "permalink": "/docs/getting-started/create-an-app",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/getting-started/create-an-app.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "create-an-app",
+    "title": "Create an App",
+    "description": "Documentation on Creating an App"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Getting Started",
+    "permalink": "/docs/getting-started/index"
+  },
+  "next": {
+    "title": "Running Backstage Locally",
+    "permalink": "/docs/getting-started/running-backstage-locally"
+  }
+}

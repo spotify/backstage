@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/github-apps",
+  "id": "plugins/github-apps",
+  "isDocsHomePage": false,
+  "title": "GitHub Apps for Backend Authentication",
+  "description": "Configure GitHub Apps for Backend Authentication",
+  "source": "@site/../docs/plugins/github-apps.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/github-apps",
+  "permalink": "/docs/plugins/github-apps",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/github-apps.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "github-apps",
+    "title": "GitHub Apps for Backend Authentication",
+    "description": "Configure GitHub Apps for Backend Authentication"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Call Existing API",
+    "permalink": "/docs/plugins/call-existing-api"
+  },
+  "next": {
+    "title": "Testing with Jest",
+    "permalink": "/docs/plugins/testing"
+  }
+}

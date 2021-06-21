@@ -1,0 +1,30 @@
+{
+  "unversionedId": "tutorials/journey",
+  "id": "tutorials/journey",
+  "isDocsHomePage": false,
+  "title": "Future developer journey",
+  "description": "This document describes a possible journey of a future Backstage",
+  "source": "@site/../docs/tutorials/journey.md",
+  "sourceDirName": "tutorials",
+  "slug": "/tutorials/journey",
+  "permalink": "/docs/tutorials/journey",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/tutorials/journey.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "journey",
+    "title": "Future developer journey",
+    "description": "This document describes a possible journey of a future Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Backend",
+    "permalink": "/docs/api/backend"
+  },
+  "next": {
+    "title": "Adding Custom Plugin to Existing Monorepo App",
+    "permalink": "/docs/tutorials/quickstart-app-plugin"
+  }
+}

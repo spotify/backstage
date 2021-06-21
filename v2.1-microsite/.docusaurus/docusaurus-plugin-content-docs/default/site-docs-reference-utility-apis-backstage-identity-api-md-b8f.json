@@ -1,0 +1,17 @@
+{
+  "unversionedId": "reference/utility-apis/BackstageIdentityApi",
+  "id": "reference/utility-apis/BackstageIdentityApi",
+  "isDocsHomePage": false,
+  "title": "BackstageIdentityApi",
+  "description": "The BackstageIdentityApi type is defined at",
+  "source": "@site/../docs/reference/utility-apis/BackstageIdentityApi.md",
+  "sourceDirName": "reference/utility-apis",
+  "slug": "/reference/utility-apis/BackstageIdentityApi",
+  "permalink": "/docs/reference/utility-apis/BackstageIdentityApi",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/utility-apis/BackstageIdentityApi.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {}
+}

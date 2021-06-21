@@ -1,0 +1,32 @@
+{
+  "unversionedId": "integrations/bitbucket/locations",
+  "id": "integrations/bitbucket/locations",
+  "isDocsHomePage": false,
+  "title": "Bitbucket Locations",
+  "description": "Integrating source code stored in Bitbucket into the Backstage catalog",
+  "source": "@site/../docs/integrations/bitbucket/locations.md",
+  "sourceDirName": "integrations/bitbucket",
+  "slug": "/integrations/bitbucket/locations",
+  "permalink": "/docs/integrations/bitbucket/locations",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/integrations/bitbucket/locations.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Locations",
+  "frontMatter": {
+    "id": "locations",
+    "title": "Bitbucket Locations",
+    "sidebar_label": "Locations",
+    "description": "Integrating source code stored in Bitbucket into the Backstage catalog"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Azure DevOps Locations",
+    "permalink": "/docs/integrations/azure/locations"
+  },
+  "next": {
+    "title": "Bitbucket Discovery",
+    "permalink": "/docs/integrations/bitbucket/discovery"
+  }
+}

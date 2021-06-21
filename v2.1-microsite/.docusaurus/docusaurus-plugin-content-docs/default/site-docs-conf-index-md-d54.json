@@ -1,0 +1,30 @@
+{
+  "unversionedId": "conf/index",
+  "id": "conf/index",
+  "isDocsHomePage": false,
+  "title": "Static Configuration in Backstage",
+  "description": "Documentation on Static Configuration in Backstage",
+  "source": "@site/../docs/conf/index.md",
+  "sourceDirName": "conf",
+  "slug": "/conf/index",
+  "permalink": "/docs/conf/index",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/conf/index.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "index",
+    "title": "Static Configuration in Backstage",
+    "description": "Documentation on Static Configuration in Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Observability",
+    "permalink": "/docs/plugins/observability"
+  },
+  "next": {
+    "title": "Reading Backstage Configuration",
+    "permalink": "/docs/conf/reading"
+  }
+}

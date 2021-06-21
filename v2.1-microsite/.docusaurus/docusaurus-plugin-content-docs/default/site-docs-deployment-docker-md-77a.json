@@ -1,0 +1,32 @@
+{
+  "unversionedId": "deployment/docker",
+  "id": "deployment/docker",
+  "isDocsHomePage": false,
+  "title": "Building a Docker image",
+  "description": "How to build a Backstage Docker image for deployment",
+  "source": "@site/../docs/deployment/docker.md",
+  "sourceDirName": "deployment",
+  "slug": "/deployment/docker",
+  "permalink": "/docs/deployment/docker",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/deployment/docker.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Docker",
+  "frontMatter": {
+    "id": "docker",
+    "title": "Building a Docker image",
+    "sidebar_label": "Docker",
+    "description": "How to build a Backstage Docker image for deployment"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Deploying Backstage",
+    "permalink": "/docs/deployment/index"
+  },
+  "next": {
+    "title": "Deploying with Kubernetes",
+    "permalink": "/docs/deployment/k8s"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-templates/template-legacy",
+  "id": "features/software-templates/template-legacy",
+  "isDocsHomePage": false,
+  "title": "Writing Templates (Legacy)",
+  "description": "Old documentation describing the backstage.io/v1alpha1 format of the Template Schema",
+  "source": "@site/../docs/features/software-templates/legacy.md",
+  "sourceDirName": "features/software-templates",
+  "slug": "/features/software-templates/template-legacy",
+  "permalink": "/docs/features/software-templates/template-legacy",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-templates/legacy.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "template-legacy",
+    "title": "Writing Templates (Legacy)",
+    "description": "Old documentation describing the backstage.io/v1alpha1 format of the Template Schema"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Writing Custom Actions",
+    "permalink": "/docs/features/software-templates/writing-custom-actions"
+  },
+  "next": {
+    "title": "What's new?",
+    "permalink": "/docs/features/software-templates/migrating-from-v1alpha1-to-v1beta2"
+  }
+}

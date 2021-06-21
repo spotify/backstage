@@ -1,0 +1,30 @@
+{
+  "unversionedId": "support/project-structure",
+  "id": "support/project-structure",
+  "isDocsHomePage": false,
+  "title": "Backstage Project Structure",
+  "description": "Introduction to files and folders in the Backstage Project repository",
+  "source": "@site/../docs/support/project-structure.md",
+  "sourceDirName": "support",
+  "slug": "/support/project-structure",
+  "permalink": "/docs/support/project-structure",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/support/project-structure.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "project-structure",
+    "title": "Backstage Project Structure",
+    "description": "Introduction to files and folders in the Backstage Project repository"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Support and community",
+    "permalink": "/docs/support/support"
+  },
+  "next": {
+    "title": "Backstage Glossary",
+    "permalink": "/docs/glossary"
+  }
+}

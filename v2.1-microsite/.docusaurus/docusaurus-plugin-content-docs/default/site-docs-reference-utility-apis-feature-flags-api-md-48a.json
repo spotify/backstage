@@ -1,0 +1,17 @@
+{
+  "unversionedId": "reference/utility-apis/FeatureFlagsApi",
+  "id": "reference/utility-apis/FeatureFlagsApi",
+  "isDocsHomePage": false,
+  "title": "FeatureFlagsApi",
+  "description": "The FeatureFlagsApi type is defined at",
+  "source": "@site/../docs/reference/utility-apis/FeatureFlagsApi.md",
+  "sourceDirName": "reference/utility-apis",
+  "slug": "/reference/utility-apis/FeatureFlagsApi",
+  "permalink": "/docs/reference/utility-apis/FeatureFlagsApi",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/utility-apis/FeatureFlagsApi.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {}
+}

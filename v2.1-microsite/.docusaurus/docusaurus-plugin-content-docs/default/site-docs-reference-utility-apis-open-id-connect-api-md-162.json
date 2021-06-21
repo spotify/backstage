@@ -1,0 +1,17 @@
+{
+  "unversionedId": "reference/utility-apis/OpenIdConnectApi",
+  "id": "reference/utility-apis/OpenIdConnectApi",
+  "isDocsHomePage": false,
+  "title": "OpenIdConnectApi",
+  "description": "The OpenIdConnectApi type is defined at",
+  "source": "@site/../docs/reference/utility-apis/OpenIdConnectApi.md",
+  "sourceDirName": "reference/utility-apis",
+  "slug": "/reference/utility-apis/OpenIdConnectApi",
+  "permalink": "/docs/reference/utility-apis/OpenIdConnectApi",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/utility-apis/OpenIdConnectApi.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {}
+}

@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-catalog/external-integrations",
+  "id": "features/software-catalog/external-integrations",
+  "isDocsHomePage": false,
+  "title": "External integrations",
+  "description": "Documentation on External integrations to integrate systems with Backstage",
+  "source": "@site/../docs/features/software-catalog/external-integrations.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/external-integrations",
+  "permalink": "/docs/features/software-catalog/external-integrations",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/external-integrations.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "external-integrations",
+    "title": "External integrations",
+    "description": "Documentation on External integrations to integrate systems with Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Extending the model",
+    "permalink": "/docs/features/software-catalog/extending-the-model"
+  },
+  "next": {
+    "title": "Catalog Customization",
+    "permalink": "/docs/features/software-catalog/catalog-customization"
+  }
+}

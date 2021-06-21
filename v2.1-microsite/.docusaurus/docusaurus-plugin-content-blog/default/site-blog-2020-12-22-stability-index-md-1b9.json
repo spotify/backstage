@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/12/22/stability-index",
+  "source": "@site/blog/2020-12-22-stability-index.md",
+  "title": "Announcing the Backstage Stability Index",
+  "description": "TL;DR Backstage is heading out of alpha and moving onto the path to stable releases and an eventual version 1.0. As the community and ecosystem continue to grow at an increasing rate, we want to provide a solid foundation for everyone building things in, with, and around Backstage. So, today we’re introducing the Stability Index — a simple way to find out how likely (or unlikely) a specific package or plugin inside Backstage might be updated with major changes. By indicating the reliability of key features and APIs, this quick reference will help contributors and adopters better plan and coordinate their development efforts going forward.",
+  "date": "2020-12-22T00:00:00.000Z",
+  "formattedDate": "December 22, 2020",
+  "tags": [],
+  "readingTime": 3.655,
+  "truncated": true,
+  "prevItem": {
+    "title": "New Backstage feature: Kubernetes for Service owners",
+    "permalink": "/blog/2021/01/12/new-backstage-feature-kubernetes-for-service-owners"
+  },
+  "nextItem": {
+    "title": "New Cost Insights plugin: The engineer’s solution to taming cloud costs",
+    "permalink": "/blog/2020/10/22/cost-insights-plugin"
+  }
+}

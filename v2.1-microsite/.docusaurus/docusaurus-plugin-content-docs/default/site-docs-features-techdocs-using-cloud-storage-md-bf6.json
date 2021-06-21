@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/techdocs/using-cloud-storage",
+  "id": "features/techdocs/using-cloud-storage",
+  "isDocsHomePage": false,
+  "title": "Using Cloud Storage for TechDocs generated files",
+  "description": "Using Cloud Storage for TechDocs generated files",
+  "source": "@site/../docs/features/techdocs/using-cloud-storage.md",
+  "sourceDirName": "features/techdocs",
+  "slug": "/features/techdocs/using-cloud-storage",
+  "permalink": "/docs/features/techdocs/using-cloud-storage",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/techdocs/using-cloud-storage.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "using-cloud-storage",
+    "title": "Using Cloud Storage for TechDocs generated files",
+    "description": "Using Cloud Storage for TechDocs generated files"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "TechDocs Configuration Options",
+    "permalink": "/docs/features/techdocs/configuration"
+  },
+  "next": {
+    "title": "Configuring CI/CD to generate and publish TechDocs sites",
+    "permalink": "/docs/features/techdocs/configuring-ci-cd"
+  }
+}

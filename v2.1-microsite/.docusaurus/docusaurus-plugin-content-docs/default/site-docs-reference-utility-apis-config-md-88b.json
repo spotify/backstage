@@ -1,0 +1,17 @@
+{
+  "unversionedId": "reference/utility-apis/Config",
+  "id": "reference/utility-apis/Config",
+  "isDocsHomePage": false,
+  "title": "Config",
+  "description": "The Config type is defined at",
+  "source": "@site/../docs/reference/utility-apis/Config.md",
+  "sourceDirName": "reference/utility-apis",
+  "slug": "/reference/utility-apis/Config",
+  "permalink": "/docs/reference/utility-apis/Config",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/utility-apis/Config.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {}
+}

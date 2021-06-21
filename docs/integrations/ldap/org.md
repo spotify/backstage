@@ -2,7 +2,7 @@
 id: org
 title: LDAP Organizational Data
 sidebar_label: Org Data
-# prettier-ignore
+# prettier-ignore: ""
 description: Setting up ingestion of organizational data from LDAP
 ---
 

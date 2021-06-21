@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/testing",
+  "id": "plugins/testing",
+  "isDocsHomePage": false,
+  "title": "Testing with Jest",
+  "description": "Documentation on How to do unit testing with Jest",
+  "source": "@site/../docs/plugins/testing.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/testing",
+  "permalink": "/docs/plugins/testing",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/testing.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "testing",
+    "title": "Testing with Jest",
+    "description": "Documentation on How to do unit testing with Jest"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "GitHub Apps for Backend Authentication",
+    "permalink": "/docs/plugins/github-apps"
+  },
+  "next": {
+    "title": "Publishing",
+    "permalink": "/docs/plugins/publishing"
+  }
+}

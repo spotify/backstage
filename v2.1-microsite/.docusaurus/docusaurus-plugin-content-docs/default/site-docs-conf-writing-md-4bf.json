@@ -1,0 +1,30 @@
+{
+  "unversionedId": "conf/writing",
+  "id": "conf/writing",
+  "isDocsHomePage": false,
+  "title": "Writing Backstage Configuration Files",
+  "description": "Documentation on Writing Backstage Configuration Files",
+  "source": "@site/../docs/conf/writing.md",
+  "sourceDirName": "conf",
+  "slug": "/conf/writing",
+  "permalink": "/docs/conf/writing",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/conf/writing.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "writing",
+    "title": "Writing Backstage Configuration Files",
+    "description": "Documentation on Writing Backstage Configuration Files"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Reading Backstage Configuration",
+    "permalink": "/docs/conf/reading"
+  },
+  "next": {
+    "title": "Defining Configuration for your Plugin",
+    "permalink": "/docs/conf/defining"
+  }
+}

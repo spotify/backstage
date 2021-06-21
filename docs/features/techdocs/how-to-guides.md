@@ -1,8 +1,8 @@
 ---
 id: how-to-guides
-title: TechDocs "HOW TO" guides
-sidebar_label: "HOW TO" guides
-description: TechDocs "HOW TO" guides related to TechDocs
+title: 'TechDocs "HOW TO" guides'
+sidebar_label: '"HOW TO" guides'
+description: 'TechDocs "HOW TO" guides related to TechDocs'
 ---
 
 ## How to migrate from TechDocs Basic to Recommended deployment approach?

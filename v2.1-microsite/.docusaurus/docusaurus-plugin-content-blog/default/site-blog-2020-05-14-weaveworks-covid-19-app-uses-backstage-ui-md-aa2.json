@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/05/14/weaveworks-covid-19-app-uses-backstage-ui",
+  "source": "@site/blog/2020-05-14-weaveworks-covid-19-app-uses-backstage-ui.md",
+  "title": "Weaveworks’ COVID-19 app uses Backstage UI",
+  "description": "fk-covid-screenshot",
+  "date": "2020-05-14T00:00:00.000Z",
+  "formattedDate": "May 14, 2020",
+  "tags": [],
+  "readingTime": 2.01,
+  "truncated": true,
+  "prevItem": {
+    "title": "Introducing Tech Radar for Backstage",
+    "permalink": "/blog/2020/05/14/tech-radar-plugin"
+  },
+  "nextItem": {
+    "title": "How to quickly set up Backstage",
+    "permalink": "/blog/2020/04/30/how-to-quickly-set-up-backstage"
+  }
+}

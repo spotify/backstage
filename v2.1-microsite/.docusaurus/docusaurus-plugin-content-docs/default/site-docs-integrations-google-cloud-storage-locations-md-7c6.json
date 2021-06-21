@@ -1,0 +1,32 @@
+{
+  "unversionedId": "integrations/google-cloud-storage/locations",
+  "id": "integrations/google-cloud-storage/locations",
+  "isDocsHomePage": false,
+  "title": "Google Cloud Storage Locations",
+  "description": "Setting up an integration with Google Cloud Storage",
+  "source": "@site/../docs/integrations/google-cloud-storage/locations.md",
+  "sourceDirName": "integrations/google-cloud-storage",
+  "slug": "/integrations/google-cloud-storage/locations",
+  "permalink": "/docs/integrations/google-cloud-storage/locations",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/integrations/google-cloud-storage/locations.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Locations",
+  "frontMatter": {
+    "id": "locations",
+    "sidebar_label": "Locations",
+    "title": "Google Cloud Storage Locations",
+    "description": "Setting up an integration with Google Cloud Storage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Google Analytics Installation",
+    "permalink": "/docs/integrations/google-analytics/installation"
+  },
+  "next": {
+    "title": "LDAP Organizational Data",
+    "permalink": "/docs/integrations/ldap/org"
+  }
+}

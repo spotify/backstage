@@ -1,0 +1,30 @@
+{
+  "unversionedId": "getting-started/configure-app-with-plugins",
+  "id": "getting-started/configure-app-with-plugins",
+  "isDocsHomePage": false,
+  "title": "Configuring App with plugins",
+  "description": "Documentation on How Configuring App with plugins",
+  "source": "@site/../docs/getting-started/configure-app-with-plugins.md",
+  "sourceDirName": "getting-started",
+  "slug": "/getting-started/configure-app-with-plugins",
+  "permalink": "/docs/getting-started/configure-app-with-plugins",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/getting-started/configure-app-with-plugins.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "configure-app-with-plugins",
+    "title": "Configuring App with plugins",
+    "description": "Documentation on How Configuring App with plugins"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Running Backstage Locally",
+    "permalink": "/docs/getting-started/running-backstage-locally"
+  },
+  "next": {
+    "title": "Customize the look-and-feel of your App",
+    "permalink": "/docs/getting-started/app-custom-theme"
+  }
+}

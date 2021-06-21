@@ -1,0 +1,30 @@
+{
+  "unversionedId": "api/backend",
+  "id": "api/backend",
+  "isDocsHomePage": false,
+  "title": "Backend",
+  "description": "About Backend",
+  "source": "@site/../docs/api/backend.md",
+  "sourceDirName": "api",
+  "slug": "/api/backend",
+  "permalink": "/docs/api/backend",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/api/backend.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "backend",
+    "title": "Backend",
+    "description": "About Backend"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "createPlugin - feature flags",
+    "permalink": "/docs/reference/createPlugin-feature-flags"
+  },
+  "next": {
+    "title": "Future developer journey",
+    "permalink": "/docs/tutorials/journey"
+  }
+}

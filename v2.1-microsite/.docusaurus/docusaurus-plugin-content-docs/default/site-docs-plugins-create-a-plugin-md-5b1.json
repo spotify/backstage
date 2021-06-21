@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/create-a-plugin",
+  "id": "plugins/create-a-plugin",
+  "isDocsHomePage": false,
+  "title": "Create a Backstage Plugin",
+  "description": "Documentation on How to Create a Backstage Plugin",
+  "source": "@site/../docs/plugins/create-a-plugin.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/create-a-plugin",
+  "permalink": "/docs/plugins/create-a-plugin",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/create-a-plugin.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "create-a-plugin",
+    "title": "Create a Backstage Plugin",
+    "description": "Documentation on How to Create a Backstage Plugin"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Existing plugins",
+    "permalink": "/docs/plugins/existing-plugins"
+  },
+  "next": {
+    "title": "Plugin Development",
+    "permalink": "/docs/plugins/plugin-development"
+  }
+}

@@ -1,7 +1,7 @@
 ---
 id: vision
 title: Vision
-# prettier-ignore
+# prettier-ignore: ""
 description: Goal is to provide engineers with the best developer experience in the world
 ---
 

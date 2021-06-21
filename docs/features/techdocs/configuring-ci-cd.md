@@ -1,8 +1,8 @@
 ---
 id: configuring-ci-cd
-title: Configuring CI/CD to generate and publish TechDocs sites
-# prettier-ignore
-description: Configuring CI/CD to generate and publish TechDocs sites to cloud storage
+title: "Configuring CI/CD to generate and publish TechDocs sites"
+# prettier-ignore: ""
+description: "Configuring CI/CD to generate and publish TechDocs sites to cloud storage"
 ---
 
 In the [Recommended deployment setup](./architecture.md#recommended-deployment),

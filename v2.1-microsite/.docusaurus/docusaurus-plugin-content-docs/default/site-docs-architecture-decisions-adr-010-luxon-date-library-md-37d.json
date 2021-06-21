@@ -1,0 +1,30 @@
+{
+  "unversionedId": "architecture-decisions/adrs-adr010",
+  "id": "architecture-decisions/adrs-adr010",
+  "isDocsHomePage": false,
+  "title": "ADR010: Use the Luxon Date Library",
+  "description": "Architecture Decision Record (ADR) for Luxon Date Library",
+  "source": "@site/../docs/architecture-decisions/adr010-luxon-date-library.md",
+  "sourceDirName": "architecture-decisions",
+  "slug": "/architecture-decisions/adrs-adr010",
+  "permalink": "/docs/architecture-decisions/adrs-adr010",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/architecture-decisions/adr010-luxon-date-library.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "adrs-adr010",
+    "title": "ADR010: Use the Luxon Date Library",
+    "description": "Architecture Decision Record (ADR) for Luxon Date Library"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "ADR009: Entity References",
+    "permalink": "/docs/architecture-decisions/adrs-adr009"
+  },
+  "next": {
+    "title": "ADR011: Plugin Package Structure",
+    "permalink": "/docs/architecture-decisions/adrs-adr011"
+  }
+}

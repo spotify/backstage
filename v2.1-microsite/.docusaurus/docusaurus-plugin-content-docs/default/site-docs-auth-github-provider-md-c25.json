@@ -1,0 +1,32 @@
+{
+  "unversionedId": "auth/github/provider",
+  "id": "auth/github/provider",
+  "isDocsHomePage": false,
+  "title": "GitHub Authentication Provider",
+  "description": "Adding GitHub OAuth as an authentication provider in Backstage",
+  "source": "@site/../docs/auth/github/provider.md",
+  "sourceDirName": "auth/github",
+  "slug": "/auth/github/provider",
+  "permalink": "/docs/auth/github/provider",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/github/provider.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "GitHub",
+  "frontMatter": {
+    "id": "provider",
+    "title": "GitHub Authentication Provider",
+    "sidebar_label": "GitHub",
+    "description": "Adding GitHub OAuth as an authentication provider in Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Microsoft Azure Authentication Provider",
+    "permalink": "/docs/auth/microsoft/provider"
+  },
+  "next": {
+    "title": "GitLab Authentication Provider",
+    "permalink": "/docs/auth/gitlab/provider"
+  }
+}

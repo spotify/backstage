@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/call-existing-api",
+  "id": "plugins/call-existing-api",
+  "isDocsHomePage": false,
+  "title": "Call Existing API",
+  "description": "Describes the various options that Backstage frontend plugins have, in communicating with service APIs that already exist",
+  "source": "@site/../docs/plugins/call-existing-api.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/call-existing-api",
+  "permalink": "/docs/plugins/call-existing-api",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/call-existing-api.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "call-existing-api",
+    "title": "Call Existing API",
+    "description": "Describes the various options that Backstage frontend plugins have, in communicating with service APIs that already exist"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Backend plugins",
+    "permalink": "/docs/plugins/backend-plugin"
+  },
+  "next": {
+    "title": "GitHub Apps for Backend Authentication",
+    "permalink": "/docs/plugins/github-apps"
+  }
+}

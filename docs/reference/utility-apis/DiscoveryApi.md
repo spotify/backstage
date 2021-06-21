@@ -1,3 +1,5 @@
+---
+---
 # DiscoveryApi
 
 The DiscoveryApi type is defined at

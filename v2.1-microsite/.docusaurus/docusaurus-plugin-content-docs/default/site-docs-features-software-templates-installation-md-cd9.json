@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-templates/installation",
+  "id": "features/software-templates/installation",
+  "isDocsHomePage": false,
+  "title": "Installing in your Backstage App",
+  "description": "Documentation on How to install Backstage App",
+  "source": "@site/../docs/features/software-templates/installation.md",
+  "sourceDirName": "features/software-templates",
+  "slug": "/features/software-templates/installation",
+  "permalink": "/docs/features/software-templates/installation",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-templates/installation.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "installation",
+    "title": "Installing in your Backstage App",
+    "description": "Documentation on How to install Backstage App"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Backstage Software Templates",
+    "permalink": "/docs/features/software-templates/software-templates-index"
+  },
+  "next": {
+    "title": "Adding your own Templates",
+    "permalink": "/docs/features/software-templates/adding-templates"
+  }
+}

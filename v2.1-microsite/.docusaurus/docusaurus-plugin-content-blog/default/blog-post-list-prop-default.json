@@ -1,0 +1,25 @@
+{
+  "title": "Recent posts",
+  "items": [
+    {
+      "title": "Where do you start when adopting Backstage?",
+      "permalink": "/blog/2021/05/20/adopting-backstage"
+    },
+    {
+      "title": "New Backstage feature: Kubernetes for Service owners",
+      "permalink": "/blog/2021/01/12/new-backstage-feature-kubernetes-for-service-owners"
+    },
+    {
+      "title": "Announcing the Backstage Stability Index",
+      "permalink": "/blog/2020/12/22/stability-index"
+    },
+    {
+      "title": "New Cost Insights plugin: The engineer’s solution to taming cloud costs",
+      "permalink": "/blog/2020/10/22/cost-insights-plugin"
+    },
+    {
+      "title": "How to design for Backstage (even if you’re not a designer)",
+      "permalink": "/blog/2020/09/30/backstage-design-system"
+    }
+  ]
+}

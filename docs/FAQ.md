@@ -3,7 +3,6 @@ id: FAQ
 title: FAQ
 description: All FAQ related to Backstage
 ---
-
 ## Product FAQ
 
 ### Can we call Backstage something different? So that it fits our company better?

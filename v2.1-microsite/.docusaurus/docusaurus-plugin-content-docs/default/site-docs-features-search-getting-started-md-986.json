@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/search/getting-started",
+  "id": "features/search/getting-started",
+  "isDocsHomePage": false,
+  "title": "Getting Started",
+  "description": "How to set up and install Backstage Search",
+  "source": "@site/../docs/features/search/getting-started.md",
+  "sourceDirName": "features/search",
+  "slug": "/features/search/getting-started",
+  "permalink": "/docs/features/search/getting-started",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/search/getting-started.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "getting-started",
+    "title": "Getting Started with Search",
+    "description": "How to set up and install Backstage Search"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Backstage Search",
+    "permalink": "/docs/features/search/search-overview"
+  },
+  "next": {
+    "title": "Search Concepts",
+    "permalink": "/docs/features/search/concepts"
+  }
+}

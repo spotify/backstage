@@ -1,3 +1,5 @@
+---
+---
 # Config
 
 The Config type is defined at
@@ -110,7 +112,7 @@ These types are part of the API declaration, but may not be unique to this API.
 
 ### Config
 
-<pre>
+```tsx
 export type Config = {
   has(key: string): boolean;
 
@@ -137,7 +139,7 @@ export type Config = {
   getStringArray(key: string): string[];
   getOptionalStringArray(key: string): string[] | undefined;
 }
-</pre>
+```
 
 Defined at
 [packages/config/src/types.ts:32](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/config/src/types.ts#L32).
@@ -159,9 +161,9 @@ Referenced by: [JsonValue](#jsonvalue).
 
 ### JsonObject
 
-<pre>
+```tsx
 export type JsonObject = { [key in string]?: <a href="#jsonvalue">JsonValue</a> }
-</pre>
+```
 
 Defined at
 [packages/config/src/types.ts:17](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/config/src/types.ts#L17).
@@ -170,7 +172,7 @@ Referenced by: [JsonValue](#jsonvalue).
 
 ### JsonValue
 
-<pre>
+```tsx
 export type JsonValue =
   | <a href="#jsonobject">JsonObject</a>
   | <a href="#jsonarray">JsonArray</a>
@@ -178,7 +180,7 @@ export type JsonValue =
   | string
   | boolean
   | null
-</pre>
+```
 
 Defined at
 [packages/config/src/types.ts:19](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/config/src/types.ts#L19).

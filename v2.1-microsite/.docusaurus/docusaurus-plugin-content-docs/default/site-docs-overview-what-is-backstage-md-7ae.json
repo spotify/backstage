@@ -1,0 +1,26 @@
+{
+  "unversionedId": "overview/what-is-backstage",
+  "id": "overview/what-is-backstage",
+  "isDocsHomePage": true,
+  "title": "What is Backstage?",
+  "description": "Backstage is an open platform for building developer portals. Powered by a centralized service catalog, Backstage restores order to your microservices and infrastructure",
+  "source": "@site/../docs/overview/what-is-backstage.md",
+  "sourceDirName": "overview",
+  "slug": "/",
+  "permalink": "/docs/",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/overview/what-is-backstage.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "what-is-backstage",
+    "title": "What is Backstage?",
+    "description": "Backstage is an open platform for building developer portals. Powered by a centralized service catalog, Backstage restores order to your microservices and infrastructure"
+  },
+  "sidebar": "docs",
+  "next": {
+    "title": "Architecture overview",
+    "permalink": "/docs/overview/architecture-overview"
+  }
+}

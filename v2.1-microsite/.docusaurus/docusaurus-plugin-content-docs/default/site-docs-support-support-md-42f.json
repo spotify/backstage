@@ -1,0 +1,30 @@
+{
+  "unversionedId": "support/support",
+  "id": "support/support",
+  "isDocsHomePage": false,
+  "title": "Support and community",
+  "description": "Support and Community Details and Links",
+  "source": "@site/../docs/support/support.md",
+  "sourceDirName": "support",
+  "slug": "/support/support",
+  "permalink": "/docs/support/support",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/support/support.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "support",
+    "title": "Support and community",
+    "description": "Support and Community Details and Links"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "ADR011: Plugin Package Structure",
+    "permalink": "/docs/architecture-decisions/adrs-adr011"
+  },
+  "next": {
+    "title": "Backstage Project Structure",
+    "permalink": "/docs/support/project-structure"
+  }
+}

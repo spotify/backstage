@@ -1,0 +1,29 @@
+{
+  "unversionedId": "tutorials/quickstart-app-plugin",
+  "id": "tutorials/quickstart-app-plugin",
+  "isDocsHomePage": false,
+  "title": "Adding Custom Plugin to Existing Monorepo App",
+  "description": "September 15th 2020 - v0.1.1-alpha.21",
+  "source": "@site/../docs/tutorials/quickstart-app-plugin.md",
+  "sourceDirName": "tutorials",
+  "slug": "/tutorials/quickstart-app-plugin",
+  "permalink": "/docs/tutorials/quickstart-app-plugin",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/tutorials/quickstart-app-plugin.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "quickstart-app-plugin",
+    "title": "Adding Custom Plugin to Existing Monorepo App"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Future developer journey",
+    "permalink": "/docs/tutorials/journey"
+  },
+  "next": {
+    "title": "Switching Backstage from SQLite to PostgreSQL",
+    "permalink": "/docs/tutorials/switching-sqlite-postgres"
+  }
+}

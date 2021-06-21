@@ -1,0 +1,32 @@
+{
+  "unversionedId": "integrations/bitbucket/discovery",
+  "id": "integrations/bitbucket/discovery",
+  "isDocsHomePage": false,
+  "title": "Bitbucket Discovery",
+  "description": "Automatically discovering catalog entities from repositories in Bitbucket",
+  "source": "@site/../docs/integrations/bitbucket/discovery.md",
+  "sourceDirName": "integrations/bitbucket",
+  "slug": "/integrations/bitbucket/discovery",
+  "permalink": "/docs/integrations/bitbucket/discovery",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/integrations/bitbucket/discovery.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Discovery",
+  "frontMatter": {
+    "id": "discovery",
+    "title": "Bitbucket Discovery",
+    "sidebar_label": "Discovery",
+    "description": "Automatically discovering catalog entities from repositories in Bitbucket"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Bitbucket Locations",
+    "permalink": "/docs/integrations/bitbucket/locations"
+  },
+  "next": {
+    "title": "Datadog RUM Installation",
+    "permalink": "/docs/integrations/datadog-rum/installation"
+  }
+}

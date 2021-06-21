@@ -1,0 +1,32 @@
+{
+  "unversionedId": "auth/okta/provider",
+  "id": "auth/okta/provider",
+  "isDocsHomePage": false,
+  "title": "Okta Authentication Provider",
+  "description": "Adding Okta OAuth as an authentication provider in Backstage",
+  "source": "@site/../docs/auth/okta/provider.md",
+  "sourceDirName": "auth/okta",
+  "slug": "/auth/okta/provider",
+  "permalink": "/docs/auth/okta/provider",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/okta/provider.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Okta",
+  "frontMatter": {
+    "id": "provider",
+    "title": "Okta Authentication Provider",
+    "sidebar_label": "Okta",
+    "description": "Adding Okta OAuth as an authentication provider in Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Google Authentication Provider",
+    "permalink": "/docs/auth/google/provider"
+  },
+  "next": {
+    "title": "OneLogin Authentication Provider",
+    "permalink": "/docs/auth/onelogin/provider"
+  }
+}

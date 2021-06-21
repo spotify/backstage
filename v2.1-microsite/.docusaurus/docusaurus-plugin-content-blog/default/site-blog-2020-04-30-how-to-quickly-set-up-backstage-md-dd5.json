@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/04/30/how-to-quickly-set-up-backstage",
+  "source": "@site/blog/2020-04-30-how-to-quickly-set-up-backstage.md",
+  "title": "How to quickly set up Backstage",
+  "description": "We wanted to make getting started with Backstage as easy as possible. Even though Backstage is still in the early phases of its development, we believe it is important for our users to get a feel for what Backstage really is.",
+  "date": "2020-04-30T00:00:00.000Z",
+  "formattedDate": "April 30, 2020",
+  "tags": [],
+  "readingTime": 4.36,
+  "truncated": true,
+  "prevItem": {
+    "title": "Weaveworks’ COVID-19 app uses Backstage UI",
+    "permalink": "/blog/2020/05/14/weaveworks-covid-19-app-uses-backstage-ui"
+  },
+  "nextItem": {
+    "title": "Introducing Lighthouse for Backstage",
+    "permalink": "/blog/2020/04/06/lighthouse-plugin"
+  }
+}

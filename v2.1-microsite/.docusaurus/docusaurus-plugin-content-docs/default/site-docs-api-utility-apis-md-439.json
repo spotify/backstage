@@ -1,0 +1,30 @@
+{
+  "unversionedId": "api/utility-apis",
+  "id": "api/utility-apis",
+  "isDocsHomePage": false,
+  "title": "Utility APIs",
+  "description": "Backstage Utility APIs",
+  "source": "@site/../docs/api/utility-apis.md",
+  "sourceDirName": "api",
+  "slug": "/api/utility-apis",
+  "permalink": "/docs/api/utility-apis",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/api/utility-apis.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "utility-apis",
+    "title": "Utility APIs",
+    "description": "Backstage Utility APIs"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Figma",
+    "permalink": "/docs/dls/figma"
+  },
+  "next": {
+    "title": "Backstage Core Utility APIs",
+    "permalink": "/docs/reference/utility-apis/README"
+  }
+}

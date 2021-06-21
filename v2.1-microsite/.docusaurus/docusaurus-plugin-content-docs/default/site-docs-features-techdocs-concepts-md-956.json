@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/techdocs/concepts",
+  "id": "features/techdocs/concepts",
+  "isDocsHomePage": false,
+  "title": "Concepts",
+  "description": "Documentation on concepts that are introduced with Spotify's docs-like-code solution in Backstage",
+  "source": "@site/../docs/features/techdocs/concepts.md",
+  "sourceDirName": "features/techdocs",
+  "slug": "/features/techdocs/concepts",
+  "permalink": "/docs/features/techdocs/concepts",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/techdocs/concepts.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "concepts",
+    "title": "Concepts",
+    "description": "Documentation on concepts that are introduced with Spotify's docs-like-code solution in Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Getting Started",
+    "permalink": "/docs/features/techdocs/getting-started"
+  },
+  "next": {
+    "title": "TechDocs Architecture",
+    "permalink": "/docs/features/techdocs/architecture"
+  }
+}

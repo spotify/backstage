@@ -1,0 +1,32 @@
+{
+  "unversionedId": "features/techdocs/techdocs-overview",
+  "id": "features/techdocs/techdocs-overview",
+  "isDocsHomePage": false,
+  "title": "TechDocs Documentation",
+  "description": "TechDocs is Spotify’s homegrown docs-like-code solution built directly into Backstage",
+  "source": "@site/../docs/features/techdocs/README.md",
+  "sourceDirName": "features/techdocs",
+  "slug": "/features/techdocs/techdocs-overview",
+  "permalink": "/docs/features/techdocs/techdocs-overview",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/techdocs/README.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Overview",
+  "frontMatter": {
+    "id": "techdocs-overview",
+    "title": "TechDocs Documentation",
+    "sidebar_label": "Overview",
+    "description": "TechDocs is Spotify’s homegrown docs-like-code solution built directly into Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Search Architecture",
+    "permalink": "/docs/features/search/architecture"
+  },
+  "next": {
+    "title": "Getting Started",
+    "permalink": "/docs/features/techdocs/getting-started"
+  }
+}

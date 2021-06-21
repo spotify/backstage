@@ -1,7 +1,7 @@
 ---
 id: contributors
 title: Contributors
-# prettier-ignore
+# prettier-ignore: ""
 description: Documentation on how to get set up for doing development on the Backstage repository
 ---
 

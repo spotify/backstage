@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/04/06/lighthouse-plugin",
+  "source": "@site/blog/2020-04-06-lighthouse-plugin.md",
+  "title": "Introducing Lighthouse for Backstage",
+  "description": "image illustrating the Lighthouse plugin for Backstage",
+  "date": "2020-04-06T00:00:00.000Z",
+  "formattedDate": "April 6, 2020",
+  "tags": [],
+  "readingTime": 2,
+  "truncated": true,
+  "prevItem": {
+    "title": "How to quickly set up Backstage",
+    "permalink": "/blog/2020/04/30/how-to-quickly-set-up-backstage"
+  },
+  "nextItem": {
+    "title": "What the heck is Backstage anyway?",
+    "permalink": "/blog/2020/03/18/what-is-backstage"
+  }
+}

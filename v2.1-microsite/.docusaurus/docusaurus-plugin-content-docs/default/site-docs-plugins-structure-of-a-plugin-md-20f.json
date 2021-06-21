@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/structure-of-a-plugin",
+  "id": "plugins/structure-of-a-plugin",
+  "isDocsHomePage": false,
+  "title": "Structure of a Plugin",
+  "description": "Details about structure of a plugin",
+  "source": "@site/../docs/plugins/structure-of-a-plugin.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/structure-of-a-plugin",
+  "permalink": "/docs/plugins/structure-of-a-plugin",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/structure-of-a-plugin.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "structure-of-a-plugin",
+    "title": "Structure of a Plugin",
+    "description": "Details about structure of a plugin"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Plugin Development",
+    "permalink": "/docs/plugins/plugin-development"
+  },
+  "next": {
+    "title": "Integrate into the Service Catalog",
+    "permalink": "/docs/plugins/integrating-plugin-into-service-catalog"
+  }
+}

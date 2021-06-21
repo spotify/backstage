@@ -1,0 +1,30 @@
+{
+  "unversionedId": "conf/defining",
+  "id": "conf/defining",
+  "isDocsHomePage": false,
+  "title": "Defining Configuration for your Plugin",
+  "description": "Documentation on Defining Configuration for your Plugin",
+  "source": "@site/../docs/conf/defining.md",
+  "sourceDirName": "conf",
+  "slug": "/conf/defining",
+  "permalink": "/docs/conf/defining",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/conf/defining.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "defining",
+    "title": "Defining Configuration for your Plugin",
+    "description": "Documentation on Defining Configuration for your Plugin"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Writing Backstage Configuration Files",
+    "permalink": "/docs/conf/writing"
+  },
+  "next": {
+    "title": "Adding Authentication",
+    "permalink": "/docs/auth/index"
+  }
+}

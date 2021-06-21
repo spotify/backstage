@@ -1,0 +1,26 @@
+{
+  "unversionedId": "FAQ",
+  "id": "FAQ",
+  "isDocsHomePage": false,
+  "title": "FAQ",
+  "description": "All FAQ related to Backstage",
+  "source": "@site/../docs/FAQ.md",
+  "sourceDirName": ".",
+  "slug": "/FAQ",
+  "permalink": "/docs/FAQ",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/FAQ.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "FAQ",
+    "title": "FAQ",
+    "description": "All FAQ related to Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Backstage Glossary",
+    "permalink": "/docs/glossary"
+  }
+}

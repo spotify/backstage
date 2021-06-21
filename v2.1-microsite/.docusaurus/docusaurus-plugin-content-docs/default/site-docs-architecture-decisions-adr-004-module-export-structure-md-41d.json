@@ -1,0 +1,30 @@
+{
+  "unversionedId": "architecture-decisions/adrs-adr004",
+  "id": "architecture-decisions/adrs-adr004",
+  "isDocsHomePage": false,
+  "title": "ADR004: Module Export Structure",
+  "description": "Architecture Decision Record (ADR) log on Module Export Structure",
+  "source": "@site/../docs/architecture-decisions/adr004-module-export-structure.md",
+  "sourceDirName": "architecture-decisions",
+  "slug": "/architecture-decisions/adrs-adr004",
+  "permalink": "/docs/architecture-decisions/adrs-adr004",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/architecture-decisions/adr004-module-export-structure.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "adrs-adr004",
+    "title": "ADR004: Module Export Structure",
+    "description": "Architecture Decision Record (ADR) log on Module Export Structure"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "ADR003: Avoid Default Exports and Prefer Named Exports",
+    "permalink": "/docs/architecture-decisions/adrs-adr003"
+  },
+  "next": {
+    "title": "ADR005: Catalog Core Entities",
+    "permalink": "/docs/architecture-decisions/adrs-adr005"
+  }
+}

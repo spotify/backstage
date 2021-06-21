@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-catalog/system-model",
+  "id": "features/software-catalog/system-model",
+  "isDocsHomePage": false,
+  "title": "System Model",
+  "description": "Documentation on System Model",
+  "source": "@site/../docs/features/software-catalog/system-model.md",
+  "sourceDirName": "features/software-catalog",
+  "slug": "/features/software-catalog/system-model",
+  "permalink": "/docs/features/software-catalog/system-model",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-catalog/system-model.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "system-model",
+    "title": "System Model",
+    "description": "Documentation on System Model"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Catalog Configuration",
+    "permalink": "/docs/features/software-catalog/configuration"
+  },
+  "next": {
+    "title": "Descriptor Format of Catalog Entities",
+    "permalink": "/docs/features/software-catalog/descriptor-format"
+  }
+}

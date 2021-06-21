@@ -1,0 +1,17 @@
+{
+  "unversionedId": "reference/utility-apis/OAuthRequestApi",
+  "id": "reference/utility-apis/OAuthRequestApi",
+  "isDocsHomePage": false,
+  "title": "OAuthRequestApi",
+  "description": "The OAuthRequestApi type is defined at",
+  "source": "@site/../docs/reference/utility-apis/OAuthRequestApi.md",
+  "sourceDirName": "reference/utility-apis",
+  "slug": "/reference/utility-apis/OAuthRequestApi",
+  "permalink": "/docs/reference/utility-apis/OAuthRequestApi",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/reference/utility-apis/OAuthRequestApi.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {}
+}

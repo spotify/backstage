@@ -73,14 +73,10 @@
   "prettier": "@spotify/prettier-config",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
     ],
     "*.{json,md}": [
-      "prettier --write"
     ],
     "*.md": [
-      "node ./scripts/check-docs-quality"
     ]
   },
   "jest": {

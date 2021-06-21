@@ -36,7 +36,7 @@ This will create a new Backstage App inside the current folder. The name of the
 app-folder is the name that was provided when prompted.
 
 <p align='center'>
-  <img src='../assets/getting-started/create-app_output.png' width='600' alt='create app'>
+  <img src='../assets/getting-started/create-app_output.png' width='600' alt='create app' />
 </p>
 
 Inside that directory, it will generate all the files and folder structure

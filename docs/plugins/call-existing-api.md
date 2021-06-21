@@ -1,7 +1,7 @@
 ---
 id: call-existing-api
 title: Call Existing API
-# prettier-ignore
+# prettier-ignore: ""
 description: Describes the various options that Backstage frontend plugins have, in communicating with service APIs that already exist
 ---
 

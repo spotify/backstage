@@ -1,0 +1,19 @@
+{
+  "permalink": "/blog/2020/10/22/cost-insights-plugin",
+  "source": "@site/blog/2020-10-22-cost-insights-plugin.md",
+  "title": "New Cost Insights plugin: The engineer’s solution to taming cloud costs",
+  "description": "How did Spotify save millions on cloud costs within a matter of months?? We made cost optimization just another part of the daily development process. Our newly open sourced Cost Insights plugin makes a team’s cloud costs visible — and actionable — right inside Backstage. So engineers can see the impact of their cloud usage (down to a product and resource level) and make optimizations wherever and whenever it makes sense. By managing cloud costs from the ground up, you can make smarter decisions that let you continue to build and scale quickly, without wasting resources.",
+  "date": "2020-10-22T00:00:00.000Z",
+  "formattedDate": "October 22, 2020",
+  "tags": [],
+  "readingTime": 5.525,
+  "truncated": true,
+  "prevItem": {
+    "title": "Announcing the Backstage Stability Index",
+    "permalink": "/blog/2020/12/22/stability-index"
+  },
+  "nextItem": {
+    "title": "How to design for Backstage (even if you’re not a designer)",
+    "permalink": "/blog/2020/09/30/backstage-design-system"
+  }
+}

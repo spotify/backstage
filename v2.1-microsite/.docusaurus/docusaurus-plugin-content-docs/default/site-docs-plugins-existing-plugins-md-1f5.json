@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/existing-plugins",
+  "id": "plugins/existing-plugins",
+  "isDocsHomePage": false,
+  "title": "Existing plugins",
+  "description": "Lists of existing open source plugins",
+  "source": "@site/../docs/plugins/existing-plugins.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/existing-plugins",
+  "permalink": "/docs/plugins/existing-plugins",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/existing-plugins.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "existing-plugins",
+    "title": "Existing plugins",
+    "description": "Lists of existing open source plugins"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Intro to plugins",
+    "permalink": "/docs/plugins/index"
+  },
+  "next": {
+    "title": "Create a Backstage Plugin",
+    "permalink": "/docs/plugins/create-a-plugin"
+  }
+}

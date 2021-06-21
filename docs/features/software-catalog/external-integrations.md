@@ -1,7 +1,7 @@
 ---
 id: external-integrations
 title: External integrations
-# prettier-ignore
+# prettier-ignore: ""
 description: Documentation on External integrations to integrate systems with Backstage
 ---
 

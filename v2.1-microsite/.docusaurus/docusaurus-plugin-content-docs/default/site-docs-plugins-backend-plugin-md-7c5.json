@@ -1,0 +1,30 @@
+{
+  "unversionedId": "plugins/backend-plugin",
+  "id": "plugins/backend-plugin",
+  "isDocsHomePage": false,
+  "title": "Backend plugins",
+  "description": "Creating and Developing Backend plugins",
+  "source": "@site/../docs/plugins/backend-plugin.md",
+  "sourceDirName": "plugins",
+  "slug": "/plugins/backend-plugin",
+  "permalink": "/docs/plugins/backend-plugin",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/plugins/backend-plugin.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "backend-plugin",
+    "title": "Backend plugins",
+    "description": "Creating and Developing Backend plugins"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Proxying",
+    "permalink": "/docs/plugins/proxying"
+  },
+  "next": {
+    "title": "Call Existing API",
+    "permalink": "/docs/plugins/call-existing-api"
+  }
+}

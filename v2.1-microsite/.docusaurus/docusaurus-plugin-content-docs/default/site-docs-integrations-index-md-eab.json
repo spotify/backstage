@@ -1,0 +1,32 @@
+{
+  "unversionedId": "integrations/index",
+  "id": "integrations/index",
+  "isDocsHomePage": false,
+  "title": "Integrations",
+  "description": "Configuring Backstage to read or publish data with external providers using integrations",
+  "source": "@site/../docs/integrations/index.md",
+  "sourceDirName": "integrations",
+  "slug": "/integrations/index",
+  "permalink": "/docs/integrations/index",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/integrations/index.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Overview",
+  "frontMatter": {
+    "id": "index",
+    "title": "Integrations",
+    "sidebar_label": "Overview",
+    "description": "Configuring Backstage to read or publish data with external providers using integrations"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "TechDocs FAQ",
+    "permalink": "/docs/features/techdocs/faqs"
+  },
+  "next": {
+    "title": "Azure DevOps Locations",
+    "permalink": "/docs/integrations/azure/locations"
+  }
+}

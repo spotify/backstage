@@ -1,0 +1,30 @@
+{
+  "unversionedId": "architecture-decisions/adrs-adr001",
+  "id": "architecture-decisions/adrs-adr001",
+  "isDocsHomePage": false,
+  "title": "ADR001: Architecture Decision Record (ADR) log",
+  "description": "Architecture Decision Record (ADR) logs as a reference point for the team",
+  "source": "@site/../docs/architecture-decisions/adr001-add-adr-log.md",
+  "sourceDirName": "architecture-decisions",
+  "slug": "/architecture-decisions/adrs-adr001",
+  "permalink": "/docs/architecture-decisions/adrs-adr001",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/architecture-decisions/adr001-add-adr-log.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "adrs-adr001",
+    "title": "ADR001: Architecture Decision Record (ADR) log",
+    "description": "Architecture Decision Record (ADR) logs as a reference point for the team"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Architecture Decision Records (ADR)",
+    "permalink": "/docs/architecture-decisions/adrs-overview"
+  },
+  "next": {
+    "title": "ADR002: Default Software Catalog File Format",
+    "permalink": "/docs/architecture-decisions/adrs-adr002"
+  }
+}

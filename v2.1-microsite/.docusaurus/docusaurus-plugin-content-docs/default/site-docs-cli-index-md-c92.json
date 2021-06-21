@@ -1,0 +1,30 @@
+{
+  "unversionedId": "cli/index",
+  "id": "cli/index",
+  "isDocsHomePage": false,
+  "title": "Overview",
+  "description": "Overview of the Backstage CLI",
+  "source": "@site/../docs/cli/index.md",
+  "sourceDirName": "cli",
+  "slug": "/cli/index",
+  "permalink": "/docs/cli/index",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/cli/index.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "index",
+    "title": "Overview",
+    "description": "Overview of the Backstage CLI"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Contributors",
+    "permalink": "/docs/getting-started/contributors"
+  },
+  "next": {
+    "title": "Commands",
+    "permalink": "/docs/cli/commands"
+  }
+}

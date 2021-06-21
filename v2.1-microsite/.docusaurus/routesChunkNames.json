@@ -1,0 +1,829 @@
+{
+  "/-deb": {
+    "component": "component---site-src-pages-index-jsc-4-f-f99",
+    "config": "config---5-e-9-4f3"
+  },
+  "/__docusaurus/debug-3d6": {
+    "component": "component---theme-debug-config-23-a-2ff"
+  },
+  "/__docusaurus/debug/config-914": {
+    "component": "component---theme-debug-config-23-a-2ff"
+  },
+  "/__docusaurus/debug/content-c28": {
+    "component": "component---theme-debug-contentba-8-ce7",
+    "allContent": "allContent---docusaurus-debug-content-246-9aa"
+  },
+  "/__docusaurus/debug/globalData-3cf": {
+    "component": "component---theme-debug-global-dataede-0fa"
+  },
+  "/__docusaurus/debug/metadata-31b": {
+    "component": "component---theme-debug-site-metadata-68-e-3d4"
+  },
+  "/__docusaurus/debug/registry-0da": {
+    "component": "component---theme-debug-registry-679-501"
+  },
+  "/__docusaurus/debug/routes-244": {
+    "component": "component---theme-debug-routes-946-699"
+  },
+  "/blog-96b": {
+    "component": "component---theme-blog-list-pagea-6-a-7ba",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "items": [
+      {
+        "content": "content---blog-51-e-b7e"
+      },
+      {
+        "content": "content---bloga-96-493"
+      },
+      {
+        "content": "content---blog-22-c-2b2"
+      },
+      {
+        "content": "content---bloga-68-7c7"
+      },
+      {
+        "content": "content---blog-4-de-4ef"
+      },
+      {
+        "content": "content---blog-64-d-c1c"
+      },
+      {
+        "content": "content---blog-9-f-6-0ec"
+      },
+      {
+        "content": "content---blog-216-f3f"
+      },
+      {
+        "content": "content---blog-834-aa9"
+      },
+      {
+        "content": "content---blogbfc-322"
+      }
+    ],
+    "metadata": "metadata---blogb-2-b-df1"
+  },
+  "/blog/2020/03/16/announcing-backstage-ee7": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-03-16-announcing-backstage-406-b3f"
+  },
+  "/blog/2020/03/18/what-is-backstage-15d": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-03-18-what-is-backstage-317-cc9"
+  },
+  "/blog/2020/04/06/lighthouse-plugin-f77": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-04-06-lighthouse-plugin-9-e-1-1c7"
+  },
+  "/blog/2020/04/30/how-to-quickly-set-up-backstage-73b": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-04-30-how-to-quickly-set-up-backstagedd-5-929"
+  },
+  "/blog/2020/05/14/tech-radar-plugin-853": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-05-14-tech-radar-plugina-80-a0d"
+  },
+  "/blog/2020/05/14/weaveworks-covid-19-app-uses-backstage-ui-c24": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-05-14-weaveworks-covid-19-app-uses-backstage-uiaa-2-422"
+  },
+  "/blog/2020/05/22/phase-2-service-catalog-c71": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-05-22-phase-2-service-catalogb-54-73a"
+  },
+  "/blog/2020/06/22/backstage-service-catalog-alpha-966": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-06-22-backstage-service-catalog-alpha-6-cd-ea5"
+  },
+  "/blog/2020/07/01/how-to-enable-authentication-in-backstage-using-passport-918": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-07-01-how-to-enable-authentication-in-backstage-using-passport-64-c-dfd"
+  },
+  "/blog/2020/08/05/announcing-backstage-software-templates-34d": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-08-05-announcing-backstage-software-templates-445-5d7"
+  },
+  "/blog/2020/09/08/announcing-tech-docs-73b": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-09-08-announcing-tech-docse-39-6be"
+  },
+  "/blog/2020/09/23/backstage-cncf-sandbox-3c5": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-09-23-backstage-cncf-sandboxdd-5-74c"
+  },
+  "/blog/2020/09/30/backstage-design-system-b5d": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-09-30-backstage-design-systemd-67-510"
+  },
+  "/blog/2020/09/30/plugin-marketplace-e6d": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-09-30-plugin-marketplacee-62-cd9"
+  },
+  "/blog/2020/10/22/cost-insights-plugin-956": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-10-22-cost-insights-plugin-552-a7c"
+  },
+  "/blog/2020/12/22/stability-index-e48": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2020-12-22-stability-index-1-b-9-1e7"
+  },
+  "/blog/2021/01/12/new-backstage-feature-kubernetes-for-service-owners-194": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2021-01-12-new-backstage-feature-kubernetes-for-service-ownersb-71-fec"
+  },
+  "/blog/2021/05/20/adopting-backstage-a98": {
+    "component": "component---theme-blog-post-pageccc-cab",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "content": "content---blog-2021-05-20-adopting-backstageb-69-c90"
+  },
+  "/blog/page/2-30f": {
+    "component": "component---theme-blog-list-pagea-6-a-7ba",
+    "sidebar": "sidebar---blog-41-c-84d",
+    "items": [
+      {
+        "content": "content---blog-page-23-c-9-f87"
+      },
+      {
+        "content": "content---blog-page-2-fd-9-394"
+      },
+      {
+        "content": "content---blog-page-2953-eb9"
+      },
+      {
+        "content": "content---blog-page-2383-c83"
+      },
+      {
+        "content": "content---blog-page-278-c-93e"
+      },
+      {
+        "content": "content---blog-page-2-ff-4-3c6"
+      },
+      {
+        "content": "content---blog-page-2767-ad4"
+      },
+      {
+        "content": "content---blog-page-20-ea-c15"
+      }
+    ],
+    "metadata": "metadata---blog-page-28-eb-625"
+  },
+  "/demos-d3d": {
+    "component": "component---site-src-pages-demos-jsb-35-a3c",
+    "config": "config---5-e-9-4f3"
+  },
+  "/docs-145": {
+    "component": "component---site-src-pages-docs-js-25-b-a16",
+    "config": "config---5-e-9-4f3"
+  },
+  "/docs/features/software-catalog/-8fc": {
+    "component": "component---site-src-pages-docs-features-software-catalog-index-jsa-07-1ba",
+    "config": "config---5-e-9-4f3"
+  },
+  "/docs/features/software-templates/-8c9": {
+    "component": "component---site-src-pages-docs-features-software-templates-index-js-482-004",
+    "config": "config---5-e-9-4f3"
+  },
+  "/docs/features/techdocs/-2df": {
+    "component": "component---site-src-pages-docs-features-techdocs-index-js-00-d-2ac",
+    "config": "config---5-e-9-4f3"
+  },
+  "/plugins-169": {
+    "component": "component---site-src-pages-plugins-js-312-07e",
+    "config": "config---5-e-9-4f3"
+  },
+  "/search-6fa": {
+    "component": "component---users-davidtuite-dev-roadiehq-backstage-v-2-1-microsite-node-modules-docusaurus-theme-search-algolia-src-theme-search-page-index-js-7-ca-59e"
+  },
+  "/docs-986": {
+    "component": "component---theme-doc-page-1-be-9be",
+    "versionMetadata": "versionMetadata---docs-935-398"
+  },
+  "/docs/-e67": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-7-ae-8c8"
+  },
+  "/docs/api/backend-153": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-api-backend-860-3a2"
+  },
+  "/docs/api/utility-apis-00b": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-api-utility-apis-439-843"
+  },
+  "/docs/architecture-decisions/adrs-adr000-a24": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-adr-000-d-2-f-be2"
+  },
+  "/docs/architecture-decisions/adrs-adr001-deb": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-adr-001-c-7-b-ddf"
+  },
+  "/docs/architecture-decisions/adrs-adr002-16d": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-adr-002-c-75-76f"
+  },
+  "/docs/architecture-decisions/adrs-adr003-5f7": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-adr-0038-aa-f0d"
+  },
+  "/docs/architecture-decisions/adrs-adr004-92f": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-adr-00441-d-0e4"
+  },
+  "/docs/architecture-decisions/adrs-adr005-b5a": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-adr-005-d-88-89d"
+  },
+  "/docs/architecture-decisions/adrs-adr006-a43": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-adr-006-ac-9-8e1"
+  },
+  "/docs/architecture-decisions/adrs-adr007-556": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-adr-0075-c-2-ae0"
+  },
+  "/docs/architecture-decisions/adrs-adr008-fa2": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-adr-0088-c-8-5c7"
+  },
+  "/docs/architecture-decisions/adrs-adr009-60b": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-adr-009929-336"
+  },
+  "/docs/architecture-decisions/adrs-adr010-12b": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-adr-01037-d-a16"
+  },
+  "/docs/architecture-decisions/adrs-adr011-940": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-adr-01142-c-020"
+  },
+  "/docs/architecture-decisions/adrs-overview-755": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-decisions-adrs-overviewa-44-bc3"
+  },
+  "/docs/auth/add-auth-provider-d87": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-add-auth-provider-712-add"
+  },
+  "/docs/auth/auth-backend-806": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-auth-backend-325-275"
+  },
+  "/docs/auth/auth-backend-classes-953": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-auth-backend-classes-07-a-16b"
+  },
+  "/docs/auth/auth0/provider-6b8": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-auth-0-provider-89-b-d21"
+  },
+  "/docs/auth/github/provider-490": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-github-providerc-25-2cc"
+  },
+  "/docs/auth/gitlab/provider-b61": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-gitlab-provider-56-c-d81"
+  },
+  "/docs/auth/glossary-f8f": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-glossary-478-c54"
+  },
+  "/docs/auth/google/provider-0bf": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-google-provider-523-a1a"
+  },
+  "/docs/auth/index-6c2": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-indexeb-9-f55"
+  },
+  "/docs/auth/microsoft/provider-423": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-microsoft-providerbbb-7a5"
+  },
+  "/docs/auth/oauth-3b5": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-oauth-2-a-1-242"
+  },
+  "/docs/auth/okta/provider-b26": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-okta-provider-54-d-408"
+  },
+  "/docs/auth/onelogin/provider-ceb": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-onelogin-provider-1-ac-0d3"
+  },
+  "/docs/auth/using-auth-6db": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-auth-using-authdb-1-23b"
+  },
+  "/docs/cli/commands-373": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-cli-commandsad-6-971"
+  },
+  "/docs/cli/index-4fc": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-cli-indexc-92-00e"
+  },
+  "/docs/conf/defining-1b6": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-conf-defining-7-cd-664"
+  },
+  "/docs/conf/index-841": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-conf-indexd-54-c7c"
+  },
+  "/docs/conf/reading-4c2": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-conf-reading-6-d-4-b49"
+  },
+  "/docs/conf/writing-21f": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-conf-writing-4-bf-490"
+  },
+  "/docs/deployment/docker-038": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-deployment-docker-77-a-f4e"
+  },
+  "/docs/deployment/helm-92d": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-deployment-helmb-4-d-b0b"
+  },
+  "/docs/deployment/heroku-924": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-deployment-heroku-950-683"
+  },
+  "/docs/deployment/index-44f": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-deployment-index-551-912"
+  },
+  "/docs/deployment/k8s-0e5": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-deployment-k-8-s-462-60e"
+  },
+  "/docs/dls/contributing-to-storybook-256": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-dls-contributing-to-storybookd-01-234"
+  },
+  "/docs/dls/design-887": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-dls-design-9-ac-6d8"
+  },
+  "/docs/dls/figma-c19": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-dls-figmaf-21-794"
+  },
+  "/docs/FAQ-68f": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-fa-qb-67-7ec"
+  },
+  "/docs/features/kubernetes/configuration-fa5": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-kubernetes-configuration-22-c-171"
+  },
+  "/docs/features/kubernetes/installation-cff": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-kubernetes-installation-6-bf-776"
+  },
+  "/docs/features/kubernetes/overview-bcd": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-kubernetes-overview-779-dcd"
+  },
+  "/docs/features/kubernetes/troubleshooting-107": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-kubernetes-troubleshootinge-25-bc0"
+  },
+  "/docs/features/search/architecture-2f1": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-search-architecture-0-ab-151"
+  },
+  "/docs/features/search/concepts-5a8": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-search-conceptsa-78-9d3"
+  },
+  "/docs/features/search/getting-started-f78": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-search-getting-started-986-695"
+  },
+  "/docs/features/search/search-overview-eb2": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-search-search-overview-255-1fa"
+  },
+  "/docs/features/software-catalog/catalog-customization-b81": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-catalog-customization-3-d-0-b93"
+  },
+  "/docs/features/software-catalog/configuration-fbe": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-configurationf-3-f-1a3"
+  },
+  "/docs/features/software-catalog/descriptor-format-7e2": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-descriptor-formatd-5-c-213"
+  },
+  "/docs/features/software-catalog/extending-the-model-6ca": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-extending-the-modele-3-e-2b0"
+  },
+  "/docs/features/software-catalog/external-integrations-320": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-external-integrations-681-826"
+  },
+  "/docs/features/software-catalog/installation-97d": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-installation-35-a-9b0"
+  },
+  "/docs/features/software-catalog/references-83a": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-referencesf-0-b-069"
+  },
+  "/docs/features/software-catalog/software-catalog-api-89c": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-software-catalog-apib-09-d56"
+  },
+  "/docs/features/software-catalog/software-catalog-overview-083": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-software-catalog-overview-6-ae-b22"
+  },
+  "/docs/features/software-catalog/system-model-9a0": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-system-model-561-e45"
+  },
+  "/docs/features/software-catalog/well-known-annotations-0ef": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-well-known-annotations-3-eb-e28"
+  },
+  "/docs/features/software-catalog/well-known-relations-cb7": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-well-known-relationsbff-849"
+  },
+  "/docs/features/software-catalog/well-known-statuses-6d6": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-catalog-well-known-statusesa-1-c-db5"
+  },
+  "/docs/features/software-templates/adding-templates-056": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-templates-adding-templates-777-d0d"
+  },
+  "/docs/features/software-templates/builtin-actions-74a": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-templates-builtin-actionsffa-4a3"
+  },
+  "/docs/features/software-templates/installation-005": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-templates-installationcd-9-db9"
+  },
+  "/docs/features/software-templates/migrating-from-v1alpha1-to-v1beta2-f91": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-templates-migrating-from-v-1-alpha-1-to-v-1-beta-2859-eae"
+  },
+  "/docs/features/software-templates/software-templates-index-9e0": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-templates-software-templates-index-549-59f"
+  },
+  "/docs/features/software-templates/template-legacy-572": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-templates-template-legacycf-8-43f"
+  },
+  "/docs/features/software-templates/writing-custom-actions-73b": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-templates-writing-custom-actionsb-61-b52"
+  },
+  "/docs/features/software-templates/writing-templates-885": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-software-templates-writing-templates-389-8f3"
+  },
+  "/docs/features/techdocs/architecture-b28": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-techdocs-architectured-65-3b4"
+  },
+  "/docs/features/techdocs/concepts-92f": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-techdocs-concepts-956-90d"
+  },
+  "/docs/features/techdocs/configuration-627": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-techdocs-configuration-7-c-9-b49"
+  },
+  "/docs/features/techdocs/configuring-ci-cd-46a": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-techdocs-configuring-ci-cdfa-0-fa8"
+  },
+  "/docs/features/techdocs/creating-and-publishing-b6e": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-techdocs-creating-and-publishingc-04-044"
+  },
+  "/docs/features/techdocs/faqs-065": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-techdocs-faqsbef-043"
+  },
+  "/docs/features/techdocs/getting-started-df3": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-techdocs-getting-started-622-fe2"
+  },
+  "/docs/features/techdocs/how-to-guides-6c6": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-techdocs-how-to-guidesad-5-7a7"
+  },
+  "/docs/features/techdocs/techdocs-overview-a6a": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-techdocs-techdocs-overview-11-d-3fe"
+  },
+  "/docs/features/techdocs/troubleshooting-38d": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-techdocs-troubleshooting-2-e-3-ec3"
+  },
+  "/docs/features/techdocs/using-cloud-storage-77f": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-features-techdocs-using-cloud-storagebf-6-408"
+  },
+  "/docs/getting-started/app-custom-theme-fb9": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-getting-started-app-custom-themefd-3-43b"
+  },
+  "/docs/getting-started/concepts-935": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-getting-started-concepts-8-c-3-282"
+  },
+  "/docs/getting-started/configure-app-with-plugins-f3d": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-getting-started-configure-app-with-plugins-7-ba-55e"
+  },
+  "/docs/getting-started/contributors-1ec": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-getting-started-contributors-636-e59"
+  },
+  "/docs/getting-started/create-an-app-043": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-getting-started-create-an-appba-9-c49"
+  },
+  "/docs/getting-started/index-5eb": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-getting-started-indexb-76-09c"
+  },
+  "/docs/getting-started/keeping-backstage-updated-2eb": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-getting-started-keeping-backstage-updated-643-16a"
+  },
+  "/docs/getting-started/running-backstage-locally-1cd": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-getting-started-running-backstage-locally-3-d-6-424"
+  },
+  "/docs/glossary-f5c": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-glossary-317-1b9"
+  },
+  "/docs/integrations/azure/locations-c66": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-integrations-azure-locationsaac-01f"
+  },
+  "/docs/integrations/bitbucket/discovery-8a6": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-integrations-bitbucket-discovery-278-cbf"
+  },
+  "/docs/integrations/bitbucket/locations-617": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-integrations-bitbucket-locationsdf-0-d1c"
+  },
+  "/docs/integrations/datadog-rum/installation-d14": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-integrations-datadog-rum-installation-220-545"
+  },
+  "/docs/integrations/github/discovery-04f": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-integrations-github-discovery-26-a-e1d"
+  },
+  "/docs/integrations/github/locations-675": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-integrations-github-locations-09-a-e3f"
+  },
+  "/docs/integrations/github/org-62a": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-integrations-github-org-775-a0c"
+  },
+  "/docs/integrations/gitlab/locations-a42": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-integrations-gitlab-locations-55-c-18d"
+  },
+  "/docs/integrations/google-analytics/installation-9a4": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-integrations-google-analytics-installation-499-4ab"
+  },
+  "/docs/integrations/google-cloud-storage/locations-1af": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-integrations-google-cloud-storage-locations-7-c-6-d53"
+  },
+  "/docs/integrations/index-e89": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-integrations-indexeab-52a"
+  },
+  "/docs/integrations/ldap/org-f21": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-integrations-ldap-orgffb-d1f"
+  },
+  "/docs/overview/adopting-b3a": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-overview-adopting-7-a-8-30d"
+  },
+  "/docs/overview/architecture-overview-c0d": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-overview-architecture-overview-5-cd-a80"
+  },
+  "/docs/overview/background-f7f": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-overview-backgroundc-26-5f8"
+  },
+  "/docs/overview/logos-e3e": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-overview-logosdc-6-1ec"
+  },
+  "/docs/overview/roadmap-03c": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-overview-roadmap-6-ee-ab5"
+  },
+  "/docs/overview/stability-index-70c": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-overview-stability-index-42-d-b73"
+  },
+  "/docs/overview/vision-55c": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-overview-visionbb-1-2ae"
+  },
+  "/docs/plugins/add-to-marketplace-8cb": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-add-to-marketplacec-62-c00"
+  },
+  "/docs/plugins/backend-plugin-741": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-backend-plugin-7-c-5-a1c"
+  },
+  "/docs/plugins/call-existing-api-19b": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-call-existing-apia-6-d-9ae"
+  },
+  "/docs/plugins/composability-38d": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-composability-83-b-e39"
+  },
+  "/docs/plugins/create-a-plugin-f19": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-create-a-plugin-5-b-1-25b"
+  },
+  "/docs/plugins/existing-plugins-e8d": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-existing-plugins-1-f-5-f29"
+  },
+  "/docs/plugins/github-apps-3ba": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-github-appsa-2-b-96a"
+  },
+  "/docs/plugins/index-dd0": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-indexaf-8-831"
+  },
+  "/docs/plugins/integrating-plugin-into-service-catalog-56f": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-integrating-plugin-into-service-catalog-017-d8b"
+  },
+  "/docs/plugins/observability-8ae": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-observability-5-cc-996"
+  },
+  "/docs/plugins/plugin-development-148": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-plugin-development-90-f-2e7"
+  },
+  "/docs/plugins/proxying-11e": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-proxyingcfc-1b0"
+  },
+  "/docs/plugins/publish-private-9ca": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-publish-private-9-e-0-8c7"
+  },
+  "/docs/plugins/publishing-86c": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-publishing-232-d53"
+  },
+  "/docs/plugins/structure-of-a-plugin-451": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-structure-of-a-plugin-20-f-624"
+  },
+  "/docs/plugins/testing-d47": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-plugins-testing-4-d-9-e58"
+  },
+  "/docs/README-87e": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-readme-608-d0d"
+  },
+  "/docs/reference/createPlugin-001": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-create-pluginfa-7-797"
+  },
+  "/docs/reference/createPlugin-feature-flags-734": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-create-plugin-feature-flagsc-6-c-83c"
+  },
+  "/docs/reference/utility-apis/AlertApi-b55": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-alert-api-680-9a4"
+  },
+  "/docs/reference/utility-apis/AppThemeApi-ce6": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-app-theme-apic-97-c84"
+  },
+  "/docs/reference/utility-apis/BackstageIdentityApi-72e": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-backstage-identity-apib-8-f-afd"
+  },
+  "/docs/reference/utility-apis/Config-ad6": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-config-88-b-05a"
+  },
+  "/docs/reference/utility-apis/DiscoveryApi-948": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-discovery-apia-70-007"
+  },
+  "/docs/reference/utility-apis/ErrorApi-7a3": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-error-apiea-3-c4c"
+  },
+  "/docs/reference/utility-apis/FeatureFlagsApi-192": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-feature-flags-api-48-a-2ae"
+  },
+  "/docs/reference/utility-apis/IdentityApi-c8c": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-identity-apic-46-341"
+  },
+  "/docs/reference/utility-apis/OAuthApi-a42": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-o-auth-apid-37-8d2"
+  },
+  "/docs/reference/utility-apis/OAuthRequestApi-c1c": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-o-auth-request-apif-3-e-378"
+  },
+  "/docs/reference/utility-apis/OpenIdConnectApi-e61": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-open-id-connect-api-162-807"
+  },
+  "/docs/reference/utility-apis/ProfileInfoApi-8e2": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-profile-info-apia-8-a-e0a"
+  },
+  "/docs/reference/utility-apis/README-b2e": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-readm-ef-31-de2"
+  },
+  "/docs/reference/utility-apis/SessionApi-ceb": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-session-apieaa-08b"
+  },
+  "/docs/reference/utility-apis/SessionStateApi-e68": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-session-state-api-819-503"
+  },
+  "/docs/reference/utility-apis/StorageApi-1bb": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-reference-utility-apis-storage-apibdc-968"
+  },
+  "/docs/support/project-structure-9d3": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-support-project-structure-12-f-101"
+  },
+  "/docs/support/support-26c": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-support-support-42-f-3b5"
+  },
+  "/docs/tutorials/journey-37c": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-tutorials-journey-86-b-b99"
+  },
+  "/docs/tutorials/quickstart-app-plugin-900": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-tutorials-quickstart-app-plugin-273-e6a"
+  },
+  "/docs/tutorials/switching-sqlite-postgres-724": {
+    "component": "component---theme-doc-item-178-a40",
+    "content": "content---docs-tutorials-switching-sqlite-postgresaf-7-4b2"
+  }
+}

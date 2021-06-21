@@ -1,0 +1,32 @@
+{
+  "unversionedId": "auth/gitlab/provider",
+  "id": "auth/gitlab/provider",
+  "isDocsHomePage": false,
+  "title": "GitLab Authentication Provider",
+  "description": "Adding GitLab OAuth as an authentication provider in Backstage",
+  "source": "@site/../docs/auth/gitlab/provider.md",
+  "sourceDirName": "auth/gitlab",
+  "slug": "/auth/gitlab/provider",
+  "permalink": "/docs/auth/gitlab/provider",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/auth/gitlab/provider.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "GitLab",
+  "frontMatter": {
+    "id": "provider",
+    "title": "GitLab Authentication Provider",
+    "sidebar_label": "GitLab",
+    "description": "Adding GitLab OAuth as an authentication provider in Backstage"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "GitHub Authentication Provider",
+    "permalink": "/docs/auth/github/provider"
+  },
+  "next": {
+    "title": "Google Authentication Provider",
+    "permalink": "/docs/auth/google/provider"
+  }
+}

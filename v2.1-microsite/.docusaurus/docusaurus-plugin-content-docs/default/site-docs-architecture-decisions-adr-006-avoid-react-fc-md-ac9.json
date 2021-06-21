@@ -1,0 +1,30 @@
+{
+  "unversionedId": "architecture-decisions/adrs-adr006",
+  "id": "architecture-decisions/adrs-adr006",
+  "isDocsHomePage": false,
+  "title": "ADR006: Avoid React.FC and React.SFC",
+  "description": "Architecture Decision Record (ADR) log on Avoid React.FC and React.SFC",
+  "source": "@site/../docs/architecture-decisions/adr006-avoid-react-fc.md",
+  "sourceDirName": "architecture-decisions",
+  "slug": "/architecture-decisions/adrs-adr006",
+  "permalink": "/docs/architecture-decisions/adrs-adr006",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/architecture-decisions/adr006-avoid-react-fc.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "adrs-adr006",
+    "title": "ADR006: Avoid React.FC and React.SFC",
+    "description": "Architecture Decision Record (ADR) log on Avoid React.FC and React.SFC"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "ADR005: Catalog Core Entities",
+    "permalink": "/docs/architecture-decisions/adrs-adr005"
+  },
+  "next": {
+    "title": "ADR007: Use MSW to mock http requests",
+    "permalink": "/docs/architecture-decisions/adrs-adr007"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "unversionedId": "features/software-templates/builtin-actions",
+  "id": "features/software-templates/builtin-actions",
+  "isDocsHomePage": false,
+  "title": "Builtin actions",
+  "description": "Documentation describing the built-in template actions.",
+  "source": "@site/../docs/features/software-templates/builtin-actions.md",
+  "sourceDirName": "features/software-templates",
+  "slug": "/features/software-templates/builtin-actions",
+  "permalink": "/docs/features/software-templates/builtin-actions",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/features/software-templates/builtin-actions.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "builtin-actions",
+    "title": "Builtin actions",
+    "description": "Documentation describing the built-in template actions."
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Writing Templates",
+    "permalink": "/docs/features/software-templates/writing-templates"
+  },
+  "next": {
+    "title": "Writing Custom Actions",
+    "permalink": "/docs/features/software-templates/writing-custom-actions"
+  }
+}

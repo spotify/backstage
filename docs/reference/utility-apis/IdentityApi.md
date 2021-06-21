@@ -1,3 +1,5 @@
+---
+---
 # IdentityApi
 
 The IdentityApi type is defined at
@@ -56,7 +58,7 @@ These types are part of the API declaration, but may not be unique to this API.
 
 Profile information of the user.
 
-<pre>
+```ts
 export type ProfileInfo = {
   /**
    * Email ID.
@@ -73,7 +75,7 @@ export type ProfileInfo = {
    */
   picture?: string;
 }
-</pre>
+```
 
 Defined at
 [packages/core-api/src/apis/definitions/auth.ts:162](https://github.com/backstage/backstage/blob/a4dbd8353cfa4d4d4334473e2c33afcda64e130d/packages/core-api/src/apis/definitions/auth.ts#L162).

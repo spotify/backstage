@@ -1,0 +1,31 @@
+{
+  "unversionedId": "deployment/index",
+  "id": "deployment/index",
+  "isDocsHomePage": false,
+  "title": "Deploying Backstage",
+  "description": "Packaging Backstage and deploying to production",
+  "source": "@site/../docs/deployment/index.md",
+  "sourceDirName": "deployment",
+  "slug": "/deployment/index",
+  "permalink": "/docs/deployment/index",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/deployment/index.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "frontMatter": {
+    "id": "index",
+    "title": "Deploying Backstage",
+    "sidebar_title": "Overview",
+    "description": "Packaging Backstage and deploying to production"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Glossary",
+    "permalink": "/docs/auth/glossary"
+  },
+  "next": {
+    "title": "Building a Docker image",
+    "permalink": "/docs/deployment/docker"
+  }
+}

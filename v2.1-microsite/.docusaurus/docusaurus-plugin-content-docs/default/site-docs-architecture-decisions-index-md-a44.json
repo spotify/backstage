@@ -1,0 +1,32 @@
+{
+  "unversionedId": "architecture-decisions/adrs-overview",
+  "id": "architecture-decisions/adrs-overview",
+  "isDocsHomePage": false,
+  "title": "Architecture Decision Records (ADR)",
+  "description": "Overview of Architecture Decision Records (ADR)",
+  "source": "@site/../docs/architecture-decisions/index.md",
+  "sourceDirName": "architecture-decisions",
+  "slug": "/architecture-decisions/adrs-overview",
+  "permalink": "/docs/architecture-decisions/adrs-overview",
+  "editUrl": "https://github.com/backstage/backstage/edit/master/docs/../docs/architecture-decisions/index.md",
+  "version": "current",
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055,
+  "formattedLastUpdatedAt": "10/14/2018",
+  "sidebar_label": "Overview",
+  "frontMatter": {
+    "id": "adrs-overview",
+    "title": "Architecture Decision Records (ADR)",
+    "sidebar_label": "Overview",
+    "description": "Overview of Architecture Decision Records (ADR)"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Switching Backstage from SQLite to PostgreSQL",
+    "permalink": "/docs/tutorials/switching-sqlite-postgres"
+  },
+  "next": {
+    "title": "ADR001: Architecture Decision Record (ADR) log",
+    "permalink": "/docs/architecture-decisions/adrs-adr001"
+  }
+}
