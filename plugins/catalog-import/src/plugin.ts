@@ -67,7 +67,10 @@ export const catalogImportPlugin = createPlugin({
 
 export const CatalogImportPage = catalogImportPlugin.provide(
   createRoutableExtension({
-    component: () => import('./components/Router').then(m => m.Router),
+    component: () =>
+      import('./components/ImportComponentPage').then(
+        m => m.ImportComponentPage,
+      ),
     mountPoint: rootRouteRef,
   }),
 );

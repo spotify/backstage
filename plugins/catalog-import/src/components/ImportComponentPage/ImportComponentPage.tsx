@@ -15,13 +15,17 @@
  */
 
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { ImportComponentPage } from './ImportComponentPage';
-import { ImportOptions } from './types';
+import { useOutlet } from 'react-router';
+import { DefaultImportComponentPage } from '../DefaultImportComponentPage';
+import { ImportOptionsContext } from '../ImportOptionsContext';
+import { ImportOptions } from '../types';
 
-/// @deprecated, use ImportComponentPage instead.
-export const Router = (opts: ImportOptions) => (
-  <Routes>
-    <Route element={<ImportComponentPage {...opts} />} />
-  </Routes>
-);
+export const ImportComponentPage = (opts: ImportOptions) => {
+  const outlet = useOutlet();
+
+  return (
+    <ImportOptionsContext.Provider value={opts}>
+      {outlet || <DefaultImportComponentPage />}
+    </ImportOptionsContext.Provider>
+  );
+};

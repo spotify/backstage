@@ -8,6 +8,7 @@ import { ApiRef } from '@backstage/core';
 import { BackstagePlugin } from '@backstage/core';
 import { CatalogApi } from '@backstage/catalog-client';
 import { ConfigApi } from '@backstage/core';
+import { Context } from 'react';
 import { Control } from 'react-hook-form';
 import { DiscoveryApi } from '@backstage/core';
 import { Entity } from '@backstage/catalog-model';
@@ -86,7 +87,7 @@ export class CatalogImportClient implements CatalogImportApi {
 }
 
 // @public (undocumented)
-export const CatalogImportPage: (opts: StepperProviderOpts) => JSX.Element;
+export const CatalogImportPage: (opts: ImportOptions) => JSX.Element;
 
 // @public (undocumented)
 const catalogImportPlugin: BackstagePlugin<{
@@ -101,10 +102,19 @@ export { catalogImportPlugin as plugin }
 export function defaultGenerateStepper(flow: ImportFlows, defaults: StepperProvider): StepperProvider;
 
 // @public (undocumented)
-export const EntityListComponent: ({ locations, collapsed, locationListItemIcon, onItemClick, firstListItem, withLinks, }: Props_2) => JSX.Element;
+export const DefaultImportComponentPage: () => JSX.Element;
 
 // @public (undocumented)
-export const ImportStepper: ({ initialUrl, generateStepper, variant, opts, }: Props) => JSX.Element;
+export const EntityListComponent: ({ locations, collapsed, locationListItemIcon, onItemClick, firstListItem, withLinks, }: Props) => JSX.Element;
+
+// @public (undocumented)
+export const ImportInfoCard: () => JSX.Element;
+
+// @public (undocumented)
+export const ImportOptionsContext: Context<ImportOptions>;
+
+// @public (undocumented)
+export const ImportStepper: ({ initialUrl, generateStepper, variant, }: Props_2) => JSX.Element;
 
 // @public
 export const PreparePullRequestForm: <TFieldValues extends Record<string, any>>({ defaultValues, onSubmit, render, }: Props_5<TFieldValues>) => JSX.Element;
@@ -116,13 +126,16 @@ export const PreviewCatalogInfoComponent: ({ repositoryUrl, entities, classes, }
 export const PreviewPullRequestComponent: ({ title, description, classes, }: Props_7) => JSX.Element;
 
 // @public (undocumented)
-export const Router: (opts: StepperProviderOpts) => JSX.Element;
+export const Router: (opts: ImportOptions) => JSX.Element;
 
 // @public
 export const StepInitAnalyzeUrl: ({ onAnalysis, analysisUrl, disablePullRequest, }: Props_3) => JSX.Element;
 
 // @public (undocumented)
 export const StepPrepareCreatePullRequest: ({ analyzeResult, onPrepare, onGoBack, renderFormFields, defaultTitle, defaultBody, }: Props_8) => JSX.Element;
+
+// @public (undocumented)
+export const useImportOptions: () => ImportOptions;
 
 
 // (No @packageDocumentation comment for this package)

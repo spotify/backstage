@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-export * from './ImportStepper';
+export * from './DefaultImportComponentPage';
 export * from './EntityListComponent';
+export * from './ImportInfoCard';
+export * from './ImportOptionsContext';
+export * from './ImportStepper';
 export * from './StepInitAnalyzeUrl';
 export * from './StepPrepareCreatePullRequest';

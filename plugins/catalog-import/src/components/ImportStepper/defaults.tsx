@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { ConfigApi } from '@backstage/core';
 import {
   Box,
   Checkbox,
@@ -34,20 +33,8 @@ import {
 } from '../StepPrepareCreatePullRequest';
 import { StepPrepareSelectLocations } from '../StepPrepareSelectLocations';
 import { StepReviewLocation } from '../StepReviewLocation';
+import { ImportOptions, StepperApis } from '../types';
 import { ImportFlows, ImportState } from '../useImportState';
-
-export type StepperProviderOpts = {
-  pullRequest?: {
-    disable?: boolean;
-    preparePullRequest?: (
-      apis: StepperApis,
-    ) => { title?: string; body?: string };
-  };
-};
-
-type StepperApis = {
-  configApi: ConfigApi;
-};
 
 export type StepConfiguration = {
   stepLabel: React.ReactElement;
@@ -57,19 +44,19 @@ export type StepConfiguration = {
 export type StepperProvider = {
   analyze: (
     s: Extract<ImportState, { activeState: 'analyze' }>,
-    opts: { apis: StepperApis; opts?: StepperProviderOpts },
+    opts: { apis: StepperApis; opts?: ImportOptions },
   ) => StepConfiguration;
   prepare: (
     s: Extract<ImportState, { activeState: 'prepare' }>,
-    opts: { apis: StepperApis; opts?: StepperProviderOpts },
+    opts: { apis: StepperApis; opts?: ImportOptions },
   ) => StepConfiguration;
   review: (
     s: Extract<ImportState, { activeState: 'review' }>,
-    opts: { apis: StepperApis; opts?: StepperProviderOpts },
+    opts: { apis: StepperApis; opts?: ImportOptions },
   ) => StepConfiguration;
   finish: (
     s: Extract<ImportState, { activeState: 'finish' }>,
-    opts: { apis: StepperApis; opts?: StepperProviderOpts },
+    opts: { apis: StepperApis; opts?: ImportOptions },
   ) => StepConfiguration;
 };
 
