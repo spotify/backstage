@@ -74,7 +74,7 @@
     "@backstage/cli": "^0.7.1",
     "@backstage/test-utils": "^0.1.13",
     "@testing-library/jest-dom": "^5.10.1",
-    "@testing-library/react": "^11.2.5",
+    "@testing-library/react": "^12.0.0-alpha.2",
     "@testing-library/user-event": "^13.1.8",
     "@types/classnames": "^2.2.9",
     "@types/d3-selection": "^2.0.0",

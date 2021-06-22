@@ -47,7 +47,7 @@
     "@backstage/dev-utils": "^0.1.17",
     "@backstage/test-utils": "^0.1.13",
     "@testing-library/jest-dom": "^5.10.1",
-    "@testing-library/react": "^11.2.5",
+    "@testing-library/react": "^12.0.0-alpha.2",
     "@testing-library/user-event": "^13.1.8",
     "@types/color": "^3.0.1",
     "@types/d3-force": "^2.1.1",

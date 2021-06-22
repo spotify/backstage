@@ -79,7 +79,7 @@ async function getConfig() {
 
     transform: {
       '\\.esm\\.js$': require.resolve('./jestEsmTransform.js'), // See jestEsmTransform.js
-      '\\.(js|jsx|ts|tsx)$': require.resolve('@sucrase/jest-plugin'),
+      '\\.(js|jsx|ts|tsx)$': require.resolve('./sucrase.js'),
       '\\.(bmp|gif|jpg|jpeg|png|frag|xml|svg)$': require.resolve(
         './jestFileTransform.js',
       ),

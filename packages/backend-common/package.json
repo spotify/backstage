@@ -94,7 +94,7 @@
     "@types/webpack-env": "^1.15.2",
     "get-port": "^5.1.1",
     "http-errors": "^1.7.3",
-    "jest": "^26.0.1",
+    "jest": "^27.0.3",
     "mock-fs": "^4.13.0",
     "msw": "^0.21.2",
     "mysql2": "^2.2.5",

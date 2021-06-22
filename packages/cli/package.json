@@ -81,7 +81,7 @@
     "handlebars": "^4.7.3",
     "html-webpack-plugin": "^4.3.0",
     "inquirer": "^7.0.4",
-    "jest": "^26.0.1",
+    "jest": "^27.0.3",
     "jest-css-modules": "^2.1.0",
     "json-schema": "^0.3.0",
     "lodash": "^4.17.19",

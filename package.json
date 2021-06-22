@@ -86,6 +86,7 @@
   "jest": {
     "transformModules": [
       "@asyncapi/react-component"
-    ]
+    ],
+    "testEnvironment": "jsdom"
   }
 }
