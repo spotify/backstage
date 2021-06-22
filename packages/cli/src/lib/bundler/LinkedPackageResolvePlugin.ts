@@ -15,14 +15,14 @@
  */
 
 import { resolve as resolvePath } from 'path';
-import { ResolvePlugin } from 'webpack';
+import { WebpackPluginInstance } from 'webpack';
 import { isChildPath } from './paths';
 import { LernaPackage } from './types';
 
 // Enables proper resolution of packages when linking in external packages.
 // Without this the packages would depend on dependencies in the node_modules
 // of the external packages themselves, leading to module duplication
-export class LinkedPackageResolvePlugin implements ResolvePlugin {
+export class LinkedPackageResolvePlugin implements WebpackPluginInstance {
   constructor(
     private readonly targetModules: string,
     private readonly packages: LernaPackage[],

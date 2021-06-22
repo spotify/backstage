@@ -19,8 +19,8 @@ import { resolve as resolvePath } from 'path';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ModuleScopePlugin from 'react-dev-utils/ModuleScopePlugin';
-import StartServerPlugin from 'start-server-webpack-plugin';
-import webpack from 'webpack';
+import { RunScriptWebpackPlugin } from 'run-script-webpack-plugin';
+import webpack, { ProvidePlugin } from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 import { optimization } from './optimization';
 import { Config } from '@backstage/config';
@@ -113,6 +113,15 @@ export async function createConfig(
     );
   }
 
+  // TODO(blam): process is no longer auto polyfilled by webpack in v5.
+  // we use the provide plugin to provide this polyfill, but lets look
+  // to remove this eventually!
+  plugins.push(
+    new ProvidePlugin({
+      process: 'process/browser',
+    }),
+  );
+
   plugins.push(
     new webpack.EnvironmentPlugin({
       APP_CONFIG: options.frontendAppConfigs,
@@ -155,27 +164,36 @@ export async function createConfig(
   return {
     mode: isDev ? 'development' : 'production',
     profile: false,
-    node: {
-      module: 'empty',
-      dgram: 'empty',
-      dns: 'mock',
-      fs: 'empty',
-      http2: 'empty',
-      net: 'empty',
-      tls: 'empty',
-      child_process: 'empty',
-    },
     optimization: optimization(options),
     bail: false,
     performance: {
       hints: false, // we check the gzip size instead
     },
-    devtool: isDev ? 'cheap-module-eval-source-map' : 'source-map',
+    // Workaround for hot module reloads not working, will be fixed in webpack-dev-server v4
+    //   https://github.com/webpack/webpack-dev-server/issues/2758
+    target: 'web',
+    devtool: isDev ? 'eval-cheap-module-source-map' : 'source-map',
     context: paths.targetPath,
     entry: [require.resolve('react-hot-loader/patch'), paths.targetEntry],
     resolve: {
       extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx'],
       mainFields: ['browser', 'module', 'main'],
+      fallback: {
+        module: false,
+        dgram: false,
+        dns: false,
+        fs: false,
+        http2: false,
+        net: false,
+        tls: false,
+        child_process: false,
+
+        /* new ignores */
+        path: false,
+        https: false,
+        http: false,
+        util: require.resolve('util/'),
+      },
       plugins: [
         new LinkedPackageResolvePlugin(paths.rootNodeModules, externalPkgs),
         new ModuleScopePlugin(
@@ -236,7 +254,7 @@ export async function createBackendConfig(
       ? {
           watch: true,
           watchOptions: {
-            ignored: [/node_modules\/(?!\@backstage)/],
+            ignored: /node_modules\/(?!\@backstage)/,
           },
         }
       : {}),
@@ -258,7 +276,7 @@ export async function createBackendConfig(
     performance: {
       hints: false, // we check the gzip size instead
     },
-    devtool: isDev ? 'cheap-module-eval-source-map' : 'source-map',
+    devtool: isDev ? 'eval-cheap-module-source-map' : 'source-map',
     context: paths.targetPath,
     entry: [
       'webpack/hot/poll?100',
@@ -299,7 +317,7 @@ export async function createBackendConfig(
         : {}),
     },
     plugins: [
-      new StartServerPlugin({
+      new RunScriptWebpackPlugin({
         name: 'main.js',
         nodeArgs: options.inspectEnabled ? ['--inspect'] : undefined,
       }),
@@ -346,11 +364,10 @@ function nodeExternalsWithResolve(
   });
 
   return (
-    context: string,
-    request: string,
-    callback: webpack.ExternalsFunctionCallback,
+    { context, request }: { context?: string; request?: string },
+    callback: any,
   ) => {
-    currentContext = context;
+    currentContext = context!;
     return externals(context, request, callback);
   };
 }

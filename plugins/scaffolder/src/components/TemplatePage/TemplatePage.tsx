@@ -184,7 +184,7 @@ export const TemplatePage = ({
         pageTitleOverride="Create a New Component"
         title={
           <>
-            Create a New Component <Lifecycle alpha shorthand />
+            Create a new component <Lifecycle alpha shorthand />
           </>
         }
         subtitle="Create new software components using standard templates"

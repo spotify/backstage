@@ -69,6 +69,10 @@ export async function buildBundle(options: BuildOptions) {
     throw new Error(`Failed to compile.\n${error.message || error}`);
   });
 
+  if (!stats) {
+    throw new Error('No stats returned');
+  }
+
   if (statsJsonEnabled) {
     // No @types/bfj
     await require('bfj').write(
@@ -87,25 +91,32 @@ export async function buildBundle(options: BuildOptions) {
 }
 
 async function build(compiler: webpack.Compiler, isCi: boolean) {
-  const stats = await new Promise<webpack.Stats>((resolve, reject) => {
-    compiler.run((err, buildStats) => {
-      if (err) {
-        if (err.message) {
-          const { errors } = formatWebpackMessages({
-            errors: [err.message],
-            warnings: new Array<string>(),
-          } as webpack.Stats.ToJsonOutput);
+  const stats = await new Promise<webpack.Stats | undefined>(
+    (resolve, reject) => {
+      compiler.run((err, buildStats) => {
+        if (err) {
+          if (err.message) {
+            const { errors } = formatWebpackMessages({
+              errors: [err.message],
+              warnings: new Array<string>(),
+              _showErrors: true,
+              _showWarnings: true,
+            });
 
-          throw new Error(errors[0]);
+            throw new Error(errors[0]);
+          } else {
+            reject(err);
+          }
         } else {
-          reject(err);
+          resolve(buildStats);
         }
-      } else {
-        resolve(buildStats);
-      }
-    });
-  });
+      });
+    },
+  );
 
+  if (!stats) {
+    throw new Error('No stats provided');
+  }
   const { errors, warnings } = formatWebpackMessages(
     stats.toJson({ all: false, warnings: true, errors: true }),
   );
