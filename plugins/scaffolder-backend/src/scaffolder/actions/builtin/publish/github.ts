@@ -124,7 +124,13 @@ export function createPublishGithubAction(options: {
         collaborators,
       } = ctx.input;
 
-      const { owner, repo, host } = parseRepoUrl(repoUrl);
+      const { owner, repo, host } = parseRepoUrl(repoUrl, integrations);
+
+      if (!owner) {
+        throw new InputError(
+          `No owner provided for host: ${host}, and repo ${repo}`,
+        );
+      }
 
       const credentialsProvider = credentialsProviders.get(host);
       const integrationConfig = integrations.github.byHost(host);

@@ -26,12 +26,14 @@ import { TemplateActionRegistry } from '../actions/TemplateActionRegistry';
 import * as Handlebars from 'handlebars';
 import { InputError } from '@backstage/errors';
 import { parseRepoUrl } from '../actions/builtin/publish/util';
+import { ScmIntegrations } from '@backstage/integration';
 
 type Options = {
   logger: Logger;
   taskBroker: TaskBroker;
   workingDirectory: string;
   actionRegistry: TemplateActionRegistry;
+  integrations: ScmIntegrations;
 };
 
 export class TaskWorker {
@@ -44,7 +46,7 @@ export class TaskWorker {
     // scary right now, so we're going to lock it off like the component API is
     // in the frontend until we can work out a nice way to do it.
     this.handlebars.registerHelper('parseRepoUrl', repoUrl => {
-      return JSON.stringify(parseRepoUrl(repoUrl));
+      return JSON.stringify(parseRepoUrl(repoUrl, options.integrations));
     });
 
     this.handlebars.registerHelper('json', obj => JSON.stringify(obj));

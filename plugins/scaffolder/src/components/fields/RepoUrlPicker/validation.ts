@@ -21,7 +21,7 @@ export const repoPickerValidation = (
 ) => {
   try {
     const { host, searchParams } = new URL(`https://${value}`);
-    if (!host || !searchParams.get('owner') || !searchParams.get('repo')) {
+    if (!host || !searchParams.get('repo')) {
       validation.addError('Incomplete repository location provided');
     }
   } catch {

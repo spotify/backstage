@@ -221,7 +221,10 @@ export function createPublishBitbucketAction(options: {
     async handler(ctx) {
       const { repoUrl, description, repoVisibility = 'private' } = ctx.input;
 
-      const { workspace, project, repo, host } = parseRepoUrl(repoUrl);
+      const { workspace, project, repo, host } = parseRepoUrl(
+        repoUrl,
+        integrations,
+      );
 
       // Workspace is only required for bitbucket cloud
       if (host === 'bitbucket.org') {

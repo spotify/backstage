@@ -146,18 +146,13 @@ integrations:
       token: ${GITLAB_TOKEN}
   bitbucket:
     - host: bitbucket.org
-      username:
-        $env: BITBUCKET_USERNAME
-      appPassword:
-        $env: BITBUCKET_APP_PASSWORD
-    - host: server.bitbucket.com
-      apiBaseUrl: server.bitbucket.com
-      username:
-        $env: BITBUCKET_SERVER_USERNAME
-      appPassword:
-        $env: BITBUCKET_SERVER_APP_PASSWORD
       username: ${BITBUCKET_USERNAME}
       appPassword: ${BITBUCKET_APP_PASSWORD}
+    ### Example for how to add your bitbucket server instance using the API:
+    # - host: server.bitbucket.com
+    #   apiBaseUrl: server.bitbucket.com
+    #   username: ${BITBUCKET_SERVER_USERNAME}
+    #   appPassword: ${BITBUCKET_SERVER_APP_PASSWORD}
   azure:
     - host: dev.azure.com
       token: ${AZURE_TOKEN}

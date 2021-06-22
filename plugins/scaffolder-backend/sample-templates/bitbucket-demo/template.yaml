@@ -19,7 +19,6 @@ spec:
           ui:field: RepoUrlPicker
           ui:options:
             allowedHosts:
-              - github.com
               - bitbucket.org
               - server.bitbucket.com
     - title: Fill in some steps
@@ -64,7 +63,6 @@ spec:
       name: Publish
       action: publish:bitbucket
       input:
-        allowedHosts: ['bitbucket.org']
         description: 'This is {{ parameters.name }}'
         repoUrl: '{{ parameters.repoUrl }}'
 

@@ -185,7 +185,7 @@ export const createPublishGithubPullRequestAction = ({
       } = ctx.input;
 
       if (repoUrl) {
-        const parsed = parseRepoUrl(repoUrl);
+        const parsed = parseRepoUrl(repoUrl, integrations);
         host = parsed.host;
         owner = parsed.owner;
         repo = parsed.repo;

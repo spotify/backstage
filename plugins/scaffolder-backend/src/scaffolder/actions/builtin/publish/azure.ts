@@ -72,6 +72,7 @@ export function createPublishAzureAction(options: {
     async handler(ctx) {
       const { owner, repo, host, organization } = parseRepoUrl(
         ctx.input.repoUrl,
+        integrations,
       );
 
       if (!organization) {
