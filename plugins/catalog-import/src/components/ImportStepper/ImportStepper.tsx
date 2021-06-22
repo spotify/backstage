@@ -23,13 +23,14 @@ import {
 import { Step, StepContent, Stepper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import React, { useMemo } from 'react';
+import { useImportOptions } from '../ImportOptionsContext';
+import { ImportOptions } from '../types';
 import { ImportFlows, ImportState, useImportState } from '../useImportState';
 import {
   defaultGenerateStepper,
   defaultStepper,
   StepConfiguration,
   StepperProvider,
-  StepperProviderOpts,
 } from './defaults';
 
 const useStyles = makeStyles(() => ({
@@ -45,18 +46,19 @@ type Props = {
     defaults: StepperProvider,
   ) => StepperProvider;
   variant?: InfoCardVariants;
-  opts?: StepperProviderOpts;
+  /// @deprecated Pass import options via ImportOptionsContext instead.
+  opts?: ImportOptions;
 };
 
 export const ImportStepper = ({
   initialUrl,
   generateStepper = defaultGenerateStepper,
   variant,
-  opts,
 }: Props) => {
   const configApi = useApi(configApiRef);
   const classes = useStyles();
   const state = useImportState({ initialUrl });
+  const opts = useImportOptions();
 
   const states = useMemo<StepperProvider>(
     () => generateStepper(state.activeFlow, defaultStepper),

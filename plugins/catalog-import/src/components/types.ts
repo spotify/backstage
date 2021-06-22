@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Backstage Authors
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { ImportComponentPage } from './ImportComponentPage';
-import { ImportOptions } from './types';
+import { ConfigApi } from '@backstage/core';
 
-/// @deprecated, use ImportComponentPage instead.
-export const Router = (opts: ImportOptions) => (
-  <Routes>
-    <Route element={<ImportComponentPage {...opts} />} />
-  </Routes>
-);
+export type ImportOptions = {
+  pullRequest?: {
+    disable?: boolean;
+    preparePullRequest?: (
+      apis: StepperApis,
+    ) => { title?: string; body?: string };
+  };
+};
+
+export type StepperApis = {
+  configApi: ConfigApi;
+};

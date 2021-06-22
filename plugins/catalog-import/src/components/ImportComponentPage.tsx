@@ -28,7 +28,7 @@ import {
 import { Grid, Typography } from '@material-ui/core';
 import React from 'react';
 import { ImportStepper } from './ImportStepper';
-import { StepperProviderOpts } from './ImportStepper/defaults';
+import { ImportOptions } from './types';
 
 function repositories(configApi: ConfigApi): string[] {
   const integrations = configApi.getConfig('integrations');
@@ -48,7 +48,7 @@ function repositories(configApi: ConfigApi): string[] {
   return repos;
 }
 
-export const ImportComponentPage = (opts: StepperProviderOpts) => {
+export const ImportComponentPage = (opts: ImportOptions) => {
   const configApi = useApi(configApiRef);
   const appTitle = configApi.getOptional('app.title') || 'Backstage';
 
