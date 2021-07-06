@@ -2,16 +2,21 @@
 id: provider
 title: Google Identity Aware Proxy Provider
 sidebar_label: Google IAP
-description: Adding Google Identity Aware Proxy as an authentication provider in Backstage
+description:
+  Adding Google Identity Aware Proxy as an authentication provider in Backstage
 ---
 
 # Using Google Identity Aware Proxy to authenticate requests
 
-Backstage allows offloading the responsibility of authenticating users to an Google HTTPS Load Balancer & [IAP](https://cloud.google.com/iap), leveraging the authentication support on IAP.
+Backstage allows offloading the responsibility of authenticating users to an
+Google HTTPS Load Balancer & [IAP](https://cloud.google.com/iap), leveraging the
+authentication support on IAP.
 
-This tutorial shows how to use authentication on an ALB sitting in front of Backstage.
+This tutorial shows how to use authentication on an ALB sitting in front of
+Backstage.
 
-It is assumed an IAP is already serving traffic in front of a Backstage instance configured to serve the frontend app from the backend.
+It is assumed an IAP is already serving traffic in front of a Backstage instance
+configured to serve the frontend app from the backend.
 
 ## Infrastructure setup
 
@@ -19,16 +24,21 @@ It is assumed an IAP is already serving traffic in front of a Backstage instance
 
 ### Frontend
 
-The Backstage App needs a SignInPage when authentication is required.
-When using ALB authentication Backstage will only be loaded once the user has successfully authenticated; we won't need to display a SignIn page, however we will need to create a dummy SignIn component that can refresh the token.
+The Backstage App needs a SignInPage when authentication is required. When using
+IAP Proxy authentication Backstage will only be loaded once the user has
+successfully authenticated; we won't need to display a SignIn page, however we
+will need to create a dummy SignIn component that can refresh the token.
 
 - edit `packages/app/src/App.tsx`
-- import the following two additional definitions from `@backstage/core`: `useApi`, `configApiRef`; these will be used to check whether Backstage is running locally or behind an ALB
-- add the following definition just before the app is created (`const app = createApp`):
+- import the following two additional definitions from `@backstage/core`:
+  `useApi`, `configApiRef`; these will be used to check whether Backstage is
+  running locally or behind an ALB
+- add the following definition just before the app is created
+  (`const app = createApp`):
 
 ```ts
 const refreshToken = async ({ props, discoveryApiConfig, config }) => {
-  const baseUrl = await discoveryApiConfig.getBaseUrl("auth");
+  const baseUrl = await discoveryApiConfig.getBaseUrl('auth');
   const shouldAuth = !!config.getOptionalConfig('auth.providers.gcp-iap');
 
   if (!shouldAuth) {
@@ -43,18 +53,17 @@ const refreshToken = async ({ props, discoveryApiConfig, config }) => {
     return;
   }
   try {
-
     const request = await fetch(`${baseUrl}/gcp-iap/refresh`, {
       headers: {
-        "x-requested-with": "XMLHttpRequest"
+        'x-requested-with': 'XMLHttpRequest',
       },
-      credentials: "include"
+      credentials: 'include',
     });
-    const data = await request.json()
+    const data = await request.json();
 
     props.onResult({
-      userId: data.backstageIdentity.id ?? "nouser@ms.at",
-      profile: data.profile ?? "nouser@ms.at",
+      userId: data.backstageIdentity.id ?? 'nouser@ms.at',
+      profile: data.profile ?? 'nouser@ms.at',
     });
   } catch (e) {
     props.onResult({
@@ -71,7 +80,7 @@ const DummySignInComponent: any = (props: any) => {
   try {
     const config = useApi(configApiRef);
     const discoveryApiConfig = useApi(discoveryApiRef);
-    refreshToken({ props, discoveryApiConfig, config })
+    refreshToken({ props, discoveryApiConfig, config });
     return <div />;
   } catch (err) {
     return <div>{err.message}</div>;
@@ -81,7 +90,9 @@ const DummySignInComponent: any = (props: any) => {
 
 ### Backend
 
-When using ALB auth it is not possible to leverage the built-in auth config discovery mechanism implemented in the app created by default; bespoke logic needs to be implemented.
+When using ALB auth it is not possible to leverage the built-in auth config
+discovery mechanism implemented in the app created by default; bespoke logic
+needs to be implemented.
 
 - replace the content of `packages/backend/plugin/auth.ts` with the below
 
@@ -116,10 +127,17 @@ export default async function createPlugin({
     });
   };
   return await createRouter({
-    logger, config, database, discovery, providerFactories: {
-      "gcp-iap": (options: AuthProviderFactoryOptions) => {
-        return createGcpIAPProvider({ ...options, identityResolver })({ ...options, identityResolver })
-      }
+    logger,
+    config,
+    database,
+    discovery,
+    providerFactories: {
+      'gcp-iap': (options: AuthProviderFactoryOptions) => {
+        return createGcpIAPProvider({ ...options, identityResolver })({
+          ...options,
+          identityResolver,
+        });
+      },
     },
   });
 }
@@ -133,10 +151,10 @@ Use the following `auth` configuration when running Backstage on AWS:
 auth:
   providers:
     gcp-iap:
-      audience: "/projects/0123456/global/backendServices/1242345678765434567"
+      audience: '/projects/0123456/global/backendServices/1242345678765434567'
 ```
-
 
 ## Conclusion
 
-Once it's deployed, after going through the AAD authentication flow, Backstage should display the AAD user details.
+Once it's deployed, after going through the AAD authentication flow, Backstage
+should display the AAD user details.

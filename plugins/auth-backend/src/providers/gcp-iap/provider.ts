@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  AuthProviderFactoryOptions,
-  AuthProviderRouteHandlers,
-  AuthResponse
-} from '@backstage/plugin-auth-backend';
 
 import {
+  AuthProviderRouteHandlers,
+  AuthProviderFactoryOptions,
   ExperimentalIdentityResolver,
 } from '../types';
+
 import express from 'express';
+
 import { Logger } from 'winston';
 import { CatalogApi } from '@backstage/catalog-client';
 
@@ -54,9 +53,12 @@ export class GcpIAPProvider implements AuthProviderRouteHandlers {
 
   async refresh(req: express.Request, res: express.Response): Promise<void> {
     const expectedAudience = this.options.audience;
-
     const jwtToken = req.header(IAP_JWT_HEADER);
-
+    if (jwtToken === undefined) {
+      res.status(401);
+      res.end();
+      return;
+    }
     const oAuth2Client = new OAuth2Client();
     const verify = async () => {
       const response = await oAuth2Client.getIapPublicKeys();
@@ -64,30 +66,32 @@ export class GcpIAPProvider implements AuthProviderRouteHandlers {
         jwtToken,
         response.pubkeys,
         expectedAudience,
-        ['https://cloud.google.com/iap']
+        ['https://cloud.google.com/iap'],
       );
-      return ticket.payload;
-    }
+      return ticket.getPayload();
+    };
 
     try {
       const user = await verify();
+      if (user === undefined) {
+        this.logger.error('gcp iap proxy user returned undefined');
+        res.status(401);
+        res.end();
+        return;
+      }
       const resolvedEntity = await this.options.identityResolutionCallback(
         {
-          email: user.email
+          email: user.email,
         },
         this.catalogClient,
       );
       res.json(resolvedEntity);
     } catch (e) {
-      const resolvedEntity = await this.options.identityResolutionCallback(
-        {},
-        this.catalogClient,
-      );
-      res.json(resolvedEntity);
       this.logger.error('Verification failed with', e);
 
       res.status(401);
       res.end();
+      return;
     }
     res.status(200);
     res.end();
@@ -97,7 +101,6 @@ export class GcpIAPProvider implements AuthProviderRouteHandlers {
     return Promise.resolve(undefined);
   }
 }
-
 
 export const createGcpIAPProvider = (_options?: GcpIAPProviderOptions) => {
   return ({

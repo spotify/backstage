@@ -15,33 +15,14 @@
  */
 import { getVoidLogger } from '@backstage/backend-common';
 import express from 'express';
-import { JWT } from 'jose';
 
-import { AwsAlbAuthProvider } from './provider';
+import { GcpIAPProvider } from './provider';
 import { AuthResponse } from '../types';
 
-const jwtMock = JWT as jest.Mocked<any>;
+jest.mock('google-auth-library');
 
-const mockKey = async () => {
-  return `-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEnuN4LlaJhaUpx+qZFTzYCrSBLk0I
-yOlxJ2VW88mLAQGJ7HPAvOdylxZsItMnzCuqNzZvie8m/NJsOjhDncVkrw==
------END PUBLIC KEY-----
-`;
-};
-
-jest.mock('jose');
-
-jest.mock('cross-fetch', () => ({
-  __esModule: true,
-  default: async () => {
-    return {
-      text: async () => {
-        return mockKey();
-      },
-    };
-  },
-}));
+const setCredentialsMock = jest.fn();
+const getAccessTokenMock = jest.fn();
 
 const identityResolutionCallbackMock = async (): Promise<AuthResponse<any>> => {
   return {
@@ -66,7 +47,7 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-describe('AwsALBAuthProvider', () => {
+describe('GcpIAPProvider', () => {
   const catalogApi = {
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     addLocation: jest.fn(),
@@ -98,15 +79,10 @@ describe('AwsALBAuthProvider', () => {
 
   describe('should transform to type OAuthResponse', () => {
     it('when JWT is valid and identity is resolved successfully', async () => {
-      const provider = new AwsAlbAuthProvider(getVoidLogger(), catalogApi, {
-        region: 'us-west-2',
+      const provider = new GcpIAPProvider(getVoidLogger(), catalogApi, {
         identityResolutionCallback: identityResolutionCallbackMock,
-        issuer: 'foo',
+        audience: 'foo',
       });
-
-      jwtMock.verify.mockImplementationOnce(() => ({
-        sub: 'foo',
-      }));
 
       await provider.refresh(mockRequest, mockResponse);
 
@@ -124,10 +100,9 @@ describe('AwsALBAuthProvider', () => {
   });
   describe('should fail when', () => {
     it('JWT is missing', async () => {
-      const provider = new AwsAlbAuthProvider(getVoidLogger(), catalogApi, {
-        region: 'us-west-2',
+      const provider = new GcpIAPProvider(getVoidLogger(), catalogApi, {
         identityResolutionCallback: identityResolutionCallbackMock,
-        issuer: 'foo',
+        audience: 'foo',
       });
 
       await provider.refresh(mockRequestWithoutJwt, mockResponse);
@@ -135,43 +110,11 @@ describe('AwsALBAuthProvider', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(401);
     });
 
-    it('JWT is invalid', async () => {
-      const provider = new AwsAlbAuthProvider(getVoidLogger(), catalogApi, {
-        region: 'us-west-2',
-        identityResolutionCallback: identityResolutionCallbackMock,
-        issuer: 'foo',
-      });
-
-      jwtMock.verify.mockImplementationOnce(() => {
-        throw new Error('bad JWT');
-      });
-
-      await provider.refresh(mockRequest, mockResponse);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(401);
-    });
-
-    it('issuer is invalid', async () => {
-      const provider = new AwsAlbAuthProvider(getVoidLogger(), catalogApi, {
-        region: 'us-west-2',
-        identityResolutionCallback: identityResolutionCallbackMock,
-        issuer: 'foobar',
-      });
-
-      jwtMock.verify.mockReturnValueOnce({});
-
-      await provider.refresh(mockRequest, mockResponse);
-      expect(mockResponse.status).toHaveBeenCalledWith(401);
-    });
-
     it('identity resolution callback rejects', async () => {
-      const provider = new AwsAlbAuthProvider(getVoidLogger(), catalogApi, {
-        region: 'us-west-2',
+      const provider = new GcpIAPProvider(getVoidLogger(), catalogApi, {
         identityResolutionCallback: identityResolutionCallbackRejectedMock,
-        issuer: 'foo',
+        audience: 'foo',
       });
-
-      jwtMock.verify.mockReturnValueOnce({});
 
       await provider.refresh(mockRequest, mockResponse);
 
