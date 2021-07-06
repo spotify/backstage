@@ -1,10 +1,17 @@
-# Using AWS Application Load Balancer with Azure Active Directory to authenticate requests
+---
+id: provider
+title: Google Identity Aware Proxy Provider
+sidebar_label: Google IAP
+description: Adding Google Identity Aware Proxy as an authentication provider in Backstage
+---
 
-Backstage allows offloading the responsibility of authenticating users to an AWS Application Load Balancer (**ALB**), leveraging the authentication support on ALB.
+# Using Google Identity Aware Proxy to authenticate requests
+
+Backstage allows offloading the responsibility of authenticating users to an Google HTTPS Load Balancer & [IAP](https://cloud.google.com/iap), leveraging the authentication support on IAP.
+
 This tutorial shows how to use authentication on an ALB sitting in front of Backstage.
-Azure Active Directory (**AAD**) is used as identity provider but any identity provider supporting OpenID Connect (OIDC) can be used.
 
-It is assumed an ALB is already serving traffic in front of a Backstage instance configured to serve the frontend app from the backend.
+It is assumed an IAP is already serving traffic in front of a Backstage instance configured to serve the frontend app from the backend.
 
 ## Infrastructure setup
 
@@ -133,7 +140,3 @@ auth:
 ## Conclusion
 
 Once it's deployed, after going through the AAD authentication flow, Backstage should display the AAD user details.
-
-<!-- links -->
-
-[monorepo-app-setup-with-auth-ms]: https://backstage.io/docs/auth/microsoft/provider

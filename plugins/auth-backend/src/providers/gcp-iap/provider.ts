@@ -18,21 +18,18 @@ import {
   AuthProviderRouteHandlers,
   AuthResponse
 } from '@backstage/plugin-auth-backend';
+
+import {
+  ExperimentalIdentityResolver,
+} from '../types';
 import express from 'express';
 import { Logger } from 'winston';
 import { CatalogApi } from '@backstage/catalog-client';
 
-const { OAuth2Client } = require('google-auth-library');
+import { OAuth2Client } from 'google-auth-library';
 
 const IAP_JWT_HEADER = 'x-goog-iap-jwt-assertion';
 
-export type ExperimentalIdentityResolver = (
-  /**
-   * An object containing information specific to the auth provider.
-   */
-  payload: object,
-  catalogApi: CatalogApi,
-) => Promise<AuthResponse<any>>;
 export type GcpIAPProviderOptions = {
   audience: string;
   identityResolutionCallback: ExperimentalIdentityResolver;
