@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 
 import { Entity, Location, LocationSpec } from '@backstage/catalog-model';
+import { DeferredEntity } from './processing/types';
 
 export interface LocationService {
   createLocation(
@@ -39,8 +40,8 @@ export interface CatalogProcessingEngine {
 }
 
 export type EntityProviderMutation =
-  | { type: 'full'; entities: Entity[] }
-  | { type: 'delta'; added: Entity[]; removed: Entity[] };
+  | { type: 'full'; entities: DeferredEntity[] }
+  | { type: 'delta'; added: DeferredEntity[]; removed: DeferredEntity[] };
 
 export interface EntityProviderConnection {
   applyMutation(mutation: EntityProviderMutation): Promise<void>;

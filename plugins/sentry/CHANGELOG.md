@@ -1,5 +1,25 @@
 # @backstage/plugin-sentry
 
+## 0.3.13
+
+### Patch Changes
+
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+  - @backstage/catalog-model@0.8.4
+  - @backstage/plugin-catalog-react@0.2.4
+
+## 0.3.12
+
+### Patch Changes
+
+- 6c12f0ec6: Migrated the package from `timeago.js` to `luxon`. See #4278
+- Updated dependencies
+  - @backstage/plugin-catalog-react@0.2.3
+  - @backstage/catalog-model@0.8.3
+  - @backstage/core@0.7.13
+
 ## 0.3.11
 
 ### Patch Changes

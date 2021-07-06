@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { Header, Page, useApi, configApiRef } from '@backstage/core';
 import React from 'react';
+
+import { Header, Page } from '@backstage/core-components';
+import { useApi, configApiRef } from '@backstage/core-plugin-api';
 
 type Props = {
   children?: React.ReactNode;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import {
   RELATION_CHILD_OF,
   stringifyEntityRef,
   parseEntityRef,
+  GroupEntity,
 } from '@backstage/catalog-model';
 import {
   catalogApiRef,
@@ -25,21 +26,20 @@ import {
   getEntityRelations,
   formatEntityRefTitle,
 } from '@backstage/plugin-catalog-react';
-import {
-  DependencyGraph,
-  DependencyGraphTypes,
-  Progress,
-  useApi,
-  ResponseErrorPanel,
-  Link,
-  useRouteRef,
-  configApiRef,
-} from '@backstage/core';
 import { makeStyles, Typography } from '@material-ui/core';
 import ZoomOutMap from '@material-ui/icons/ZoomOutMap';
 import React from 'react';
 import { useAsync } from 'react-use';
 import { BackstageTheme } from '@backstage/theme';
+
+import {
+  DependencyGraph,
+  DependencyGraphTypes,
+  Progress,
+  ResponseErrorPanel,
+  Link,
+} from '@backstage/core-components';
+import { useApi, useRouteRef, configApiRef } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles((theme: BackstageTheme) => ({
   organizationNode: {
@@ -108,7 +108,11 @@ function RenderNode(props: DependencyGraphTypes.RenderNodeProps<any>) {
  * Dynamically generates a diagram of groups registered in the catalog.
  */
 export function GroupsDiagram() {
-  const nodes = new Array<{ id: string; kind: string; name: string }>();
+  const nodes = new Array<{
+    id: string;
+    kind: string;
+    name: string;
+  }>();
   const edges = new Array<{ from: string; to: string; label: string }>();
 
   const configApi = useApi(configApiRef);
@@ -142,7 +146,9 @@ export function GroupsDiagram() {
     nodes.push({
       id: stringifyEntityRef(catalogItem),
       kind: catalogItem.kind,
-      name: formatEntityRefTitle(catalogItem, { defaultKind: 'Group' }),
+      name:
+        (catalogItem as GroupEntity).spec?.profile?.displayName ||
+        formatEntityRefTitle(catalogItem, { defaultKind: 'Group' }),
     });
 
     // Edge to parent

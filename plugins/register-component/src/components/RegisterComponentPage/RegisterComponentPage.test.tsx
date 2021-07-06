@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-import {
-  ApiProvider,
-  ApiRegistry,
-  createRouteRef,
-  errorApiRef,
-} from '@backstage/core';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import { renderInTestApp } from '@backstage/test-utils';
 import { lightTheme } from '@backstage/theme';
 import { ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import { RegisterComponentPage } from './RegisterComponentPage';
+
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
+import { createRouteRef, errorApiRef } from '@backstage/core-plugin-api';
 
 const errorApi: jest.Mocked<typeof errorApiRef.T> = {
   post: jest.fn(),
@@ -62,7 +59,7 @@ describe('RegisterComponentPage', () => {
         <RegisterComponentPage
           catalogRouteRef={createRouteRef({
             path: '/catalog',
-            title: 'Service Catalog',
+            title: 'Software Catalog',
           })}
         />
       </Wrapper>,

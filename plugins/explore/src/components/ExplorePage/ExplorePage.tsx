@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { configApiRef, Header, Page, useApi } from '@backstage/core';
+
 import React from 'react';
-import { ExploreTabs } from './ExploreTabs';
+import { useOutlet } from 'react-router';
+import { DefaultExplorePage } from '../DefaultExplorePage';
 
 export const ExplorePage = () => {
-  const configApi = useApi(configApiRef);
-  const organizationName =
-    configApi.getOptionalString('organization.name') ?? 'Backstage';
-  return (
-    <Page themeId="home">
-      <Header
-        title={`Explore the ${organizationName} ecosystem`}
-        subtitle="Discover solutions available in your ecosystem"
-      />
+  const outlet = useOutlet();
 
-      <ExploreTabs />
-    </Page>
-  );
+  return <>{outlet || <DefaultExplorePage />}</>;
 };

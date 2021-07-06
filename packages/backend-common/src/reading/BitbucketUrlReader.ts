@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,8 @@ import {
   SearchOptions,
   SearchResponse,
   UrlReader,
+  ReadUrlResponse,
+  ReadUrlOptions,
 } from './types';
 
 /**
@@ -97,6 +99,15 @@ export class BitbucketUrlReader implements UrlReader {
       throw new NotFoundError(message);
     }
     throw new Error(message);
+  }
+
+  async readUrl(
+    url: string,
+    _options?: ReadUrlOptions,
+  ): Promise<ReadUrlResponse> {
+    // TODO etag is not implemented yet.
+    const buffer = await this.read(url);
+    return { buffer: async () => buffer };
   }
 
   async readTree(

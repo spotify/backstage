@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,17 @@
  * limitations under the License.
  */
 
-export * from './connection';
-export * from './types';
 export * from './SingleConnection';
+export * from './DatabaseManager';
+
+/*
+ * Undocumented API surface from connection is being reduced for future deprecation.
+ * Avoid exporting additional symbols.
+ */
+export {
+  createDatabaseClient,
+  createDatabase,
+  ensureDatabaseExists,
+} from './connection';
+
+export type { PluginDatabaseManager } from './types';

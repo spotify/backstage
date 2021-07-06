@@ -1,5 +1,20 @@
 # @backstage/plugin-proxy-backend
 
+## 0.2.11
+
+### Patch Changes
+
+- 13da7be3c: Clean up proxy creation log messages and make them include the mount path.
+
+## 0.2.10
+
+### Patch Changes
+
+- 3108ff7bf: Make `yarn dev` respect the `PLUGIN_PORT` environment variable.
+- 6ffcf9ed8: Bump http-proxy-middleware from 0.19.2 to 2.0.0
+- Updated dependencies
+  - @backstage/backend-common@0.8.3
+
 ## 0.2.9
 
 ### Patch Changes

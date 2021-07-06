@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { isChildPath } from '@backstage/cli-common';
+import { NotAllowedError } from '@backstage/errors';
 import { resolve as resolvePath } from 'path';
 
 /**
@@ -32,3 +34,27 @@ export function resolvePackagePath(name: string, ...paths: string[]) {
 
   return resolvePath(req.resolve(`${name}/package.json`), '..', ...paths);
 }
+
+/**
+ * Resolves a target path from a base path while guaranteeing that the result is
+ * a path that point to or within the base path. This is useful for resolving
+ * paths from user input, as it otherwise opens up for vulnerabilities.
+ *
+ * @param base The base directory to resolve the path from.
+ * @param path The target path, relative or absolute
+ * @returns A path that is guaranteed to point to or within the base path.
+ */
+export function resolveSafeChildPath(base: string, path: string): string {
+  const targetPath = resolvePath(base, path);
+
+  if (!isChildPath(base, targetPath)) {
+    throw new NotAllowedError(
+      'Relative path is not allowed to refer to a directory outside its parent',
+    );
+  }
+
+  return targetPath;
+}
+
+// Re-export isChildPath so that backend packages don't need to depend on cli-common
+export { isChildPath };

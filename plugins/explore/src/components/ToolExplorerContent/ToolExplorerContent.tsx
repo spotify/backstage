@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { exploreToolsConfigRef } from '@backstage/plugin-explore-react';
+import React from 'react';
+import { useAsync } from 'react-use';
+import { ToolCard } from '../ToolCard';
+
 import {
   Content,
   ContentHeader,
@@ -20,13 +26,10 @@ import {
   ItemCardGrid,
   Progress,
   SupportButton,
-  useApi,
   WarningPanel,
-} from '@backstage/core';
-import { exploreToolsConfigRef } from '@backstage/plugin-explore-react';
-import React from 'react';
-import { useAsync } from 'react-use';
-import { ToolCard } from '../ToolCard';
+} from '@backstage/core-components';
+
+import { useApi } from '@backstage/core-plugin-api';
 
 const Body = () => {
   const exploreToolsConfigApi = useApi(exploreToolsConfigRef);
@@ -61,9 +64,13 @@ const Body = () => {
   );
 };
 
-export const ToolExplorerContent = () => (
+type ToolExplorerContentProps = {
+  title?: string;
+};
+
+export const ToolExplorerContent = ({ title }: ToolExplorerContentProps) => (
   <Content noPadding>
-    <ContentHeader title="Tools">
+    <ContentHeader title={title ?? 'Tools'}>
       <SupportButton>Discover the tools in your ecosystem.</SupportButton>
     </ContentHeader>
     <Body />

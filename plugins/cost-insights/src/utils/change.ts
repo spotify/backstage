@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,9 @@ import {
   Duration,
   DateAggregation,
 } from '../types';
-import dayjs, { OpUnitType } from 'dayjs';
-import durationPlugin from 'dayjs/plugin/duration';
+import { DateTime, Duration as LuxonDuration } from 'luxon';
 import { inclusiveStartDateOf } from './duration';
 import { notEmpty } from './assert';
-
-dayjs.extend(durationPlugin);
 
 // Used for displaying status colors
 export function growthOf(change: ChangeStatistic): GrowthType {
@@ -85,16 +82,12 @@ export function getPreviousPeriodTotalCost(
   duration: Duration,
   inclusiveEndDate: string,
 ): number {
-  const dayjsDuration = dayjs.duration(duration);
+  const luxonDuration = LuxonDuration.fromISO(duration);
   const startDate = inclusiveStartDateOf(duration, inclusiveEndDate);
-  // dayjs doesn't allow adding an ISO 8601 period to dates.
-  const [amount, type]: [number, OpUnitType] = dayjsDuration.days()
-    ? [dayjsDuration.days(), 'day']
-    : [dayjsDuration.months(), 'month'];
-  const nextPeriodStart = dayjs(startDate).add(amount, type);
+  const nextPeriodStart = DateTime.fromISO(startDate).plus(luxonDuration);
   // Add up costs that incurred before the start of the next period.
   return aggregation.reduce((acc, costByDate) => {
-    return dayjs(costByDate.date).isBefore(nextPeriodStart)
+    return DateTime.fromISO(costByDate.date) < nextPeriodStart
       ? acc + costByDate.amount
       : acc;
   }, 0);

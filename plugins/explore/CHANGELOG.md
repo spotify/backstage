@@ -1,5 +1,76 @@
 # @backstage/plugin-explore
 
+## 0.3.8
+
+### Patch Changes
+
+- dd9118574: Using displayName as default value when loading Groups Diagram
+- Updated dependencies
+  - @backstage/plugin-catalog-react@0.2.5
+  - @backstage/core-components@0.1.4
+
+## 0.3.7
+
+### Patch Changes
+
+- 5c4e6aee2: Refactors the explore plugin to be more customizable. This includes the following non-breaking changes:
+
+  - Introduce new `ExploreLayout` page which can be used to create a custom `ExplorePage`
+  - Refactor `ExplorePage` to use a new `ExploreLayout` component
+  - Exports existing `DomainExplorerContent`, `GroupsExplorerContent`, & `ToolExplorerContent` components
+  - Allows `title` props to be customized
+
+  Create a custom explore page in `packages/app/src/components/explore/ExplorePage.tsx`.
+
+  ```tsx
+  import {
+    DomainExplorerContent,
+    ExploreLayout,
+  } from '@backstage/plugin-explore';
+  import React from 'react';
+  import { InnserSourceExplorerContent } from './InnserSourceExplorerContent';
+
+  export const ExplorePage = () => {
+    return (
+      <ExploreLayout
+        title="Explore the ACME corp ecosystem"
+        subtitle="Browse our ecosystem"
+      >
+        <ExploreLayout.Route path="domains" title="Domains">
+          <DomainExplorerContent />
+        </ExploreLayout.Route>
+        <ExploreLayout.Route path="inner-source" title="InnerSource">
+          <AcmeInnserSourceExplorerContent />
+        </ExploreLayout.Route>
+      </ExploreLayout>
+    );
+  };
+
+  export const explorePage = <ExplorePage />;
+  ```
+
+  Now register the new explore page in `packages/app/src/App.tsx`.
+
+  ```diff
+  + import { explorePage } from './components/explore/ExplorePage';
+
+  const routes = (
+    <FlatRoutes>
+  -    <Route path="/explore" element={<ExplorePage />} />
+  +    <Route path="/explore" element={<ExplorePage />}>
+  +      {explorePage}
+  +    </Route>
+    </FlatRoutes>
+  );
+  ```
+
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+  - @backstage/catalog-model@0.8.4
+  - @backstage/plugin-catalog-react@0.2.4
+  - @backstage/plugin-explore-react@0.0.6
+
 ## 0.3.6
 
 ### Patch Changes

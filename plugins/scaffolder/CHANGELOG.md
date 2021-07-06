@@ -1,5 +1,31 @@
 # @backstage/plugin-scaffolder
 
+## 0.9.10
+
+### Patch Changes
+
+- 9e60a728e: Upgrade `rjsf` to 3.0.0.
+- a94587cad: Update dependencies
+- Updated dependencies
+  - @backstage/plugin-catalog-react@0.2.5
+  - @backstage/core-components@0.1.4
+  - @backstage/integration@0.5.7
+  - @backstage/catalog-client@0.3.15
+
+## 0.9.9
+
+### Patch Changes
+
+- 5f4339b8c: Adding `FeatureFlag` component and treating `FeatureFlags` as first class citizens to composability API
+- 71416fb64: Moved installation instructions from the main [backstage.io](https://backstage.io) documentation to the package README file. These instructions are not generally needed, since the plugin comes installed by default with `npx @backstage/create-app`.
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+  - @backstage/catalog-client@0.3.14
+  - @backstage/catalog-model@0.8.4
+  - @backstage/integration-react@0.1.4
+  - @backstage/plugin-catalog-react@0.2.4
+
 ## 0.9.8
 
 ### Patch Changes

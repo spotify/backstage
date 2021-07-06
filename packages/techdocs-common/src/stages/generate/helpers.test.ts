@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -344,19 +344,28 @@ describe('helpers', () => {
       mockFs.restore();
     });
 
+    const inputDir = resolvePath(__filename, '../__fixtures__/');
     it('should return true on when no docs_dir present', async () => {
-      await expect(validateMkdocsYaml('/mkdocs.yml')).resolves.toBeUndefined();
+      await expect(
+        validateMkdocsYaml(inputDir, '/mkdocs.yml'),
+      ).resolves.toBeUndefined();
     });
 
     it('should return false on absolute doc_dir path', async () => {
       await expect(
-        validateMkdocsYaml('/mkdocs_invalid_doc_dir.yml'),
+        validateMkdocsYaml(inputDir, '/mkdocs_invalid_doc_dir.yml'),
+      ).rejects.toThrow();
+    });
+
+    it('should return false on doc_dir path that traverses directory structure backwards', async () => {
+      await expect(
+        validateMkdocsYaml(inputDir, '/mkdocs_invalid_doc_dir2.yml'),
       ).rejects.toThrow();
     });
 
     it('should validate files with custom yaml tags', async () => {
       await expect(
-        validateMkdocsYaml('/mkdocs_with_extensions.yml'),
+        validateMkdocsYaml(inputDir, '/mkdocs_with_extensions.yml'),
       ).resolves.toBeUndefined();
     });
   });

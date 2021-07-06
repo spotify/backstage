@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,9 @@ leaving any imports in place.
 import { version as backendCommon } from '@backstage/backend-common/package.json';
 import { version as cli } from '@backstage/cli/package.json';
 import { version as config } from '@backstage/config/package.json';
-import { version as core } from '@backstage/core/package.json';
+import { version as coreAppApi } from '@backstage/core-app-api/package.json';
+import { version as coreComponents } from '@backstage/core-components/package.json';
+import { version as corePluginApi } from '@backstage/core-plugin-api/package.json';
 import { version as devUtils } from '@backstage/dev-utils/package.json';
 import { version as testUtils } from '@backstage/test-utils/package.json';
 import { version as theme } from '@backstage/theme/package.json';
@@ -43,7 +45,9 @@ export const packageVersions = {
   '@backstage/backend-common': backendCommon,
   '@backstage/cli': cli,
   '@backstage/config': config,
-  '@backstage/core': core,
+  '@backstage/core-app-api': coreAppApi,
+  '@backstage/core-components': coreComponents,
+  '@backstage/core-plugin-api': corePluginApi,
   '@backstage/dev-utils': devUtils,
   '@backstage/test-utils': testUtils,
   '@backstage/theme': theme,

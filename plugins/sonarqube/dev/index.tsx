@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { Content, Header, Page } from '@backstage/core';
 import { createDevApp, EntityGridItem } from '@backstage/dev-utils';
 import { Grid } from '@material-ui/core';
 import React from 'react';
 import { EntitySonarQubeCard, sonarQubePlugin } from '../src';
 import { FindingSummary, SonarQubeApi, sonarQubeApiRef } from '../src/api';
 import { SONARQUBE_PROJECT_KEY_ANNOTATION } from '../src/components/useProjectKey';
+import { Content, Header, Page } from '@backstage/core-components';
 
 const entity = (name?: string) =>
   ({

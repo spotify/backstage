@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
-import { gcpProjectsPlugin } from '../src/plugin';
+import { gcpProjectsPlugin, GcpProjectsPage } from '../src/plugin';
 
-createDevApp().registerPlugin(gcpProjectsPlugin).render();
+createDevApp()
+  .registerPlugin(gcpProjectsPlugin)
+  .addPage({
+    title: 'GCP Projects',
+    element: <GcpProjectsPage />,
+  })
+  .render();

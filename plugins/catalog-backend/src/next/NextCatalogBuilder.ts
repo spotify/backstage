@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,8 +49,6 @@ import {
   FileReaderProcessor,
   GithubDiscoveryProcessor,
   GithubOrgReaderProcessor,
-  LdapOrgReaderProcessor,
-  MicrosoftGraphOrgReaderProcessor,
   PlaceholderProcessor,
   PlaceholderResolver,
   UrlReaderProcessor,
@@ -63,7 +61,11 @@ import {
 } from '../ingestion/processors/PlaceholderProcessor';
 import { defaultEntityDataParser } from '../ingestion/processors/util/parse';
 import { LocationAnalyzer } from '../ingestion/types';
-import { CatalogProcessingEngine, LocationService } from '../next/types';
+import {
+  CatalogProcessingEngine,
+  EntityProvider,
+  LocationService,
+} from '../next/types';
 import { ConfigLocationEntityProvider } from './ConfigLocationEntityProvider';
 import { DefaultProcessingDatabase } from './database/DefaultProcessingDatabase';
 import { DefaultCatalogProcessingEngine } from './DefaultCatalogProcessingEngine';
@@ -105,9 +107,11 @@ export class NextCatalogBuilder {
   private entityPoliciesReplace: boolean;
   private placeholderResolvers: Record<string, PlaceholderResolver>;
   private fieldFormatValidators: Partial<Validators>;
+  private entityProviders: EntityProvider[];
   private processors: CatalogProcessor[];
   private processorsReplace: boolean;
   private parser: CatalogProcessorParser | undefined;
+  private refreshIntervalSeconds = 100;
 
   constructor(env: CatalogEnvironment) {
     this.env = env;
@@ -115,6 +119,7 @@ export class NextCatalogBuilder {
     this.entityPoliciesReplace = false;
     this.placeholderResolvers = {};
     this.fieldFormatValidators = {};
+    this.entityProviders = [];
     this.processors = [];
     this.processorsReplace = false;
     this.parser = undefined;
@@ -133,6 +138,16 @@ export class NextCatalogBuilder {
    */
   addEntityPolicy(...policies: EntityPolicy[]): NextCatalogBuilder {
     this.entityPolicies.push(...policies);
+    return this;
+  }
+
+  /**
+   * Refresh interval determines how often entities should be refreshed.
+   * The default refresh duration is 100, setting this too low will potentially
+   * deplete request quotas to upstream services.
+   */
+  setRefreshIntervalSeconds(seconds: number): NextCatalogBuilder {
+    this.refreshIntervalSeconds = seconds;
     return this;
   }
 
@@ -184,6 +199,20 @@ export class NextCatalogBuilder {
     validators: Partial<Validators>,
   ): NextCatalogBuilder {
     lodash.merge(this.fieldFormatValidators, validators);
+    return this;
+  }
+
+  /**
+   * Adds or replaces entity providers. These are responsible for bootstrapping
+   * the list of entities out of original data sources. For example, there is
+   * one entity source for the config locations, and one for the database
+   * stored locations. If you ingest entities out of a third party system, you
+   * may want to implement that in terms of an entity provider as well.
+   *
+   * @param providers One or more entity providers
+   */
+  addEntityProvider(...providers: EntityProvider[]): NextCatalogBuilder {
+    this.entityProviders.push(...providers);
     return this;
   }
 
@@ -246,13 +275,17 @@ export class NextCatalogBuilder {
     await dbClient.migrate.latest({
       directory: resolvePackagePath(
         '@backstage/plugin-catalog-backend',
-        'migrationsv2',
+        'migrations',
       ),
     });
 
     const db = new CommonDatabase(dbClient, logger);
 
-    const processingDatabase = new DefaultProcessingDatabase(dbClient, logger);
+    const processingDatabase = new DefaultProcessingDatabase({
+      database: dbClient,
+      logger,
+      refreshIntervalSeconds: this.refreshIntervalSeconds,
+    });
     const integrations = ScmIntegrations.fromConfig(config);
     const orchestrator = new DefaultCatalogProcessingOrchestrator({
       processors,
@@ -262,13 +295,18 @@ export class NextCatalogBuilder {
       policy,
     });
     const entitiesCatalog = new NextEntitiesCatalog(dbClient);
+    const stitcher = new Stitcher(dbClient, logger);
 
     const locationStore = new DefaultLocationStore(dbClient);
-    const stitcher = new Stitcher(dbClient, logger);
     const configLocationProvider = new ConfigLocationEntityProvider(config);
+    const entityProviders = lodash.uniqBy(
+      [...this.entityProviders, locationStore, configLocationProvider],
+      provider => provider.getProviderName(),
+    );
+
     const processingEngine = new DefaultCatalogProcessingEngine(
       logger,
-      [locationStore, configLocationProvider],
+      entityProviders,
       processingDatabase,
       orchestrator,
       stitcher,
@@ -280,6 +318,7 @@ export class NextCatalogBuilder {
       locationStore,
       orchestrator,
     );
+
     return {
       entitiesCatalog,
       locationsCatalog,
@@ -331,8 +370,6 @@ export class NextCatalogBuilder {
         BitbucketDiscoveryProcessor.fromConfig(config, { logger }),
         GithubDiscoveryProcessor.fromConfig(config, { logger }),
         GithubOrgReaderProcessor.fromConfig(config, { logger }),
-        LdapOrgReaderProcessor.fromConfig(config, { logger }),
-        MicrosoftGraphOrgReaderProcessor.fromConfig(config, { logger }),
         new UrlReaderProcessor({ reader, logger }),
         CodeOwnersProcessor.fromConfig(config, { logger, reader }),
         new AnnotateLocationEntityProcessor({ integrations }),

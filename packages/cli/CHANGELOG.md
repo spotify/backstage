@@ -1,5 +1,56 @@
 # @backstage/cli
 
+## 0.7.3
+
+### Patch Changes
+
+- a93e60fdc: Updated dependencies
+- 55f49fcc7: Update dependencies
+- ab5cc376f: Use new `isChildPath` export from `@backstage/cli-common`
+- Updated dependencies
+  - @backstage/cli-common@0.1.2
+
+## 0.7.2
+
+### Patch Changes
+
+- 953a7e66f: updated plugin template to generate path equals plugin id for the root page
+- 04248b8f9: chore: bump `msw` dependency in `create-plugin`
+- e3d31b381: Make the `create-github-app` command disable webhooks by default.
+- 8f100db75: chore: bump `@typescript-eslint/eslint-plugin` from 4.26.0 to 4.27.0
+- 95e572305: chore: bump `del` from 5.1.0 to 6.0.0
+- ece2b5dd1: chore: bump `@spotify/eslint-config-typescript` from 9.0.0 to 10.0.0
+- 0ec31e596: chore: bump `@rollup/plugin-node-resolve` from 11.2.1 to 13.0.0
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+
+## 0.7.1
+
+### Patch Changes
+
+- 3108ff7bf: Make `yarn dev` in newly created backend plugins respect the `PLUGIN_PORT` environment variable.
+
+  You can achieve the same in your created backend plugins by making sure to properly call the port and CORS methods on your service builder. Typically in a file named `src/service/standaloneServer.ts` inside your backend plugin package, replace the following:
+
+  ```ts
+  const service = createServiceBuilder(module)
+    .enableCors({ origin: 'http://localhost:3000' })
+    .addRouter('/my-plugin', router);
+  ```
+
+  With something like the following:
+
+  ```ts
+  let service = createServiceBuilder(module)
+    .setPort(options.port)
+    .addRouter('/my-plugin', router);
+  if (options.enableCors) {
+    service = service.enableCors({ origin: 'http://localhost:3000' });
+  }
+  ```
+
+- Updated dependencies
+  - @backstage/config-loader@0.6.4
+
 ## 0.7.0
 
 ### Minor Changes

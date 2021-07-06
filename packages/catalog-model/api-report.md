@@ -10,7 +10,7 @@ import { JsonValue } from '@backstage/config';
 import { SerializedError } from '@backstage/errors';
 import * as yup from 'yup';
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const analyzeLocationSchema: yup.ObjectSchema<{
     location: LocationSpec;
 }, object>;
@@ -316,7 +316,7 @@ export { LocationEntityV1alpha1 }
 // @public (undocumented)
 export const locationEntityV1alpha1Validator: KindValidator;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const locationSchema: yup.ObjectSchema<Location_2, object>;
 
 // @public (undocumented)
@@ -326,7 +326,7 @@ export type LocationSpec = {
     presence?: 'optional' | 'required';
 };
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const locationSpecSchema: yup.ObjectSchema<LocationSpec, object>;
 
 // @public (undocumented)

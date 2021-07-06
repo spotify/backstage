@@ -1,6 +1,6 @@
 {
   "name": "example-backend",
-  "version": "0.2.32",
+  "version": "0.2.35",
   "main": "dist/index.cjs.js",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -27,24 +27,24 @@
     "migrate:create": "knex migrate:make -x ts"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.8.2",
-    "@backstage/catalog-client": "^0.3.13",
+    "@backstage/backend-common": "^0.8.4",
+    "@backstage/catalog-client": "^0.3.15",
     "@backstage/catalog-model": "^0.8.2",
     "@backstage/config": "^0.1.5",
     "@backstage/plugin-app-backend": "^0.3.13",
-    "@backstage/plugin-auth-backend": "^0.3.12",
+    "@backstage/plugin-auth-backend": "^0.3.15",
     "@backstage/plugin-badges-backend": "^0.1.6",
-    "@backstage/plugin-catalog-backend": "^0.10.2",
+    "@backstage/plugin-catalog-backend": "^0.11.0",
     "@backstage/plugin-code-coverage-backend": "^0.1.6",
     "@backstage/plugin-graphql-backend": "^0.1.8",
     "@backstage/plugin-kubernetes-backend": "^0.3.8",
-    "@backstage/plugin-kafka-backend": "^0.2.6",
+    "@backstage/plugin-kafka-backend": "^0.2.7",
     "@backstage/plugin-proxy-backend": "^0.2.9",
     "@backstage/plugin-rollbar-backend": "^0.1.11",
-    "@backstage/plugin-scaffolder-backend": "^0.12.0",
+    "@backstage/plugin-scaffolder-backend": "^0.12.4",
     "@backstage/plugin-search-backend": "^0.2.0",
     "@backstage/plugin-search-backend-node": "^0.2.0",
-    "@backstage/plugin-techdocs-backend": "^0.8.2",
+    "@backstage/plugin-techdocs-backend": "^0.8.5",
     "@backstage/plugin-todo-backend": "^0.1.6",
     "@gitbeaker/node": "^30.2.0",
     "@octokit/rest": "^18.5.3",
@@ -60,7 +60,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.7.0",
+    "@backstage/cli": "^0.7.3",
     "@types/dockerode": "^3.2.1",
     "@types/express": "^4.17.6",
     "@types/express-serve-static-core": "^4.17.5"

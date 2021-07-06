@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
+import { BitriseClientApi } from './api/bitriseApi.client';
+
+import { BitriseApi } from './api/bitriseApi';
 import {
   discoveryApiRef,
   createApiRef,
   createApiFactory,
   createPlugin,
-} from '@backstage/core';
-
-import { BitriseClientApi } from './api/bitriseApi.client';
-import { BitriseApi } from './api/bitriseApi';
+} from '@backstage/core-plugin-api';
 
 export const bitriseApiRef = createApiRef<BitriseApi>({
   id: 'plugin.bitrise.service',

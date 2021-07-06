@@ -6,8 +6,8 @@ sidebar_label: Locations
 description: Integrating source code stored in Azure DevOps into the Backstage catalog
 ---
 
-The Azure integration supports loading catalog entities from Azure DevOps.
-Entities can be added to
+The Azure DevOps integration supports loading catalog entities from Azure
+DevOps. Entities can be added to
 [static catalog configuration](../../features/software-catalog/configuration.md),
 or registered with the
 [catalog-import](https://github.com/backstage/backstage/tree/master/plugins/catalog-import)

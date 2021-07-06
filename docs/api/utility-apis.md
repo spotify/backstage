@@ -23,18 +23,18 @@ during their entire life cycle.
 Each Utility API is tied to an `ApiRef` instance, which is a global singleton
 object without any additional state or functionality, its only purpose is to
 reference Utility APIs. `ApiRef`s are created using `createApiRef`, which is
-exported by `@backstage/core`. There are many
+exported by `@backstage/core-plugin-api`. There are many
 [predefined Utility APIs](../reference/utility-apis/README.md) defined in
-`@backstage/core`, and they're all exported with a name of the pattern
-`*ApiRef`, for example `errorApiRef`.
+`@backstage/core-plugin-api`, and they're all exported with a name of the
+pattern `*ApiRef`, for example `errorApiRef`.
 
 To access one of the Utility APIs inside a React component, use the `useApi`
-hook exported by `@backstage/core`, or the `withApis` HOC if you prefer class
-components. For example, the `ErrorApi` can be accessed like this:
+hook exported by `@backstage/core-plugin-api`, or the `withApis` HOC if you
+prefer class components. For example, the `ErrorApi` can be accessed like this:
 
 ```tsx
 import React from 'react';
-import { useApi, errorApiRef } from '@backstage/core';
+import { useApi, errorApiRef } from '@backstage/core-plugin-api';
 
 export const MyComponent = () => {
   const errorApi = useApi(errorApiRef);
@@ -52,9 +52,9 @@ Note that there is no explicit type given for `ErrorApi`. This is because the
 `errorApiRef` has the type embedded, and `useApi` is able to infer the type.
 
 Also note that consuming Utility APIs is not limited to plugins, it can be done
-from any component inside Backstage, including the ones in `@backstage/core`.
-The only requirement is that they are beneath the `AppProvider` in the react
-tree.
+from any component inside Backstage, including the ones in
+`@backstage/core-plugin-api`. The only requirement is that they are beneath the
+`AppProvider` in the react tree.
 
 ## Supplying APIs
 
@@ -71,8 +71,11 @@ For example, this is the default `ApiFactory` for the `ErrorApi`:
 createApiFactory({
   api: errorApiRef,
   deps: { alertApi: alertApiRef },
-  factory: ({ alertApi }) =>
-    new ErrorAlerter(alertApi, new ErrorApiForwarder()),
+  factory: ({ alertApi }) => {
+    const errorApi = new ErrorAlerter(alertApi, new ErrorApiForwarder());
+    UnhandledErrorForwarder.forward(errorApi, { hidden: false });
+    return errorApi;
+  },
 });
 ```
 
@@ -98,13 +101,13 @@ app, and the app itself.
 ### Core APIs
 
 Starting with the Backstage core library, it provides implementations for all of
-the core APIs. The core APIs are the ones exported by `@backstage/core`, such as
-the `errorApiRef` and `configApiRef`. You can find a full list of them
-[here](../reference/utility-apis/README.md).
+the core APIs. The core APIs are the ones exported by
+`@backstage/core-plugin-api`, such as the `errorApiRef` and `configApiRef`. You
+can find a full list of them [here](../reference/utility-apis/README.md).
 
 The core APIs are loaded for any app created with `createApp` from
-`@backstage/core`, which means that there is no step that needs to be taken to
-include these APIs in an app.
+`@backstage/core-plugin-api`, which means that there is no step that needs to be
+taken to include these APIs in an app.
 
 ### Plugin APIs
 
@@ -210,8 +213,9 @@ implement the `ErrorApi`, as it is checked by the type embedded in the
 
 Plugins are free to define their own Utility APIs. Simply define the TypeScript
 interface for the API, and create an `ApiRef` using `createApiRef` exported from
-`@backstage/core`. Also be sure to provide at least one implementation of the
-API, and to declare a default factory for the API in `createPlugin`.
+`@backstage/core-plugin-api`. Also be sure to provide at least one
+implementation of the API, and to declare a default factory for the API in
+`createPlugin`.
 
 Custom Utility APIs can be either public or private, which is up to the plugin
 to choose. Private APIs do not expose an external API surface, and it's

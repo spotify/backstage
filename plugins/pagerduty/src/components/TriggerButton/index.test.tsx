@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
 import React from 'react';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { renderInTestApp } from '@backstage/test-utils';
-import {
-  ApiRegistry,
-  alertApiRef,
-  createApiRef,
-  ApiProvider,
-  IdentityApi,
-  identityApiRef,
-} from '@backstage/core';
 import { pagerDutyApiRef } from '../../api';
 import { Entity } from '@backstage/catalog-model';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { TriggerButton } from './';
+
+import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
+import {
+  alertApiRef,
+  createApiRef,
+  IdentityApi,
+  identityApiRef,
+} from '@backstage/core-plugin-api';
 
 describe('TriggerButton', () => {
   const mockIdentityApi: Partial<IdentityApi> = {

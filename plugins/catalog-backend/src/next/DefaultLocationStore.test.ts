@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,13 +113,17 @@ describe('DefaultLocationStore', () => {
           type: 'delta',
           removed: [],
           added: expect.arrayContaining([
-            expect.objectContaining({
-              spec: {
-                target:
-                  'https://github.com/backstage/demo/blob/master/catalog-info.yml',
-                type: 'url',
-              },
-            }),
+            {
+              entity: expect.objectContaining({
+                spec: {
+                  target:
+                    'https://github.com/backstage/demo/blob/master/catalog-info.yml',
+                  type: 'url',
+                },
+              }),
+              locationKey:
+                'url:https://github.com/backstage/demo/blob/master/catalog-info.yml',
+            },
           ]),
         });
       },
@@ -156,15 +160,19 @@ describe('DefaultLocationStore', () => {
         expect(connection.applyMutation).toHaveBeenCalledWith({
           type: 'delta',
           added: [],
-          removed: expect.arrayContaining([
-            expect.objectContaining({
-              spec: {
-                target:
-                  'https://github.com/backstage/demo/blob/master/catalog-info.yml',
-                type: 'url',
-              },
-            }),
-          ]),
+          removed: [
+            {
+              entity: expect.objectContaining({
+                spec: {
+                  target:
+                    'https://github.com/backstage/demo/blob/master/catalog-info.yml',
+                  type: 'url',
+                },
+              }),
+              locationKey:
+                'url:https://github.com/backstage/demo/blob/master/catalog-info.yml',
+            },
+          ],
         });
       },
       60_000,

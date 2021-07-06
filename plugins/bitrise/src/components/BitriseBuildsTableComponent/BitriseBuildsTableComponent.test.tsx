@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,17 @@
  */
 
 import React from 'react';
-import { ApiProvider, ApiRegistry, UrlPatternDiscovery } from '@backstage/core';
 import { bitriseApiRef } from '../../plugin';
 import { BitriseClientApi } from '../../api/bitriseApi.client';
 import { setupServer } from 'msw/node';
 import { msw, renderInTestApp } from '@backstage/test-utils';
 import { useBitriseBuilds } from '../../hooks/useBitriseBuilds';
 import { BitriseBuildsTable } from './BitriseBuildsTableComponent';
+import {
+  ApiProvider,
+  ApiRegistry,
+  UrlPatternDiscovery,
+} from '@backstage/core-app-api';
 
 jest.mock('../../hooks/useBitriseBuilds', () => ({
   useBitriseBuilds: jest.fn(),

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { ConfigApi, OAuthApi } from '@backstage/core';
 import { Octokit } from '@octokit/rest';
 import { GitHubIntegration, ScmIntegrations } from '@backstage/integration';
-
 import { DISABLE_CACHE } from '../constants/constants';
+
 import { Project } from '../contexts/ProjectContext';
 import { UnboxArray, UnboxReturnedPromise } from '../types/helpers';
 import { GitReleaseManagerError } from '../errors/GitReleaseManagerError';
+import { ConfigApi, OAuthApi } from '@backstage/core-plugin-api';
 
 export class GitReleaseClient implements GitReleaseApi {
   private readonly githubAuthApi: OAuthApi;

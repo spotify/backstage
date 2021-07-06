@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,14 @@
  */
 
 import { ApiEntity } from '@backstage/catalog-model';
-import { CardTab, TabbedCard, useApi } from '@backstage/core';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { Alert } from '@material-ui/lab';
 import React from 'react';
 import { apiDocsConfigRef } from '../../config';
 import { PlainApiDefinitionWidget } from '../PlainApiDefinitionWidget';
+
+import { CardTab, TabbedCard } from '@backstage/core-components';
+import { useApi } from '@backstage/core-plugin-api';
 
 type Props = {
   /** @deprecated The entity is now grabbed from context instead */

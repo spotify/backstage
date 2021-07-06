@@ -1,5 +1,11 @@
 # @backstage/core-plugin-api
 
+## 0.1.3
+
+### Patch Changes
+
+- 5f4339b8c: Adding `FeatureFlag` component and treating `FeatureFlags` as first class citizens to composability API
+
 ## 0.1.2
 
 ### Patch Changes

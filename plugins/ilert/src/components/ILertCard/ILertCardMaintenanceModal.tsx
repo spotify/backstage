@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import React from 'react';
-import { alertApiRef, useApi } from '@backstage/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -25,6 +24,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import { ilertApiRef } from '../../api';
 import { AlertSource } from '../../types';
+import { alertApiRef, useApi } from '@backstage/core-plugin-api';
 
 export const ILertCardMaintenanceModal = ({
   alertSource,

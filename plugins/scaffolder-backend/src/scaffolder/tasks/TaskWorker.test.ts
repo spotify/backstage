@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-import {
-  getVoidLogger,
-  SingleConnectionDatabaseManager,
-} from '@backstage/backend-common';
-import { ConfigReader, JsonObject } from '@backstage/config';
 import os from 'os';
+import { getVoidLogger, DatabaseManager } from '@backstage/backend-common';
+import { ConfigReader, JsonObject } from '@backstage/config';
 import { createTemplateAction, TemplateActionRegistry } from '../actions';
 import { RepoSpec } from '../actions/builtin/publish/util';
 import { DatabaseTaskStore } from './DatabaseTaskStore';
@@ -27,7 +24,7 @@ import { StorageTaskBroker } from './StorageTaskBroker';
 import { TaskWorker } from './TaskWorker';
 
 async function createStore(): Promise<DatabaseTaskStore> {
-  const manager = SingleConnectionDatabaseManager.fromConfig(
+  const manager = DatabaseManager.fromConfig(
     new ConfigReader({
       backend: {
         database: {

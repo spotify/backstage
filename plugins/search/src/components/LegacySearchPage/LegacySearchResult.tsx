@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  EmptyState,
-  Link,
-  Progress,
-  Table,
-  TableColumn,
-  useApi,
-} from '@backstage/core';
 import { Divider, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React, { useEffect, useState } from 'react';
@@ -29,6 +21,15 @@ import { catalogApiRef } from '@backstage/plugin-catalog-react';
 
 import { Filters, FiltersButton, FiltersState } from './Filters';
 import { Entity, ENTITY_DEFAULT_NAMESPACE } from '@backstage/catalog-model';
+
+import {
+  EmptyState,
+  Link,
+  Progress,
+  Table,
+  TableColumn,
+} from '@backstage/core-components';
+import { useApi } from '@backstage/core-plugin-api';
 
 type Result = {
   name: string;

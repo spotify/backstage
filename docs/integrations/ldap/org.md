@@ -14,19 +14,25 @@ entities that mirror your org setup.
 
 ## Installation
 
-The processor that performs the import, `LdapOrgReaderProcessor`, comes
-installed with the default setup of Backstage.
+1. The processor is not installed by default, therefore you have to add a
+   dependency to `@backstage/plugin-catalog-backend-module-ldap` to your backend
+   package.
 
-If you replace the set of processors in your installation using that facility of
-the catalog builder class, you can import and add it as follows.
+```bash
+# From your Backstage root directory
+cd packages/backend
+yarn add @backstage/plugin-catalog-backend-module-ldap
+```
 
-```ts
-// Typically in packages/backend/src/plugins/catalog.ts
-import { LdapOrgReaderProcessor } from '@backstage/plugin-catalog-backend';
+2. The `LdapOrgReaderProcessor` is not registered by default, so you have to
+   register it in the catalog plugin:
 
-builder.replaceProcessors(
-  LdapOrgReaderProcessor.fromConfig(config, { logger }),
-  // ...
+```typescript
+// packages/backend/src/plugins/catalog.ts
+builder.addProcessor(
+  LdapOrgReaderProcessor.fromConfig(config, {
+    logger,
+  }),
 );
 ```
 

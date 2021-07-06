@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SingleConnectionDatabaseManager } from '@backstage/backend-common';
+import { DatabaseManager } from '@backstage/backend-common';
 import { stringifyEntityRef } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
 import {
@@ -22,7 +22,7 @@ import {
 } from './CodeCoverageDatabase';
 import { JsonCodeCoverage } from './types';
 
-const db = SingleConnectionDatabaseManager.fromConfig(
+const db = DatabaseManager.fromConfig(
   new ConfigReader({
     backend: {
       database: {

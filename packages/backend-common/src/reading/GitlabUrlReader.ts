@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,8 @@ import {
   SearchOptions,
   SearchResponse,
   UrlReader,
+  ReadUrlResponse,
+  ReadUrlOptions,
 } from './types';
 
 export class GitlabUrlReader implements UrlReader {
@@ -54,20 +56,37 @@ export class GitlabUrlReader implements UrlReader {
   ) {}
 
   async read(url: string): Promise<Buffer> {
+    const response = await this.readUrl(url);
+    return response.buffer();
+  }
+
+  async readUrl(
+    url: string,
+    options?: ReadUrlOptions,
+  ): Promise<ReadUrlResponse> {
     const builtUrl = await getGitLabFileFetchUrl(url, this.integration.config);
 
     let response: Response;
     try {
-      response = await fetch(
-        builtUrl,
-        getGitLabRequestOptions(this.integration.config),
-      );
+      response = await fetch(builtUrl, {
+        headers: {
+          ...getGitLabRequestOptions(this.integration.config).headers,
+          ...(options?.etag && { 'If-None-Match': options.etag }),
+        },
+      });
     } catch (e) {
       throw new Error(`Unable to read ${url}, ${e}`);
     }
 
+    if (response.status === 304) {
+      throw new NotModifiedError();
+    }
+
     if (response.ok) {
-      return Buffer.from(await response.text());
+      return {
+        buffer: async () => Buffer.from(await response.text()),
+        etag: response.headers.get('ETag') ?? undefined,
+      };
     }
 
     const message = `${url} could not be read as ${builtUrl}, ${response.status} ${response.statusText}`;
@@ -139,7 +158,7 @@ export class GitlabUrlReader implements UrlReader {
     const archiveGitLabResponse = await fetch(
       `${this.integration.config.apiBaseUrl}/projects/${encodeURIComponent(
         full_name,
-      )}/repository/archive.zip?sha=${branch}`,
+      )}/repository/archive?sha=${branch}`,
       getGitLabRequestOptions(this.integration.config),
     );
     if (!archiveGitLabResponse.ok) {
@@ -150,7 +169,7 @@ export class GitlabUrlReader implements UrlReader {
       throw new Error(message);
     }
 
-    return await this.deps.treeResponseFactory.fromZipArchive({
+    return await this.deps.treeResponseFactory.fromTarArchive({
       stream: (archiveGitLabResponse.body as unknown) as Readable,
       subpath: filepath,
       etag: commitSha,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SidebarSearchField, useRouteRef } from '@backstage/core';
 import qs from 'qs';
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { rootRouteRef } from '../../plugin';
+
+import { SidebarSearchField } from '@backstage/core-components';
+import { useRouteRef } from '@backstage/core-plugin-api';
 
 export const SidebarSearch = () => {
   const searchRoute = useRouteRef(rootRouteRef);

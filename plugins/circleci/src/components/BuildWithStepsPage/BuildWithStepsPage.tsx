@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Breadcrumbs, InfoCard, Progress, Link } from '@backstage/core';
 import { BuildWithSteps, BuildStepAction } from '../../api';
 import {
   Grid,
@@ -29,6 +28,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import { ActionOutput } from './lib/ActionOutput/ActionOutput';
 import LaunchIcon from '@material-ui/icons/Launch';
 import { useBuildWithSteps } from '../../state/useBuildWithSteps';
+import {
+  Breadcrumbs,
+  InfoCard,
+  Progress,
+  Link,
+} from '@backstage/core-components';
 
 const IconLink = (IconButton as any) as typeof MaterialLink;
 

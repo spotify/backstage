@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 import React from 'react';
-import {
-  HeaderIconLinkRow,
-  IconLinkVerticalProps,
-  useApi,
-  alertApiRef,
-} from '@backstage/core';
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -35,6 +29,12 @@ import WebIcon from '@material-ui/icons/Web';
 import Typography from '@material-ui/core/Typography';
 import { ilertApiRef } from '../../api';
 import { AlertSource, UptimeMonitor } from '../../types';
+
+import {
+  HeaderIconLinkRow,
+  IconLinkVerticalProps,
+} from '@backstage/core-components';
+import { useApi, alertApiRef } from '@backstage/core-plugin-api';
 
 export const ILertCardActionsHeader = ({
   alertSource,

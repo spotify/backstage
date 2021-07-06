@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { DiscoveryApi, IdentityApi } from '@backstage/core';
 import { ResponseError } from '@backstage/errors';
 import fetch from 'cross-fetch';
 import pLimit from 'p-limit';
 import { FindingSummary, FossaApi } from './FossaApi';
+import { DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
 
 type FossaProjectsResponse = {
   title: string;

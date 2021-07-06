@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { StorageApi } from '@backstage/core';
 import { pageTheme } from '@backstage/theme';
 import ObservableImpl from 'zen-observable';
 import { v4 as uuid } from 'uuid';
 import { ShortcutApi } from './ShortcutApi';
 import { Shortcut } from '../types';
+import { StorageApi } from '@backstage/core-plugin-api';
 
 /**
  * Implementation of the ShortcutApi that uses the StorageApi to store shortcuts.

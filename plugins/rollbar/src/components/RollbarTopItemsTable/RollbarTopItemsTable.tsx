@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Table, TableColumn } from '@backstage/core';
 import { Box, Link, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React from 'react';
@@ -25,6 +24,7 @@ import {
 } from '../../api/types';
 import { buildItemUrl } from '../../utils';
 import { TrendGraph } from '../TrendGraph/TrendGraph';
+import { Table, TableColumn } from '@backstage/core-components';
 
 const columns: TableColumn[] = [
   {

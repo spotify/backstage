@@ -14,11 +14,15 @@ coverage:
 # Since Backstage is a mono repo, flags here help in getting the code coverage of individual packages.
 # Documentation: https://docs.codecov.io/docs/flags
 flags:
-  core:
+  core-app-api:
     paths:
-      - packages/core/
+      - packages/core-app-api/
     carryforward: true
-  core-api:
+  core-components:
     paths:
-      - packages/core-api/
+      - packages/core-components/
+    carryforward: true
+  core-plugin-api:
+    paths:
+      - packages/core-plugin-api/
     carryforward: true

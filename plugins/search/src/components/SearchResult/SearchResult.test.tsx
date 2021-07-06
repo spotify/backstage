@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,9 +55,23 @@ describe('SearchResult', () => {
     });
   });
 
-  it('On empty result value state', async () => {
+  it('On no result value state', async () => {
     (useSearch as jest.Mock).mockReturnValueOnce({
       result: { loading: false, error: '', value: undefined },
+    });
+
+    const { getByRole } = render(<SearchResult>{() => <></>}</SearchResult>);
+
+    await waitFor(() => {
+      expect(
+        getByRole('heading', { name: 'Sorry, no results were found' }),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('On empty result value state', async () => {
+    (useSearch as jest.Mock).mockReturnValueOnce({
+      result: { loading: false, error: '', value: { results: [] } },
     });
 
     const { getByRole } = render(<SearchResult>{() => <></>}</SearchResult>);

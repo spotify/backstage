@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import { TemplateEntityV1alpha1 } from '@backstage/catalog-model';
-import { useApi } from '@backstage/core';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAsyncFn } from 'react-use';
@@ -26,6 +25,7 @@ import {
   FilterGroupState,
   FilterGroupStates,
 } from './types';
+import { useApi } from '@backstage/core-plugin-api';
 
 /**
  * Implementation of the shared filter groups state.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,20 @@ describe('apis', () => {
 
   const baseUrl = 'https://base-url.com/';
   const getBaseUrl = jest.fn().mockResolvedValue(baseUrl);
+
+  const token = 'AUTHTOKEN';
+  const withToken = jest.fn().mockResolvedValue(token);
+  const withoutToken = jest.fn().mockResolvedValue(undefined);
+  const createIdentityApiMock = (getIdToken: any) => ({
+    getIdToken,
+    getUserId: jest.fn(),
+    getProfile: jest.fn(),
+    signOut: jest.fn(),
+  });
+
   const client = new SearchClient({
     discoveryApi: { getBaseUrl },
+    identityApi: createIdentityApiMock(withoutToken),
   });
 
   const json = jest.fn();
@@ -41,7 +53,21 @@ describe('apis', () => {
   it('Fetch is called with expected URL (including stringified Q params)', async () => {
     await client.query(query);
     expect(getBaseUrl).toHaveBeenLastCalledWith('search/query');
-    expect(fetch).toHaveBeenLastCalledWith(`${baseUrl}?term=&pageCursor=`);
+    expect(fetch).toHaveBeenLastCalledWith(`${baseUrl}?term=&pageCursor=`, {
+      headers: {},
+    });
+  });
+
+  it('Sets Authorization if token is available', async () => {
+    const authedClient = new SearchClient({
+      discoveryApi: { getBaseUrl },
+      identityApi: createIdentityApiMock(withToken),
+    });
+    await authedClient.query(query);
+    expect(getBaseUrl).toHaveBeenLastCalledWith('search/query');
+    expect(fetch).toHaveBeenLastCalledWith(`${baseUrl}?term=&pageCursor=`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
   });
 
   it('Resolves JSON from fetch response', async () => {

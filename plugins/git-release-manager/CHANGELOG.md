@@ -1,5 +1,13 @@
 # @backstage/plugin-git-release-manager
 
+## 0.1.3
+
+### Patch Changes
+
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes

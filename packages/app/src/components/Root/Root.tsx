@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,11 @@ import CreateComponentIcon from '@material-ui/icons/AddCircleOutline';
 import MoneyIcon from '@material-ui/icons/MonetizationOn';
 import LogoFull from './LogoFull';
 import LogoIcon from './LogoIcon';
+import { NavLink } from 'react-router-dom';
+import { GraphiQLIcon } from '@backstage/plugin-graphiql';
+import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
+import { SidebarSearch } from '@backstage/plugin-search';
+import { Shortcuts } from '@backstage/plugin-shortcuts';
 import {
   Sidebar,
   SidebarPage,
@@ -34,12 +39,8 @@ import {
   SidebarItem,
   SidebarDivider,
   SidebarSpace,
-} from '@backstage/core';
-import { NavLink } from 'react-router-dom';
-import { GraphiQLIcon } from '@backstage/plugin-graphiql';
-import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
-import { SidebarSearch } from '@backstage/plugin-search';
-import { Shortcuts } from '@backstage/plugin-shortcuts';
+  SidebarScrollWrapper,
+} from '@backstage/core-components';
 
 const useSidebarLogoStyles = makeStyles({
   root: {
@@ -88,10 +89,12 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
       <SidebarItem icon={CreateComponentIcon} to="create" text="Create..." />
       {/* End global nav */}
       <SidebarDivider />
-      <SidebarItem icon={MapIcon} to="tech-radar" text="Tech Radar" />
-      <SidebarItem icon={RuleIcon} to="lighthouse" text="Lighthouse" />
-      <SidebarItem icon={MoneyIcon} to="cost-insights" text="Cost Insights" />
-      <SidebarItem icon={GraphiQLIcon} to="graphiql" text="GraphiQL" />
+      <SidebarScrollWrapper>
+        <SidebarItem icon={MapIcon} to="tech-radar" text="Tech Radar" />
+        <SidebarItem icon={RuleIcon} to="lighthouse" text="Lighthouse" />
+        <SidebarItem icon={MoneyIcon} to="cost-insights" text="Cost Insights" />
+        <SidebarItem icon={GraphiQLIcon} to="graphiql" text="GraphiQL" />
+      </SidebarScrollWrapper>
       <SidebarDivider />
       <Shortcuts />
       <SidebarSpace />

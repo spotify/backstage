@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 import * as yup from 'yup';
 import { LocationSpec, Location } from './types';
 
+/** @deprecated */
 export const locationSpecSchema = yup
   .object<LocationSpec>({
     type: yup.string().required(),
@@ -26,6 +27,7 @@ export const locationSpecSchema = yup
   .noUnknown()
   .required();
 
+/** @deprecated */
 export const locationSchema = yup
   .object<Location>({
     id: yup.string().required(),
@@ -35,6 +37,7 @@ export const locationSchema = yup
   .noUnknown()
   .required();
 
+/** @deprecated */
 export const analyzeLocationSchema = yup
   .object<{ location: LocationSpec }>({
     location: locationSpecSchema,

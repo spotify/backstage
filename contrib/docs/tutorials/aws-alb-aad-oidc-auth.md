@@ -51,7 +51,7 @@ The Backstage App needs a SignInPage when authentication is required.
 When using ALB authentication Backstage will only be loaded once the user has successfully authenticated; we won't need to display a SignIn page, however we will need to create a dummy SignIn component that can refresh the token.
 
 - edit `packages/app/src/App.tsx`
-- import the following two additional definitions from `@backstage/core`: `useApi`, `configApiRef`; these will be used to check whether Backstage is running locally or behind an ALB
+- import the following two additional definitions from `@backstage/core-plugin-api`: `useApi`, `configApiRef`; these will be used to check whether Backstage is running locally or behind an ALB
 - add the following definition just before the app is created (`const app = createApp`):
 
 ```ts

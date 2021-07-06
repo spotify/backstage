@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { V1Pod, V1HorizontalPodAutoscaler } from '@kubernetes/client-node';
-import { StatusError, StatusOK } from '@backstage/core';
 import { PodsTable } from '../../Pods';
 import { HorizontalPodAutoscalerDrawer } from '../../HorizontalPodAutoscalers';
 import { RolloutDrawer } from './RolloutDrawer';
@@ -41,6 +40,7 @@ import {
   getMatchingHpa,
   getOwnedPodsThroughReplicaSets,
 } from '../../../utils/owner';
+import { StatusError, StatusOK } from '@backstage/core-components';
 
 type RolloutAccordionsProps = {
   rollouts: any[];

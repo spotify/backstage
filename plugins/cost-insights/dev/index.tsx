@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
 import { ExampleCostInsightsClient } from '../src/example';
 import { costInsightsApiRef } from '../src/api';
-import { costInsightsPlugin } from '../src/plugin';
+import {
+  costInsightsPlugin,
+  CostInsightsPage,
+  CostInsightsProjectGrowthInstructionsPage,
+  CostInsightsLabelDataflowInstructionsPage,
+} from '../src/plugin';
 
 createDevApp()
   .registerPlugin(costInsightsPlugin)
@@ -24,5 +31,17 @@ createDevApp()
     api: costInsightsApiRef,
     deps: {},
     factory: () => new ExampleCostInsightsClient(),
+  })
+  .addPage({
+    title: 'Cost Insights',
+    element: <CostInsightsPage />,
+  })
+  .addPage({
+    title: 'Growth',
+    element: <CostInsightsProjectGrowthInstructionsPage />,
+  })
+  .addPage({
+    title: 'Labelling',
+    element: <CostInsightsLabelDataflowInstructionsPage />,
   })
   .render();

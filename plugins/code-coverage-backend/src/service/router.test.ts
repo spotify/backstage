@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,14 @@ import {
   getVoidLogger,
   PluginDatabaseManager,
   PluginEndpointDiscovery,
-  SingleConnectionDatabaseManager,
+  DatabaseManager,
   UrlReaders,
 } from '@backstage/backend-common';
 import { ConfigReader } from '@backstage/config';
 import { createRouter } from './router';
 
 function createDatabase(): PluginDatabaseManager {
-  return SingleConnectionDatabaseManager.fromConfig(
+  return DatabaseManager.fromConfig(
     new ConfigReader({
       backend: {
         database: {

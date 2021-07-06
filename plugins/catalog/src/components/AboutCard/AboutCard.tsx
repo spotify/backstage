@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,6 @@ import {
   RELATION_CONSUMES_API,
   RELATION_PROVIDES_API,
 } from '@backstage/catalog-model';
-import {
-  HeaderIconLinkRow,
-  IconLinkVerticalProps,
-  InfoCardVariants,
-  useApi,
-} from '@backstage/core';
 import {
   ScmIntegrationIcon,
   scmIntegrationsApiRef,
@@ -49,6 +43,13 @@ import EditIcon from '@material-ui/icons/Edit';
 import ExtensionIcon from '@material-ui/icons/Extension';
 import React from 'react';
 import { AboutContent } from './AboutContent';
+
+import {
+  HeaderIconLinkRow,
+  IconLinkVerticalProps,
+  InfoCardVariants,
+} from '@backstage/core-components';
+import { useApi } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles({
   gridItemCard: {

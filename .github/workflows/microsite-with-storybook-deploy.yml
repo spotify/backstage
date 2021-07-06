@@ -7,7 +7,7 @@ on:
     paths:
       - '.github/workflows/microsite-with-storybook-deploy.yml'
       - 'packages/storybook/**'
-      - 'packages/core/src/**'
+      - 'packages/core-components/src/**'
       - 'microsite/**'
       - 'docs/**'
 

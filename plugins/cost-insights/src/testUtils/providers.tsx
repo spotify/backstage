@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,6 @@
 
 import React, { PropsWithChildren } from 'react';
 import { costInsightsApiRef, CostInsightsApi } from '../api';
-import {
-  ApiProvider,
-  ApiRegistry,
-  IdentityApi,
-  identityApiRef,
-} from '@backstage/core';
 import { LoadingContext, LoadingContextProps } from '../hooks/useLoading';
 import { GroupsContext, GroupsContextProps } from '../hooks/useGroups';
 import { FilterContext, FilterContextProps } from '../hooks/useFilters';
@@ -33,6 +27,11 @@ import {
 } from '../hooks/useLastCompleteBillingDate';
 import { ScrollContext, ScrollContextProps } from '../hooks/useScroll';
 import { Group, Duration } from '../types';
+
+// TODO(Rugvip): Could be good to have a clear place to put test utils that is linted accordingly
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
+import { IdentityApi, identityApiRef } from '@backstage/core-plugin-api';
 
 type PartialPropsWithChildren<T> = PropsWithChildren<Partial<T>>;
 

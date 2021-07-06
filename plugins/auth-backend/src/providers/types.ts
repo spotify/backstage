@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,12 @@
 
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { CatalogApi } from '@backstage/catalog-client';
+import { Entity } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
 import express from 'express';
 import { Logger } from 'winston';
 import { TokenIssuer } from '../identity/types';
+import { CatalogIdentityClient } from '../lib/catalog';
 
 export type AuthProviderConfig = {
   /**
@@ -148,14 +150,30 @@ export type AuthResponse<ProviderInfo> = {
 
 export type BackstageIdentity = {
   /**
-   * The backstage user ID.
+   * An opaque ID that uniquely identifies the user within Backstage.
+   *
+   * This is typically the same as the user entity `metadata.name`.
    */
   id: string;
 
   /**
-   * An ID token that can be used to authenticate the user within Backstage.
+   * This is deprecated, use `token` instead.
+   * @deprecated
    */
   idToken?: string;
+
+  /**
+   * The token used to authenticate the user within Backstage.
+   */
+  token?: string;
+
+  /**
+   * The entity that the user is represented by within Backstage.
+   *
+   * This entity may or may not exist within the Catalog, and it can be used
+   * to read and store additional metadata about the user.
+   */
+  entity?: Entity;
 };
 
 /**
@@ -179,3 +197,38 @@ export type ProfileInfo = {
    */
   picture?: string;
 };
+
+export type SignInInfo<AuthResult> = {
+  /**
+   * The simple profile passed down for use in the frontend.
+   */
+  profile: ProfileInfo;
+
+  /**
+   * The authentication result that was received from the authentication provider.
+   */
+  result: AuthResult;
+};
+
+export type SignInResolver<AuthResult> = (
+  info: SignInInfo<AuthResult>,
+  context: {
+    tokenIssuer: TokenIssuer;
+    catalogIdentityClient: CatalogIdentityClient;
+    logger: Logger;
+  },
+) => Promise<BackstageIdentity>;
+
+export type AuthHandlerResult = { profile: ProfileInfo };
+
+/**
+ * The AuthHandler function is called every time the user authenticates using the provider.
+ *
+ * The handler should return a profile that represents the session for the user in the frontend.
+ *
+ * Throwing an error in the function will cause the authentication to fail, making it
+ * possible to use this function as a way to limit access to a certain group of users.
+ */
+export type AuthHandler<AuthResult> = (
+  input: AuthResult,
+) => Promise<AuthHandlerResult>;

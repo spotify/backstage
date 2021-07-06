@@ -8,4 +8,4 @@ spec:
   lifecycle: production
   owner: team-a
   definition:
-    $text: https://github.com/APIs-guru/openapi-directory/blob/master/APIs/archive.org/wayback/1.0.0/openapi.yaml
+    $text: https://github.com/APIs-guru/openapi-directory/blob/main/APIs/archive.org/wayback/1.0.0/openapi.yaml

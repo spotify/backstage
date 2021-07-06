@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -168,23 +168,6 @@ function compileTsSchemas(paths: string[]) {
         },
         [path.split(sep).join('/')], // Unix paths are expected for all OSes here
       ) as JsonObject | null;
-
-      // This is a workaround for an API change in TypeScript 4.3 where doc comments no
-      // longer are represented by a single string, but instead an array of objects.
-      // This isn't handled by typescript-json-schema so we do the conversion here instead.
-      value = JSON.parse(JSON.stringify(value), (key, prop) => {
-        if (key === 'visibility' && Array.isArray(prop)) {
-          const text = prop[0]?.text;
-          if (!text) {
-            const propStr = JSON.stringify(prop);
-            throw new Error(
-              `Failed conversion of visibility schema, got ${propStr}`,
-            );
-          }
-          return text;
-        }
-        return prop;
-      });
     } catch (error) {
       if (error.message !== 'type Config not found') {
         throw error;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import React from 'react';
-import { Table, TableColumn } from '@backstage/core';
 import { V1Pod } from '@kubernetes/client-node';
 import { PodDrawer } from './PodDrawer';
 import {
@@ -23,6 +22,7 @@ import {
   containerStatuses,
   totalRestarts,
 } from '../../utils/pod';
+import { Table, TableColumn } from '@backstage/core-components';
 
 const columns: TableColumn<V1Pod>[] = [
   {

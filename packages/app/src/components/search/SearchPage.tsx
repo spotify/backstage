@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 import React from 'react';
 import { makeStyles, Theme, Grid, List, Paper } from '@material-ui/core';
 
-import { Content, Header, Lifecycle, Page } from '@backstage/core';
 import { CatalogResultListItem } from '@backstage/plugin-catalog';
 import {
   SearchBar,
@@ -25,6 +24,7 @@ import {
   SearchResult,
   DefaultResultListItem,
 } from '@backstage/plugin-search';
+import { Content, Header, Lifecycle, Page } from '@backstage/core-components';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bar: {

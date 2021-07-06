@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import {
   UrlPatternDiscovery,
   SamlAuth,
   OneLoginAuth,
+  UnhandledErrorForwarder,
 } from '../apis';
 
 import {
@@ -67,8 +68,11 @@ export const defaultApis = [
   createApiFactory({
     api: errorApiRef,
     deps: { alertApi: alertApiRef },
-    factory: ({ alertApi }) =>
-      new ErrorAlerter(alertApi, new ErrorApiForwarder()),
+    factory: ({ alertApi }) => {
+      const errorApi = new ErrorAlerter(alertApi, new ErrorApiForwarder());
+      UnhandledErrorForwarder.forward(errorApi, { hidden: false });
+      return errorApi;
+    },
   }),
   createApiFactory({
     api: storageApiRef,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 import React from 'react';
-import {
-  Content,
-  ContentHeader,
-  SupportButton,
-  ResponseErrorPanel,
-} from '@backstage/core';
 import { AuthenticationError } from '@backstage/errors';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
@@ -27,6 +21,12 @@ import { IncidentsTable } from './IncidentsTable';
 import { MissingAuthorizationHeaderError } from '../Errors';
 import { useIncidents } from '../../hooks/useIncidents';
 import { IncidentNewModal } from '../Incident/IncidentNewModal';
+import {
+  Content,
+  ContentHeader,
+  SupportButton,
+  ResponseErrorPanel,
+} from '@backstage/core-components';
 
 export const IncidentsPage = () => {
   const [

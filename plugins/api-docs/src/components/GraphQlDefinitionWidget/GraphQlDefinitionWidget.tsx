@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { Progress } from '@backstage/core';
 import { BackstageTheme } from '@backstage/theme';
 import { makeStyles } from '@material-ui/core/styles';
 import 'graphiql/graphiql.css';
 import { buildSchema } from 'graphql';
 import React, { Suspense } from 'react';
+import { Progress } from '@backstage/core-components';
 
 const GraphiQL = React.lazy(() => import('graphiql'));
 

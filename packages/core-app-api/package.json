@@ -1,7 +1,7 @@
 {
   "name": "@backstage/core-app-api",
   "description": "Core app API used by Backstage apps",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "private": false,
   "publishConfig": {
     "access": "public",
@@ -29,9 +29,9 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/core-components": "^0.1.2",
+    "@backstage/core-components": "^0.1.4",
     "@backstage/config": "^0.1.3",
-    "@backstage/core-plugin-api": "^0.1.2",
+    "@backstage/core-plugin-api": "^0.1.3",
     "@backstage/theme": "^0.2.8",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -44,8 +44,8 @@
     "zen-observable": "^0.8.15"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.7.0",
-    "@backstage/test-utils": "^0.1.13",
+    "@backstage/cli": "^0.7.3",
+    "@backstage/test-utils": "^0.1.14",
     "@backstage/test-utils-core": "^0.1.1",
     "@testing-library/jest-dom": "^5.10.1",
     "@testing-library/react": "^11.2.5",
@@ -55,7 +55,7 @@
     "@types/node": "^14.14.32",
     "@types/zen-observable": "^0.8.0",
     "cross-fetch": "^3.0.6",
-    "msw": "^0.21.3"
+    "msw": "^0.29.0"
   },
   "files": [
     "dist",

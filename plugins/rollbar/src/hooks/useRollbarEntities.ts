@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { configApiRef, useApi } from '@backstage/core';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import { useAsync } from 'react-use';
 import { ROLLBAR_ANNOTATION } from '../constants';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 
 export function useRollbarEntities() {
   const configApi = useApi(configApiRef);

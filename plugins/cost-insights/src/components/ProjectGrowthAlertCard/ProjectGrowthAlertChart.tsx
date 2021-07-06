@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { Box } from '@material-ui/core';
 import { BarChart, BarChartLegend, BarChartLegendOptions } from '../BarChart';
 import { LegendItem } from '../LegendItem';
@@ -38,8 +38,12 @@ export const ProjectGrowthAlertChart = ({
   const resourceData = alert.products.map(resourceOf);
 
   const options: Partial<BarChartLegendOptions> = {
-    previousName: moment(alert.periodStart, 'YYYY-[Q]Q').format('[Q]Q YYYY'),
-    currentName: moment(alert.periodEnd, 'YYYY-[Q]Q').format('[Q]Q YYYY'),
+    previousName: DateTime.fromFormat(alert.periodStart, "yyyy-'Q'q").toFormat(
+      "'Q'q yyyy",
+    ),
+    currentName: DateTime.fromFormat(alert.periodEnd, "yyyy-'Q'q").toFormat(
+      "'Q'q yyyy",
+    ),
   };
 
   return (

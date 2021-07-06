@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { SearchClient, searchApiRef } from './apis';
 import {
   createApiFactory,
   createPlugin,
@@ -20,8 +22,8 @@ import {
   createRoutableExtension,
   discoveryApiRef,
   createComponentExtension,
-} from '@backstage/core';
-import { SearchClient, searchApiRef } from './apis';
+  identityApiRef,
+} from '@backstage/core-plugin-api';
 
 export const rootRouteRef = createRouteRef({
   path: '/search',
@@ -38,9 +40,9 @@ export const searchPlugin = createPlugin({
   apis: [
     createApiFactory({
       api: searchApiRef,
-      deps: { discoveryApi: discoveryApiRef },
-      factory: ({ discoveryApi }) => {
-        return new SearchClient({ discoveryApi });
+      deps: { discoveryApi: discoveryApiRef, identityApi: identityApiRef },
+      factory: ({ discoveryApi, identityApi }) => {
+        return new SearchClient({ discoveryApi, identityApi });
       },
     }),
   ],

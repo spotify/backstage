@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 import React from 'react';
 import classnames from 'classnames';
-import { Table, TableColumn } from '@backstage/core';
 import { Typography } from '@material-ui/core';
 import { costFormatter, formatChange } from '../../utils/formatters';
 import { useEntityDialogStyles as useStyles } from '../../utils/styles';
 import { CostGrowthIndicator } from '../CostGrowth';
 import { BarChartOptions, ChangeStatistic, Entity } from '../../types';
+import { Table, TableColumn } from '@backstage/core-components';
 
 export type ProductEntityTableOptions = Partial<
   Pick<BarChartOptions, 'previousName' | 'currentName'>

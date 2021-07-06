@@ -55,10 +55,10 @@ const spotifyAuthApiRef = createApiRef<OAuthApi>({
 Sam realizes that Spotify auth might be useful to others, and that it would be
 more convenient if it was a part of the Backstage Core. After submitting and
 merging a Pull Request with the additions to the
-`@backstage/plugin-auth-backend` and `@backstage/core` packages, Spotify auth is
-now available for everyone to use. Since the Backstage Core team also adds it to
-the public demo server, Sam can now get rid of it in the local setup and rely on
-the shared development auth providers instead.
+`@backstage/plugin-auth-backend` and `@backstage/core-plugin-api` packages,
+Spotify auth is now available for everyone to use. Since the Backstage Core team
+also adds it to the public demo server, Sam can now get rid of it in the local
+setup and rely on the shared development auth providers instead.
 
 The only thing left now is making sure that users of the plugin provide Spotify
 auth in the app. Sam ensures this by adding `spotifyAuthApiRef` to the plugin's
@@ -70,7 +70,7 @@ README.
 
 This plugin requires the following APIs to function:
 
-- `spotifyAuthApiRef` from `@backstage/core@^1.1.0`
+- `spotifyAuthApiRef` from `@@backstage/core-plugin-api@^1.1.0`
 ```
 
 # 3. The Catalog Awakens

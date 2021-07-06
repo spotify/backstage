@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,15 @@ import React from 'react';
 import { render, waitForElement } from '@testing-library/react';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
-import { ApiRegistry, ApiProvider, errorApiRef } from '@backstage/core';
 import { act } from 'react-dom/test-utils';
 import { withLogCollector } from '@backstage/test-utils';
 
 import GetBBoxPolyfill from '../utils/polyfills/getBBox';
 import RadarComponent from './RadarComponent';
 import { TechRadarLoaderResponse, techRadarApiRef, TechRadarApi } from '../api';
+
+import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
+import { errorApiRef } from '@backstage/core-plugin-api';
 
 describe('RadarComponent', () => {
   beforeAll(() => {

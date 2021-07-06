@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,6 @@
  * limitations under the License.
  */
 
-import {
-  Content,
-  ContentHeader,
-  Header,
-  HeaderLabel,
-  InfoCard,
-  Page,
-  Progress,
-  useApi,
-} from '@backstage/core';
 import {
   Button,
   Grid,
@@ -47,6 +37,17 @@ import { Audit, lighthouseApiRef, Website } from '../../api';
 import { formatTime } from '../../utils';
 import AuditStatusIcon from '../AuditStatusIcon';
 import LighthouseSupportButton from '../SupportButton';
+
+import {
+  Content,
+  ContentHeader,
+  Header,
+  HeaderLabel,
+  InfoCard,
+  Page,
+  Progress,
+} from '@backstage/core-components';
+import { useApi } from '@backstage/core-plugin-api';
 
 // TODO(freben): move all of this out of index
 

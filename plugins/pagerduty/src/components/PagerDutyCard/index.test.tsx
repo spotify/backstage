@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,11 @@ import { PagerDutyCard } from '../PagerDutyCard';
 import { Entity } from '@backstage/catalog-model';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { wrapInTestApp } from '@backstage/test-utils';
-import {
-  alertApiRef,
-  ApiProvider,
-  ApiRegistry,
-  createApiRef,
-} from '@backstage/core';
 import { pagerDutyApiRef, UnauthorizedError, PagerDutyClient } from '../../api';
 import { Service } from '../types';
+
+import { alertApiRef, createApiRef } from '@backstage/core-plugin-api';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 
 const mockPagerDutyApi: Partial<PagerDutyClient> = {
   getServiceByIntegrationKey: async () => [],

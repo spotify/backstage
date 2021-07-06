@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Typography } from '@material-ui/core';
 import { default as Alert } from '@material-ui/lab/Alert';
-import { useApi } from '@backstage/core';
 import { costInsightsApiRef } from '../../api';
 import { ProductInsightsCardList } from '../ProductInsightsCard/ProductInsightsCardList';
 import { Duration, Entity, Maybe, Product } from '../../types';
@@ -34,6 +33,7 @@ import {
   useLastCompleteBillingDate,
   MapLoadingToProps,
 } from '../../hooks';
+import { useApi } from '@backstage/core-plugin-api';
 
 type LoadingProps = (isLoading: boolean) => void;
 

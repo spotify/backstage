@@ -24,7 +24,8 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/core": "^{{version '@backstage/core'}}",
+    "@backstage/core-components": "^{{version '@backstage/core-components'}}",
+    "@backstage/core-plugin-api": "^{{version '@backstage/core-plugin-api'}}",
     "@backstage/theme": "^{{version '@backstage/theme'}}",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "^{{version '@backstage/cli'}}",
+    "@backstage/core-app-api": "^{{version '@backstage/core-app-api'}}",
     "@backstage/dev-utils": "^{{version '@backstage/dev-utils'}}",
     "@backstage/test-utils": "^{{version '@backstage/test-utils'}}",
     "@testing-library/jest-dom": "^5.10.1",
@@ -42,7 +44,7 @@
     "@testing-library/user-event": "^13.1.8",
     "@types/jest": "^26.0.7",
     "@types/node": "^14.14.32",
-    "msw": "^0.21.2",
+    "msw": "^0.29.0",
     "cross-fetch": "^3.0.6"
   },
   "files": [

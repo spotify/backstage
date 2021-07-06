@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ describe('AzureUrlReader', () => {
             ctx.status(200),
             ctx.json({
               url: req.url.toString(),
-              headers: req.headers.getAllHeaders(),
+              headers: req.headers.all(),
             }),
           ),
         ),

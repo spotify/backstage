@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, useMediaQuery } from '@material-ui/core';
 import clsx from 'clsx';
 import React, { useRef, useState, useContext, PropsWithChildren } from 'react';
 import { sidebarConfig, SidebarContext } from './config';
@@ -82,6 +82,9 @@ export const Sidebar = ({
   children,
 }: PropsWithChildren<Props>) => {
   const classes = useStyles();
+  const isSmallScreen = useMediaQuery<BackstageTheme>(theme =>
+    theme.breakpoints.down('md'),
+  );
   const [state, setState] = useState(State.Closed);
   const hoverTimerRef = useRef<number>();
   const { isPinned } = useContext(SidebarPinStateContext);
@@ -94,7 +97,7 @@ export const Sidebar = ({
       clearTimeout(hoverTimerRef.current);
       hoverTimerRef.current = undefined;
     }
-    if (state !== State.Open) {
+    if (state !== State.Open && !isSmallScreen) {
       hoverTimerRef.current = window.setTimeout(() => {
         hoverTimerRef.current = undefined;
         setState(State.Open);
@@ -122,6 +125,8 @@ export const Sidebar = ({
     }
   };
 
+  const isOpen = (state === State.Open && !isSmallScreen) || isPinned;
+
   return (
     <div
       className={classes.root}
@@ -133,13 +138,13 @@ export const Sidebar = ({
     >
       <SidebarContext.Provider
         value={{
-          isOpen: state === State.Open || isPinned,
+          isOpen,
         }}
       >
         <div
           className={clsx(classes.drawer, {
             [classes.drawerPeek]: state === State.Peek,
-            [classes.drawerOpen]: state === State.Open || isPinned,
+            [classes.drawerOpen]: isOpen,
           })}
         >
           {children}

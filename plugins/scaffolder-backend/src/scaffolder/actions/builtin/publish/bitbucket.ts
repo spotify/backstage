@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ import {
   BitbucketIntegrationConfig,
   ScmIntegrationRegistry,
 } from '@backstage/integration';
-import { initRepoAndPush } from '../../../stages/publish/helpers';
-import { getRepoSourceDirectory, parseRepoUrl } from './util';
 import fetch from 'cross-fetch';
+import { initRepoAndPush } from '../../../stages/publish/helpers';
 import { createTemplateAction } from '../../createTemplateAction';
+import { getRepoSourceDirectory, parseRepoUrl } from './util';
 
 const createBitbucketCloudRepository = async (opts: {
   owner: string;
@@ -102,7 +102,7 @@ const createBitbucketServerRepository = async (opts: {
     body: JSON.stringify({
       name: repo,
       description: description,
-      is_private: repoVisibility === 'private',
+      public: repoVisibility === 'public',
     }),
     headers: {
       Authorization: authorization,
@@ -156,6 +156,32 @@ const getAuthorizationHeader = (config: BitbucketIntegrationConfig) => {
   );
 };
 
+const performEnableLFS = async (opts: {
+  authorization: string;
+  host: string;
+  owner: string;
+  repo: string;
+}) => {
+  const { authorization, host, owner, repo } = opts;
+
+  const options: RequestInit = {
+    method: 'PUT',
+    headers: {
+      Authorization: authorization,
+    },
+  };
+
+  const { ok, status, statusText } = await fetch(
+    `https://${host}/rest/git-lfs/admin/projects/${owner}/repos/${repo}/enabled`,
+    options,
+  );
+
+  if (!ok)
+    throw new Error(
+      `Failed to enable LFS in the repository, ${status}: ${statusText}`,
+    );
+};
+
 export function createPublishBitbucketAction(options: {
   integrations: ScmIntegrationRegistry;
 }) {
@@ -164,8 +190,10 @@ export function createPublishBitbucketAction(options: {
   return createTemplateAction<{
     repoUrl: string;
     description: string;
+    defaultBranch?: string;
     repoVisibility: 'private' | 'public';
     sourcePath?: string;
+    enableLFS: boolean;
   }>({
     id: 'publish:bitbucket',
     description:
@@ -188,10 +216,20 @@ export function createPublishBitbucketAction(options: {
             type: 'string',
             enum: ['private', 'public'],
           },
+          defaultBranch: {
+            title: 'Default Branch',
+            type: 'string',
+            description: `Sets the default branch on the repository. The default value is 'master'`,
+          },
           sourcePath: {
             title:
               'Path within the workspace that will be used as the repository root. If omitted, the entire workspace will be published as the repository.',
             type: 'string',
+          },
+          enableLFS: {
+            title:
+              'Enable LFS for the repository. Only available for hosted Bitbucket.',
+            type: 'boolean',
           },
         },
       },
@@ -210,7 +248,13 @@ export function createPublishBitbucketAction(options: {
       },
     },
     async handler(ctx) {
-      const { repoUrl, description, repoVisibility = 'private' } = ctx.input;
+      const {
+        repoUrl,
+        description,
+        defaultBranch = 'master',
+        repoVisibility = 'private',
+        enableLFS = false,
+      } = ctx.input;
 
       const { owner, repo, host } = parseRepoUrl(repoUrl);
 
@@ -251,8 +295,13 @@ export function createPublishBitbucketAction(options: {
             ? integrationConfig.config.appPassword
             : integrationConfig.config.token ?? '',
         },
+        defaultBranch,
         logger: ctx.logger,
       });
+
+      if (enableLFS && host !== 'bitbucket.org') {
+        await performEnableLFS({ authorization, host, owner, repo });
+      }
 
       ctx.output('remoteUrl', remoteUrl);
       ctx.output('repoContentsUrl', repoContentsUrl);

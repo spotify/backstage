@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 import { EntityName } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
-import { DiscoveryApi, IdentityApi } from '@backstage/core';
 import { NotFoundError } from '@backstage/errors';
-import { TechDocsApi, TechDocsStorageApi } from './api';
+import { SyncResult, TechDocsApi, TechDocsStorageApi } from './api';
 import { TechDocsEntityMetadata, TechDocsMetadata } from './types';
+import { DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
 
 /**
  * API to talk to techdocs-backend.
@@ -192,10 +192,10 @@ export class TechDocsStorageClient implements TechDocsStorageApi {
    * Check if docs are on the latest version and trigger rebuild if not
    *
    * @param {EntityName} entityId Object containing entity data like name, namespace, etc.
-   * @returns {boolean} Whether documents are currently synchronized to newest version
+   * @returns {SyncResult} Whether documents are currently synchronized to newest version
    * @throws {Error} Throws error on error from sync endpoint in Techdocs Backend
    */
-  async syncEntityDocs(entityId: EntityName): Promise<boolean> {
+  async syncEntityDocs(entityId: EntityName): Promise<SyncResult> {
     const { kind, namespace, name } = entityId;
 
     const apiOrigin = await this.getApiOrigin();
@@ -215,16 +215,20 @@ export class TechDocsStorageClient implements TechDocsStorageApi {
     switch (request.status) {
       case 404:
         throw new NotFoundError((await request.json()).error);
+
       case 200:
-      case 201:
       case 304:
-        return true;
+        return 'cached';
+
+      case 201:
+        return 'updated';
+
       // for timeout and misc errors, handle without error to allow viewing older docs
       // if older docs not available,
       // Reader will show 404 error coming from getEntityDocs
       case 408:
       default:
-        return false;
+        return 'timeout';
     }
   }
 

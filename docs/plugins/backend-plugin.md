@@ -99,7 +99,7 @@ import carmen from './plugins/carmen';
 async function main() {
   // ...
   const carmenEnv = useHotMemoize(module, () => createEnv('carmen'));
-  apiRouter.use('/carmen', await carmen(badgesEnv));
+  apiRouter.use('/carmen', await carmen(carmenEnv));
 ```
 
 After you start the backend (e.g. using `yarn start-backend` from the repo
@@ -111,3 +111,42 @@ curl localhost:7000/api/carmen/health
 ```
 
 This should return `{"status":"ok"}` like before. Success!
+
+## Making Use of a Database
+
+The Backstage backend comes with a builtin facility for SQL database access.
+Most plugins that have persistence needs will choose to make use of this
+facility, so that Backstage operators can manage database needs uniformly.
+
+As part of the environment object that is passed to your `createPlugin`
+function, there is a `database` field. You can use that to get a
+[Knex](http://knexjs.org/) connection object.
+
+```ts
+// in packages/backend/src/plugins/carmen.ts
+export default async function createPlugin(env: PluginEnvironment) {
+  const db: Knex<any, unknown[]> = await env.database.getClient();
+
+  // You will then pass this client into your actual plugin implementation
+  // code, maybe similar to the following:
+  const model = new CarmenDatabaseModel(db);
+  return await createRouter({
+    model: model,
+    logger: env.logger,
+  });
+}
+```
+
+You may note that the `getClient` call has no parameters. This is because all
+plugin database needs are configured under the `backend.database` config key of
+your `app-config.yaml`. The framework may even make sure behind the scenes that
+the logical database is created automatically if it doesn't exist, based on
+rules that the Backstage operator decides on.
+
+The framework does not handle database schema migrations for you, however. The
+builtin plugins in the main repo have chosen to use the Knex library to manage
+schema migrations as well, but you can do so in any manner that you see fit.
+
+See the [Knex library documentation](http://knexjs.org/) for examples and
+details on how to write schema migrations and perform SQL queries against your
+database..

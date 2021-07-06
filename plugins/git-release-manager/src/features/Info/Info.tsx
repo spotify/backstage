@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import { Stats } from '../Stats/Stats';
 import { TEST_IDS } from '../../test-helpers/test-ids';
 import { useProjectContext } from '../../contexts/ProjectContext';
 import flowImage from './flow.png';
-import { Link } from '@backstage/core';
+import { Link } from '@backstage/core-components';
 
 interface InfoCardProps {
   releaseBranch: GetBranchResult['branch'] | null;

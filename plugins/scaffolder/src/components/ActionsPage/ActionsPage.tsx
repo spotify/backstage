@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,6 @@
  */
 import React from 'react';
 import { useAsync } from 'react-use';
-import {
-  useApi,
-  Progress,
-  Content,
-  Header,
-  Page,
-  ErrorPage,
-} from '@backstage/core';
 import { scaffolderApiRef } from '../../api';
 import {
   Typography,
@@ -39,6 +31,15 @@ import {
 import { JSONSchema } from '@backstage/catalog-model';
 import { JSONSchema7Definition } from 'json-schema';
 import classNames from 'classnames';
+
+import { useApi } from '@backstage/core-plugin-api';
+import {
+  Progress,
+  Content,
+  Header,
+  Page,
+  ErrorPage,
+} from '@backstage/core-components';
 
 const useStyles = makeStyles(theme => ({
   code: {

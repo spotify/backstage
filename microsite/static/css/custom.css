@@ -7,6 +7,11 @@
 
 /* your custom css */
 
+/* makes scroll bars, inputs etc match the dark theme better */
+html {
+  color-scheme: dark;
+}
+
 /* override font color for new dark tech docs styling */
 table {
   color: white;
@@ -132,6 +137,20 @@ td {
   color: $navigatorItemTextColor;
 }
 
+/* search */
+[aria-expanded='true'] ~ .aa-without-1 {
+  display: block !important;
+}
+
+[aria-expanded='true'] ~ .aa-without-1 .aa-dataset-1:after {
+  content: 'No results';
+}
+
+.navSearchWrapper {
+  /* Prevents the search box from detaching from its icon when pushed down */
+  justify-content: flex-start;
+}
+
 /* header */
 .fixedHeaderContainer {
   position: fixed;
@@ -141,6 +160,12 @@ td {
   box-shadow: 3px 3px 8px rgba(38, 38, 38, 0.25);
   color: #fff;
 }
+
+.wrapper.headerWrapper {
+  /* Keep the header stretched across the screen on the mid breakpoint, since we need a bit more space */
+  max-width: 1400px;
+}
+
 @media only screen and (min-width: 1024px) {
   .fixedHeaderContainer {
     height: 66px;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { Table, TableColumn } from '@backstage/core';
 import { makeStyles } from '@material-ui/core';
 import React, { ReactNode } from 'react';
 import * as columnFactories from './columns';
 import { componentEntityColumns, systemEntityColumns } from './presets';
+import { Table, TableColumn } from '@backstage/core-components';
 
 type Props<T extends Entity> = {
   title: string;

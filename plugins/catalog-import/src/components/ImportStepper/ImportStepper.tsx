@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-import {
-  configApiRef,
-  InfoCard,
-  InfoCardVariants,
-  useApi,
-} from '@backstage/core';
 import { Step, StepContent, Stepper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import React, { useMemo } from 'react';
@@ -31,6 +25,9 @@ import {
   StepperProvider,
   StepperProviderOpts,
 } from './defaults';
+
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
+import { InfoCard, InfoCardVariants } from '@backstage/core-components';
 
 const useStyles = makeStyles(() => ({
   stepperRoot: {

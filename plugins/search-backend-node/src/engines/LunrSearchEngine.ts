@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,9 @@ export class LunrSearchEngine implements SearchEngine {
         .map(([field, value]) => {
           // Require that the given field has the given value (with +).
           if (['string', 'number', 'boolean'].includes(typeof value)) {
+            if (typeof value === 'string') {
+              return ` +${field}:${value.replace(':', '\\:')}`;
+            }
             return ` +${field}:${value}`;
           }
 
@@ -90,6 +93,10 @@ export class LunrSearchEngine implements SearchEngine {
 
   index(type: string, documents: IndexableDocument[]): void {
     const lunrBuilder = new lunr.Builder();
+
+    lunrBuilder.pipeline.add(lunr.trimmer, lunr.stopWordFilter, lunr.stemmer);
+    lunrBuilder.searchPipeline.add(lunr.stemmer);
+
     // Make this lunr index aware of all relevant fields.
     Object.keys(documents[0]).forEach(field => {
       lunrBuilder.field(field);

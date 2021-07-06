@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,8 +133,14 @@ export class NextEntitiesCatalog implements EntitiesCatalog {
       };
     }
 
+    const dbResponse = rows.map(e => JSON.parse(e.final_entity!));
+
+    const entities = dbResponse.map(e =>
+      request?.fields ? request.fields(e) : e,
+    );
+
     return {
-      entities: rows.map(e => JSON.parse(e.final_entity!)),
+      entities,
       pageInfo,
     };
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-import { buildMiddleware, createRouter } from './router';
 import {
   getVoidLogger,
   loadBackendConfig,
   SingleHostDiscovery,
 } from '@backstage/backend-common';
-import createProxyMiddleware, {
-  Config as ProxyMiddlewareConfig,
-  Proxy,
-} from 'http-proxy-middleware';
+import { Request, Response } from 'express';
 import * as http from 'http';
+import { createProxyMiddleware, Options } from 'http-proxy-middleware';
+import { buildMiddleware, createRouter } from './router';
 
-jest.mock('http-proxy-middleware', () => {
-  return jest.fn().mockImplementation(
-    (): Proxy => {
-      return () => undefined;
-    },
-  );
-});
+jest.mock('http-proxy-middleware', () => ({
+  createProxyMiddleware: jest.fn(() => () => undefined),
+}));
 
 const mockCreateProxyMiddleware = createProxyMiddleware as jest.MockedFunction<
   typeof createProxyMiddleware
@@ -66,7 +60,7 @@ describe('buildMiddleware', () => {
 
     const [filter, fullConfig] = mockCreateProxyMiddleware.mock.calls[0] as [
       (pathname: string, req: Partial<http.IncomingMessage>) => boolean,
-      ProxyMiddlewareConfig,
+      Options,
     ];
     expect(filter('', { method: 'GET', headers: {} })).toBe(true);
     expect(filter('', { method: 'POST', headers: {} })).toBe(true);
@@ -86,7 +80,7 @@ describe('buildMiddleware', () => {
 
     const [filter, fullConfig] = mockCreateProxyMiddleware.mock.calls[0] as [
       (pathname: string, req: Partial<http.IncomingMessage>) => boolean,
-      ProxyMiddlewareConfig,
+      Options,
     ];
     expect(filter('', { method: 'GET', headers: {} })).toBe(true);
     expect(filter('', { method: 'POST', headers: {} })).toBe(true);
@@ -106,7 +100,7 @@ describe('buildMiddleware', () => {
 
     const [filter, fullConfig] = mockCreateProxyMiddleware.mock.calls[0] as [
       (pathname: string, req: Partial<http.IncomingMessage>) => boolean,
-      ProxyMiddlewareConfig,
+      Options,
     ];
     expect(filter('', { method: 'GET', headers: {} })).toBe(true);
     expect(filter('', { method: 'POST', headers: {} })).toBe(true);
@@ -129,7 +123,7 @@ describe('buildMiddleware', () => {
 
     const [filter, fullConfig] = mockCreateProxyMiddleware.mock.calls[0] as [
       (pathname: string, req: Partial<http.IncomingMessage>) => boolean,
-      ProxyMiddlewareConfig,
+      Options,
     ];
     expect(filter('', { method: 'GET', headers: {} })).toBe(true);
     expect(filter('', { method: 'POST', headers: {} })).toBe(false);
@@ -254,8 +248,7 @@ describe('buildMiddleware', () => {
 
     expect(createProxyMiddleware).toHaveBeenCalledTimes(1);
 
-    const config = mockCreateProxyMiddleware.mock
-      .calls[0][1] as ProxyMiddlewareConfig;
+    const config = mockCreateProxyMiddleware.mock.calls[0][1] as Options;
 
     const testClientResponse = {
       headers: {
@@ -275,8 +268,8 @@ describe('buildMiddleware', () => {
 
     config.onProxyRes!(
       testClientResponse as http.IncomingMessage,
-      {} as http.IncomingMessage,
-      {} as http.ServerResponse,
+      {} as Request,
+      {} as Response,
     );
 
     expect(Object.keys(testClientResponse.headers!)).toEqual([
@@ -298,8 +291,7 @@ describe('buildMiddleware', () => {
 
     expect(createProxyMiddleware).toHaveBeenCalledTimes(1);
 
-    const config = mockCreateProxyMiddleware.mock
-      .calls[0][1] as ProxyMiddlewareConfig;
+    const config = mockCreateProxyMiddleware.mock.calls[0][1] as Options;
 
     const testClientResponse = {
       headers: {
@@ -313,8 +305,8 @@ describe('buildMiddleware', () => {
 
     config.onProxyRes!(
       testClientResponse as http.IncomingMessage,
-      {} as http.IncomingMessage,
-      {} as http.ServerResponse,
+      {} as Request,
+      {} as Response,
     );
 
     expect(Object.keys(testClientResponse.headers!)).toEqual(['set-cookie']);

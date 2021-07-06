@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,9 @@ import { version as catalogClient } from '../../../catalog-client/package.json';
 import { version as catalogModel } from '../../../catalog-model/package.json';
 import { version as cli } from '../../../cli/package.json';
 import { version as config } from '../../../config/package.json';
-import { version as core } from '../../../core/package.json';
+import { version as coreAppApi } from '../../../core-app-api/package.json';
+import { version as coreComponents } from '../../../core-components/package.json';
+import { version as corePluginApi } from '../../../core-plugin-api/package.json';
 import { version as errors } from '../../../errors/package.json';
 import { version as integrationReact } from '../../../integration-react/package.json';
 import { version as testUtils } from '../../../test-utils/package.json';
@@ -71,7 +73,9 @@ export const packageVersions = {
   '@backstage/catalog-model': catalogModel,
   '@backstage/cli': cli,
   '@backstage/config': config,
-  '@backstage/core': core,
+  '@backstage/core-app-api': coreAppApi,
+  '@backstage/core-components': coreComponents,
+  '@backstage/core-plugin-api': corePluginApi,
   '@backstage/errors': errors,
   '@backstage/integration-react': integrationReact,
   '@backstage/plugin-api-docs': pluginApiDocs,

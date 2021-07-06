@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,15 @@ import {
   Typography,
   CircularProgress,
 } from '@material-ui/core';
-import { useApi, alertApiRef, identityApiRef } from '@backstage/core';
 import { useAsyncFn } from 'react-use';
 import { pagerDutyApiRef } from '../../api';
 import { Alert } from '@material-ui/lab';
 import { usePagerdutyEntity } from '../../hooks';
+import {
+  useApi,
+  alertApiRef,
+  identityApiRef,
+} from '@backstage/core-plugin-api';
 
 type Props = {
   showDialog: boolean;

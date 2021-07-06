@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { UrlPatternDiscovery } from '@backstage/core';
 import { msw } from '@backstage/test-utils';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { BitriseClientApi } from './bitriseApi.client';
 import { BitriseApi } from './bitriseApi';
+import { UrlPatternDiscovery } from '@backstage/core-app-api';
 
 const server = setupServer();
 

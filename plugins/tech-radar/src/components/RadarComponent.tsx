@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import React, { useEffect } from 'react';
-import { Progress, useApi, errorApiRef } from '@backstage/core';
 import { useAsync } from 'react-use';
 import Radar from '../components/Radar';
 import {
@@ -25,13 +24,17 @@ import {
 } from '../api';
 import { Entry } from '../utils/types';
 
-const useTechRadarLoader = () => {
+import { Progress } from '@backstage/core-components';
+import { useApi, errorApiRef } from '@backstage/core-plugin-api';
+
+const useTechRadarLoader = (id: string | undefined) => {
   const errorApi = useApi(errorApiRef);
   const techRadarApi = useApi(techRadarApiRef);
 
-  const { error, value, loading } = useAsync(async () => techRadarApi.load(), [
-    techRadarApi,
-  ]);
+  const { error, value, loading } = useAsync(
+    async () => techRadarApi.load(id),
+    [techRadarApi],
+  );
 
   useEffect(() => {
     if (error) {
@@ -43,7 +46,7 @@ const useTechRadarLoader = () => {
 };
 
 const RadarComponent = (props: TechRadarComponentProps): JSX.Element => {
-  const { loading, error, value: data } = useTechRadarLoader();
+  const { loading, error, value: data } = useTechRadarLoader(props.id);
 
   const mapToEntries = (
     loaderResponse: TechRadarLoaderResponse | undefined,

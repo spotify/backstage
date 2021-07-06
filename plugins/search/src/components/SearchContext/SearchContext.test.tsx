@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { renderHook, act } from '@testing-library/react-hooks';
 
-import { useApi } from '@backstage/core';
-
 import { useSearch, SearchContextProvider } from './SearchContext';
 
-jest.mock('@backstage/core', () => ({
-  ...jest.requireActual('@backstage/core'),
+import { useApi } from '@backstage/core-plugin-api';
+
+jest.mock('@backstage/core-plugin-api', () => ({
+  ...jest.requireActual('@backstage/core-plugin-api'),
   useApi: jest.fn(),
 }));
 

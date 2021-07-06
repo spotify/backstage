@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { UrlReader } from '@backstage/backend-common';
+import { UrlReader, resolveSafeChildPath } from '@backstage/backend-common';
 import { JsonObject } from '@backstage/config';
 import { InputError } from '@backstage/errors';
 import { ScmIntegrations } from '@backstage/integration';
@@ -138,12 +138,7 @@ export function createFetchCookiecutterAction(options: {
 
       // Finally move the template result into the task workspace
       const targetPath = ctx.input.targetPath ?? './';
-      const outputPath = resolvePath(ctx.workspacePath, targetPath);
-      if (!outputPath.startsWith(ctx.workspacePath)) {
-        throw new InputError(
-          `Fetch action targetPath may not specify a path outside the working directory`,
-        );
-      }
+      const outputPath = resolveSafeChildPath(ctx.workspacePath, targetPath);
       await fs.copy(resultDir, outputPath);
     },
   });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 
 import { useAsync } from 'react-use';
-import { useApi } from '@backstage/core';
 import { Entity } from '@backstage/catalog-model';
 import { rollbarApiRef } from '../api';
 import { RollbarTopActiveItem } from '../api/types';
 import { useProjectSlugFromEntity } from './useProject';
+import { useApi } from '@backstage/core-plugin-api';
 
 export function useTopActiveItems(entity: Entity) {
   const api = useApi(rollbarApiRef);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ import { useProjectName } from '../useProjectName';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Entity } from '@backstage/catalog-model';
-import { configApiRef, useApi } from '@backstage/core';
 import { readGitHubIntegrationConfigs } from '@backstage/integration';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 
 const LazyLog = React.lazy(() => import('react-lazylog/build/LazyLog'));
 const LinePart = React.lazy(() => import('react-lazylog/build/LinePart'));

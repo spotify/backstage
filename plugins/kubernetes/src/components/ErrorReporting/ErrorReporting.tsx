@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import * as React from 'react';
-import { Table, TableColumn, InfoCard } from '@backstage/core';
 import { DetectedError, DetectedErrorsByCluster } from '../../error-detection';
 import { Chip, Typography, Grid } from '@material-ui/core';
 import EmptyStateImage from '../../assets/emptystate.svg';
+import { Table, TableColumn, InfoCard } from '@backstage/core-components';
 
 type ErrorReportingProps = {
   detectedErrors: DetectedErrorsByCluster;

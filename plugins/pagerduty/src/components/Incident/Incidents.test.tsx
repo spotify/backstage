@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { Incidents } from './Incidents';
 import { wrapInTestApp } from '@backstage/test-utils';
-import { ApiProvider, ApiRegistry } from '@backstage/core';
 import { pagerDutyApiRef } from '../../api';
 import { Incident } from '../types';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 
 const mockPagerDutyApi = {
   getIncidentsByServiceId: () => [],

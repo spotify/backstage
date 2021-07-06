@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { ConfigReader, OAuthApi } from '@backstage/core';
-
 import { GitReleaseClient } from './GitReleaseClient';
+
+import { ConfigReader } from '@backstage/core-app-api';
+import { OAuthApi } from '@backstage/core-plugin-api';
 
 describe('GitReleaseClient', () => {
   it('should return the default plugin api client', () => {

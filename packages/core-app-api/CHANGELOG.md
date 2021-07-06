@@ -1,5 +1,22 @@
 # @backstage/core-app-api
 
+## 0.1.4
+
+### Patch Changes
+
+- 62abffee4: Reintroduce export of `defaultConfigLoader`.
+- Updated dependencies
+  - @backstage/core-components@0.1.4
+
+## 0.1.3
+
+### Patch Changes
+
+- dc3e7ce68: Introducing new UnhandledErrorForwarder installed by default. For catching unhandled promise rejections, you can override the API to align with general error handling.
+- 5f4339b8c: Adding `FeatureFlag` component and treating `FeatureFlags` as first class citizens to composability API
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes

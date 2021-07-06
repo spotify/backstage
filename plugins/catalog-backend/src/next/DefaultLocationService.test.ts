@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,11 +48,14 @@ describe('DefaultLocationServiceTest', () => {
         },
         deferredEntities: [
           {
-            apiVersion: 'backstage.io/v1alpha1',
-            kind: 'Component',
-            metadata: {
-              name: 'bar',
+            entity: {
+              apiVersion: 'backstage.io/v1alpha1',
+              kind: 'Component',
+              metadata: {
+                name: 'bar',
+              },
             },
+            locationKey: 'file:///tmp/mock.yaml',
           },
         ],
         relations: [],

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { scmIntegrationsApiRef } from '@backstage/integration-react';
+import { catalogApiRef } from '@backstage/plugin-catalog-react';
+import { catalogImportApiRef, CatalogImportClient } from './api';
 import {
   createApiFactory,
   createPlugin,
@@ -22,10 +25,7 @@ import {
   discoveryApiRef,
   githubAuthApiRef,
   identityApiRef,
-} from '@backstage/core';
-import { scmIntegrationsApiRef } from '@backstage/integration-react';
-import { catalogApiRef } from '@backstage/plugin-catalog-react';
-import { catalogImportApiRef, CatalogImportClient } from './api';
+} from '@backstage/core-plugin-api';
 
 export const rootRouteRef = createRouteRef({
   path: '',

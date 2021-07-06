@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,6 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import {
-  alertApiRef,
-  configApiRef,
-  Progress,
-  ResponseErrorPanel,
-  useApi,
-} from '@backstage/core';
 import { EntityRefLink } from '@backstage/plugin-catalog-react';
 import {
   Box,
@@ -37,6 +30,9 @@ import {
 import Alert from '@material-ui/lab/Alert';
 import React, { useCallback, useState } from 'react';
 import { useUnregisterEntityDialogState } from './useUnregisterEntityDialogState';
+
+import { alertApiRef, configApiRef, useApi } from '@backstage/core-plugin-api';
+import { Progress, ResponseErrorPanel } from '@backstage/core-components';
 
 const useStyles = makeStyles({
   advancedButton: {

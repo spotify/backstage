@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import { Config } from '@backstage/config';
 import path from 'path';
+import { getEntityLocationRef } from './processing/util';
 import { EntityProvider, EntityProviderConnection } from './types';
 import { locationSpecToLocationEntity } from './util';
 
@@ -37,10 +38,12 @@ export class ConfigLocationEntityProvider implements EntityProvider {
     const entities = locationConfigs.map(location => {
       const type = location.getString('type');
       const target = location.getString('target');
-      return locationSpecToLocationEntity({
+      const entity = locationSpecToLocationEntity({
         type,
         target: type === 'file' ? path.resolve(target) : target,
       });
+      const locationKey = getEntityLocationRef(entity);
+      return { entity, locationKey };
     });
 
     await this.connection.applyMutation({

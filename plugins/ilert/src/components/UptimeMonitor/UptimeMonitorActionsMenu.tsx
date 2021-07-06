@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 import React from 'react';
-import { alertApiRef, useApi, Link } from '@backstage/core';
 import { IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { ilertApiRef } from '../../api';
 import { UptimeMonitor } from '../../types';
+
+import { alertApiRef, useApi } from '@backstage/core-plugin-api';
+import { Link } from '@backstage/core-components';
 
 export const UptimeMonitorActionsMenu = ({
   uptimeMonitor,

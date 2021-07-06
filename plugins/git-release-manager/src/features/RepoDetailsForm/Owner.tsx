@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import {
   Select,
   Box,
 } from '@material-ui/core';
-import { Progress, useApi } from '@backstage/core';
 
 import { gitReleaseManagerApiRef } from '../../api/serviceApiRef';
 import { TEST_IDS } from '../../test-helpers/test-ids';
@@ -33,6 +32,9 @@ import { useFormClasses } from './styles';
 import { useProjectContext } from '../../contexts/ProjectContext';
 import { useQueryHandler } from '../../hooks/useQueryHandler';
 import { useUserContext } from '../../contexts/UserContext';
+
+import { Progress } from '@backstage/core-components';
+import { useApi } from '@backstage/core-plugin-api';
 
 export function Owner() {
   const pluginApiClient = useApi(gitReleaseManagerApiRef);

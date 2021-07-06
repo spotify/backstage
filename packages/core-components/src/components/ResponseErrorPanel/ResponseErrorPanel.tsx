@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ export const ResponseErrorPanel = ({
           <ListItemText
             classes={{ secondary: classes.text }}
             primary="Request"
-            secondary={request}
+            secondary={request ? `${requestString}` : undefined}
           />
           <CopyTextButton text={requestString} />
         </ListItem>
@@ -87,10 +87,9 @@ export const ResponseErrorPanel = ({
           <ListItemText
             classes={{ secondary: classes.text }}
             primary="Full Error as JSON"
-            secondary={<CodeSnippet language="json" text={jsonString} />}
           />
-          <CopyTextButton text={jsonString} />
         </ListItem>
+        <CodeSnippet language="json" text={jsonString} showCopyCodeButton />
       </>
     </ErrorPanel>
   );

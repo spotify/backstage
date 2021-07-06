@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,10 @@ import {
 } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { Link } from '@backstage/core';
-
 import { ReleaseStats } from '../contexts/ReleaseStatsContext';
+
 import { RowCollapsed } from './RowCollapsed/RowCollapsed';
+import { Link } from '@backstage/core-components';
 
 const useRowStyles = makeStyles({
   root: {

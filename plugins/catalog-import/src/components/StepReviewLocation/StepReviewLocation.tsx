@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { configApiRef, Link, useApi } from '@backstage/core';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import { FormHelperText, Grid, Typography } from '@material-ui/core';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
@@ -22,6 +21,9 @@ import React, { useCallback, useState } from 'react';
 import { BackButton, NextButton } from '../Buttons';
 import { EntityListComponent } from '../EntityListComponent';
 import { PrepareResult, ReviewResult } from '../useImportState';
+
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
+import { Link } from '@backstage/core-components';
 
 type Props = {
   prepareResult: PrepareResult;

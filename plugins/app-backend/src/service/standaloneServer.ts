@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,9 @@ export async function startStandaloneServer(
     appPackageName: 'example-app',
   });
 
-  const service = createServiceBuilder(module).addRouter('', router);
+  const service = createServiceBuilder(module)
+    .setPort(options.port)
+    .addRouter('', router);
 
   return await service.start().catch(err => {
     logger.error(err);

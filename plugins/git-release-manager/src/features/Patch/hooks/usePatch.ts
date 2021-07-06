@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 
 import { useEffect, useState } from 'react';
 import { useAsync, useAsyncFn } from 'react-use';
-import { useApi } from '@backstage/core';
-
 import {
   GetLatestReleaseResult,
   GetRecentCommitsResultSingle,
 } from '../../../api/GitReleaseClient';
+
 import { CalverTagParts } from '../../../helpers/tagParts/getCalverTagParts';
 import { ComponentConfigPatch, CardHook } from '../../../types/types';
 import { getPatchCommitSuffix } from '../helpers/getPatchCommitSuffix';
@@ -31,6 +30,7 @@ import { SemverTagParts } from '../../../helpers/tagParts/getSemverTagParts';
 import { TAG_OBJECT_MESSAGE } from '../../../constants/constants';
 import { useResponseSteps } from '../../../hooks/useResponseSteps';
 import { useUserContext } from '../../../contexts/UserContext';
+import { useApi } from '@backstage/core-plugin-api';
 
 interface Patch {
   bumpedTag: string;

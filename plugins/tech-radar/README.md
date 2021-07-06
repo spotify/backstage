@@ -82,7 +82,9 @@ import {
 } from '@backstage/plugin-tech-radar';
 
 class MyOwnClient implements TechRadarApi {
-  async load(): Promise<TechRadarLoaderResponse> {
+  async load(id: string | undefined): Promise<TechRadarLoaderResponse> {
+    // if needed id prop can be used to fetch the correct data
+
     const data = await fetch('https://mydata.json').then(res => res.json());
 
     // maybe you'll need to do some data transformation here to make it look like TechRadarLoaderResponse
@@ -120,3 +122,7 @@ You can use the `svgProps` option to pass custom React props to the `<svg>` elem
 // const { getByTestId } = render(...);
 // expect(getByTestId('tech-radar-svg')).toBeInTheDocument();
 ```
+
+### How do I support multiple radars
+
+The `TechRadarPage` and `TechRadarComponent` components both take an optional `id` prop which is subsequently passed to the `load` method of the API to distinguish which radar's data to load.

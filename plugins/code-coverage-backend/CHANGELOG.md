@@ -1,5 +1,14 @@
 # @backstage/plugin-code-coverage-backend
 
+## 0.1.7
+
+### Patch Changes
+
+- 3108ff7bf: Make `yarn dev` respect the `PLUGIN_PORT` environment variable.
+- Updated dependencies
+  - @backstage/backend-common@0.8.3
+  - @backstage/catalog-model@0.8.3
+
 ## 0.1.6
 
 ### Patch Changes

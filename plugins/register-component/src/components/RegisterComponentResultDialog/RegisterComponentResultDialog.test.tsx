@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { createRouteRef } from '@backstage/core';
 import { lightTheme } from '@backstage/theme';
 import { ThemeProvider } from '@material-ui/core';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RegisterComponentResultDialog } from './RegisterComponentResultDialog';
+import { createRouteRef } from '@backstage/core-plugin-api';
 
 const Wrapper = ({ children }: { children?: React.ReactNode }) => (
   <MemoryRouter>
@@ -37,7 +37,7 @@ describe('RegisterComponentResultDialog', () => {
         entities={[]}
         catalogRouteRef={createRouteRef({
           path: '/catalog',
-          title: 'Service Catalog',
+          title: 'Software Catalog',
         })}
       />,
       { wrapper: Wrapper },
@@ -76,7 +76,7 @@ describe('RegisterComponentResultDialog', () => {
         entities={entities}
         catalogRouteRef={createRouteRef({
           path: '/catalog',
-          title: 'Service Catalog',
+          title: 'Software Catalog',
         })}
       />,
       { wrapper: Wrapper },

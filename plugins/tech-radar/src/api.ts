@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 import { MovedState } from './utils/types';
-import { createApiRef } from '@backstage/core';
+import { createApiRef } from '@backstage/core-plugin-api';
 
 export const techRadarApiRef = createApiRef<TechRadarApi>({
   id: 'plugin.techradar.service',
@@ -23,11 +23,14 @@ export const techRadarApiRef = createApiRef<TechRadarApi>({
 });
 
 export interface TechRadarApi {
-  // Loads the TechRadar response data to pass through to the TechRadar component
-  load: () => Promise<TechRadarLoaderResponse>;
+  /**
+   * Loads the TechRadar response data to pass through to the TechRadar component.
+   * Takes the id prop of the TechRadarComponent or TechRadarPage to distinguish between multiple radars if needed
+   */
+  load: (id: string | undefined) => Promise<TechRadarLoaderResponse>;
 }
 
-/**
+/*
  * Types related to the Radar's visualization.
  */
 
@@ -59,7 +62,7 @@ export interface RadarEntrySnapshot {
   moved?: MovedState;
 }
 
-/**
+/*
  * Types related to data collection for the Radar.
  */
 
@@ -69,11 +72,12 @@ export interface TechRadarLoaderResponse {
   entries: RadarEntry[];
 }
 
-/**
+/*
  * Set up the Radar as a Backstage component.
  */
 
 export interface TechRadarComponentProps {
+  id?: string;
   width: number;
   height: number;
   svgProps?: object;

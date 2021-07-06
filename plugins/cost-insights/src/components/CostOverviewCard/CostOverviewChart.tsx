@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 import React from 'react';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
+import { DateTime } from 'luxon';
 import { useTheme, Box } from '@material-ui/core';
 import {
   ComposedChart,
@@ -51,8 +50,6 @@ import { useCostOverviewStyles as useStyles } from '../../utils/styles';
 import { groupByDate, toDataMax, trendFrom } from '../../utils/charts';
 import { aggregationSort } from '../../utils/sort';
 import { CostOverviewLegend } from './CostOverviewLegend';
-
-dayjs.extend(utc);
 
 type CostOverviewChartProps = {
   metric: Maybe<Metric>;
@@ -108,7 +105,11 @@ export const CostOverviewChart = ({
     if (isInvalid({ label, payload })) return null;
 
     const dataKeys = [data.dailyCost.dataKey, data.metric.dataKey];
-    const title = dayjs(label).utc().format(DEFAULT_DATE_FORMAT);
+    const date =
+      typeof label === 'number'
+        ? DateTime.fromMillis(label)
+        : DateTime.fromISO(label!);
+    const title = date.toUTC().toFormat(DEFAULT_DATE_FORMAT);
     const items = payload
       .filter(p => dataKeys.includes(p.dataKey as string))
       .map(p => ({

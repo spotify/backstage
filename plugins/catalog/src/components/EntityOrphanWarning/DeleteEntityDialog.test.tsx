@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,13 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { DeleteEntityDialog } from './DeleteEntityDialog';
 import { ORIGIN_LOCATION_ANNOTATION } from '@backstage/catalog-model';
-import {
-  AlertApi,
-  alertApiRef,
-  ApiProvider,
-  ApiRegistry,
-} from '@backstage/core';
 import { CatalogApi } from '@backstage/catalog-client';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import { screen, waitFor } from '@testing-library/react';
 import { renderInTestApp } from '@backstage/test-utils';
+
+import { AlertApi, alertApiRef } from '@backstage/core-plugin-api';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 
 describe('DeleteEntityDialog', () => {
   const alertApi: jest.Mocked<AlertApi> = {

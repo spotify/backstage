@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import {
   ResourceEntity,
   SystemEntity,
 } from '@backstage/catalog-model';
-import { TableColumn } from '@backstage/core';
 import { EntityTable } from '@backstage/plugin-catalog-react';
+import { TableColumn } from '@backstage/core-components';
 
 export const componentEntityColumns: TableColumn<ComponentEntity>[] = [
   EntityTable.columns.createEntityRefColumn({ defaultKind: 'component' }),

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,10 @@ import { IncidentListItem } from './IncidentListItem';
 import { IncidentsEmptyState } from './IncidentEmptyState';
 import { useAsyncFn } from 'react-use';
 import { pagerDutyApiRef } from '../../api';
-import { useApi, Progress } from '@backstage/core';
 import { Alert } from '@material-ui/lab';
+
+import { useApi } from '@backstage/core-plugin-api';
+import { Progress } from '@backstage/core-components';
 
 type Props = {
   serviceId: string;

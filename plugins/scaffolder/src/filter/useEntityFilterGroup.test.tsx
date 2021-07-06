@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { ApiProvider, ApiRegistry, storageApiRef } from '@backstage/core';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import { MockStorageApi } from '@backstage/test-utils';
 import { act, renderHook } from '@testing-library/react-hooks';
@@ -22,6 +21,9 @@ import React from 'react';
 import { EntityFilterGroupsProvider } from './EntityFilterGroupsProvider';
 import { FilterGroup, FilterGroupStatesReady } from './types';
 import { useEntityFilterGroup } from './useEntityFilterGroup';
+
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
+import { storageApiRef } from '@backstage/core-plugin-api';
 
 describe('useEntityFilterGroup', () => {
   let catalogApi: jest.Mocked<typeof catalogApiRef.T>;

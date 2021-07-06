@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { JsonObject } from '@backstage/config';
-import { Content, StructuredMetadataTable } from '@backstage/core';
 import {
   Box,
   Button,
@@ -29,6 +28,7 @@ import { FormProps, IChangeEvent, withTheme } from '@rjsf/core';
 import { Theme as MuiTheme } from '@rjsf/material-ui';
 import React, { useState } from 'react';
 import { transformSchemaToProps } from './schema';
+import { Content, StructuredMetadataTable } from '@backstage/core-components';
 
 const Form = withTheme(MuiTheme);
 type Step = {

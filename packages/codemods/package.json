@@ -1,8 +1,12 @@
 {
   "name": "@backstage/codemods",
   "description": "A collection of codemods for Backstage projects",
-  "version": "0.1.1",
-  "private": true,
+  "version": "0.1.4",
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.cjs.js"
+  },
   "homepage": "https://backstage.io",
   "repository": {
     "type": "git",
@@ -16,14 +20,18 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "nodemon --",
+    "build": "backstage-cli build --outputs cjs",
     "lint": "backstage-cli lint",
-    "test": "backstage-cli test"
+    "test": "backstage-cli test",
+    "prepack": "backstage-cli prepack",
+    "postpack": "backstage-cli postpack",
+    "clean": "backstage-cli clean"
   },
   "bin": {
     "backstage-codemods": "bin/backstage-codemods"
   },
   "dependencies": {
-    "@backstage/cli-common": "0.1.1",
+    "@backstage/cli-common": "0.1.2",
     "@backstage/core-app-api": "*",
     "@backstage/core-components": "*",
     "@backstage/core-plugin-api": "*",
@@ -35,7 +43,7 @@
     "@types/jscodeshift": "^0.11.0",
     "@types/node": "^14.14.32",
     "commander": "^6.1.0",
-    "ts-node": "^9.1.1"
+    "ts-node": "^10.0.0"
   },
   "nodemonConfig": {
     "watch": "./src",
@@ -43,6 +51,7 @@
     "ext": "ts"
   },
   "files": [
+    "bin",
     "dist",
     "transforms"
   ]

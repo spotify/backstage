@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -201,14 +201,16 @@ describe('Git', () => {
   describe('init', () => {
     it('should call isomorphic-git with the correct arguments', async () => {
       const dir = '/some/mock/dir';
+      const defaultBranch = 'master';
 
       const git = Git.fromAuth({});
 
-      await git.init({ dir });
+      await git.init({ dir, defaultBranch });
 
       expect(isomorphic.init).toHaveBeenCalledWith({
         fs,
         dir,
+        defaultBranch,
       });
     });
   });

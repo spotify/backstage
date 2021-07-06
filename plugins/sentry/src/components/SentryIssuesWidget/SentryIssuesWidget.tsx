@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,6 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import {
-  EmptyState,
-  ErrorApi,
-  errorApiRef,
-  InfoCard,
-  InfoCardVariants,
-  MissingAnnotationEmptyState,
-  Progress,
-  useApi,
-} from '@backstage/core';
 import React, { useEffect } from 'react';
 import { useAsync } from 'react-use';
 import { sentryApiRef } from '../../api';
@@ -33,6 +23,16 @@ import {
   SENTRY_PROJECT_SLUG_ANNOTATION,
   useProjectSlug,
 } from '../useProjectSlug';
+
+import {
+  EmptyState,
+  InfoCard,
+  InfoCardVariants,
+  MissingAnnotationEmptyState,
+  Progress,
+} from '@backstage/core-components';
+
+import { ErrorApi, errorApiRef, useApi } from '@backstage/core-plugin-api';
 
 export const SentryIssuesWidget = ({
   entity,

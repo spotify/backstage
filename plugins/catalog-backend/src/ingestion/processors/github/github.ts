@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -144,6 +144,7 @@ export async function getOrganizationUsers(
 export async function getOrganizationTeams(
   client: typeof graphql,
   org: string,
+  orgNamespace?: string,
 ): Promise<{
   groups: GroupEntity[];
   groupMemberUsers: Map<string, string[]>;
@@ -189,6 +190,10 @@ export async function getOrganizationTeams(
       },
     };
 
+    if (orgNamespace) {
+      entity.metadata.namespace = orgNamespace;
+    }
+
     if (team.description) {
       entity.metadata.description = team.description;
     }
@@ -203,7 +208,8 @@ export async function getOrganizationTeams(
     }
 
     const memberNames: string[] = [];
-    groupMemberUsers.set(team.slug, memberNames);
+    const groupKey = orgNamespace ? `${orgNamespace}/${team.slug}` : team.slug;
+    groupMemberUsers.set(groupKey, memberNames);
 
     if (!team.members.pageInfo.hasNextPage) {
       // We got all the members in one go, run the fast path

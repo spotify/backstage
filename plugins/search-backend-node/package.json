@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-search-backend-node",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -25,8 +25,8 @@
     "@types/lunr": "^2.3.3"
   },
   "devDependencies": {
-    "@backstage/backend-common": "^0.8.2",
-    "@backstage/cli": "^0.7.0"
+    "@backstage/backend-common": "^0.8.3",
+    "@backstage/cli": "^0.7.2"
   },
   "files": [
     "dist"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,6 @@
 
 //  NEEDS WORK
 import {
-  Content,
-  ContentHeader,
-  Header,
-  HeaderLabel,
-  Link,
-  Page,
-  SupportButton,
-  useApi,
-  WarningPanel,
-} from '@backstage/core';
-import {
   Button,
   LinearProgress,
   Paper,
@@ -41,6 +30,19 @@ import {
 import React from 'react';
 import { useAsync } from 'react-use';
 import { gcpApiRef, Project } from '../../api';
+
+import {
+  Content,
+  ContentHeader,
+  Header,
+  HeaderLabel,
+  Link,
+  Page,
+  SupportButton,
+  WarningPanel,
+} from '@backstage/core-components';
+
+import { useApi } from '@backstage/core-plugin-api';
 
 const LongText = ({ text, max }: { text: string; max: number }) => {
   if (text.length < max) {

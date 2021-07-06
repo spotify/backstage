@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router';
 import { RegisterComponentPage } from './RegisterComponentPage';
-import { RouteRef } from '@backstage/core';
+import { RouteRef } from '@backstage/core-plugin-api';
 
 // As we don't know which path the catalog's router mounted on
 // We need to inject this from the app

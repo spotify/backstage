@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-import { Link, IconComponent } from '@backstage/core';
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { makeStyles, Box, Typography } from '@material-ui/core';
 import LanguageIcon from '@material-ui/icons/Language';
 import React from 'react';
+
+import { Link } from '@backstage/core-components';
+import { IconComponent } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles({
   svgIcon: {
@@ -42,17 +44,17 @@ export const IconLink = ({
   const classes = useStyles();
 
   return (
-    <Grid container direction="row" spacing={1}>
-      <Grid item>
-        <Typography component="div" className={classes.svgIcon}>
+    <Box display="flex">
+      <Box mr={1} className={classes.svgIcon}>
+        <Typography component="div">
           {Icon ? <Icon /> : <LanguageIcon />}
         </Typography>
-      </Grid>
-      <Grid item>
+      </Box>
+      <Box flexGrow="1">
         <Link to={href} target="_blank" rel="noopener">
           {text || href}
         </Link>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };

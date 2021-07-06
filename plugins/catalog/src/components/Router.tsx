@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { ENTITY_DEFAULT_NAMESPACE } from '@backstage/catalog-model';
-import { Content } from '@backstage/core';
 import {
   entityRoute,
   rootRoute,
@@ -27,6 +26,7 @@ import { CatalogPage } from './CatalogPage';
 import { EntityLoaderProvider } from './EntityLoaderProvider';
 import { EntityNotFound } from './EntityNotFound';
 import { EntityPageLayout } from './EntityPageLayout';
+import { Content } from '@backstage/core-components';
 
 const DefaultEntityPage = () => (
   <EntityPageLayout>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 import React, { useMemo } from 'react';
-import { Header, Page, Content, useApi, Progress } from '@backstage/core';
 import { useObservable } from 'react-use';
 import { configSchemaApiRef } from '../../api';
 import { SchemaViewer } from '../SchemaViewer';
 import { Typography } from '@material-ui/core';
+
+import { Header, Page, Content, Progress } from '@backstage/core-components';
+import { useApi } from '@backstage/core-plugin-api';
 
 export const ConfigSchemaPage = () => {
   const configSchemaApi = useApi(configSchemaApiRef);

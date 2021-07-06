@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,27 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import {
-  Content,
-  ContentHeader,
-  SupportButton,
-  TableColumn,
-} from '@backstage/core';
-import {
   EntityKindPicker,
+  EntityLifecyclePicker,
   EntityListProvider,
+  EntityOwnerPicker,
   EntityTagPicker,
   EntityTypePicker,
   UserListFilterKind,
   UserListPicker,
 } from '@backstage/plugin-catalog-react';
-
 import { CatalogTable } from '../CatalogTable';
+
 import { EntityRow } from '../CatalogTable/types';
 import CatalogLayout from './CatalogLayout';
 import { CreateComponentButton } from '../CreateComponentButton';
+import {
+  Content,
+  ContentHeader,
+  SupportButton,
+  TableColumn,
+  TableProps,
+} from '@backstage/core-components';
 
 const useStyles = makeStyles(theme => ({
   contentWrapper: {
@@ -51,11 +54,13 @@ const useStyles = makeStyles(theme => ({
 export type CatalogPageProps = {
   initiallySelectedFilter?: UserListFilterKind;
   columns?: TableColumn<EntityRow>[];
+  actions?: TableProps<EntityRow>['actions'];
 };
 
 export const CatalogPage = ({
   initiallySelectedFilter = 'owned',
   columns,
+  actions,
 }: CatalogPageProps) => {
   const styles = useStyles();
 
@@ -72,9 +77,11 @@ export const CatalogPage = ({
               <EntityKindPicker initialFilter="component" hidden />
               <EntityTypePicker />
               <UserListPicker initialFilter={initiallySelectedFilter} />
+              <EntityOwnerPicker />
+              <EntityLifecyclePicker />
               <EntityTagPicker />
             </div>
-            <CatalogTable columns={columns} />
+            <CatalogTable columns={columns} actions={actions} />
           </EntityListProvider>
         </div>
       </Content>

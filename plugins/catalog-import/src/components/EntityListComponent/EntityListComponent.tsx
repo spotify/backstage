@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -146,11 +146,15 @@ export const EntityListComponent = ({
             <List component="div" disablePadding dense>
               {sortEntities(r.entities).map(entity => (
                 <ListItem
-                  component={withLinks ? EntityRefLink : 'div'}
-                  entityRef={withLinks ? entity : undefined}
-                  button={withLinks as any}
                   key={formatEntityRefTitle(entity)}
                   className={classes.nested}
+                  {...(withLinks
+                    ? {
+                        component: EntityRefLink,
+                        entityRef: entity,
+                        button: withLinks as any,
+                      }
+                    : {})}
                 >
                   <ListItemIcon>{getEntityIcon(entity)}</ListItemIcon>
                   <ListItemText primary={formatEntityRefTitle(entity)} />

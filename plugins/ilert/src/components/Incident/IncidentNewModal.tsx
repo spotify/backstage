@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import React from 'react';
-import { alertApiRef, identityApiRef, useApi } from '@backstage/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
@@ -29,6 +28,11 @@ import { Typography } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { ilertApiRef } from '../../api';
 import { AlertSource } from '../../types';
+import {
+  alertApiRef,
+  identityApiRef,
+  useApi,
+} from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles(() => ({
   container: {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,16 @@
  */
 
 import React, { ComponentClass, Component, ErrorInfo } from 'react';
+import { Button } from '../../components/Button';
+import { ErrorPanel } from '../../components/ErrorPanel';
 
-type Props = {
-  slackChannel?: string;
+type SlackChannel = {
+  name: string;
+  href?: string;
+};
+
+export type ErrorBoundaryProps = {
+  slackChannel?: string | SlackChannel;
   onError?: (error: Error, errorInfo: string) => null;
 };
 
@@ -26,28 +33,30 @@ type State = {
   errorInfo?: ErrorInfo;
 };
 
-type EProps = {
-  error?: Error;
-  slackChannel?: string;
-  children?: React.ReactNode;
-};
+const SlackLink = (props: { slackChannel?: string | SlackChannel }) => {
+  const { slackChannel } = props;
 
-const Error = ({ slackChannel }: EProps) => {
+  if (!slackChannel) {
+    return null;
+  } else if (typeof slackChannel === 'string') {
+    return <>Please contact {slackChannel} for help.</>;
+  } else if (!slackChannel.href) {
+    return <>Please contact {slackChannel.name} for help.</>;
+  }
+
   return (
-    <div role="alert">
-      Something went wrong here.{' '}
-      {slackChannel && <>Please contact {slackChannel} for help.</>}
-    </div>
+    <Button to={slackChannel.href} variant="contained">
+      {slackChannel.name}
+    </Button>
   );
 };
 
 export const ErrorBoundary: ComponentClass<
-  Props,
+  ErrorBoundaryProps,
   State
-> = class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
+> = class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
-
     this.state = {
       error: undefined,
       errorInfo: undefined,
@@ -61,13 +70,17 @@ export const ErrorBoundary: ComponentClass<
   }
 
   render() {
-    const { slackChannel } = this.props;
-    const { error, errorInfo } = this.state;
+    const { slackChannel, children } = this.props;
+    const { error } = this.state;
 
-    if (!errorInfo) {
-      return this.props.children;
+    if (!error) {
+      return children;
     }
 
-    return <Error error={error} slackChannel={slackChannel} />;
+    return (
+      <ErrorPanel title="Something Went Wrong" error={error}>
+        <SlackLink slackChannel={slackChannel} />
+      </ErrorPanel>
+    );
   }
 };

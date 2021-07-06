@@ -7,6 +7,9 @@
 // @public
 export function findPaths(searchDir: string): Paths;
 
+// @public
+export function isChildPath(base: string, path: string): boolean;
+
 // @public (undocumented)
 export type Paths = {
     ownDir: string;

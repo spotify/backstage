@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,11 @@ import { EscalationUsersEmptyState } from './EscalationUsersEmptyState';
 import { EscalationUser } from './EscalationUser';
 import { useAsync } from 'react-use';
 import { splunkOnCallApiRef } from '../../api';
-import { useApi, Progress } from '@backstage/core';
 import { Alert } from '@material-ui/lab';
 import { User } from '../types';
+
+import { useApi } from '@backstage/core-plugin-api';
+import { Progress } from '@backstage/core-components';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

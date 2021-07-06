@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 import { DomainEntity } from '@backstage/catalog-model';
+import { catalogApiRef } from '@backstage/plugin-catalog-react';
+import { Button } from '@material-ui/core';
+import React from 'react';
+import { useAsync } from 'react-use';
+import { DomainCard } from '../DomainCard';
+
 import {
   Content,
   ContentHeader,
@@ -21,14 +27,10 @@ import {
   ItemCardGrid,
   Progress,
   SupportButton,
-  useApi,
   WarningPanel,
-} from '@backstage/core';
-import { catalogApiRef } from '@backstage/plugin-catalog-react';
-import { Button } from '@material-ui/core';
-import React from 'react';
-import { useAsync } from 'react-use';
-import { DomainCard } from '../DomainCard';
+} from '@backstage/core-components';
+
+import { useApi } from '@backstage/core-plugin-api';
 
 const Body = () => {
   const catalogApi = useApi(catalogApiRef);
@@ -79,10 +81,16 @@ const Body = () => {
   );
 };
 
-export const DomainExplorerContent = () => {
+type DomainExplorerContentProps = {
+  title?: string;
+};
+
+export const DomainExplorerContent = ({
+  title,
+}: DomainExplorerContentProps) => {
   return (
     <Content noPadding>
-      <ContentHeader title="Domains">
+      <ContentHeader title={title ?? 'Domains'}>
         <SupportButton>Discover the domains in your ecosystem.</SupportButton>
       </ContentHeader>
       <Body />

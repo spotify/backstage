@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ import {
 } from '../extensions/traversal';
 import { pluginCollector } from '../plugins/collectors';
 import {
+  featureFlagCollector,
   routeObjectCollector,
   routeParentCollector,
   routePathCollector,
@@ -215,7 +216,12 @@ export class PrivateAppImpl implements BackstageApp {
         [],
       );
 
-      const { routePaths, routeParents, routeObjects } = useMemo(() => {
+      const {
+        routePaths,
+        routeParents,
+        routeObjects,
+        featureFlags,
+      } = useMemo(() => {
         const result = traverseElementTree({
           root: children,
           discoverers: [childDiscoverer, routeElementDiscoverer],
@@ -224,6 +230,7 @@ export class PrivateAppImpl implements BackstageApp {
             routeParents: routeParentCollector,
             routeObjects: routeObjectCollector,
             collectedPlugins: pluginCollector,
+            featureFlags: featureFlagCollector,
           },
         });
 
@@ -238,7 +245,6 @@ export class PrivateAppImpl implements BackstageApp {
 
         // Initialize APIs once all plugins are available
         this.getApiHolder();
-
         return result;
       }, [children]);
 
@@ -273,8 +279,14 @@ export class PrivateAppImpl implements BackstageApp {
               }
             }
           }
+
+          // Go through the featureFlags returned from the traversal and
+          // register those now the configApi has been loaded
+          for (const name of featureFlags) {
+            featureFlagsApi.registerFlag({ name, pluginId: '' });
+          }
         }
-      }, [hasConfigApi, loadedConfig]);
+      }, [hasConfigApi, loadedConfig, featureFlags]);
 
       if ('node' in loadedConfig) {
         // Loading or error

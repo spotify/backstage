@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 import React from 'react';
-import {
-  MissingAnnotationEmptyState,
-  ResponseErrorPanel,
-  TableColumn,
-  useApi,
-} from '@backstage/core';
 import { useAsyncRetry } from 'react-use';
 import { GithubDeployment, githubDeploymentsApiRef } from '../api';
 import { useEntity } from '@backstage/plugin-catalog-react';
@@ -32,6 +26,13 @@ import {
   LOCATION_ANNOTATION,
   SOURCE_LOCATION_ANNOTATION,
 } from '@backstage/catalog-model';
+
+import {
+  MissingAnnotationEmptyState,
+  ResponseErrorPanel,
+  TableColumn,
+} from '@backstage/core-components';
+import { useApi } from '@backstage/core-plugin-api';
 
 const GithubDeploymentsComponent = ({
   projectSlug,

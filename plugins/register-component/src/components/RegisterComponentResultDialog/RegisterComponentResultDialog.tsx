@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { RouteRef, StructuredMetadataTable } from '@backstage/core';
 import {
   entityRoute,
   entityRouteParams,
@@ -35,6 +34,9 @@ import {
 import React, { useState } from 'react';
 import { generatePath, resolvePath } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
+
+import { RouteRef } from '@backstage/core-plugin-api';
+import { StructuredMetadataTable } from '@backstage/core-components';
 
 type Props = {
   onClose: () => void;

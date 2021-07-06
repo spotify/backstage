@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import {
   TabProps,
 } from '@material-ui/core';
 import { BottomLink, BottomLinkProps } from '../BottomLink';
-import { ErrorBoundary } from '../ErrorBoundary';
+import { ErrorBoundary, ErrorBoundaryProps } from '../ErrorBoundary';
 
 const useTabsStyles = makeStyles(theme => ({
   root: {
@@ -52,7 +52,9 @@ const BoldHeader = withStyles(theme => ({
 }))(CardHeader);
 
 type Props = {
+  /** @deprecated Use errorBoundaryProps instead */
   slackChannel?: string;
+  errorBoundaryProps?: ErrorBoundaryProps;
   children?: ReactElement<TabProps>[];
   onChange?: (event: React.ChangeEvent<{}>, value: number | string) => void;
   title?: string;
@@ -61,7 +63,8 @@ type Props = {
 };
 
 const TabbedCard = ({
-  slackChannel = '#backstage',
+  slackChannel,
+  errorBoundaryProps,
   children,
   title,
   deepLink,
@@ -87,9 +90,12 @@ const TabbedCard = ({
     });
   }
 
+  const errProps: ErrorBoundaryProps =
+    errorBoundaryProps || (slackChannel ? { slackChannel } : {});
+
   return (
     <Card>
-      <ErrorBoundary slackChannel={slackChannel}>
+      <ErrorBoundary {...errProps}>
         {title && <BoldHeader title={title} />}
         <Tabs
           classes={tabsClasses}

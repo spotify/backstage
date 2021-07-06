@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,17 @@
  */
 
 import { CatalogClient } from '@backstage/catalog-client';
-import { configApiRef, discoveryApiRef, identityApiRef } from '@backstage/core';
 import { createDevApp } from '@backstage/dev-utils';
 import { scmIntegrationsApiRef } from '@backstage/integration-react';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import React from 'react';
 import { scaffolderApiRef, ScaffolderClient } from '../src';
 import { ScaffolderPage } from '../src/plugin';
+import {
+  configApiRef,
+  discoveryApiRef,
+  identityApiRef,
+} from '@backstage/core-plugin-api';
 
 createDevApp()
   .registerApi({

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,35 +15,38 @@
  */
 
 import {
-  AlertDisplay,
-  AnyApiFactory,
-  ApiFactory,
-  attachComponentData,
-  configApiRef,
-  createApiFactory,
-  createApp,
-  createPlugin,
-  createRouteRef,
-  FlatRoutes,
-  IconComponent,
-  OAuthRequestDialog,
-  RouteRef,
-  Sidebar,
-  SidebarItem,
-  SidebarPage,
-  SidebarSpacer,
-} from '@backstage/core';
-import {
   ScmIntegrationsApi,
   scmIntegrationsApiRef,
 } from '@backstage/integration-react';
 import { Box } from '@material-ui/core';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
 import React, { ComponentType, ReactNode } from 'react';
 import ReactDOM from 'react-dom';
 import { hot } from 'react-hot-loader';
 import { Route } from 'react-router';
+
+import {
+  AlertDisplay,
+  OAuthRequestDialog,
+  Sidebar,
+  SidebarItem,
+  SidebarPage,
+  SidebarSpacer,
+} from '@backstage/core-components';
+
+import {
+  AnyApiFactory,
+  ApiFactory,
+  attachComponentData,
+  configApiRef,
+  createApiFactory,
+  createPlugin,
+  createRouteRef,
+  IconComponent,
+  RouteRef,
+} from '@backstage/core-plugin-api';
+
+import { createApp, FlatRoutes } from '@backstage/core-app-api';
 
 const GatheringRoute: (props: {
   path: string;
@@ -74,6 +77,8 @@ class DevAppBuilder {
   private readonly rootChildren = new Array<ReactNode>();
   private readonly routes = new Array<JSX.Element>();
   private readonly sidebarItems = new Array<JSX.Element>();
+
+  private defaultPage?: string;
 
   /**
    * Register one or more plugins to render in the dev app
@@ -113,6 +118,11 @@ class DevAppBuilder {
    */
   addPage(opts: RegisterPageOptions): DevAppBuilder {
     const path = opts.path ?? `/page-${this.routes.length + 1}`;
+
+    if (!this.defaultPage || path === '/') {
+      this.defaultPage = path;
+    }
+
     if (opts.title) {
       this.sidebarItems.push(
         <SidebarItem
@@ -169,9 +179,6 @@ class DevAppBuilder {
 
     const AppProvider = app.getProvider();
     const AppRouter = app.getRouter();
-    const deprecatedAppRoutes = app.getRoutes();
-
-    const sidebar = this.setupSidebar(this.plugins);
 
     const DevApp = () => {
       return (
@@ -181,10 +188,12 @@ class DevAppBuilder {
           {this.rootChildren}
           <AppRouter>
             <SidebarPage>
-              {sidebar}
+              <Sidebar>
+                <SidebarSpacer />
+                {this.sidebarItems}
+              </Sidebar>
               <FlatRoutes>
                 {this.routes}
-                {deprecatedAppRoutes}
                 <Route path="/_external_route" element={<DummyPage />} />
               </FlatRoutes>
             </SidebarPage>
@@ -207,83 +216,11 @@ class DevAppBuilder {
 
     const DevApp = hot(hotModule)(this.build());
 
-    const paths = this.findPluginPaths(this.plugins);
-
-    if (window.location.pathname === '/') {
-      if (!paths.includes('/') && paths.length > 0) {
-        window.location.pathname = paths[0];
-      }
+    if (window.location.pathname === '/' && this.defaultPage) {
+      window.location.pathname = this.defaultPage;
     }
 
     ReactDOM.render(<DevApp />, document.getElementById('root'));
-  }
-
-  // Create a sidebar that exposes the touchpoints of a plugin
-  private setupSidebar(plugins: BackstagePlugin[]): JSX.Element {
-    const sidebarItems = new Array<JSX.Element>();
-    for (const plugin of plugins) {
-      for (const output of plugin.output()) {
-        switch (output.type) {
-          case 'legacy-route': {
-            const { path } = output;
-            sidebarItems.push(
-              <SidebarItem
-                key={path}
-                to={path}
-                text={path}
-                icon={BookmarkIcon}
-              />,
-            );
-            break;
-          }
-          case 'route': {
-            const { target } = output;
-            sidebarItems.push(
-              <SidebarItem
-                key={target.path}
-                to={target.path}
-                text={target.title}
-                icon={target.icon ?? SentimentDissatisfiedIcon}
-              />,
-            );
-            break;
-          }
-          default:
-            break;
-        }
-      }
-    }
-
-    return (
-      <Sidebar>
-        <SidebarSpacer />
-        {this.sidebarItems}
-        {sidebarItems}
-      </Sidebar>
-    );
-  }
-
-  private findPluginPaths(plugins: BackstagePlugin[]) {
-    const paths = new Array<string>();
-
-    for (const plugin of plugins) {
-      for (const output of plugin.output()) {
-        switch (output.type) {
-          case 'legacy-route': {
-            paths.push(output.path);
-            break;
-          }
-          case 'route': {
-            paths.push(output.target.path);
-            break;
-          }
-          default:
-            break;
-        }
-      }
-    }
-
-    return paths;
   }
 }
 

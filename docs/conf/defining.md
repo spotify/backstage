@@ -93,6 +93,21 @@ declare the visibility of a leaf node of `type: "string"`.
 | `backend`    | (Default) Only in backend                                          |
 | `secret`     | Only in backend and may be excluded from logs for security reasons |
 
+You can set visibility with an `@visibility` comment in the `Config` Typescript
+interface.
+
+```ts
+export interface Config {
+  app: {
+    /**
+     * Frontend root URL
+     * @visibility frontend
+     */
+    baseUrl: string;
+  };
+}
+```
+
 ## Validation
 
 Schemas can be validated using the `backstage-cli config:check` command. If you

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,5 +31,7 @@ export function durationHumanized(
   startTime: DateTimeObject,
   endTime: DateTimeObject,
 ) {
-  return dayjs.duration(dayjs(startTime).diff(dayjs(endTime))).humanize();
+  return dayjs
+    .duration(dayjs(startTime).diff(dayjs(endTime || new Date())))
+    .humanize();
 }

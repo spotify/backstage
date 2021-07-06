@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,10 @@ import {
 } from '@backstage/catalog-model';
 import { serializeError } from '@backstage/errors';
 import { Logger } from 'winston';
-import { ProcessingDatabase } from './database/types';
+import { ProcessingDatabase, RefreshStateItem } from './database/types';
 import { CatalogProcessingOrchestrator } from './processing/types';
 import { Stitcher } from './stitching/Stitcher';
+import { startTaskPipeline } from './TaskPipeline';
 import {
   CatalogProcessingEngine,
   EntityProvider,
@@ -45,7 +46,7 @@ class Connection implements EntityProviderConnection {
     const db = this.config.processingDatabase;
 
     if (mutation.type === 'full') {
-      this.check(mutation.entities);
+      this.check(mutation.entities.map(e => e.entity));
       await db.transaction(async tx => {
         await db.replaceUnprocessedEntities(tx, {
           sourceKey: this.config.id,
@@ -56,8 +57,8 @@ class Connection implements EntityProviderConnection {
       return;
     }
 
-    this.check(mutation.added);
-    this.check(mutation.removed);
+    this.check(mutation.added.map(e => e.entity));
+    this.check(mutation.removed.map(e => e.entity));
     await db.transaction(async tx => {
       await db.replaceUnprocessedEntities(tx, {
         sourceKey: this.config.id,
@@ -80,7 +81,7 @@ class Connection implements EntityProviderConnection {
 }
 
 export class DefaultCatalogProcessingEngine implements CatalogProcessingEngine {
-  private running = false;
+  private stopFunc?: () => void;
 
   constructor(
     private readonly logger: Logger,
@@ -99,106 +100,99 @@ export class DefaultCatalogProcessingEngine implements CatalogProcessingEngine {
         }),
       );
     }
-    this.running = true;
-    this.run();
-  }
 
-  private async run() {
-    while (this.running) {
-      try {
-        // TODO: We want to disconnect the queue popping and message processing
-        // so that if the queue popping fails we exponentially back off in order to give the DB room to sort itself out.
-        await this.process();
-      } catch (e) {
-        this.logger.warn('Processing failed with:', e);
-        // TODO: this can be a little smarter as mentioned in the above comment.
-        // But for now, if something fails, wait a brief time to pick up the next message.
-        await this.wait();
-      }
-    }
-  }
-
-  private async process() {
-    const { items } = await this.processingDatabase.transaction(async tx => {
-      return this.processingDatabase.getProcessableEntities(tx, {
-        processBatchSize: 1,
-      });
-    });
-
-    if (!items.length) {
-      // No items to process, wait and try again.
-      await this.wait();
-      return;
+    if (this.stopFunc) {
+      throw new Error('Processing engine is already started');
     }
 
-    // TODO: replace Promise.all with something more sophisticated for parallel processing.
-    await Promise.all(
-      items.map(async item => {
-        const { id, state, unprocessedEntity, entityRef } = item;
-        const result = await this.orchestrator.process({
-          entity: unprocessedEntity,
-          state,
-        });
-
-        for (const error of result.errors) {
-          // TODO(freben): Try to extract the location out of the unprocessed
-          // entity and add as meta to the log lines
-          this.logger.warn(error.message, {
-            entity: entityRef,
-          });
+    this.stopFunc = startTaskPipeline<RefreshStateItem>({
+      lowWatermark: 5,
+      highWatermark: 10,
+      loadTasks: async count => {
+        try {
+          const { items } = await this.processingDatabase.transaction(
+            async tx => {
+              return this.processingDatabase.getProcessableEntities(tx, {
+                processBatchSize: count,
+              });
+            },
+          );
+          return items;
+        } catch (error) {
+          this.logger.warn('Failed to load processing items', error);
+          return [];
         }
-        const errorsString = JSON.stringify(
-          result.errors.map(e => serializeError(e)),
-        );
+      },
+      processTask: async item => {
+        try {
+          const { id, state, unprocessedEntity, entityRef, locationKey } = item;
+          const result = await this.orchestrator.process({
+            entity: unprocessedEntity,
+            state,
+          });
 
-        // If the result was marked as not OK, it signals that some part of the
-        // processing pipeline threw an exception. This can happen both as part of
-        // non-catastrophic things such as due to validation errors, as well as if
-        // something fatal happens inside the processing for other reasons. In any
-        // case, this means we can't trust that anything in the output is okay. So
-        // just store the errors and trigger a stich so that they become visible to
-        // the outside.
-        if (!result.ok) {
+          for (const error of result.errors) {
+            // TODO(freben): Try to extract the location out of the unprocessed
+            // entity and add as meta to the log lines
+            this.logger.warn(error.message, {
+              entity: entityRef,
+            });
+          }
+          const errorsString = JSON.stringify(
+            result.errors.map(e => serializeError(e)),
+          );
+
+          // If the result was marked as not OK, it signals that some part of the
+          // processing pipeline threw an exception. This can happen both as part of
+          // non-catastrophic things such as due to validation errors, as well as if
+          // something fatal happens inside the processing for other reasons. In any
+          // case, this means we can't trust that anything in the output is okay. So
+          // just store the errors and trigger a stich so that they become visible to
+          // the outside.
+          if (!result.ok) {
+            await this.processingDatabase.transaction(async tx => {
+              await this.processingDatabase.updateProcessedEntityErrors(tx, {
+                id,
+                errors: errorsString,
+              });
+            });
+            await this.stitcher.stitch(
+              new Set([stringifyEntityRef(unprocessedEntity)]),
+            );
+            return;
+          }
+
+          result.completedEntity.metadata.uid = id;
           await this.processingDatabase.transaction(async tx => {
-            await this.processingDatabase.updateProcessedEntityErrors(tx, {
+            await this.processingDatabase.updateProcessedEntity(tx, {
               id,
+              processedEntity: result.completedEntity,
+              state: result.state,
               errors: errorsString,
+              relations: result.relations,
+              deferredEntities: result.deferredEntities,
+              locationKey,
             });
           });
-          await this.stitcher.stitch(
-            new Set([stringifyEntityRef(unprocessedEntity)]),
-          );
-          return;
+
+          const setOfThingsToStitch = new Set<string>([
+            stringifyEntityRef(result.completedEntity),
+            ...result.relations.map(relation =>
+              stringifyEntityRef(relation.source),
+            ),
+          ]);
+          await this.stitcher.stitch(setOfThingsToStitch);
+        } catch (error) {
+          this.logger.warn('Processing failed with:', error);
         }
-
-        result.completedEntity.metadata.uid = id;
-        await this.processingDatabase.transaction(async tx => {
-          await this.processingDatabase.updateProcessedEntity(tx, {
-            id,
-            processedEntity: result.completedEntity,
-            state: result.state,
-            errors: errorsString,
-            relations: result.relations,
-            deferredEntities: result.deferredEntities,
-          });
-        });
-
-        const setOfThingsToStitch = new Set<string>([
-          stringifyEntityRef(result.completedEntity),
-          ...result.relations.map(relation =>
-            stringifyEntityRef(relation.source),
-          ),
-        ]);
-        await this.stitcher.stitch(setOfThingsToStitch);
-      }),
-    );
-  }
-
-  private async wait() {
-    await new Promise<void>(resolve => setTimeout(resolve, 1000));
+      },
+    });
   }
 
   async stop() {
-    this.running = false;
+    if (this.stopFunc) {
+      this.stopFunc();
+      this.stopFunc = undefined;
+    }
   }
 }

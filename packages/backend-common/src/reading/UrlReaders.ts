@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ export class UrlReaders {
    * Creates a UrlReader without any known types.
    */
   static create({ logger, config, factories }: CreateOptions): UrlReader {
-    const mux = new UrlReaderPredicateMux();
+    const mux = new UrlReaderPredicateMux(logger);
     const treeResponseFactory = DefaultReadTreeResponseFactory.create({
       config,
     });

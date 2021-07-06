@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,16 @@
  */
 
 import React, { useCallback, useState } from 'react';
-import {
-  featureFlagsApiRef,
-  FeatureFlagState,
-  InfoCard,
-  useApi,
-} from '@backstage/core';
 import { List } from '@material-ui/core';
 import { EmptyFlags } from './EmptyFlags';
 import { FlagItem } from './FeatureFlagsItem';
+
+import {
+  featureFlagsApiRef,
+  FeatureFlagState,
+  useApi,
+} from '@backstage/core-plugin-api';
+import { InfoCard } from '@backstage/core-components';
 
 export const FeatureFlags = () => {
   const featureFlagsApi = useApi(featureFlagsApiRef);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import {
   getEntityName,
   ORIGIN_LOCATION_ANNOTATION,
 } from '@backstage/catalog-model';
-import { useApi } from '@backstage/core';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import { useCallback } from 'react';
 import { useAsync } from 'react-use';
+import { useApi } from '@backstage/core-plugin-api';
 
 /**
  * Each distinct state that the dialog can be in at any given time.

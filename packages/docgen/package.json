@@ -28,9 +28,9 @@
   "dependencies": {
     "chalk": "^4.0.0",
     "commander": "^6.1.0",
-    "fs-extra": "^9.0.0",
+    "fs-extra": "^10.0.0",
     "github-slugger": "^1.3.0",
-    "ts-node": "^9.1.1",
+    "ts-node": "^10.0.0",
     "typescript": "^4.0.3"
   },
   "devDependencies": {

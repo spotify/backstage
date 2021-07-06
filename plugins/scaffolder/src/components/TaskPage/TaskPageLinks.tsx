@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 
 import { parseEntityName } from '@backstage/catalog-model';
-import { IconComponent, IconKey, useApp, useRouteRef } from '@backstage/core';
 import { entityRouteRef } from '@backstage/plugin-catalog-react';
 import { Box } from '@material-ui/core';
 import LanguageIcon from '@material-ui/icons/Language';
 import React from 'react';
 import { TaskOutput } from '../../types';
 import { IconLink } from './IconLink';
+import { IconComponent, useApp, useRouteRef } from '@backstage/core-plugin-api';
 
 type TaskPageLinksProps = {
   output: TaskOutput;
@@ -33,7 +33,7 @@ export const TaskPageLinks = ({ output }: TaskPageLinksProps) => {
   const app = useApp();
   const entityRoute = useRouteRef(entityRouteRef);
 
-  const iconResolver = (key: IconKey | undefined): IconComponent =>
+  const iconResolver = (key?: string): IconComponent =>
     key ? app.getSystemIcon(key) ?? LanguageIcon : LanguageIcon;
 
   if (remoteUrl) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,14 @@
  */
 
 import { ConfigReader } from '@backstage/config';
-import { createDatabaseClient } from './connection';
+import { createDatabaseClient, ensureDatabaseExists } from './connection';
 import { SingleConnectionDatabaseManager } from './SingleConnection';
 
-jest.mock('./connection');
+jest.mock('./connection', () => ({
+  ...jest.requireActual('./connection'),
+  createDatabaseClient: jest.fn(),
+  ensureDatabaseExists: jest.fn(),
+}));
 
 describe('SingleConnectionDatabaseManager', () => {
   const defaultConfigOptions = {
@@ -43,9 +47,8 @@ describe('SingleConnectionDatabaseManager', () => {
 
   describe('SingleConnectionDatabaseManager.fromConfig', () => {
     it('accesses the backend.database key', () => {
-      const getConfig = jest.fn();
       const config = defaultConfig();
-      config.getConfig = getConfig;
+      const getConfig = jest.spyOn(config, 'getConfig');
 
       SingleConnectionDatabaseManager.fromConfig(config);
 
@@ -64,7 +67,6 @@ describe('SingleConnectionDatabaseManager', () => {
 
       const mockCalls = mocked(createDatabaseClient).mock.calls.splice(-1);
       const callArgs = mockCalls[0];
-      expect(callArgs[0].get()).toEqual(defaultConfigOptions.backend.database);
       expect(callArgs[1].connection.database).toEqual(
         `backstage_plugin_${pluginId}`,
       );
@@ -84,6 +86,14 @@ describe('SingleConnectionDatabaseManager', () => {
       expect(plugin1CallArgs[1].connection.database).not.toEqual(
         plugin2CallArgs[1].connection.database,
       );
+    });
+
+    it('ensure plugin database is created', async () => {
+      await manager.forPlugin('test').getClient();
+      const mockCalls = mocked(ensureDatabaseExists).mock.calls.splice(-1);
+      const [_, database] = mockCalls[0];
+
+      expect(database).toEqual('backstage_plugin_test');
     });
   });
 });

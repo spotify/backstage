@@ -5,6 +5,7 @@
 ```ts
 
 import { Config } from '@backstage/config';
+import { RestEndpointMethodTypes } from '@octokit/rest';
 
 // @public (undocumented)
 export class AzureIntegration implements ScmIntegration {
@@ -105,6 +106,15 @@ export function getGitLabFileFetchUrl(url: string, config: GitLabIntegrationConf
 
 // @public
 export function getGitLabRequestOptions(config: GitLabIntegrationConfig): RequestInit;
+
+// @public (undocumented)
+export class GithubAppCredentialsMux {
+    constructor(config: GitHubIntegrationConfig);
+    // (undocumented)
+    getAllInstallations(): Promise<RestEndpointMethodTypes['apps']['listInstallations']['response']['data']>;
+    // (undocumented)
+    getAppToken(owner: string, repo?: string): Promise<string | undefined>;
+}
 
 // @public (undocumented)
 export class GithubCredentialsProvider {

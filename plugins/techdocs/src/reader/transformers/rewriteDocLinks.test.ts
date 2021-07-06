@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,6 +82,7 @@ describe('normalizeUrl', () => {
     ['http://example.org/folder#intro', 'http://example.org/folder/#intro'],
     ['http://example.org/folder/#intro', 'http://example.org/folder/#intro'],
     ['http://example.org/folder#', 'http://example.org/folder/#'],
+    ['http://example.org/page.html', 'http://example.org/page.html'],
   ])('should handle %s', (url, expected) => {
     expect(normalizeUrl(url)).toEqual(expected);
   });

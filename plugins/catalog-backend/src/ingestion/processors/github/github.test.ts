@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,8 +72,10 @@ describe('github', () => {
   });
 
   describe('getOrganizationTeams', () => {
-    it('reads teams', async () => {
-      const input: QueryResponse = {
+    let input: QueryResponse;
+
+    beforeEach(() => {
+      input = {
         organization: {
           teams: {
             pageInfo: { hasNextPage: false },
@@ -98,7 +100,9 @@ describe('github', () => {
           },
         },
       };
+    });
 
+    it('reads teams', async () => {
       const output = {
         groups: [
           expect.objectContaining({
@@ -125,6 +129,38 @@ describe('github', () => {
       );
 
       await expect(getOrganizationTeams(graphql, 'a')).resolves.toEqual(output);
+    });
+
+    it('applies namespaces', async () => {
+      const output = {
+        groups: [
+          expect.objectContaining({
+            metadata: expect.objectContaining({
+              name: 'team',
+              namespace: 'foo',
+              description: 'The one and only team',
+            }),
+            spec: {
+              type: 'team',
+              profile: {
+                displayName: 'Team',
+                picture: 'http://example.com/team.jpeg',
+              },
+              parent: 'parent',
+              children: [],
+            },
+          }),
+        ],
+        groupMemberUsers: new Map([['foo/team', ['user']]]),
+      };
+
+      server.use(
+        graphqlMsw.query('teams', (_req, res, ctx) => res(ctx.data(input))),
+      );
+
+      await expect(getOrganizationTeams(graphql, 'a', 'foo')).resolves.toEqual(
+        output,
+      );
     });
   });
 

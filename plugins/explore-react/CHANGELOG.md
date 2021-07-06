@@ -1,5 +1,13 @@
 # @backstage/plugin-explore-react
 
+## 0.0.6
+
+### Patch Changes
+
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+
 ## 0.0.5
 
 ### Patch Changes

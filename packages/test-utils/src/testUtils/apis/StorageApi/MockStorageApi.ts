@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import {
   Observable,
   StorageApi,
   StorageValueChange,
-} from '@backstage/core-api';
+} from '@backstage/core-plugin-api';
 import ObservableImpl from 'zen-observable';
 
 export type MockStorageBucket = { [key: string]: any };

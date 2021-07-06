@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
+import { createApp, FlatRoutes } from '@backstage/core-app-api';
 import {
   AlertDisplay,
-  createApp,
-  FlatRoutes,
   OAuthRequestDialog,
   SignInPage,
-} from '@backstage/core';
+} from '@backstage/core-components';
 import { apiDocsPlugin, ApiExplorerPage } from '@backstage/plugin-api-docs';
 import {
   CatalogEntityPage,
@@ -65,6 +64,7 @@ const app = createApp({
     // Custom icon example
     alert: AlarmIcon,
   },
+
   components: {
     SignInPage: props => {
       return (
@@ -116,6 +116,7 @@ const routes = (
     />
     <Route path="/graphiql" element={<GraphiQLPage />} />
     <Route path="/lighthouse" element={<LighthousePage />} />
+
     <Route path="/api-docs" element={<ApiExplorerPage />} />
     <Route path="/gcp-projects" element={<GcpProjectsPage />} />
     <Route path="/newrelic" element={<NewRelicPage />} />

@@ -1,0 +1,13 @@
+---
+title: Harbor
+author: BESTSELLER
+authorUrl: bestsellerit.com
+category: Discovery
+description: This plugin will show you information about docker images within harbor.
+documentation: https://github.com/BESTSELLER/backstage-plugin-harbor/blob/master/README.md
+iconUrl: https://bestsellerit.com/img/terraform-harbor/goharbor.jpeg
+npmPackageName: '@bestsellerit/backstage-plugin-harbor'
+tags:
+  - goharbor
+  - harbor
+  - docker

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 
 import { Config } from '@backstage/config';
-import { ConfigApi } from '@backstage/core';
 import { MockProductTypes } from './products';
+import { ConfigApi } from '@backstage/core-plugin-api';
 
 export const MockProductsConfig: Partial<ConfigApi> = {
   keys: () => Object.keys(MockProductTypes),

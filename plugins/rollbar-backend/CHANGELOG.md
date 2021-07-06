@@ -1,5 +1,13 @@
 # @backstage/plugin-rollbar-backend
 
+## 0.1.12
+
+### Patch Changes
+
+- 3108ff7bf: Make `yarn dev` respect the `PLUGIN_PORT` environment variable.
+- Updated dependencies
+  - @backstage/backend-common@0.8.3
+
 ## 0.1.11
 
 ### Patch Changes

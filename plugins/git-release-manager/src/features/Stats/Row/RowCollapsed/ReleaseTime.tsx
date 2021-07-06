@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,15 @@ import { useAsync } from 'react-use';
 import { DateTime } from 'luxon';
 import { Box, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { Progress, useApi } from '@backstage/core';
 
 import { getDecimalNumber } from '../../helpers/getDecimalNumber';
 import { getTagDates } from '../../helpers/getTagDates';
 import { gitReleaseManagerApiRef } from '../../../../api/serviceApiRef';
 import { ReleaseStats } from '../../contexts/ReleaseStatsContext';
 import { useProjectContext } from '../../../../contexts/ProjectContext';
+
+import { Progress } from '@backstage/core-components';
+import { useApi } from '@backstage/core-plugin-api';
 
 interface ReleaseTimeProps {
   releaseStat: ReleaseStats['releases']['0'];

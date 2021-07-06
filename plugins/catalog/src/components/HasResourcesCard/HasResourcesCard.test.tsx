@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import { Entity, RELATION_HAS_PART } from '@backstage/catalog-model';
-import { ApiProvider, ApiRegistry } from '@backstage/core';
 import {
   CatalogApi,
   catalogApiRef,
@@ -25,6 +24,7 @@ import { renderInTestApp } from '@backstage/test-utils';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 import { HasResourcesCard } from './HasResourcesCard';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 
 describe('<HasResourcesCard />', () => {
   const catalogApi: jest.Mocked<CatalogApi> = {
@@ -66,7 +66,7 @@ describe('<HasResourcesCard />', () => {
       </Wrapper>,
     );
 
-    expect(getByText('Resources')).toBeInTheDocument();
+    expect(getByText('Has resources')).toBeInTheDocument();
     expect(
       getByText(/No resource is part of this system/i),
     ).toBeInTheDocument();
@@ -114,7 +114,7 @@ describe('<HasResourcesCard />', () => {
     );
 
     await waitFor(() => {
-      expect(getByText('Resources')).toBeInTheDocument();
+      expect(getByText('Has resources')).toBeInTheDocument();
       expect(getByText(/target-name/i)).toBeInTheDocument();
     });
   });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@ import React, {
 } from 'react';
 import * as yup from 'yup';
 import { Alert } from '@material-ui/lab';
-import { useApi } from '@backstage/core';
 import { costInsightsApiRef } from '../api';
 import { MapLoadingToProps, useLoading } from './useLoading';
 import { DefaultLoadingAction } from '../utils/loading';
 import { Maybe } from '../types';
+import { useApi } from '@backstage/core-plugin-api';
 
 type BillingDateProviderLoadingProps = {
   dispatchLoadingBillingDate: (isLoading: boolean) => void;

@@ -370,7 +370,7 @@ techdocs:
     openStackSwift:
       containerName: 'name-of-techdocs-storage-bucket'
       credentials:
-        userName: ${OPENSTACK_SWIFT_STORAGE_USERNAME}
+        username: ${OPENSTACK_SWIFT_STORAGE_USERNAME}
         password: ${OPENSTACK_SWIFT_STORAGE_PASSWORD}
       authUrl: ${OPENSTACK_SWIFT_STORAGE_AUTH_URL}
       keystoneAuthVersion: ${OPENSTACK_SWIFT_STORAGE_AUTH_VERSION}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,4 +27,4 @@ export enum Duration {
   P3M = 'P3M',
 }
 
-export const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
+export const DEFAULT_DATE_FORMAT = 'yyyy-LL-dd';

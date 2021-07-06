@@ -26,6 +26,7 @@ import 'global-agent/bootstrap';
 
 ```sh
 export GLOBAL_AGENT_HTTP_PROXY=$HTTP_PROXY
+export GLOBAL_AGENT_NO_PROXY=$NO_PROXY
 yarn start
 ```
 

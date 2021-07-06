@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,10 @@
 import express from 'express';
 import { Strategy as GitlabStrategy } from 'passport-gitlab2';
 import {
-  executeFrameHandlerStrategy,
   executeRedirectStrategy,
+  executeFrameHandlerStrategy,
+  executeRefreshTokenStrategy,
+  executeFetchUserProfileStrategy,
   makeProfileInfo,
   PassportDoneCallback,
 } from '../../lib/passport';
@@ -30,13 +32,39 @@ import {
   OAuthResponse,
   OAuthEnvironmentHandler,
   OAuthStartRequest,
+  OAuthRefreshRequest,
   encodeState,
   OAuthResult,
 } from '../../lib/oauth';
 
+type FullProfile = OAuthResult['fullProfile'] & {
+  avatarUrl?: string;
+};
+
+type PrivateInfo = {
+  refreshToken: string;
+};
+
 export type GitlabAuthProviderOptions = OAuthProviderOptions & {
   baseUrl: string;
 };
+
+function transformProfile(fullProfile: FullProfile) {
+  const profile = makeProfileInfo({
+    ...fullProfile,
+    photos: [
+      ...(fullProfile.photos ?? []),
+      ...(fullProfile.avatarUrl ? [{ value: fullProfile.avatarUrl }] : []),
+    ],
+  });
+
+  let id = fullProfile.id;
+  if (profile.email) {
+    id = profile.email.split('@')[0];
+  }
+
+  return { id, profile };
+}
 
 export class GitlabAuthProvider implements OAuthHandlers {
   private readonly _strategy: GitlabStrategy;
@@ -51,12 +79,18 @@ export class GitlabAuthProvider implements OAuthHandlers {
       },
       (
         accessToken: any,
-        _refreshToken: any,
+        refreshToken: any,
         params: any,
         fullProfile: any,
-        done: PassportDoneCallback<OAuthResult>,
+        done: PassportDoneCallback<OAuthResult, PrivateInfo>,
       ) => {
-        done(undefined, { fullProfile, params, accessToken });
+        done(
+          undefined,
+          { fullProfile, params, accessToken },
+          {
+            refreshToken,
+          },
+        );
       },
     );
   }
@@ -68,33 +102,16 @@ export class GitlabAuthProvider implements OAuthHandlers {
     });
   }
 
-  async handler(req: express.Request): Promise<{ response: OAuthResponse }> {
-    const { result } = await executeFrameHandlerStrategy<OAuthResult>(
-      req,
-      this._strategy,
-    );
+  async handler(
+    req: express.Request,
+  ): Promise<{ response: OAuthResponse; refreshToken: string }> {
+    const { result, privateInfo } = await executeFrameHandlerStrategy<
+      OAuthResult,
+      PrivateInfo
+    >(req, this._strategy);
     const { accessToken, params } = result;
-    const fullProfile = result.fullProfile as OAuthResult['fullProfile'] & {
-      avatarUrl?: string;
-    };
 
-    const profile = makeProfileInfo(
-      {
-        ...fullProfile,
-        photos: [
-          ...(fullProfile.photos ?? []),
-          ...(fullProfile.avatarUrl ? [{ value: fullProfile.avatarUrl }] : []),
-        ],
-      },
-      params.id_token,
-    );
-
-    // gitlab provides an id numeric value (123)
-    // as a fallback
-    let id = fullProfile.id;
-    if (profile.email) {
-      id = profile.email.split('@')[0];
-    }
+    const { id, profile } = transformProfile(result.fullProfile);
 
     return {
       response: {
@@ -108,6 +125,39 @@ export class GitlabAuthProvider implements OAuthHandlers {
         backstageIdentity: {
           id,
         },
+      },
+      refreshToken: privateInfo.refreshToken,
+    };
+  }
+
+  async refresh(req: OAuthRefreshRequest): Promise<OAuthResponse> {
+    const {
+      accessToken,
+      refreshToken: newRefreshToken,
+      params,
+    } = await executeRefreshTokenStrategy(
+      this._strategy,
+      req.refreshToken,
+      req.scope,
+    );
+
+    const fullProfile = await executeFetchUserProfileStrategy(
+      this._strategy,
+      accessToken,
+    );
+    const { id, profile } = transformProfile(fullProfile);
+
+    return {
+      profile,
+      providerInfo: {
+        accessToken,
+        refreshToken: newRefreshToken, // GitLab expires the old refresh token when used
+        idToken: params.id_token,
+        expiresInSeconds: params.expires_in,
+        scope: params.scope,
+      },
+      backstageIdentity: {
+        id,
       },
     };
   }
@@ -134,7 +184,7 @@ export const createGitlabProvider = (
       });
 
       return OAuthAdapter.fromConfig(globalConfig, provider, {
-        disableRefresh: true,
+        disableRefresh: false,
         providerId,
         tokenIssuer,
       });

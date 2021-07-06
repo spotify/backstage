@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -180,7 +180,7 @@ describe('fetch:cookiecutter', () => {
         },
       }),
     ).rejects.toThrow(
-      /targetPath may not specify a path outside the working directory/,
+      /Relative path is not allowed to refer to a directory outside its parent/,
     );
   });
 });

@@ -45,8 +45,8 @@ pieces in place that can be used.
 #### Identity for Plugin Developers
 
 As a plugin developer, there are two main touchpoints for identities: the
-`IdentityApi` exported by `@backstage/core` via the `identityApiRef`, and a not
-yet existing middleware exported by `@backstage/backend-common`.
+`IdentityApi` exported by `@backstage/core-plugin-api` via the `identityApiRef`,
+and a not yet existing middleware exported by `@backstage/backend-common`.
 
 The `IdentityApi` gives access to the signed-in user's identity in the frontend.
 It provides access to the user's ID, lightweight profile information, and an ID
@@ -61,8 +61,9 @@ https://github.com/backstage/backstage/issues/1435.
 
 If you're setting up your own Backstage app, or want to add a new identity
 provider, there are three touchpoints: the frontend auth APIs in
-`@backstage/core-api`, the backend auth providers in `auth-backend`, and the
-`SignInPage` component configured in the Backstage app via `createApp`.
+`@backstage/core-app-api` and `@backstage/core-plugin-api`, the backend auth
+providers in `auth-backend`, and the `SignInPage` component configured in the
+Backstage app via `createApp`.
 
 The frontend APIs and backend providers are tightly coupled together for each
 auth provider, and together they implement an e2e auth flow. Only some auth
@@ -81,10 +82,10 @@ The final piece of the puzzle is the `SignInPage` component that can be
 configured as part of the app. Without a sign-in page, Backstage will fall back
 to a `guest` identity for all users, without any ID token. To enable sign-in, a
 `SignInPage` needs to be configured, which in turn has to supply a user to the
-app. The `@backstage/core` package provides a basic sign-in page that allows
-both the user and the app developer to choose between a couple of different
-sign-in methods, or to designate a single provider that may also be logged in to
-automatically.
+app. The `@backstage/core-components` package provides a basic sign-in page that
+allows both the user and the app developer to choose between a couple of
+different sign-in methods, or to designate a single provider that may also be
+logged in to automatically.
 
 ## Further Reading
 

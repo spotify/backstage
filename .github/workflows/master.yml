@@ -119,8 +119,9 @@ jobs:
           yarn lerna -- run test -- --coverage
           bash <(curl -s https://codecov.io/bash)
           # Upload code coverage for some specific flags. Also see .codecov.yml
-          bash <(curl -s https://codecov.io/bash) -f packages/core/coverage/* -F core
-          bash <(curl -s https://codecov.io/bash) -f packages/core-api/coverage/* -F core-api
+          bash <(curl -s https://codecov.io/bash) -f packages/core-app-api/coverage/* -F core-app-api
+          bash <(curl -s https://codecov.io/bash) -f packages/core-components/coverage/* -F core-components
+          bash <(curl -s https://codecov.io/bash) -f packages/core-plugin-api/coverage/* -F core-plugin-api
         env:
           BACKSTAGE_TEST_DATABASE_POSTGRES13_CONNECTION_STRING: postgresql://postgres:postgres@localhost:${{ job.services.postgres13.ports[5432] }}
           BACKSTAGE_TEST_DATABASE_POSTGRES9_CONNECTION_STRING: postgresql://postgres:postgres@localhost:${{ job.services.postgres9.ports[5432] }}

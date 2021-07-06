@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Table, TableColumn } from '@backstage/core';
 import { Box, Grid, Typography } from '@material-ui/core';
 import RetryIcon from '@material-ui/icons/Replay';
 import React from 'react';
 import { useConsumerGroupsOffsetsForEntity } from './useConsumerGroupsOffsetsForEntity';
+import { Table, TableColumn } from '@backstage/core-components';
 
 export type TopicPartitionInfo = {
   topic: string;

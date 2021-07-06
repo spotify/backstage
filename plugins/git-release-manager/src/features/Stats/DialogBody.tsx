@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,8 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
-import { Progress } from '@backstage/core';
-
 import { getMappedReleases } from './helpers/getMappedReleases';
+
 import { getReleaseStats } from './helpers/getReleaseStats';
 import { Info } from './Info/Info';
 import { ReleaseStatsContext } from './contexts/ReleaseStatsContext';
@@ -35,6 +34,7 @@ import { Row } from './Row/Row';
 import { useGetStats } from './hooks/useGetStats';
 import { useProjectContext } from '../../contexts/ProjectContext';
 import { Warn } from './Warn';
+import { Progress } from '@backstage/core-components';
 
 const useStyles = makeStyles({
   table: {

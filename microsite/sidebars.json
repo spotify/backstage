@@ -8,6 +8,8 @@
       "overview/background",
       "overview/adopting",
       "overview/stability-index",
+      "overview/support",
+      "overview/glossary",
       "overview/logos"
     ],
     "Getting Started": [
@@ -24,7 +26,8 @@
       },
       "getting-started/keeping-backstage-updated",
       "getting-started/concepts",
-      "getting-started/contributors"
+      "getting-started/contributors",
+      "getting-started/project-structure"
     ],
     "CLI": ["cli/index", "cli/commands"],
     "Core Features": [
@@ -33,7 +36,6 @@
         "label": "Software Catalog",
         "ids": [
           "features/software-catalog/software-catalog-overview",
-          "features/software-catalog/installation",
           "features/software-catalog/configuration",
           "features/software-catalog/system-model",
           "features/software-catalog/descriptor-format",
@@ -62,7 +64,7 @@
         "label": "Software Templates",
         "ids": [
           "features/software-templates/software-templates-index",
-          "features/software-templates/installation",
+          "features/software-templates/configuration",
           "features/software-templates/adding-templates",
           "features/software-templates/writing-templates",
           "features/software-templates/builtin-actions",
@@ -103,8 +105,8 @@
       "integrations/index",
       {
         "type": "subcategory",
-        "label": "Azure DevOps",
-        "ids": ["integrations/azure/locations"]
+        "label": "Azure",
+        "ids": ["integrations/azure/locations", "integrations/azure/org"]
       },
       {
         "type": "subcategory",
@@ -155,7 +157,7 @@
       "plugins/create-a-plugin",
       "plugins/plugin-development",
       "plugins/structure-of-a-plugin",
-      "plugins/integrating-plugin-into-service-catalog",
+      "plugins/integrating-plugin-into-software-catalog",
       "plugins/composability",
       {
         "type": "subcategory",
@@ -164,7 +166,8 @@
           "plugins/proxying",
           "plugins/backend-plugin",
           "plugins/call-existing-api",
-          "plugins/github-apps"
+          "plugins/github-apps",
+          "plugins/url-reader"
         ]
       },
       {
@@ -206,6 +209,7 @@
       },
       "auth/add-auth-provider",
       "auth/using-auth",
+      "auth/identity-resolver",
       "auth/auth-backend",
       "auth/oauth",
       "auth/auth-backend-classes",
@@ -243,6 +247,8 @@
     "Tutorials": [
       "tutorials/journey",
       "tutorials/quickstart-app-plugin",
+      "tutorials/migrating-away-from-core",
+      "tutorials/configuring-plugin-databases",
       "tutorials/switching-sqlite-postgres"
     ],
     "Architecture Decision Records (ADRs)": [
@@ -259,8 +265,6 @@
       "architecture-decisions/adrs-adr010",
       "architecture-decisions/adrs-adr011"
     ],
-    "Support": ["support/support", "support/project-structure"],
-    "Glossary": ["glossary"],
     "FAQ": ["FAQ"]
   }
 }

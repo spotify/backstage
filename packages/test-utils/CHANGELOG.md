@@ -1,5 +1,14 @@
 # @backstage/test-utils
 
+## 0.1.14
+
+### Patch Changes
+
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- Updated dependencies
+  - @backstage/core-app-api@0.1.3
+  - @backstage/core-plugin-api@0.1.3
+
 ## 0.1.13
 
 ### Patch Changes

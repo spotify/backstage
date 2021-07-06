@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,6 @@
  * limitations under the License.
  */
 import { Entity } from '@backstage/catalog-model';
-import {
-  configApiRef,
-  errorApiRef,
-  InfoCard,
-  InfoCardVariants,
-  StructuredMetadataTable,
-  useApi,
-} from '@backstage/core';
 import { readGitHubIntegrationConfigs } from '@backstage/integration';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import {
@@ -37,6 +29,13 @@ import { GITHUB_ACTIONS_ANNOTATION } from '../useProjectName';
 import { useWorkflowRuns, WorkflowRun } from '../useWorkflowRuns';
 import { WorkflowRunsTable } from '../WorkflowRunsTable';
 import { WorkflowRunStatus } from '../WorkflowRunStatus';
+
+import { configApiRef, errorApiRef, useApi } from '@backstage/core-plugin-api';
+import {
+  InfoCard,
+  InfoCardVariants,
+  StructuredMetadataTable,
+} from '@backstage/core-components';
 
 const useStyles = makeStyles<Theme>({
   externalLinkIcon: {

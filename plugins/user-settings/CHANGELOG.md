@@ -1,5 +1,21 @@
 # @backstage/plugin-user-settings
 
+## 0.2.12
+
+### Patch Changes
+
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+
+## 0.2.11
+
+### Patch Changes
+
+- 42a2d2ebc: Fix a bug that prevented changing themes on the user settings page when the theme `id` didn't match exactly the theme `variant`.
+- Updated dependencies
+  - @backstage/core@0.7.13
+
 ## 0.2.10
 
 ### Patch Changes

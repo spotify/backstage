@@ -5,6 +5,7 @@ ExampleComponent.tsx reference
 ```tsx
 import React from 'react';
 import { Typography, Grid } from '@material-ui/core';
+import { identityApiRef, useApi } from '@backstage/core-plugin-api';
 import {
   InfoCard,
   Header,
@@ -13,12 +14,10 @@ import {
   ContentHeader,
   HeaderLabel,
   SupportButton,
-  identityApiRef,
-  useApi,
-} from '@backstage/core';
-import ExampleFetchComponent from '../ExampleFetchComponent';
+} from '@backstage/core-components';
+import { ExampleFetchComponent } from '../ExampleFetchComponent';
 
-const ExampleComponent = () => {
+export const ExampleComponent = () => {
   const identityApi = useApi(identityApiRef);
   const userId = identityApi.getUserId();
   const profile = identityApi.getProfile();
@@ -52,6 +51,4 @@ const ExampleComponent = () => {
     </Page>
   );
 };
-
-export default ExampleComponent;
 ```

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
-import { welcomePlugin } from '../src/plugin';
+import { welcomePlugin, WelcomePage } from '../src/plugin';
 
-createDevApp().registerPlugin(welcomePlugin).render();
+createDevApp()
+  .registerPlugin(welcomePlugin)
+  .addPage({
+    title: 'Welcome',
+    element: <WelcomePage />,
+  })
+  .render();

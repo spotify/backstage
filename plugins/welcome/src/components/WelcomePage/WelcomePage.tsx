@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import {
   ListItemText,
   Link,
 } from '@material-ui/core';
+
 import {
   Content,
   InfoCard,
@@ -33,9 +34,9 @@ import {
   ContentHeader,
   SupportButton,
   WarningPanel,
-  useApi,
-  configApiRef,
-} from '@backstage/core';
+} from '@backstage/core-components';
+
+import { useApi, configApiRef } from '@backstage/core-plugin-api';
 
 const WelcomePage = () => {
   const appTitle =

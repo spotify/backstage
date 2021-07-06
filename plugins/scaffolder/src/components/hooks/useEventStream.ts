@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ import { useImmerReducer } from 'use-immer';
 import { useEffect } from 'react';
 import { scaffolderApiRef, LogEvent } from '../../api';
 import { ScaffolderTask, Status, TaskOutput } from '../../types';
-import { Subscription, useApi } from '@backstage/core';
+import { Subscription, useApi } from '@backstage/core-plugin-api';
 
 type Step = {
   id: string;

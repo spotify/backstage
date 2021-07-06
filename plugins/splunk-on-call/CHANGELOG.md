@@ -1,5 +1,25 @@
 # @backstage/plugin-splunk-on-call
 
+## 0.3.3
+
+### Patch Changes
+
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+  - @backstage/catalog-model@0.8.4
+  - @backstage/plugin-catalog-react@0.2.4
+
+## 0.3.2
+
+### Patch Changes
+
+- ae903f8e7: Added config schema to expose `splunkOnCall.eventsRestEndpoint` config option to the frontend
+- Updated dependencies
+  - @backstage/plugin-catalog-react@0.2.3
+  - @backstage/catalog-model@0.8.3
+  - @backstage/core@0.7.13
+
 ## 0.3.1
 
 ### Patch Changes

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import React, {
   forwardRef,
   FormEventHandler,
 } from 'react';
-import dayjs from 'dayjs';
+import { DateTime } from 'luxon';
 import {
   Box,
   FormControl,
@@ -57,7 +57,7 @@ export const AlertSnoozeForm = forwardRef<
     e.preventDefault();
     if (duration) {
       const repeatInterval = 1;
-      const today = dayjs().format(DEFAULT_DATE_FORMAT);
+      const today = DateTime.now().toFormat(DEFAULT_DATE_FORMAT);
       onSubmit({
         intervals: intervalsOf(duration, today, repeatInterval),
       });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SingleConnectionDatabaseManager } from '@backstage/backend-common';
+import { DatabaseManager } from '@backstage/backend-common';
 import { Knex } from 'knex';
 
 /**
@@ -35,10 +35,9 @@ export type TestDatabaseProperties = {
 
 export type Instance = {
   stopContainer?: () => Promise<void>;
-  databaseManager: SingleConnectionDatabaseManager;
+  databaseManager: DatabaseManager;
   connections: Array<Knex>;
 };
-
 export const allDatabases: Record<
   TestDatabaseId,
   TestDatabaseProperties

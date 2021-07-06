@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import { EntityName, RELATION_OWNED_BY } from '@backstage/catalog-model';
-import { Header, HeaderLabel, useRouteRef } from '@backstage/core';
 import {
   EntityRefLink,
   EntityRefLinks,
@@ -26,6 +25,9 @@ import React from 'react';
 import { AsyncState } from 'react-use/lib/useAsync';
 import { rootRouteRef } from '../../routes';
 import { TechDocsMetadata } from '../../types';
+
+import { Header, HeaderLabel } from '@backstage/core-components';
+import { useRouteRef } from '@backstage/core-plugin-api';
 
 type TechDocsPageHeaderProps = {
   entityId: EntityName;

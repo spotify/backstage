@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,15 @@ import React from 'react';
 import { GraphiQLPage } from './GraphiQLPage';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
-import { ApiProvider, ApiRegistry } from '@backstage/core';
 import { act } from 'react-dom/test-utils';
 import { renderWithEffects } from '@backstage/test-utils';
 import { GraphQLBrowseApi, graphQlBrowseApiRef } from '../../lib/api';
+import { configApiRef } from '@backstage/core-plugin-api';
+import {
+  ApiProvider,
+  ApiRegistry,
+  ConfigReader,
+} from '@backstage/core-app-api';
 
 jest.mock('../GraphiQLBrowser', () => ({
   GraphiQLBrowser: () => '<GraphiQLBrowser />',
@@ -38,7 +43,12 @@ describe('GraphiQLPage', () => {
     };
 
     const rendered = await renderWithEffects(
-      <ApiProvider apis={ApiRegistry.from([[graphQlBrowseApiRef, loadingApi]])}>
+      <ApiProvider
+        apis={ApiRegistry.from([
+          [graphQlBrowseApiRef, loadingApi],
+          [configApiRef, new ConfigReader({})],
+        ])}
+      >
         <ThemeProvider theme={lightTheme}>
           <GraphiQLPage />
         </ThemeProvider>
@@ -61,7 +71,12 @@ describe('GraphiQLPage', () => {
     };
 
     const rendered = await renderWithEffects(
-      <ApiProvider apis={ApiRegistry.from([[graphQlBrowseApiRef, loadingApi]])}>
+      <ApiProvider
+        apis={ApiRegistry.from([
+          [graphQlBrowseApiRef, loadingApi],
+          [configApiRef, new ConfigReader({})],
+        ])}
+      >
         <ThemeProvider theme={lightTheme}>
           <GraphiQLPage />
         </ThemeProvider>
@@ -80,7 +95,12 @@ describe('GraphiQLPage', () => {
     };
 
     const rendered = await renderWithEffects(
-      <ApiProvider apis={ApiRegistry.from([[graphQlBrowseApiRef, loadingApi]])}>
+      <ApiProvider
+        apis={ApiRegistry.from([
+          [graphQlBrowseApiRef, loadingApi],
+          [configApiRef, new ConfigReader({})],
+        ])}
+      >
         <ThemeProvider theme={lightTheme}>
           <GraphiQLPage />
         </ThemeProvider>

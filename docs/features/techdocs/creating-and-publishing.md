@@ -28,10 +28,10 @@ scratch.
 ### Use the documentation template
 
 Your working Backstage instance should by default have a documentation template
-added. If not, follow these
-[instructions](../software-templates/installation.md#adding-templates) to add
-the documentation template. The template creates a component with only TechDocs
-configuration and default markdown files as below mentioned in manual
+added. If not, copy the catalog locations from the
+[create-app template](https://github.com/backstage/backstage/blob/master/packages/create-app/templates/default-app/app-config.yaml.hbs)
+to add the documentation template. The template creates a component with only
+TechDocs configuration and default markdown files as below mentioned in manual
 documentation setup, and is otherwise empty.
 
 ![Documentation Template](../../assets/techdocs/documentation-template.png)

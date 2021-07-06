@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,12 @@ export class UrlReaderProcessor implements CatalogProcessor {
       return Promise.all(output);
     }
 
-    // Otherwise do a plain read
+    // Otherwise do a plain read, prioritizing readUrl if available
+    if (this.options.reader.readUrl) {
+      const data = await this.options.reader.readUrl(location);
+      return [{ url: location, data: await data.buffer() }];
+    }
+
     const data = await this.options.reader.read(location);
     return [{ url: location, data }];
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
 import React from 'react';
-import { InfoCard } from '@backstage/core';
 import { makeStyles } from '@material-ui/core';
-
 import { TEST_IDS } from '../test-helpers/test-ids';
+
+import { InfoCard } from '@backstage/core-components';
 
 const useStyles = makeStyles(() => ({
   feature: {

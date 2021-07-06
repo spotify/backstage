@@ -1,7 +1,7 @@
 {
   "name": "@backstage/test-utils",
   "description": "Utilities to test Backstage plugins and apps.",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "private": false,
   "publishConfig": {
     "access": "public",
@@ -29,7 +29,8 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/core-api": "^0.2.22",
+    "@backstage/core-app-api": "^0.1.3",
+    "@backstage/core-plugin-api": "^0.1.3",
     "@backstage/test-utils-core": "^0.1.1",
     "@backstage/theme": "^0.2.8",
     "@material-ui/core": "^4.11.0",
@@ -37,7 +38,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^13.1.8",
     "@types/react": "^16.9",
-    "msw": "^0.21.3",
+    "msw": "^0.29.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router": "6.0.0-beta.0",
@@ -45,7 +46,7 @@
     "zen-observable": "^0.8.15"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.7.0",
+    "@backstage/cli": "^0.7.2",
     "@types/jest": "^26.0.7",
     "@types/node": "^14.14.32"
   },

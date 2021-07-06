@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,9 @@ import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import CreateComponentIcon from '@material-ui/icons/AddCircleOutline';
 import LogoFull from './LogoFull';
 import LogoIcon from './LogoIcon';
+import { NavLink } from 'react-router-dom';
+import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
+import { SidebarSearch } from '@backstage/plugin-search';
 import {
   Sidebar,
   SidebarPage,
@@ -31,10 +34,8 @@ import {
   SidebarItem,
   SidebarDivider,
   SidebarSpace,
-} from '@backstage/core';
-import { NavLink } from 'react-router-dom';
-import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
-import { SidebarSearch } from '@backstage/plugin-search';
+  SidebarScrollWrapper,
+} from '@backstage/core-components';
 
 const useSidebarLogoStyles = makeStyles({
   root: {
@@ -82,7 +83,9 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
       <SidebarItem icon={CreateComponentIcon} to="create" text="Create..." />
       {/* End global nav */}
       <SidebarDivider />
-      <SidebarItem icon={MapIcon} to="tech-radar" text="Tech Radar" />
+      <SidebarScrollWrapper>
+        <SidebarItem icon={MapIcon} to="tech-radar" text="Tech Radar" />
+      </SidebarScrollWrapper>
       <SidebarSpace />
       <SidebarDivider />
       <SidebarSettings />

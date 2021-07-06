@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Observable } from '@backstage/core';
 import ObservableImpl from 'zen-observable';
 import { ResponseError } from '@backstage/errors';
 import { Schema } from 'jsonschema';
 import { ConfigSchemaApi, ConfigSchemaResult } from './types';
+import { Observable } from '@backstage/core-plugin-api';
 
 const DEFAULT_URL = 'config-schema.json';
 

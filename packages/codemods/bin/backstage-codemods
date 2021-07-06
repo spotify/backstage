@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,21 @@
 
 const path = require('path');
 
-require('ts-node').register({
-  transpileOnly: true,
-  /* eslint-disable-next-line no-restricted-syntax */
-  project: path.resolve(__dirname, '../../../tsconfig.json'),
-  compilerOptions: {
-    module: 'CommonJS',
-  },
-});
+// Figure out whether we're running inside the backstage repo or as an installed dependency
+/* eslint-disable-next-line no-restricted-syntax */
+const isLocal = require('fs').existsSync(path.resolve(__dirname, '../src'));
 
-require('../src');
+if (!isLocal) {
+  require('..');
+} else {
+  require('ts-node').register({
+    transpileOnly: true,
+    /* eslint-disable-next-line no-restricted-syntax */
+    project: path.resolve(__dirname, '../../../tsconfig.json'),
+    compilerOptions: {
+      module: 'CommonJS',
+    },
+  });
+
+  require('../src');
+}

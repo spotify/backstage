@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-import { ApiProvider, ApiRegistry } from '@backstage/core';
 import { msw, wrapInTestApp } from '@backstage/test-utils';
 import { fireEvent, render } from '@testing-library/react';
 import { rest } from 'msw';
@@ -36,6 +35,7 @@ import {
 } from '../../api';
 import * as data from '../../__fixtures__/website-list-response.json';
 import AuditList from './index';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 
 const { useNavigate } = jest.requireMock('react-router-dom');
 const websiteListResponse = data as WebsiteListResponse;

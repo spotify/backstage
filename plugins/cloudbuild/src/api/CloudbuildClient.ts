@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import {
   ActionsListWorkflowRunsForRepoResponseData,
   ActionsGetWorkflowResponseData,
 } from '../api/types';
-import { OAuthApi } from '@backstage/core';
+import { OAuthApi } from '@backstage/core-plugin-api';
 
 export class CloudbuildClient implements CloudbuildApi {
   constructor(private readonly googleAuthApi: OAuthApi) {}

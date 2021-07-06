@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,15 @@ import { generatePath } from 'react-router-dom';
 
 import { IconButton, Tooltip } from '@material-ui/core';
 import ShareIcon from '@material-ui/icons/Share';
-import { Table, EmptyState, Button, SubvalueCell, Link } from '@backstage/core';
 import { Entity } from '@backstage/catalog-model';
 import { rootDocsRouteRef } from '../../routes';
+import {
+  Table,
+  EmptyState,
+  Button,
+  SubvalueCell,
+  Link,
+} from '@backstage/core-components';
 
 export const DocsTable = ({
   entities,
@@ -111,7 +117,6 @@ export const DocsTable = ({
           action={
             <Button
               color="primary"
-              href="#"
               to="https://backstage.io/docs/features/techdocs/getting-started"
               variant="contained"
             >

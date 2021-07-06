@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 
 import { CatalogClient } from '@backstage/catalog-client';
-import { DiscoveryApi, IdentityApi } from '@backstage/core';
 import { CatalogClientWrapper } from './CatalogClientWrapper';
+import { DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
 
 jest.mock('@backstage/catalog-client');
 const MockedCatalogClient = CatalogClient as jest.Mock<CatalogClient>;

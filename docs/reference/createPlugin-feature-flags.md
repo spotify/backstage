@@ -11,7 +11,7 @@ can use this to split out logic in your code for manual A/B testing, etc.
 Here's a code sample:
 
 ```typescript
-import { createPlugin } from '@backstage/core';
+import { createPlugin } from '@backstage/core-plugin-api';
 
 export default createPlugin({
   id: 'plugin-name',
@@ -29,7 +29,7 @@ To inspect the state of a feature flag inside your plugin, you can use the
 ```tsx
 import React from 'react';
 import { Button } from '@material-ui/core';
-import { featureFlagsApiRef, useApi } from '@backstage/core';
+import { featureFlagsApiRef, useApi } from '@backstage/core-plugin-api';
 
 const ExamplePage = () => {
   const featureFlags = useApi(featureFlagsApiRef);

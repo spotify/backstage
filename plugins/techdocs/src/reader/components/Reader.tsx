@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { EntityName } from '@backstage/catalog-model';
-import { useApi } from '@backstage/core';
 import { scmIntegrationsApiRef } from '@backstage/integration-react';
 import { BackstageTheme } from '@backstage/theme';
 import { useTheme } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAsync } from 'react-use';
 import { techdocsStorageApiRef } from '../../api';
 import {
   addBaseUrl,
@@ -37,7 +36,8 @@ import {
 } from '../transformers';
 import { TechDocsNotFound } from './TechDocsNotFound';
 import TechDocsProgressBar from './TechDocsProgressBar';
-import { useRawPage } from './useRawPage';
+import { useReaderState } from './useReaderState';
+import { useApi } from '@backstage/core-plugin-api';
 
 type Props = {
   entityId: EntityName;
@@ -49,61 +49,38 @@ export const Reader = ({ entityId, onReady }: Props) => {
   const { '*': path } = useParams();
   const theme = useTheme<BackstageTheme>();
 
+  const { state, content: rawPage, errorMessage } = useReaderState(
+    kind,
+    namespace,
+    name,
+    path,
+  );
+
   const techdocsStorageApi = useApi(techdocsStorageApiRef);
   const [sidebars, setSidebars] = useState<HTMLElement[]>();
   const navigate = useNavigate();
   const shadowDomRef = useRef<HTMLDivElement>(null);
-  const [loadedPath, setLoadedPath] = useState('');
-  const [atInitialLoad, setAtInitialLoad] = useState(true);
-  const [newerDocsExist, setNewerDocsExist] = useState(false);
   const scmIntegrationsApi = useApi(scmIntegrationsApiRef);
 
-  const {
-    value: isSynced,
-    loading: syncInProgress,
-    error: syncError,
-  } = useAsync(async () => {
-    // Attempt to sync only if `techdocs.builder` in app config is set to 'local'
-    if ((await techdocsStorageApi.getBuilder()) !== 'local') {
-      return Promise.resolve({
-        value: true,
-        loading: null,
-        error: null,
+  const updateSidebarPosition = useCallback(() => {
+    if (!!shadowDomRef.current && !!sidebars) {
+      const shadowDiv: HTMLElement = shadowDomRef.current!;
+      const shadowRoot =
+        shadowDiv.shadowRoot || shadowDiv.attachShadow({ mode: 'open' });
+      const mdTabs = shadowRoot.querySelector('.md-container > .md-tabs');
+      sidebars!.forEach(sidebar => {
+        const newTop = Math.max(
+          shadowDomRef.current!.getBoundingClientRect().top,
+          0,
+        );
+        sidebar.style.top = mdTabs
+          ? `${newTop + mdTabs.getBoundingClientRect().height}px`
+          : `${newTop}px`;
       });
     }
-    return techdocsStorageApi.syncEntityDocs({ kind, namespace, name });
-  }, [techdocsStorageApi, kind, namespace, name]);
-
-  const {
-    value: rawPage,
-    loading: docLoading,
-    error: docLoadError,
-    retry,
-  } = useRawPage(path, kind, namespace, name);
+  }, [shadowDomRef, sidebars]);
 
   useEffect(() => {
-    if (isSynced && newerDocsExist && path !== loadedPath) {
-      retry();
-    }
-  });
-
-  useEffect(() => {
-    const updateSidebarPosition = () => {
-      if (!!shadowDomRef.current && !!sidebars) {
-        const mdTabs = shadowDomRef.current!.querySelector(
-          '.md-container > .md-tabs',
-        );
-        sidebars!.forEach(sidebar => {
-          const newTop = Math.max(
-            shadowDomRef.current!.getBoundingClientRect().top,
-            0,
-          );
-          sidebar.style.top = mdTabs
-            ? `${newTop + mdTabs.getBoundingClientRect().height}px`
-            : `${newTop}px`;
-        });
-      }
-    };
     updateSidebarPosition();
     window.addEventListener('scroll', updateSidebarPosition);
     window.addEventListener('resize', updateSidebarPosition);
@@ -111,28 +88,8 @@ export const Reader = ({ entityId, onReady }: Props) => {
       window.removeEventListener('scroll', updateSidebarPosition);
       window.removeEventListener('resize', updateSidebarPosition);
     };
-  }, [shadowDomRef, sidebars]);
-
-  useEffect(() => {
-    if (rawPage) {
-      setLoadedPath(path);
-    }
-  }, [rawPage, path]);
-
-  useEffect(() => {
-    if (atInitialLoad === false) {
-      return;
-    }
-    setTimeout(() => {
-      setAtInitialLoad(false);
-    }, 5000);
-  });
-
-  useEffect(() => {
-    if (!atInitialLoad && !!rawPage && syncInProgress) {
-      setNewerDocsExist(true);
-    }
-  }, [atInitialLoad, rawPage, syncInProgress]);
+    // an update to "state" might lead to an updated UI so we include it as a trigger
+  }, [updateSidebarPosition, state]);
 
   useEffect(() => {
     if (!rawPage || !shadowDomRef.current) {
@@ -142,12 +99,16 @@ export const Reader = ({ entityId, onReady }: Props) => {
       onReady();
     }
     // Pre-render
-    const transformedElement = transformer(rawPage.content, [
+    const transformedElement = transformer(rawPage, [
       sanitizeDOM(),
       addBaseUrl({
         techdocsStorageApi,
-        entityId: rawPage.entityId,
-        path: rawPage.path,
+        entityId: {
+          kind,
+          name,
+          namespace,
+        },
+        path,
       }),
       rewriteDocLinks(),
       removeMkdocsHeader(),
@@ -292,10 +253,6 @@ export const Reader = ({ entityId, onReady }: Props) => {
         baseUrl: window.location.origin,
         onClick: (_: MouseEvent, url: string) => {
           const parsedUrl = new URL(url);
-          if (newerDocsExist && isSynced) {
-            // link navigation will load newer docs
-            setNewerDocsExist(false);
-          }
 
           if (parsedUrl.hash) {
             navigate(`${parsedUrl.pathname}${parsedUrl.hash}`);
@@ -337,6 +294,10 @@ export const Reader = ({ entityId, onReady }: Props) => {
       }),
     ]);
   }, [
+    path,
+    kind,
+    namespace,
+    name,
     rawPage,
     navigate,
     onReady,
@@ -347,39 +308,40 @@ export const Reader = ({ entityId, onReady }: Props) => {
     theme.palette.primary.main,
     theme.palette.background.paper,
     theme.palette.background.default,
-    newerDocsExist,
-    isSynced,
     scmIntegrationsApi,
   ]);
 
-  // docLoadError not considered an error state if sync request is still ongoing
-  // or sync just completed and doc is loading again
-  if ((docLoadError && !syncInProgress && !docLoading) || syncError) {
-    let errMessage = '';
-    if (docLoadError) {
-      errMessage += ` Load error: ${docLoadError}`;
-    }
-    if (syncError) errMessage += ` Build error: ${syncError}`;
-    return <TechDocsNotFound errorMessage={errMessage} />;
-  }
-
   return (
     <>
-      {newerDocsExist && !isSynced ? (
+      {(state === 'CHECKING' || state === 'INITIAL_BUILD') && (
+        <TechDocsProgressBar />
+      )}
+      {state === 'CONTENT_STALE_REFRESHING' && (
         <Alert variant="outlined" severity="info">
           A newer version of this documentation is being prepared and will be
           available shortly.
         </Alert>
-      ) : null}
-      {newerDocsExist && isSynced ? (
+      )}
+      {state === 'CONTENT_STALE_READY' && (
         <Alert variant="outlined" severity="success">
           A newer version of this documentation is now available, please refresh
           to view.
         </Alert>
-      ) : null}
-      {docLoading || (docLoadError && syncInProgress) ? (
-        <TechDocsProgressBar />
-      ) : null}
+      )}
+      {state === 'CONTENT_STALE_TIMEOUT' && (
+        <Alert variant="outlined" severity="warning">
+          Building a newer version of this documentation took longer than
+          expected. Please refresh to try again.
+        </Alert>
+      )}
+      {state === 'CONTENT_STALE_ERROR' && (
+        <Alert variant="outlined" severity="error">
+          Building a newer version of this documentation failed. {errorMessage}
+        </Alert>
+      )}
+      {state === 'CONTENT_NOT_FOUND' && (
+        <TechDocsNotFound errorMessage={errorMessage} />
+      )}
       <div data-testid="techdocs-content-shadowroot" ref={shadowDomRef} />
     </>
   );

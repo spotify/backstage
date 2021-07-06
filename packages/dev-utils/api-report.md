@@ -4,12 +4,12 @@
 
 ```ts
 
-import { ApiFactory } from '@backstage/core';
+import { ApiFactory } from '@backstage/core-plugin-api';
 import { ComponentType } from 'react';
-import { createPlugin } from '@backstage/core';
+import { createPlugin } from '@backstage/core-plugin-api';
 import { Entity } from '@backstage/catalog-model';
 import { GridProps } from '@material-ui/core';
-import { IconComponent } from '@backstage/core';
+import { IconComponent } from '@backstage/core-plugin-api';
 import { ReactNode } from 'react';
 
 // @public

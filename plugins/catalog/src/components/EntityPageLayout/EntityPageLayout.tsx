@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,6 @@ import {
   RELATION_OWNED_BY,
 } from '@backstage/catalog-model';
 import {
-  Content,
-  Header,
-  HeaderLabel,
-  IconComponent,
-  Link,
-  Page,
-  Progress,
-  ResponseErrorPanel,
-  WarningPanel,
-} from '@backstage/core';
-import {
   EntityContext,
   EntityRefLinks,
   getEntityRelations,
@@ -42,6 +31,19 @@ import { EntityContextMenu } from '../EntityContextMenu/EntityContextMenu';
 import { FavouriteEntity } from '../FavouriteEntity/FavouriteEntity';
 import { UnregisterEntityDialog } from '../UnregisterEntityDialog/UnregisterEntityDialog';
 import { Tabbed } from './Tabbed';
+
+import {
+  Content,
+  Header,
+  HeaderLabel,
+  Link,
+  Page,
+  Progress,
+  ResponseErrorPanel,
+  WarningPanel,
+} from '@backstage/core-components';
+
+import { IconComponent } from '@backstage/core-plugin-api';
 
 const EntityPageTitle = ({
   entity,

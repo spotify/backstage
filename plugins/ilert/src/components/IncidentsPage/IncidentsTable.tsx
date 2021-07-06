@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import React from 'react';
-import { Table, TableColumn, useApi } from '@backstage/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ilertApiRef, TableState } from '../../api';
 import { Incident, IncidentStatus } from '../../types';
@@ -26,6 +25,9 @@ import { DateTime as dt, Interval } from 'luxon';
 import humanizeDuration from 'humanize-duration';
 import { IncidentActionsMenu } from '../Incident/IncidentActionsMenu';
 import { IncidentLink } from '../Incident/IncidentLink';
+
+import { Table, TableColumn } from '@backstage/core-components';
+import { useApi } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles(theme => ({
   empty: {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,6 @@ import {
   RELATION_OWNED_BY,
 } from '@backstage/catalog-model';
 import {
-  Content,
-  Header,
-  Link,
-  Page,
-  StatusError,
-  StatusOK,
-  StatusWarning,
-  Table,
-  TableColumn,
-  TableFilter,
-  useApi,
-} from '@backstage/core';
-import {
   catalogApiRef,
   EntityRefLink,
   EntityRefLinks,
@@ -47,6 +34,21 @@ import { useMemo } from 'react';
 import { useAsync } from 'react-use';
 import { FindingSummary, fossaApiRef } from '../../api';
 import { getProjectName } from '../getProjectName';
+
+import {
+  Content,
+  Header,
+  Link,
+  Page,
+  StatusError,
+  StatusOK,
+  StatusWarning,
+  Table,
+  TableColumn,
+  TableFilter,
+} from '@backstage/core-components';
+
+import { useApi } from '@backstage/core-plugin-api';
 
 type FossaRow = {
   entity: Entity;

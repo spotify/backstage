@@ -52,10 +52,12 @@ cookiecutter
 css
 Datadog
 dataflow
+dayjs
 deadnaming
 debounce
 Debounce
 declaratively
+deduplicated
 deps
 destructured
 dev
@@ -120,6 +122,7 @@ Knex
 kubectl
 kubernetes
 kubernetes
+ldap
 learnings
 Leasot
 lerna
@@ -134,6 +137,7 @@ maintainership
 makefile
 md
 memcache
+memoized
 microservice
 microservices
 microsite
@@ -149,6 +153,7 @@ Mkdocs
 monorepo
 Monorepo
 monorepos
+msgraph
 msw
 mysql
 namespace
@@ -172,6 +177,7 @@ oidc
 Okta
 onboarding
 Onboarding
+orgs
 pagerduty
 pageview
 parallelization
@@ -203,6 +209,8 @@ repo
 Repo
 repos
 rerender
+Reusability
+reusability
 rollbar
 Rollbar
 Rollup
@@ -220,6 +228,7 @@ seb
 semlas
 semver
 Serverless
+siloed
 Sinon
 Snyk
 sourcemaps
@@ -266,12 +275,14 @@ transpilation
 transpiled
 truthy
 ui
+unbreak
 unmanaged
 unregister
 unregistration
 untracked
 upvote
 url
+URLs
 utils
 validator
 validators

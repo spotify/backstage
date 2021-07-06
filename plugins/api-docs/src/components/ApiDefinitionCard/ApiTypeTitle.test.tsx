@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 
 import { ApiEntity } from '@backstage/catalog-model';
-import { ApiProvider, ApiRegistry } from '@backstage/core';
 import { renderInTestApp } from '@backstage/test-utils';
 import React from 'react';
 import { ApiDocsConfig, apiDocsConfigRef } from '../../config';
 import { ApiTypeTitle } from './ApiTypeTitle';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 
 describe('<ApiTypeTitle />', () => {
   const apiDocsConfig: jest.Mocked<ApiDocsConfig> = {

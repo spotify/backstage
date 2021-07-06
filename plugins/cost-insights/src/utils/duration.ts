@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import moment from 'moment';
+import { DateTime, Duration as LuxonDuration } from 'luxon';
 import { Duration, DEFAULT_DATE_FORMAT } from '../types';
 import { assertNever } from './assert';
 
@@ -34,14 +34,18 @@ export function inclusiveStartDateOf(
     case Duration.P7D:
     case Duration.P30D:
     case Duration.P90D:
-      return moment(inclusiveEndDate)
-        .subtract(moment.duration(duration).add(moment.duration(duration)))
-        .format(DEFAULT_DATE_FORMAT);
+      return DateTime.fromISO(inclusiveEndDate)
+        .minus(
+          LuxonDuration.fromISO(duration).plus(LuxonDuration.fromISO(duration)),
+        )
+        .toFormat(DEFAULT_DATE_FORMAT);
     case Duration.P3M:
-      return moment(inclusiveEndDate)
+      return DateTime.fromISO(inclusiveEndDate)
         .startOf('quarter')
-        .subtract(moment.duration(duration).add(moment.duration(duration)))
-        .format(DEFAULT_DATE_FORMAT);
+        .minus(
+          LuxonDuration.fromISO(duration).plus(LuxonDuration.fromISO(duration)),
+        )
+        .toFormat(DEFAULT_DATE_FORMAT);
     default:
       return assertNever(duration);
   }
@@ -55,11 +59,13 @@ export function exclusiveEndDateOf(
     case Duration.P7D:
     case Duration.P30D:
     case Duration.P90D:
-      return moment(inclusiveEndDate).add(1, 'day').format(DEFAULT_DATE_FORMAT);
+      return DateTime.fromISO(inclusiveEndDate)
+        .plus({ days: 1 })
+        .toFormat(DEFAULT_DATE_FORMAT);
     case Duration.P3M:
-      return moment(quarterEndDate(inclusiveEndDate))
-        .add(1, 'day')
-        .format(DEFAULT_DATE_FORMAT);
+      return DateTime.fromISO(quarterEndDate(inclusiveEndDate))
+        .plus({ days: 1 })
+        .toFormat(DEFAULT_DATE_FORMAT);
     default:
       return assertNever(duration);
   }
@@ -69,9 +75,9 @@ export function inclusiveEndDateOf(
   duration: Duration,
   inclusiveEndDate: string,
 ): string {
-  return moment(exclusiveEndDateOf(duration, inclusiveEndDate))
-    .subtract(1, 'day')
-    .format(DEFAULT_DATE_FORMAT);
+  return DateTime.fromISO(exclusiveEndDateOf(duration, inclusiveEndDate))
+    .minus({ days: 1 })
+    .toFormat(DEFAULT_DATE_FORMAT);
 }
 
 // https://en.wikipedia.org/wiki/ISO_8601#Repeating_intervals
@@ -87,13 +93,13 @@ export function intervalsOf(
 }
 
 export function quarterEndDate(inclusiveEndDate: string): string {
-  const endDate = moment(inclusiveEndDate);
-  const endOfQuarter = endDate.endOf('quarter').format(DEFAULT_DATE_FORMAT);
+  const endDate = DateTime.fromISO(inclusiveEndDate);
+  const endOfQuarter = endDate.endOf('quarter').toFormat(DEFAULT_DATE_FORMAT);
   if (endOfQuarter === inclusiveEndDate) {
-    return endDate.format(DEFAULT_DATE_FORMAT);
+    return endDate.toFormat(DEFAULT_DATE_FORMAT);
   }
   return endDate
     .startOf('quarter')
-    .subtract(1, 'day')
-    .format(DEFAULT_DATE_FORMAT);
+    .minus({ days: 1 })
+    .toFormat(DEFAULT_DATE_FORMAT);
 }

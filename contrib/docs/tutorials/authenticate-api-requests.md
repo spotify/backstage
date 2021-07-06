@@ -4,7 +4,7 @@ The Backstage backend APIs are by default available without authentication. To a
 
 API requests from frontend plugins include an authorization header with a Backstage identity token acquired when the user logs in. By adding a middleware that verifies said token to be valid and signed by Backstage, non-authenticated requests can be blocked with a 401 Unauthorized response.
 
-Note that this means Backstage will stop working for guests, as no token is issued for them.
+**NOTE**: Enabling this means that Backstage will stop working for guests, as no token is issued for them.
 
 As techdocs HTML pages load assets without an Authorization header the code below also sets a token cookie when the user logs in (and when the token is about to expire).
 
@@ -99,7 +99,7 @@ async function main() {
 ```typescript
 // packages/app/src/App.tsx from a create-app deployment
 
-import { discoveryApiRef, useApi } from '@backstage/core';
+import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
 
 // ...
 
@@ -180,4 +180,84 @@ const app = createApp({
 });
 
 // ...
+```
+
+**NOTE**: Most Backstage frontend plugins come with the support for the `IdentityApi`.
+In case you already have a dozen of internal ones, you may need to update those too.
+Assuming you follow the common plugin structure, the changes to your front-end may look like:
+
+```diff
+// plugins/internal-plugin/src/api.ts
+-  import {createApiRef} from '@backstage/core';
++  import {createApiRef, IdentityApi} from '@backstage/core';
+import {Config} from '@backstage/config';
+// ...
+
+type MyApiOptions = {
+    configApi: Config;
++   identityApi: IdentityApi;
+    // ...
+}
+
+interface MyInterface {
+    getData(): Promise<MyData[]>;
+}
+
+export class MyApi implements MyInterface {
+    private configApi: Config;
++   private identityApi: IdentityApi;
+    // ...
+
+    constructor(options: MyApiOptions) {
+        this.configApi = options.configApi;
++       this.identityApi = options.identityApi;
+    }
+
+    async getMyData() {
+        const backendUrl = this.configApi.getString('backend.baseUrl');
+
++       const token = await this.identityApi.getIdToken();
+        const requestUrl = `${backendUrl}/api/data/`;
+-       const response = await fetch(requestUrl);
++       const response = await fetch(
+          requestUrl,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+    // ...
+   }
+```
+
+and
+
+```diff
+// plugins/internal-plugin/src/plugin.ts
+
+import {
+    configApiRef,
+    createApiFactory,
+    createPlugin,
++   identityApiRef,
+} from '@backstage/core';
+import {mypluginPageRouteRef} from './routeRefs';
+import {MyApi, myApiRef} from './api';
+
+export const plugin = createPlugin({
+    id: 'my-plugin',
+    routes: {
+        mainPage: mypluginPageRouteRef,
+    },
+    apis: [
+        createApiFactory({
+            api: myApiRef,
+            deps: {
+                configApi: configApiRef,
++               identityApi: identityApiRef,
+            },
+-           factory: ({configApi}) =>
+-               new MyApi({ configApi }),
++           factory: ({configApi, identityApi}) =>
++               new MyApi({ configApi, identityApi }),
+        }),
+    ],
+});
 ```

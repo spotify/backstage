@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,12 @@ export async function readCodeOwners(
 ): Promise<string | undefined> {
   const readOwnerLocation = async (path: string): Promise<string> => {
     const url = `${sourceUrl}${path}`;
+
+    if (reader.readUrl) {
+      const data = await reader.readUrl(url);
+      const buffer = await data.buffer();
+      return buffer.toString();
+    }
     const data = await reader.read(url);
     return data.toString();
   };

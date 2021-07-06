@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 import React, { PropsWithChildren } from 'react';
 import { DialogContent, List } from '@material-ui/core';
-import { Progress } from '@backstage/core';
-
 import { ResponseStep } from '../../types/types';
+
 import { ResponseStepListItem } from './ResponseStepListItem';
 import { TEST_IDS } from '../../test-helpers/test-ids';
+import { Progress } from '@backstage/core-components';
 
 interface ResponseStepListProps {
   responseSteps: (ResponseStep | undefined)[];

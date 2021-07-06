@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { Config } from '@backstage/config';
+import { NotFoundError } from '@backstage/errors';
 import { KafkaApi, KafkaJsApiImpl } from './KafkaApi';
 import _ from 'lodash';
 import { getClusterDetails } from '../config/ClusterReader';
@@ -45,11 +46,19 @@ export const makeRouter = (
     const clusterId = req.params.clusterId;
     const consumerId = req.params.consumerId;
 
+    const kafkaApi = kafkaApiByClusterName[clusterId];
+    if (!kafkaApi) {
+      const candidates = Object.keys(kafkaApiByClusterName)
+        .map(n => `"${n}"`)
+        .join(', ');
+      throw new NotFoundError(
+        `Found no configured cluster "${clusterId}", candidates are ${candidates}`,
+      );
+    }
+
     logger.info(
       `Fetch consumer group ${consumerId} offsets from cluster ${clusterId}`,
     );
-
-    const kafkaApi = kafkaApiByClusterName[clusterId];
 
     const groupOffsets = await kafkaApi.api.fetchGroupOffsets(consumerId);
 
@@ -68,6 +77,7 @@ export const makeRouter = (
         }));
       }),
     );
+
     res.json({ consumerId, offsets: groupWithTopicOffsets.flat() });
   });
 

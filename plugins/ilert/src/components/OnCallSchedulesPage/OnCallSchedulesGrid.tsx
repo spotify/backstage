@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import React from 'react';
-import { useApi, ItemCardGrid, Progress, Link } from '@backstage/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -23,6 +22,9 @@ import Typography from '@material-ui/core/Typography';
 import { Schedule } from '../../types';
 import { ilertApiRef } from '../../api';
 import { OnCallShiftItem } from './OnCallShiftItem';
+
+import { useApi } from '@backstage/core-plugin-api';
+import { ItemCardGrid, Progress, Link } from '@backstage/core-components';
 
 const useStyles = makeStyles(() => ({
   card: {

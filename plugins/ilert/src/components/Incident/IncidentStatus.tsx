@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import React from 'react';
-import { StatusError, StatusOK } from '@backstage/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import { ACCEPTED, Incident, PENDING, RESOLVED } from '../../types';
+import { StatusError, StatusOK } from '@backstage/core-components';
 
 const useStyles = makeStyles({
   denseListIcon: {

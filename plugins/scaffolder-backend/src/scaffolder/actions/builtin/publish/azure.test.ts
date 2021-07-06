@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,6 +162,29 @@ describe('publish:azure', () => {
     expect(initRepoAndPush).toHaveBeenCalledWith({
       dir: mockContext.workspacePath,
       remoteUrl: 'https://dev.azure.com/organization/project/_git/repo',
+      defaultBranch: 'master',
+      auth: { username: 'notempty', password: 'tokenlols' },
+      logger: mockContext.logger,
+    });
+  });
+
+  it('should call initRepoAndPush with the correct default branch', async () => {
+    mockGitClient.createRepository.mockImplementation(() => ({
+      remoteUrl: 'https://dev.azure.com/organization/project/_git/repo',
+    }));
+
+    await action.handler({
+      ...mockContext,
+      input: {
+        ...mockContext.input,
+        defaultBranch: 'main',
+      },
+    });
+
+    expect(initRepoAndPush).toHaveBeenCalledWith({
+      dir: mockContext.workspacePath,
+      remoteUrl: 'https://dev.azure.com/organization/project/_git/repo',
+      defaultBranch: 'master',
       auth: { username: 'notempty', password: 'tokenlols' },
       logger: mockContext.logger,
     });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,13 @@
 
 import React from 'react';
 import { Entity } from '@backstage/catalog-model';
-import {
-  ApiProvider,
-  ApiRegistry,
-  ErrorApi,
-  errorApiRef,
-} from '@backstage/core';
 import { renderWithEffects } from '@backstage/test-utils';
 import { BadgesApi, badgesApiRef } from '../api';
 import { EntityBadgesDialog } from './EntityBadgesDialog';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
+
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
+import { ErrorApi, errorApiRef } from '@backstage/core-plugin-api';
 
 describe('EntityBadgesDialog', () => {
   it('should render', async () => {

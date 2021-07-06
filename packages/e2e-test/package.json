@@ -30,11 +30,11 @@
     "chalk": "^4.0.0",
     "commander": "^6.1.0",
     "cross-fetch": "^3.0.6",
-    "fs-extra": "^9.0.0",
+    "fs-extra": "^10.0.0",
     "handlebars": "^4.7.3",
     "pgtools": "^0.3.0",
     "tree-kill": "^1.2.2",
-    "ts-node": "^9.1.1",
+    "ts-node": "^10.0.0",
     "zombie": "^6.1.4"
   },
   "nodemonConfig": {

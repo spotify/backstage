@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
  */
 
 import React from 'react';
-import { SidebarContext, ApiProvider, ApiRegistry } from '@backstage/core';
 import { MockStorageApi, renderInTestApp } from '@backstage/test-utils';
 import { screen, waitFor } from '@testing-library/react';
 import { Shortcuts } from './Shortcuts';
 import { LocalStoredShortcuts, shortcutsApiRef } from './api';
+
+import { SidebarContext } from '@backstage/core-components';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 
 const apis = ApiRegistry.from([
   [shortcutsApiRef, new LocalStoredShortcuts(MockStorageApi.create())],

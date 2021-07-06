@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { IconComponent } from '@backstage/core';
 import {
   Card,
   List,
@@ -35,6 +34,7 @@ import React, {
   useState,
 } from 'react';
 import { FilterGroup, useEntityFilterGroup } from '../../filter';
+import { IconComponent } from '@backstage/core-plugin-api';
 
 export type ButtonGroup = {
   name: string;

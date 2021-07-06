@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { createApiRef } from '@backstage/core';
-
 import { GitReleaseApi } from './GitReleaseClient';
+
+import { createApiRef } from '@backstage/core-plugin-api';
 
 export const gitReleaseManagerApiRef = createApiRef<GitReleaseApi>({
   id: 'plugin.git-release-manager.service',

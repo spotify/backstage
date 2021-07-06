@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,7 +140,7 @@ describe('publish:bitbucket', () => {
         'https://hosted.bitbucket.com/rest/api/1.0/projects/owner/repos',
         (req, res, ctx) => {
           expect(req.headers.get('Authorization')).toBe('Bearer thing');
-          expect(req.body).toEqual({ is_private: true, name: 'repo' });
+          expect(req.body).toEqual({ public: false, name: 'repo' });
           return res(
             ctx.status(201),
             ctx.set('Content-Type', 'application/json'),
@@ -174,6 +174,88 @@ describe('publish:bitbucket', () => {
     });
   });
 
+  describe('LFS for hosted bitbucket', () => {
+    const repoCreationResponse = {
+      links: {
+        self: [
+          {
+            href: 'https://bitbucket.mycompany.com/projects/project/repos/repo',
+          },
+        ],
+        clone: [
+          {
+            name: 'http',
+            href: 'https://bitbucket.mycompany.com/scm/project/repo',
+          },
+        ],
+      },
+    };
+
+    it('should call the correct APIs to enable LFS if requested and the host is hosted bitbucket', async () => {
+      expect.assertions(1);
+      server.use(
+        rest.post(
+          'https://hosted.bitbucket.com/rest/api/1.0/projects/owner/repos',
+          (_, res, ctx) => {
+            return res(
+              ctx.status(201),
+              ctx.set('Content-Type', 'application/json'),
+              ctx.json(repoCreationResponse),
+            );
+          },
+        ),
+        rest.put(
+          'https://hosted.bitbucket.com/rest/git-lfs/admin/projects/owner/repos/repo/enabled',
+          (req, res, ctx) => {
+            expect(req.headers.get('Authorization')).toBe('Bearer thing');
+            return res(ctx.status(204));
+          },
+        ),
+      );
+
+      await action.handler({
+        ...mockContext,
+        input: {
+          ...mockContext.input,
+          repoUrl: 'hosted.bitbucket.com?owner=owner&repo=repo',
+          enableLFS: true,
+        },
+      });
+    });
+
+    it('should report an error if enabling LFS fails', async () => {
+      server.use(
+        rest.post(
+          'https://hosted.bitbucket.com/rest/api/1.0/projects/owner/repos',
+          (_, res, ctx) => {
+            return res(
+              ctx.status(201),
+              ctx.set('Content-Type', 'application/json'),
+              ctx.json(repoCreationResponse),
+            );
+          },
+        ),
+        rest.put(
+          'https://hosted.bitbucket.com/rest/git-lfs/admin/projects/owner/repos/repo/enabled',
+          (_, res, ctx) => {
+            return res(ctx.status(500));
+          },
+        ),
+      );
+
+      await expect(
+        action.handler({
+          ...mockContext,
+          input: {
+            ...mockContext.input,
+            repoUrl: 'hosted.bitbucket.com?owner=owner&repo=repo',
+            enableLFS: true,
+          },
+        }),
+      ).rejects.toThrow(/Failed to enable LFS/);
+    });
+  });
+
   it('should call initAndPush with the correct values', async () => {
     server.use(
       rest.post(
@@ -204,6 +286,49 @@ describe('publish:bitbucket', () => {
     expect(initRepoAndPush).toHaveBeenCalledWith({
       dir: mockContext.workspacePath,
       remoteUrl: 'https://bitbucket.org/owner/cloneurl',
+      defaultBranch: 'master',
+      auth: { username: 'x-token-auth', password: 'tokenlols' },
+      logger: mockContext.logger,
+    });
+  });
+
+  it('should call initAndPush with the correct default branch', async () => {
+    server.use(
+      rest.post(
+        'https://api.bitbucket.org/2.0/repositories/owner/repo',
+        (_, res, ctx) =>
+          res(
+            ctx.status(200),
+            ctx.set('Content-Type', 'application/json'),
+            ctx.json({
+              links: {
+                html: {
+                  href: 'https://bitbucket.org/owner/repo',
+                },
+                clone: [
+                  {
+                    name: 'https',
+                    href: 'https://bitbucket.org/owner/cloneurl',
+                  },
+                ],
+              },
+            }),
+          ),
+      ),
+    );
+
+    await action.handler({
+      ...mockContext,
+      input: {
+        ...mockContext.input,
+        defaultBranch: 'main',
+      },
+    });
+
+    expect(initRepoAndPush).toHaveBeenCalledWith({
+      dir: mockContext.workspacePath,
+      remoteUrl: 'https://bitbucket.org/owner/cloneurl',
+      defaultBranch: 'main',
       auth: { username: 'x-token-auth', password: 'tokenlols' },
       logger: mockContext.logger,
     });

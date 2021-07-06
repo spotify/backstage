@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,49 +16,40 @@
 
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { PropsWithChildren, ReactNode } from 'react';
 import {
-  Children,
-  Fragment,
-  isValidElement,
-  PropsWithChildren,
-  ReactNode,
-  useMemo,
-} from 'react';
+  attachComponentData,
+  useElementFilter,
+} from '@backstage/core-plugin-api';
+
+const ENTITY_SWITCH_KEY = 'core.backstage.entitySwitch';
 
 const EntitySwitchCase = (_: {
   if?: (entity: Entity) => boolean;
   children: ReactNode;
 }) => null;
 
+attachComponentData(EntitySwitchCase, ENTITY_SWITCH_KEY, true);
+
 type SwitchCase = {
   if?: (entity: Entity) => boolean;
   children: JSX.Element;
 };
 
-function createSwitchCasesFromChildren(childrenNode: ReactNode): SwitchCase[] {
-  return Children.toArray(childrenNode).flatMap(child => {
-    if (!isValidElement(child)) {
-      return [];
-    }
-
-    if (child.type === Fragment) {
-      return createSwitchCasesFromChildren(child.props.children);
-    }
-
-    if (child.type !== EntitySwitchCase) {
-      throw new Error(`Child of EntitySwitch is not an EntitySwitch.Case`);
-    }
-
-    const { if: condition, children } = child.props;
-    return [{ if: condition, children }];
-  });
-}
-
 export const EntitySwitch = ({ children }: PropsWithChildren<{}>) => {
   const { entity } = useEntity();
-  const switchCases = useMemo(() => createSwitchCasesFromChildren(children), [
-    children,
-  ]);
+  const switchCases = useElementFilter(children, collection =>
+    collection
+      .selectByComponentData({
+        key: ENTITY_SWITCH_KEY,
+        withStrictError: 'Child of EntitySwitch is not an EntitySwitch.Case',
+      })
+      .getElements()
+      .flatMap<SwitchCase>((element: React.ReactElement) => {
+        const { if: condition, children: elementsChildren } = element.props;
+        return [{ if: condition, children: elementsChildren }];
+      }),
+  );
 
   const matchingCase = switchCases.find(switchCase =>
     switchCase.if ? switchCase.if(entity) : true,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,14 @@ import React from 'react';
 import { generatePath } from 'react-router-dom';
 
 import { Entity } from '@backstage/catalog-model';
-import { Button, ItemCardGrid, ItemCardHeader } from '@backstage/core';
 import { Card, CardActions, CardContent, CardMedia } from '@material-ui/core';
-
 import { rootDocsRouteRef } from '../../routes';
+
+import {
+  Button,
+  ItemCardGrid,
+  ItemCardHeader,
+} from '@backstage/core-components';
 
 export const DocsCardGrid = ({
   entities,

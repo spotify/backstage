@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button } from '@material-ui/core';
-import { useRouteRef } from '@backstage/core';
 import { createComponentRouteRef } from '../../routes';
+import { useRouteRef } from '@backstage/core-plugin-api';
 
 export const CreateComponentButton = () => {
   const createComponentLink = useRouteRef(createComponentRouteRef);

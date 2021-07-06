@@ -16,6 +16,7 @@ import { GithubCredentialsProvider } from '@backstage/integration';
 import { GitHubIntegration } from '@backstage/integration';
 import { GitLabIntegration } from '@backstage/integration';
 import * as http from 'http';
+import { isChildPath } from '@backstage/cli-common';
 import { JsonValue } from '@backstage/config';
 import { Knex } from 'knex';
 import { Logger } from 'winston';
@@ -41,6 +42,8 @@ export class AzureUrlReader implements UrlReader {
     // (undocumented)
     readTree(url: string, options?: ReadTreeOptions): Promise<ReadTreeResponse>;
     // (undocumented)
+    readUrl(url: string, _options?: ReadUrlOptions): Promise<ReadUrlResponse>;
+    // (undocumented)
     search(url: string, options?: SearchOptions): Promise<SearchResponse>;
     // (undocumented)
     toString(): string;
@@ -57,6 +60,8 @@ export class BitbucketUrlReader implements UrlReader {
     read(url: string): Promise<Buffer>;
     // (undocumented)
     readTree(url: string, options?: ReadTreeOptions): Promise<ReadTreeResponse>;
+    // (undocumented)
+    readUrl(url: string, _options?: ReadUrlOptions): Promise<ReadUrlResponse>;
     // (undocumented)
     search(url: string, options?: SearchOptions): Promise<SearchResponse>;
     // (undocumented)
@@ -99,6 +104,12 @@ export function createServiceBuilder(_module: NodeModule): ServiceBuilderImpl;
 
 // @public (undocumented)
 export function createStatusCheckRouter(options: StatusCheckRouterOptions): Promise<express.Router>;
+
+// @public (undocumented)
+export class DatabaseManager {
+    forPlugin(pluginId: string): PluginDatabaseManager;
+    static fromConfig(config: Config): DatabaseManager;
+    }
 
 // @public (undocumented)
 export class DockerContainerRunner implements ContainerRunner {
@@ -177,8 +188,9 @@ export class Git {
         logger?: Logger | undefined;
     }) => Git;
     // (undocumented)
-    init({ dir }: {
+    init({ dir, defaultBranch, }: {
         dir: string;
+        defaultBranch?: string;
     }): Promise<void>;
     // (undocumented)
     merge({ dir, theirs, ours, author, committer, }: {
@@ -224,6 +236,8 @@ export class GithubUrlReader implements UrlReader {
     // (undocumented)
     readTree(url: string, options?: ReadTreeOptions): Promise<ReadTreeResponse>;
     // (undocumented)
+    readUrl(url: string, options?: ReadUrlOptions): Promise<ReadUrlResponse>;
+    // (undocumented)
     search(url: string, options?: SearchOptions): Promise<SearchResponse>;
     // (undocumented)
     toString(): string;
@@ -241,10 +255,14 @@ export class GitlabUrlReader implements UrlReader {
     // (undocumented)
     readTree(url: string, options?: ReadTreeOptions): Promise<ReadTreeResponse>;
     // (undocumented)
+    readUrl(url: string, options?: ReadUrlOptions): Promise<ReadUrlResponse>;
+    // (undocumented)
     search(url: string, options?: SearchOptions): Promise<SearchResponse>;
     // (undocumented)
     toString(): string;
 }
+
+export { isChildPath }
 
 // @public
 export function loadBackendConfig(options: Options): Promise<Config>;
@@ -268,7 +286,7 @@ export type PluginEndpointDiscovery = {
     getExternalBaseUrl(pluginId: string): Promise<string>;
 };
 
-// @public (undocumented)
+// @public
 export type ReadTreeResponse = {
     files(): Promise<ReadTreeResponseFile[]>;
     archive(): Promise<NodeJS.ReadableStream>;
@@ -287,6 +305,9 @@ export function requestLoggingHandler(logger?: Logger): RequestHandler;
 
 // @public
 export function resolvePackagePath(name: string, ...paths: string[]): string;
+
+// @public
+export function resolveSafeChildPath(base: string, path: string): string;
 
 // @public (undocumented)
 export type RunContainerOptions = {
@@ -326,11 +347,8 @@ export type ServiceBuilder = {
 // @public (undocumented)
 export function setRootLogger(newLogger: winston.Logger): void;
 
-// @public
-export class SingleConnectionDatabaseManager {
-    forPlugin(pluginId: string): PluginDatabaseManager;
-    static fromConfig(config: Config): SingleConnectionDatabaseManager;
-    }
+// @public @deprecated
+export const SingleConnectionDatabaseManager: typeof DatabaseManager;
 
 // @public
 export class SingleHostDiscovery implements PluginEndpointDiscovery {
@@ -357,6 +375,7 @@ export interface StatusCheckHandlerOptions {
 // @public
 export type UrlReader = {
     read(url: string): Promise<Buffer>;
+    readUrl?(url: string, options?: ReadUrlOptions): Promise<ReadUrlResponse>;
     readTree(url: string, options?: ReadTreeOptions): Promise<ReadTreeResponse>;
     search(url: string, options?: SearchOptions): Promise<SearchResponse>;
 };

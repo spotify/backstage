@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
+import { isChildPath } from '@backstage/backend-common';
 import { spawn } from 'child_process';
 import fs from 'fs-extra';
 import yaml, { DEFAULT_SCHEMA, Type } from 'js-yaml';
-import { isAbsolute, normalize } from 'path';
 import { PassThrough, Writable } from 'stream';
 import { Logger } from 'winston';
 import { ParsedLocationAnnotation } from '../../helpers';
@@ -158,9 +158,13 @@ const MKDOCS_SCHEMA = DEFAULT_SCHEMA.extend([
  * Validating mkdocs config file for incorrect/insecure values
  * Throws on invalid configs
  *
+ * @param {string} inputDir base dir to be used as a docs_dir path validity check
  * @param {string} mkdocsYmlPath Absolute path to mkdocs.yml or equivalent of a docs site
  */
-export const validateMkdocsYaml = async (mkdocsYmlPath: string) => {
+export const validateMkdocsYaml = async (
+  inputDir: string,
+  mkdocsYmlPath: string,
+) => {
   let mkdocsYmlFileString;
   try {
     mkdocsYmlFileString = await fs.readFile(mkdocsYmlPath, 'utf8');
@@ -173,9 +177,11 @@ export const validateMkdocsYaml = async (mkdocsYmlPath: string) => {
   const mkdocsYml: any = yaml.load(mkdocsYmlFileString, {
     schema: MKDOCS_SCHEMA,
   });
-  if (mkdocsYml.docs_dir && isAbsolute(normalize(mkdocsYml.docs_dir))) {
+
+  if (mkdocsYml.docs_dir && !isChildPath(inputDir, mkdocsYml.docs_dir)) {
     throw new Error(
-      "docs_dir configuration value in mkdocs can't be an absolute directory path for security reasons. Use relative paths instead which are resolved relative to your mkdocs.yml file location.",
+      `docs_dir configuration value in mkdocs can't be an absolute directory or start with ../ for security reasons.
+       Use relative paths instead which are resolved relative to your mkdocs.yml file location.`,
     );
   }
 };

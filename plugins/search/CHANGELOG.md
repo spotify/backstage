@@ -1,5 +1,17 @@
 # @backstage/plugin-search
 
+## 0.4.1
+
+### Patch Changes
+
+- df51a5507: Fix empty state not being displayed on missing results.
+- d5db15efb: Use the `identityApi` to forward authorization headers to the `search-backend`
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+  - @backstage/catalog-model@0.8.4
+  - @backstage/plugin-catalog-react@0.2.4
+
 ## 0.4.0
 
 ### Minor Changes

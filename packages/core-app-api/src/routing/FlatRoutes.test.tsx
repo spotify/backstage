@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,36 @@
 import { render, RenderResult } from '@testing-library/react';
 import React, { ReactNode } from 'react';
 import { MemoryRouter, Route, Routes, useOutlet } from 'react-router-dom';
+import { ApiProvider, ApiRegistry, LocalStorageFeatureFlags } from '../apis';
+import { featureFlagsApiRef } from '@backstage/core-plugin-api';
 import { AppContext } from '../app';
 import { AppContextProvider } from '../app/AppContext';
 import { FlatRoutes } from './FlatRoutes';
+
+const mockFeatureFlagsApi = new LocalStorageFeatureFlags();
+const Wrapper = ({ children }: { children?: React.ReactNode }) => (
+  <ApiProvider apis={ApiRegistry.with(featureFlagsApiRef, mockFeatureFlagsApi)}>
+    {children}
+  </ApiProvider>
+);
 
 function makeRouteRenderer(node: ReactNode) {
   let rendered: RenderResult | undefined = undefined;
   return (path: string) => {
     const content = (
-      <AppContextProvider
-        appContext={
-          ({
-            getComponents: () => ({
-              NotFoundErrorPage: () => <>Not Found</>,
-            }),
-          } as unknown) as AppContext
-        }
-      >
-        <MemoryRouter initialEntries={[path]} children={node} />
-      </AppContextProvider>
+      <Wrapper>
+        <AppContextProvider
+          appContext={
+            ({
+              getComponents: () => ({
+                NotFoundErrorPage: () => <>Not Found</>,
+              }),
+            } as unknown) as AppContext
+          }
+        >
+          <MemoryRouter initialEntries={[path]} children={node} />
+        </AppContextProvider>
+      </Wrapper>
     );
     if (rendered) {
       rendered.unmount();

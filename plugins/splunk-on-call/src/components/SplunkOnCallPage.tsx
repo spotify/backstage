@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 import React from 'react';
 import { Grid, makeStyles } from '@material-ui/core';
+import { EntitySplunkOnCallCard } from './EntitySplunkOnCallCard';
 import {
   Content,
   ContentHeader,
   Page,
   Header,
   SupportButton,
-} from '@backstage/core';
-import { EntitySplunkOnCallCard } from './EntitySplunkOnCallCard';
+} from '@backstage/core-components';
 
 const useStyles = makeStyles(() => ({
   overflowXScroll: {

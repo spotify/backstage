@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { wrapInTestApp, msw } from '@backstage/test-utils';
-import { ApiRegistry, ApiProvider } from '@backstage/core';
-
 import AuditListTable from './AuditListTable';
+
 import {
   WebsiteListResponse,
   lighthouseApiRef,
@@ -27,8 +26,9 @@ import {
 } from '../../api';
 import { formatTime } from '../../utils';
 import { setupServer } from 'msw/node';
-
 import * as data from '../../__fixtures__/website-list-response.json';
+
+import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
 
 const websiteListResponse = data as WebsiteListResponse;
 

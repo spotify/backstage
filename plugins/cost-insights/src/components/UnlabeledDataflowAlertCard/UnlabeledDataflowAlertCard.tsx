@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 import React from 'react';
 import pluralize from 'pluralize';
-import { InfoCard } from '@backstage/core';
 import { Box } from '@material-ui/core';
 import { BarChart, BarChartLegend } from '../BarChart';
 import { UnlabeledDataflowData, ResourceData } from '../../types';
 import { useBarChartLayoutStyles as useStyles } from '../../utils/styles';
+import { InfoCard } from '@backstage/core-components';
 
 type UnlabeledDataflowAlertProps = {
   alert: UnlabeledDataflowData;

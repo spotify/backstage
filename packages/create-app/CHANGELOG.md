@@ -1,5 +1,150 @@
 # @backstage/create-app
 
+## 0.3.29
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/cli-common@0.1.2
+
+## 0.3.28
+
+### Patch Changes
+
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+
+## 0.3.27
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-scaffolder-backend@0.12.2
+
+## 0.3.26
+
+### Patch Changes
+
+- 5db7445b4: Adding .DS_Store pattern to .gitignore in Scaffolded Backstage App. To migrate an existing app that pattern should be added manually.
+
+  ```diff
+  +# macOS
+  +.DS_Store
+  ```
+
+- b45e29410: This release enables the new catalog processing engine which is a major milestone for the catalog!
+
+  This update makes processing more scalable across multiple instances, adds support for deletions and ui flagging of entities that are no longer referenced by a location.
+
+  **Changes Required** to `catalog.ts`
+
+  ```diff
+  -import { useHotCleanup } from '@backstage/backend-common';
+   import {
+     CatalogBuilder,
+  -  createRouter,
+  -  runPeriodically
+  +  createRouter
+   } from '@backstage/plugin-catalog-backend';
+   import { Router } from 'express';
+   import { PluginEnvironment } from '../types';
+
+   export default async function createPlugin(env: PluginEnvironment): Promise<Router> {
+  -  const builder = new CatalogBuilder(env);
+  +  const builder = await CatalogBuilder.create(env);
+     const {
+       entitiesCatalog,
+       locationsCatalog,
+  -    higherOrderOperation,
+  +    locationService,
+  +    processingEngine,
+       locationAnalyzer,
+     } = await builder.build();
+
+  -  useHotCleanup(
+  -    module,
+  -    runPeriodically(() => higherOrderOperation.refreshAllLocations(), 100000),
+  -  );
+  +  await processingEngine.start();
+
+     return await createRouter({
+       entitiesCatalog,
+       locationsCatalog,
+  -    higherOrderOperation,
+  +    locationService,
+       locationAnalyzer,
+       logger: env.logger,
+       config: env.config,
+  ```
+
+  As this is a major internal change we have taken some precaution by still allowing the old catalog to be enabled by keeping your `catalog.ts` in it's current state.
+  If you encounter any issues and have to revert to the previous catalog engine make sure to raise an issue immediately as the old catalog engine is deprecated and will be removed in a future release.
+
+- 772dbdb51: Deprecates `SingleConnectionDatabaseManager` and provides an API compatible database
+  connection manager, `DatabaseManager`, which allows developers to configure database
+  connections on a per plugin basis.
+
+  The `backend.database` config path allows you to set `prefix` to use an
+  alternate prefix for automatically generated database names, the default is
+  `backstage_plugin_`. Use `backend.database.plugin.<pluginId>` to set plugin
+  specific database connection configuration, e.g.
+
+  ```yaml
+  backend:
+    database:
+      client: 'pg',
+      prefix: 'custom_prefix_'
+      connection:
+        host: 'localhost'
+        user: 'foo'
+        password: 'bar'
+      plugin:
+        catalog:
+          connection:
+            database: 'database_name_overriden'
+        scaffolder:
+          client: 'sqlite3'
+          connection: ':memory:'
+  ```
+
+  Migrate existing backstage installations by swapping out the database manager in the
+  `packages/backend/src/index.ts` file as shown below:
+
+  ```diff
+  import {
+  -  SingleConnectionDatabaseManager,
+  +  DatabaseManager,
+  } from '@backstage/backend-common';
+
+  // ...
+
+  function makeCreateEnv(config: Config) {
+    // ...
+  -  const databaseManager = SingleConnectionDatabaseManager.fromConfig(config);
+  +  const databaseManager = DatabaseManager.fromConfig(config);
+    // ...
+  }
+  ```
+
+- Updated dependencies
+  - @backstage/plugin-catalog@0.6.3
+  - @backstage/plugin-search-backend-node@0.2.1
+  - @backstage/plugin-catalog-backend@0.10.3
+  - @backstage/backend-common@0.8.3
+  - @backstage/cli@0.7.1
+  - @backstage/plugin-api-docs@0.5.0
+  - @backstage/plugin-scaffolder-backend@0.12.1
+  - @backstage/plugin-techdocs@0.9.6
+  - @backstage/plugin-techdocs-backend@0.8.3
+  - @backstage/plugin-catalog-import@0.5.10
+  - @backstage/plugin-app-backend@0.3.14
+  - @backstage/plugin-proxy-backend@0.2.10
+  - @backstage/plugin-rollbar-backend@0.1.12
+  - @backstage/plugin-search-backend@0.2.1
+  - @backstage/plugin-user-settings@0.2.11
+  - @backstage/catalog-model@0.8.3
+  - @backstage/plugin-auth-backend@0.3.13
+  - @backstage/core@0.7.13
+
 ## 0.3.25
 
 ### Patch Changes

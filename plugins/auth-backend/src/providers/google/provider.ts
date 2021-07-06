@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 import express from 'express';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { Logger } from 'winston';
-import { CatalogIdentityClient } from '../../lib/catalog';
+import { TokenIssuer } from '../../identity/types';
+import { CatalogIdentityClient, getEntityClaims } from '../../lib/catalog';
 import {
   encodeState,
   OAuthAdapter,
@@ -27,8 +27,8 @@ import {
   OAuthProviderOptions,
   OAuthRefreshRequest,
   OAuthResponse,
-  OAuthStartRequest,
   OAuthResult,
+  OAuthStartRequest,
 } from '../../lib/oauth';
 import {
   executeFetchUserProfileStrategy,
@@ -38,30 +38,40 @@ import {
   makeProfileInfo,
   PassportDoneCallback,
 } from '../../lib/passport';
-import { AuthProviderFactory, RedirectInfo } from '../types';
-import { TokenIssuer } from '../../identity/types';
+import {
+  AuthProviderFactory,
+  AuthHandler,
+  RedirectInfo,
+  SignInResolver,
+} from '../types';
+import { Logger } from 'winston';
 
 type PrivateInfo = {
   refreshToken: string;
 };
 
 type Options = OAuthProviderOptions & {
-  logger: Logger;
-  identityClient: CatalogIdentityClient;
+  signInResolver?: SignInResolver<OAuthResult>;
+  authHandler: AuthHandler<OAuthResult>;
   tokenIssuer: TokenIssuer;
+  catalogIdentityClient: CatalogIdentityClient;
+  logger: Logger;
 };
 
 export class GoogleAuthProvider implements OAuthHandlers {
   private readonly _strategy: GoogleStrategy;
-  private readonly logger: Logger;
-  private readonly identityClient: CatalogIdentityClient;
+  private readonly signInResolver?: SignInResolver<OAuthResult>;
+  private readonly authHandler: AuthHandler<OAuthResult>;
   private readonly tokenIssuer: TokenIssuer;
+  private readonly catalogIdentityClient: CatalogIdentityClient;
+  private readonly logger: Logger;
 
   constructor(options: Options) {
-    this.logger = options.logger;
-    this.identityClient = options.identityClient;
+    this.signInResolver = options.signInResolver;
+    this.authHandler = options.authHandler;
     this.tokenIssuer = options.tokenIssuer;
-    // TODO: throw error if env variables not set?
+    this.catalogIdentityClient = options.catalogIdentityClient;
+    this.logger = options.logger;
     this._strategy = new GoogleStrategy(
       {
         clientID: options.clientId,
@@ -111,18 +121,8 @@ export class GoogleAuthProvider implements OAuthHandlers {
       PrivateInfo
     >(req, this._strategy);
 
-    const profile = makeProfileInfo(result.fullProfile, result.params.id_token);
-
     return {
-      response: await this.populateIdentity({
-        providerInfo: {
-          idToken: result.params.id_token,
-          accessToken: result.accessToken,
-          scope: result.params.scope,
-          expiresInSeconds: result.params.expires_in,
-        },
-        profile,
-      }),
+      response: await this.handleResult(result),
       refreshToken: privateInfo.refreshToken,
     };
   }
@@ -133,89 +133,170 @@ export class GoogleAuthProvider implements OAuthHandlers {
       req.refreshToken,
       req.scope,
     );
-
     const fullProfile = await executeFetchUserProfileStrategy(
       this._strategy,
       accessToken,
     );
-    const profile = makeProfileInfo(fullProfile, params.id_token);
-
-    return this.populateIdentity({
-      providerInfo: {
-        accessToken,
-        idToken: params.id_token,
-        expiresInSeconds: params.expires_in,
-        scope: params.scope,
-      },
-      profile,
+    return this.handleResult({
+      fullProfile,
+      params,
+      accessToken,
+      refreshToken: req.refreshToken,
     });
   }
 
-  private async populateIdentity(
-    response: OAuthResponse,
-  ): Promise<OAuthResponse> {
-    const { profile } = response;
+  private async handleResult(result: OAuthResult) {
+    const { profile } = await this.authHandler(result);
 
-    if (!profile.email) {
-      throw new Error('Google profile contained no email');
-    }
+    const response: OAuthResponse = {
+      providerInfo: {
+        idToken: result.params.id_token,
+        accessToken: result.accessToken,
+        scope: result.params.scope,
+        expiresInSeconds: result.params.expires_in,
+      },
+      profile,
+    };
 
-    try {
-      const token = await this.tokenIssuer.issueToken({
-        claims: { sub: 'backstage.io/auth-backend' },
-      });
-      const user = await this.identityClient.findUser(
+    if (this.signInResolver) {
+      response.backstageIdentity = await this.signInResolver(
         {
-          annotations: {
-            'google.com/email': profile.email,
-          },
+          result,
+          profile,
         },
-        { token },
-      );
-
-      return {
-        ...response,
-        backstageIdentity: {
-          id: user.metadata.name,
+        {
+          tokenIssuer: this.tokenIssuer,
+          catalogIdentityClient: this.catalogIdentityClient,
+          logger: this.logger,
         },
-      };
-    } catch (error) {
-      this.logger.warn(
-        `Failed to look up user, ${error}, falling back to allowing login based on email pattern, this will probably break in the future`,
       );
-      return {
-        ...response,
-        backstageIdentity: { id: profile.email.split('@')[0] },
-      };
     }
+
+    return response;
   }
 }
 
-export type GoogleProviderOptions = {};
+export const googleEmailSignInResolver: SignInResolver<OAuthResult> = async (
+  info,
+  ctx,
+) => {
+  const { profile } = info;
+
+  if (!profile.email) {
+    throw new Error('Google profile contained no email');
+  }
+
+  const entity = await ctx.catalogIdentityClient.findUser({
+    annotations: {
+      'google.com/email': profile.email,
+    },
+  });
+
+  const claims = getEntityClaims(entity);
+  const token = await ctx.tokenIssuer.issueToken({ claims });
+
+  return { id: entity.metadata.name, entity, token };
+};
+
+const googleDefaultSignInResolver: SignInResolver<OAuthResult> = async (
+  info,
+  ctx,
+) => {
+  const { profile } = info;
+
+  if (!profile.email) {
+    throw new Error('Google profile contained no email');
+  }
+
+  let userId: string;
+  try {
+    const entity = await ctx.catalogIdentityClient.findUser({
+      annotations: {
+        'google.com/email': profile.email,
+      },
+    });
+    userId = entity.metadata.name;
+  } catch (error) {
+    ctx.logger.warn(
+      `Failed to look up user, ${error}, falling back to allowing login based on email pattern, this will probably break in the future`,
+    );
+    userId = profile.email.split('@')[0];
+  }
+
+  const token = await ctx.tokenIssuer.issueToken({
+    claims: { sub: userId, ent: [`user:default/${userId}`] },
+  });
+
+  return { id: userId, token };
+};
+
+export type GoogleProviderOptions = {
+  /**
+   * The profile transformation function used to verify and convert the auth response
+   * into the profile that will be presented to the user.
+   */
+  authHandler?: AuthHandler<OAuthResult>;
+
+  /**
+   * Configure sign-in for this provider, without it the provider can not be used to sign users in.
+   */
+  /**
+   * Maps an auth result to a Backstage identity for the user.
+   *
+   * Set to `'email'` to use the default email-based sign in resolver, which will search
+   * the catalog for a single user entity that has a matching `google.com/email` annotation.
+   */
+  signIn?: {
+    resolver?: SignInResolver<OAuthResult>;
+  };
+};
 
 export const createGoogleProvider = (
-  _options?: GoogleProviderOptions,
+  options?: GoogleProviderOptions,
 ): AuthProviderFactory => {
   return ({
     providerId,
     globalConfig,
     config,
-    logger,
     tokenIssuer,
     catalogApi,
+    logger,
   }) =>
     OAuthEnvironmentHandler.mapConfig(config, envConfig => {
       const clientId = envConfig.getString('clientId');
       const clientSecret = envConfig.getString('clientSecret');
       const callbackUrl = `${globalConfig.baseUrl}/${providerId}/handler/frame`;
 
+      const catalogIdentityClient = new CatalogIdentityClient({
+        catalogApi,
+        tokenIssuer,
+      });
+
+      const authHandler: AuthHandler<OAuthResult> = options?.authHandler
+        ? options.authHandler
+        : async ({ fullProfile, params }) => ({
+            profile: makeProfileInfo(fullProfile, params.id_token),
+          });
+
+      const signInResolverFn =
+        options?.signIn?.resolver ?? googleDefaultSignInResolver;
+
+      const signInResolver: SignInResolver<OAuthResult> = info =>
+        signInResolverFn(info, {
+          catalogIdentityClient,
+          tokenIssuer,
+          logger,
+        });
+
       const provider = new GoogleAuthProvider({
         clientId,
         clientSecret,
         callbackUrl,
-        logger,
+        signInResolver,
+        authHandler,
         tokenIssuer,
-        identityClient: new CatalogIdentityClient({ catalogApi }),
+        catalogIdentityClient,
+        logger,
       });
 
       return OAuthAdapter.fromConfig(globalConfig, provider, {

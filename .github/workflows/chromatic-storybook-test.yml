@@ -4,8 +4,7 @@ on:
     paths:
       - '.github/workflows/chromatic-storybook-test.yml'
       - 'packages/storybook/**'
-      - 'packages/core/src/components/**'
-      - 'packages/core/src/layout/**'
+      - 'packages/core-components/src/**'
 
 jobs:
   chromatic:

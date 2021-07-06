@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { ConfigApi } from '@backstage/core';
 import {
   Box,
   Checkbox,
@@ -35,6 +34,7 @@ import {
 import { StepPrepareSelectLocations } from '../StepPrepareSelectLocations';
 import { StepReviewLocation } from '../StepReviewLocation';
 import { ImportFlows, ImportState } from '../useImportState';
+import { ConfigApi } from '@backstage/core-plugin-api';
 
 export type StepperProviderOpts = {
   pullRequest?: {

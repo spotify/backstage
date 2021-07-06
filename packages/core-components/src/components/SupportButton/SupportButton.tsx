@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,19 +24,18 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Typography,
   makeStyles,
   Popover,
 } from '@material-ui/core';
-import React, {
-  Fragment,
-  MouseEventHandler,
-  PropsWithChildren,
-  useState,
-} from 'react';
+import React, { Fragment, MouseEventHandler, useState } from 'react';
 import { SupportItem, SupportItemLink, useSupportConfig } from '../../hooks';
 import { Link } from '../Link';
 
-type Props = {};
+type SupportButtonProps = {
+  title?: string;
+  children?: React.ReactNode;
+};
 
 const useStyles = makeStyles({
   popoverList: {
@@ -78,7 +77,7 @@ const SupportListItem = ({ item }: { item: SupportItem }) => {
   );
 };
 
-export const SupportButton = ({ children }: PropsWithChildren<Props>) => {
+export const SupportButton = ({ title, children }: SupportButtonProps) => {
   const { items } = useSupportConfig();
 
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -121,13 +120,20 @@ export const SupportButton = ({ children }: PropsWithChildren<Props>) => {
         onClose={popoverCloseHandler}
       >
         <List className={classes.popoverList}>
+          {title && (
+            <ListItem alignItems="flex-start">
+              <Typography variant="subtitle1">{title}</Typography>
+            </ListItem>
+          )}
           {React.Children.map(children, (child, i) => (
-            <ListItem alignItems="flex-start" key={i}>
+            <ListItem alignItems="flex-start" key={`child-${i}`}>
               {child}
             </ListItem>
           ))}
           {items &&
-            items.map((item, i) => <SupportListItem item={item} key={i} />)}
+            items.map((item, i) => (
+              <SupportListItem item={item} key={`item-${i}`} />
+            ))}
         </List>
         <DialogActions>
           <Button color="primary" onClick={popoverCloseHandler}>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -156,7 +156,7 @@ export class OpenStackSwiftPublish implements PublisherBase {
         const uploadFile = limiter(
           () =>
             new Promise((res, rej) => {
-              const readStream = fs.createReadStream(filePath, 'utf8');
+              const readStream = fs.createReadStream(filePath);
 
               const writeStream = this.storageClient.upload(params);
 

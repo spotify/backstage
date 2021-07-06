@@ -6,13 +6,8 @@ ExampleFetchComponent.tsx reference
 import React from 'react';
 import { useAsync } from 'react-use';
 import Alert from '@material-ui/lab/Alert';
-import {
-  Table,
-  TableColumn,
-  Progress,
-  githubAuthApiRef,
-  useApi,
-} from '@backstage/core';
+import { githubAuthApiRef, useApi } from '@backstage/core-plugin-api';
+import { Table, TableColumn, Progress } from '@backstage/core-components';
 import { graphql } from '@octokit/graphql';
 
 const query = `{
@@ -76,7 +71,7 @@ export const DenseTable = ({ viewer }: DenseTableProps) => {
   );
 };
 
-const ExampleFetchComponent = () => {
+export const ExampleFetchComponent = () => {
   const auth = useApi(githubAuthApiRef);
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
@@ -106,6 +101,4 @@ const ExampleFetchComponent = () => {
     />
   );
 };
-
-export default ExampleFetchComponent;
 ```

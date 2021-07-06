@@ -14,7 +14,7 @@ import {
   useHotMemoize,
   notFoundHandler,
   CacheManager,
-  SingleConnectionDatabaseManager,
+  DatabaseManager,
   SingleHostDiscovery,
   UrlReaders,
 } from '@backstage/backend-common';
@@ -35,8 +35,8 @@ function makeCreateEnv(config: Config) {
 
   root.info(`Created UrlReader ${reader}`);
 
-  const databaseManager = SingleConnectionDatabaseManager.fromConfig(config);
   const cacheManager = CacheManager.fromConfig(config);
+  const databaseManager = DatabaseManager.fromConfig(config);
 
   return (plugin: string): PluginEnvironment => {
     const logger = root.child({ type: 'plugin', plugin });

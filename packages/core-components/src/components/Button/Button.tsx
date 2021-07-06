@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-import React, { ComponentProps } from 'react';
-import { Button as MaterialButton } from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
+import {
+  Button as MaterialButton,
+  ButtonProps as MaterialButtonProps,
+} from '@material-ui/core';
+import React from 'react';
+import { Link, LinkProps } from '../Link';
 
-type Props = ComponentProps<typeof MaterialButton> &
-  ComponentProps<typeof RouterLink>;
+type Props = MaterialButtonProps & Omit<LinkProps, 'variant' | 'color'>;
 
 /**
  * Thin wrapper on top of material-ui's Button component
  * Makes the Button to utilise react-router
  */
 export const Button = React.forwardRef<any, Props>((props, ref) => (
-  <MaterialButton ref={ref} component={RouterLink} {...props} />
+  <MaterialButton ref={ref} component={Link} {...props} />
 ));

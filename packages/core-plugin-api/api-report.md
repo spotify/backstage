@@ -8,6 +8,7 @@ import { BackstageTheme } from '@backstage/theme';
 import { ComponentType } from 'react';
 import { Config } from '@backstage/config';
 import { default as React_2 } from 'react';
+import { ReactElement } from 'react';
 import { ReactNode } from 'react';
 import { SvgIconProps } from '@material-ui/core';
 
@@ -226,6 +227,20 @@ export type DiscoveryApi = {
 
 // @public (undocumented)
 export const discoveryApiRef: ApiRef<DiscoveryApi>;
+
+// @public
+export interface ElementCollection {
+    findComponentData<T>(query: {
+        key: string;
+    }): T[];
+    getElements<Props extends {
+        [name: string]: unknown;
+    }>(): Array<ReactElement<Props>>;
+    selectByComponentData(query: {
+        key: string;
+        withStrictError?: string;
+    }): ElementCollection;
+}
 
 // @public
 export type ErrorApi = {
@@ -513,6 +528,9 @@ export function useApiHolder(): ApiHolder;
 
 // @public (undocumented)
 export const useApp: () => AppContext;
+
+// @public
+export function useElementFilter<T>(node: ReactNode, filterFn: (arg: ElementCollection) => T, dependencies?: any[]): T;
 
 // @public (undocumented)
 export type UserFlags = {};

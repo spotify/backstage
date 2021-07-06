@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import { ComponentEntity, SystemEntity } from '@backstage/catalog-model';
-import { TableColumn } from '@backstage/core';
 import {
   createDomainColumn,
   createEntityRefColumn,
@@ -25,6 +24,7 @@ import {
   createSpecTypeColumn,
   createSystemColumn,
 } from './columns';
+import { TableColumn } from '@backstage/core-components';
 
 export const systemEntityColumns: TableColumn<SystemEntity>[] = [
   createEntityRefColumn({ defaultKind: 'system' }),

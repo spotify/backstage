@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,10 @@ import {
   RELATION_OWNED_BY,
 } from '@backstage/catalog-model';
 import {
+  useElementFilter,
   attachComponentData,
-  Content,
-  Header,
-  HeaderLabel,
   IconComponent,
-  Page,
-  Progress,
-  RoutedTabs,
-} from '@backstage/core';
+} from '@backstage/core-plugin-api';
 import {
   EntityContext,
   EntityRefLinks,
@@ -37,18 +32,19 @@ import {
 } from '@backstage/plugin-catalog-react';
 import { Box, TabProps } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import {
-  Children,
-  default as React,
-  Fragment,
-  isValidElement,
-  useContext,
-  useState,
-} from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { EntityContextMenu } from '../EntityContextMenu/EntityContextMenu';
 import { FavouriteEntity } from '../FavouriteEntity/FavouriteEntity';
 import { UnregisterEntityDialog } from '../UnregisterEntityDialog/UnregisterEntityDialog';
+import {
+  Content,
+  Header,
+  HeaderLabel,
+  Page,
+  Progress,
+  RoutedTabs,
+} from '@backstage/core-components';
 
 type SubRoute = {
   path: string;
@@ -58,45 +54,13 @@ type SubRoute = {
   tabProps?: TabProps<React.ElementType, { component?: React.ElementType }>;
 };
 
+const dataKey = 'plugin.catalog.entityLayoutRoute';
+
 const Route: (props: SubRoute) => null = () => null;
+attachComponentData(Route, dataKey, true);
 
 // This causes all mount points that are discovered within this route to use the path of the route itself
 attachComponentData(Route, 'core.gatherMountPoints', true);
-
-function createSubRoutesFromChildren(
-  childrenProps: React.ReactNode,
-  entity: Entity | undefined,
-): SubRoute[] {
-  // Directly comparing child.type with Route will not work with in
-  // combination with react-hot-loader in storybook
-  // https://github.com/gaearon/react-hot-loader/issues/304
-  const routeType = (
-    <Route path="" title="">
-      <div />
-    </Route>
-  ).type;
-
-  return Children.toArray(childrenProps).flatMap(child => {
-    if (!isValidElement(child)) {
-      return [];
-    }
-
-    if (child.type === Fragment) {
-      return createSubRoutesFromChildren(child.props.children, entity);
-    }
-
-    if (child.type !== routeType) {
-      throw new Error('Child of EntityLayout must be an EntityLayout.Route');
-    }
-
-    const { path, title, children, if: condition, tabProps } = child.props;
-    if (condition && entity && !condition(entity)) {
-      return [];
-    }
-
-    return [{ path, title, children, tabProps }];
-  });
-}
 
 const EntityLayoutTitle = ({
   entity,
@@ -195,7 +159,29 @@ export const EntityLayout = ({
   const { kind, namespace, name } = useEntityCompoundName();
   const { entity, loading, error } = useContext(EntityContext);
 
-  const routes = createSubRoutesFromChildren(children, entity);
+  const routes = useElementFilter(children, elements =>
+    elements
+      .selectByComponentData({
+        key: dataKey,
+        withStrictError: 'Child of EntityLayout must be an EntityLayout.Route',
+      })
+      .getElements<SubRoute>() // all nodes, element data, maintain structure or not?
+      .flatMap(({ props }) => {
+        if (props.if && entity && !props.if(entity)) {
+          return [];
+        }
+
+        return [
+          {
+            path: props.path,
+            title: props.title,
+            children: props.children,
+            tabProps: props.tabProps,
+          },
+        ];
+      }),
+  );
+
   const { headerTitle, headerType } = headerProps(
     kind,
     namespace,

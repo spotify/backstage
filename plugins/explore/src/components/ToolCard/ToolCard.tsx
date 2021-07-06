@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ import { ExploreTool } from '@backstage/plugin-explore-react';
 import { BackstageTheme } from '@backstage/theme';
 import {
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -27,6 +26,7 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import { Button } from '@backstage/core-components';
 import classNames from 'classnames';
 import React from 'react';
 
@@ -97,7 +97,7 @@ export const ToolCard = ({ card, objectFit }: Props) => {
         )}
       </CardContent>
       <CardActions>
-        <Button color="primary" href={url} disabled={!url}>
+        <Button color="primary" to={url} disabled={!url}>
           Explore
         </Button>
       </CardActions>

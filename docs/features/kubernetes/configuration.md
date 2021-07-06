@@ -68,7 +68,7 @@ The base URL to the Kubernetes control plane. Can be found by using the
 ##### `clusters.\*.name`
 
 A name to represent this cluster, this must be unique within the `clusters`
-array. Users will see this value in the Service Catalog Kubernetes plugin.
+array. Users will see this value in the Software Catalog Kubernetes plugin.
 
 ##### `clusters.\*.authProvider`
 
@@ -195,7 +195,7 @@ annotations:
 
 #### Labeling Kubernetes components
 
-In order for Kubernetes components to show up in the service catalog as a part
+In order for Kubernetes components to show up in the software catalog as a part
 of an entity, Kubernetes components themselves can have the following label:
 
 ```yaml

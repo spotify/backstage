@@ -112,7 +112,7 @@ example `getString`. These will throw an error if there is no value available.
 
 The [ConfigApi](../reference/utility-apis/Config.md) in the frontend is a
 [UtilityApi](../api/utility-apis.md). It's accessible as usual via the
-`configApiRef` exported from `@backstage/core`.
+`configApiRef` exported from `@backstage/core-plugin-api`.
 
 Depending on the config api in another API is slightly different though, as the
 `ConfigApi` implementation is supplied via the App itself and not instantiated
@@ -123,7 +123,7 @@ for an example of how this wiring is done.
 For standalone plugin setups in `dev/index.ts`, register a factory with a
 statically mocked implementation of the config API. Use the `ConfigReader` from
 `@backstage/config` to create an instance and register it for the `configApiRef`
-from `@backstage/core`.
+from `@backstage/core-plugin-api`.
 
 ## Accessing ConfigApi in Backend Plugins
 

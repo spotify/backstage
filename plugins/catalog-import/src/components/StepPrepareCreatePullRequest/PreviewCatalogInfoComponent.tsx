@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { CodeSnippet } from '@backstage/core';
 import { Card, CardContent, CardHeader } from '@material-ui/core';
 import React from 'react';
 import YAML from 'yaml';
+import { CodeSnippet } from '@backstage/core-components';
 
 type Props = {
   repositoryUrl: string;

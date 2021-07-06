@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ import React from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { Route, Routes } from 'react-router-dom';
-import { MissingAnnotationEmptyState } from '@backstage/core';
 import {
   rootRouteRef,
   rootDocsRouteRef,
@@ -27,6 +26,7 @@ import {
 import { TechDocsHome } from './home/components/TechDocsHome';
 import { TechDocsPage } from './reader/components/TechDocsPage';
 import { EntityPageDocs } from './EntityPageDocs';
+import { MissingAnnotationEmptyState } from '@backstage/core-components';
 
 const TECHDOCS_ANNOTATION = 'backstage.io/techdocs-ref';
 

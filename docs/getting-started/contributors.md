@@ -94,7 +94,7 @@ here are some useful ones:
 ```python
 yarn start # Start serving the example app, use --check to include type checks and linting
 
-yarn storybook # Start local storybook, useful for working on components in @backstage/core
+yarn storybook # Start local storybook, useful for working on components in @backstage/core-components
 
 yarn workspace @backstage/plugin-welcome start # Serve welcome plugin only, also supports --check
 

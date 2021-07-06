@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import {
   Location,
   ORIGIN_LOCATION_ANNOTATION,
 } from '@backstage/catalog-model';
-import { ApiProvider, ApiRegistry } from '@backstage/core';
 import { CatalogApi, catalogApiRef } from '@backstage/plugin-catalog-react';
 import {
   act,
@@ -31,6 +30,7 @@ import {
   UseUnregisterEntityDialogState,
   useUnregisterEntityDialogState,
 } from './useUnregisterEntityDialogState';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 
 function defer<T>(): { promise: Promise<T>; resolve: (value: T) => void } {
   let resolve: (value: T) => void = () => {};

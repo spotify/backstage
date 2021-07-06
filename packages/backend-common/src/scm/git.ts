@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -150,12 +150,19 @@ export class Git {
     });
   }
 
-  async init({ dir }: { dir: string }): Promise<void> {
+  async init({
+    dir,
+    defaultBranch = 'master',
+  }: {
+    dir: string;
+    defaultBranch?: string;
+  }): Promise<void> {
     this.config.logger?.info(`Init git repository {dir=${dir}}`);
 
     return git.init({
       fs,
       dir,
+      defaultBranch,
     });
   }
 

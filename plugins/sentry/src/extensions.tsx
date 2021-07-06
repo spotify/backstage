@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import {
-  createComponentExtension,
-  createRoutableExtension,
-} from '@backstage/core';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
 import { sentryPlugin, rootRouteRef } from './plugin';
+import {
+  createComponentExtension,
+  createRoutableExtension,
+} from '@backstage/core-plugin-api';
 
 export const EntitySentryContent = sentryPlugin.provide(
   createRoutableExtension({

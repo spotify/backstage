@@ -1,5 +1,49 @@
 # @backstage/plugin-catalog
 
+## 0.6.5
+
+### Patch Changes
+
+- f423891ee: Fixed sizing of the System diagram when the rendered graph was wider than the container.
+- e19283b39: Get rid of flex console warning for IconLink
+- Updated dependencies
+  - @backstage/plugin-catalog-react@0.2.5
+  - @backstage/core-components@0.1.4
+  - @backstage/integration@0.5.7
+  - @backstage/catalog-client@0.3.15
+
+## 0.6.4
+
+### Patch Changes
+
+- bba9df7f9: improve the wrapping behavior of long entity links
+- 5f4339b8c: Adding `FeatureFlag` component and treating `FeatureFlags` as first class citizens to composability API
+- 7bd46b19d: Allow `defaultKind` from `CatalogTable.column.creatNameColumn` to be configurable
+- 71416fb64: Moved installation instructions from the main [backstage.io](https://backstage.io) documentation to the package README file. These instructions are not generally needed, since the plugin comes installed by default with `npx @backstage/create-app`.
+- e3cbfa8c2: Disambiguated titles of `EntityDependencyOfComponentsCard` and `EntityDependsOnComponentsCard`.
+- 3d7b1c9f0: Adds an optional `actions` prop to `CatalogTable` and `CatalogPage` to support supplying custom actions for each entity row in the table. This uses the default actions if not provided.
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- 80a82ffce: Clearer titles for the relationship cards
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+  - @backstage/catalog-client@0.3.14
+  - @backstage/catalog-model@0.8.4
+  - @backstage/integration-react@0.1.4
+  - @backstage/plugin-catalog-react@0.2.4
+
+## 0.6.3
+
+### Patch Changes
+
+- 30c2fdad2: Exports `CatalogLayout` and `CreateComponentButton` for catalog customization.
+- e2d68f1ce: Truncate long entity names on the system diagram
+- d2d42a7fa: Fix for Diagram component using hard coded namespace.
+- 2ebc430c4: Export `CatalogTableRow` type
+- Updated dependencies
+  - @backstage/plugin-catalog-react@0.2.3
+  - @backstage/catalog-model@0.8.3
+  - @backstage/core@0.7.13
+
 ## 0.6.2
 
 ### Patch Changes

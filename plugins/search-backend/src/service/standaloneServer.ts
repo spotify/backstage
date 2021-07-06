@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,9 +44,12 @@ export async function startStandaloneServer(
     logger,
   });
 
-  const service = createServiceBuilder(module)
-    .enableCors({ origin: 'http://localhost:3000' })
+  let service = createServiceBuilder(module)
+    .setPort(options.port)
     .addRouter('/search', router);
+  if (options.enableCors) {
+    service = service.enableCors({ origin: 'http://localhost:3000' });
+  }
 
   return await service.start().catch(err => {
     logger.error(err);

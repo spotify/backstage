@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 import React, { cloneElement } from 'react';
 import { useObservable } from 'react-use';
 import AutoIcon from '@material-ui/icons/BrightnessAuto';
-import { appThemeApiRef, useApi } from '@backstage/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import {
@@ -27,6 +26,7 @@ import {
   Tooltip,
   makeStyles,
 } from '@material-ui/core';
+import { appThemeApiRef, useApi } from '@backstage/core-plugin-api';
 
 type ThemeIconProps = {
   id: string;

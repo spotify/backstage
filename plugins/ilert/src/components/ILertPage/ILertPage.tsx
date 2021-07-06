@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 import React from 'react';
+import { IncidentsPage } from '../IncidentsPage';
+import { UptimeMonitorsPage } from '../UptimeMonitorsPage';
+import { OnCallSchedulesPage } from '../OnCallSchedulesPage';
 import {
   Page,
   Header,
   HeaderTabs,
   HeaderLabel,
   Content,
-} from '@backstage/core';
-import { IncidentsPage } from '../IncidentsPage';
-import { UptimeMonitorsPage } from '../UptimeMonitorsPage';
-import { OnCallSchedulesPage } from '../OnCallSchedulesPage';
+} from '@backstage/core-components';
 
 export const ILertPage = () => {
   const [selectedTab, setSelectedTab] = React.useState<number>(0);

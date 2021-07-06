@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { DefaultCustomResourceDrawer } from './DefaultCustomResourceDrawer';
-import { StructuredMetadataTable } from '@backstage/core';
+import { StructuredMetadataTable } from '@backstage/core-components';
 
 type DefaultCustomResourceAccordionsProps = {
   customResources: any[];

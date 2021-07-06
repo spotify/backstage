@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
 import { ApiEntity } from '@backstage/catalog-model';
-import { TableColumn } from '@backstage/core';
 import { EntityTable } from '@backstage/plugin-catalog-react';
 import React from 'react';
 import { ApiTypeTitle } from '../ApiDefinitionCard';
+import { TableColumn } from '@backstage/core-components';
 
 export function createSpecApiTypeColumn(): TableColumn<ApiEntity> {
   return {

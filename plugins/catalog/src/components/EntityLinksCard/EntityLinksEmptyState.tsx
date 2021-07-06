@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { CodeSnippet } from '@backstage/core';
 import { BackstageTheme } from '@backstage/theme';
 import { Button, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
+import { CodeSnippet } from '@backstage/core-components';
 
 const ENTITY_YAML = `metadata:
   name: example

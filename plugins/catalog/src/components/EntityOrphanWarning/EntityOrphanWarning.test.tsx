@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import { ApiProvider, ApiRegistry } from '@backstage/core';
-
 import {
   CatalogApi,
   catalogApiRef,
   catalogRouteRef,
   EntityProvider,
 } from '@backstage/plugin-catalog-react';
+
 import { renderInTestApp } from '@backstage/test-utils';
 import React from 'react';
 import { EntityOrphanWarning } from './EntityOrphanWarning';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 
 describe('<EntityOrphanWarning />', () => {
   const catalogClient: jest.Mocked<CatalogApi> = {

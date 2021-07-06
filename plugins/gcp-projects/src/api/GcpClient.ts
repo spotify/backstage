@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { OAuthApi } from '@backstage/core';
 import { GcpApi } from './GcpApi';
 import { Operation, Project } from './types';
+import { OAuthApi } from '@backstage/core-plugin-api';
 
 const BASE_URL =
   'https://content-cloudresourcemanager.googleapis.com/v1/projects';

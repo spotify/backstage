@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { KubernetesBackendClient } from './api/KubernetesBackendClient';
+import { kubernetesApiRef } from './api/types';
+import { kubernetesAuthProvidersApiRef } from './kubernetes-auth-provider/types';
+import { KubernetesAuthProviders } from './kubernetes-auth-provider/KubernetesAuthProviders';
 import {
   createApiFactory,
   createPlugin,
@@ -21,11 +25,7 @@ import {
   identityApiRef,
   googleAuthApiRef,
   createRoutableExtension,
-} from '@backstage/core';
-import { KubernetesBackendClient } from './api/KubernetesBackendClient';
-import { kubernetesApiRef } from './api/types';
-import { kubernetesAuthProvidersApiRef } from './kubernetes-auth-provider/types';
-import { KubernetesAuthProviders } from './kubernetes-auth-provider/KubernetesAuthProviders';
+} from '@backstage/core-plugin-api';
 
 export const rootCatalogKubernetesRouteRef = createRouteRef({
   path: '*',

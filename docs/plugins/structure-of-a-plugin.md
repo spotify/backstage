@@ -57,7 +57,10 @@ package.json to declare the plugin dependencies, metadata and scripts.
 In the `src` folder we get to the interesting bits. Check out the `plugin.ts`:
 
 ```jsx
-import { createPlugin, createRoutableExtension } from '@backstage/core';
+import {
+  createPlugin,
+  createRoutableExtension,
+} from '@backstage/core-plugin-api';
 
 import { rootRouteRef } from './routes';
 

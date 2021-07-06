@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ import { Box, IconButton, Link, Typography, Tooltip } from '@material-ui/core';
 import RetryIcon from '@material-ui/icons/Replay';
 import JenkinsLogo from '../../../../assets/JenkinsLogo.svg';
 import { generatePath, Link as RouterLink } from 'react-router-dom';
-import { Table, TableColumn } from '@backstage/core';
 import { JenkinsRunStatus } from '../Status';
 import { useBuilds } from '../../../useBuilds';
 import { useProjectSlugFromEntity } from '../../../useProjectSlugFromEntity';
 import { buildRouteRef } from '../../../../plugin';
+import { Table, TableColumn } from '@backstage/core-components';
 
 export type CITableBuildInfo = {
   id: string;
@@ -118,7 +118,7 @@ const generatedColumns: TableColumn[] = [
         <Link
           component={RouterLink}
           to={generatePath(buildRouteRef.path, {
-            branch: row.source.branchName,
+            branch: encodeURIComponent(row.source.branchName),
             buildNumber: row.buildNumber.toString(),
           })}
         >

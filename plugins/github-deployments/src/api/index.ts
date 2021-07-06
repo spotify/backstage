@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import { parseLocationReference } from '@backstage/catalog-model';
-import { createApiRef, OAuthApi } from '@backstage/core';
 import { InputError } from '@backstage/errors';
 import { ScmIntegrationRegistry } from '@backstage/integration';
 import { graphql } from '@octokit/graphql';
+import { createApiRef, OAuthApi } from '@backstage/core-plugin-api';
 
 const getBaseUrl = (
   scmIntegrationsApi: ScmIntegrationRegistry,

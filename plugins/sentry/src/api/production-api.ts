@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import { SentryIssue } from './sentry-issue';
 import { SentryApi } from './sentry-api';
-import { DiscoveryApi } from '@backstage/core';
+import { DiscoveryApi } from '@backstage/core-plugin-api';
 
 export class ProductionSentryApi implements SentryApi {
   constructor(

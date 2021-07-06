@@ -33,7 +33,7 @@ class Footer extends React.Component {
             <a
               href={`/docs/features/software-catalog/software-catalog-overview`}
             >
-              Service Catalog
+              Software Catalog
             </a>
             <a href={`/docs/plugins/create-a-plugin`}>Create a Plugin</a>
             <a href={`/docs/dls/design`}>Designing for Backstage</a>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 
 import React from 'react';
-import { Table, TableColumn } from '@backstage/core';
 import { SentryIssue } from '../../api';
-import { format } from 'timeago.js';
+import { DateTime } from 'luxon';
 import { ErrorCell } from '../ErrorCell/ErrorCell';
 import { ErrorGraph } from '../ErrorGraph/ErrorGraph';
+import { Table, TableColumn } from '@backstage/core-components';
 
 const columns: TableColumn[] = [
   {
@@ -35,7 +35,8 @@ const columns: TableColumn[] = [
     field: 'firstSeen',
     render: data => {
       const { firstSeen } = data as SentryIssue;
-      return format(firstSeen);
+
+      return DateTime.fromISO(firstSeen).toRelative({ locale: 'en' });
     },
   },
   {
@@ -43,7 +44,7 @@ const columns: TableColumn[] = [
     field: 'lastSeen',
     render: data => {
       const { lastSeen } = data as SentryIssue;
-      return format(lastSeen);
+      return DateTime.fromISO(lastSeen).toRelative({ locale: 'en' });
     },
   },
   {

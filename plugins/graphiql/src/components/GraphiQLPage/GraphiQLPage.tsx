@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 import React from 'react';
-import { Content, Header, HeaderLabel, Page, Progress } from '@backstage/core';
 import { useApi } from '@backstage/core-plugin-api';
 import { useAsync } from 'react-use';
 import 'graphiql/graphiql.css';
 import { graphQlBrowseApiRef } from '../../lib/api';
 import { GraphiQLBrowser } from '../GraphiQLBrowser';
 import { Typography } from '@material-ui/core';
+import {
+  Content,
+  Header,
+  HeaderLabel,
+  Page,
+  Progress,
+} from '@backstage/core-components';
 
 export const GraphiQLPage = () => {
   const graphQlBrowseApi = useApi(graphQlBrowseApiRef);

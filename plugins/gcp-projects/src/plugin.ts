@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
+import { gcpApiRef, GcpClient } from './api';
+import { rootRouteRef } from './routes';
 import {
   createApiFactory,
   createPlugin,
   createRoutableExtension,
   googleAuthApiRef,
-} from '@backstage/core';
-import { gcpApiRef, GcpClient } from './api';
-import { NewProjectPage } from './components/NewProjectPage';
-import { ProjectDetailsPage } from './components/ProjectDetailsPage';
-import { ProjectListPage } from './components/ProjectListPage';
-import { rootRouteRef, projectRouteRef, newProjectRouteRef } from './routes';
+} from '@backstage/core-plugin-api';
 
 export const gcpProjectsPlugin = createPlugin({
   id: 'gcp-projects',
@@ -40,11 +37,6 @@ export const gcpProjectsPlugin = createPlugin({
       },
     }),
   ],
-  register({ router }) {
-    router.addRoute(rootRouteRef, ProjectListPage);
-    router.addRoute(projectRouteRef, ProjectDetailsPage);
-    router.addRoute(newProjectRouteRef, NewProjectPage);
-  },
 });
 
 export const GcpProjectsPage = gcpProjectsPlugin.provide(

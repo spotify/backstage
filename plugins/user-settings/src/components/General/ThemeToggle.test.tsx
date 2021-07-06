@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import {
-  ApiProvider,
-  ApiRegistry,
-  appThemeApiRef,
-  AppThemeSelector,
-} from '@backstage/core';
-import { AppTheme } from '@backstage/core-plugin-api';
+import { AppTheme, appThemeApiRef } from '@backstage/core-plugin-api';
 import { renderWithEffects, wrapInTestApp } from '@backstage/test-utils';
 import { lightTheme } from '@backstage/theme';
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 import { ThemeToggle } from './ThemeToggle';
+import {
+  ApiProvider,
+  ApiRegistry,
+  AppThemeSelector,
+} from '@backstage/core-app-api';
 
 const mockTheme: AppTheme = {
   id: 'light-theme',

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 import React, { useState, useCallback } from 'react';
-import {
-  useApi,
-  Progress,
-  HeaderIconLinkRow,
-  IconLinkVerticalProps,
-} from '@backstage/core';
 import { Entity } from '@backstage/catalog-model';
 import { Card, CardHeader, Divider, CardContent } from '@material-ui/core';
 import { Incidents } from '../Incident';
@@ -33,6 +27,13 @@ import WebIcon from '@material-ui/icons/Web';
 import { usePagerdutyEntity } from '../../hooks';
 import { PAGERDUTY_INTEGRATION_KEY } from '../constants';
 import { TriggerDialog } from '../TriggerDialog';
+
+import { useApi } from '@backstage/core-plugin-api';
+import {
+  Progress,
+  HeaderIconLinkRow,
+  IconLinkVerticalProps,
+} from '@backstage/core-components';
 
 export const isPluginApplicableToEntity = (entity: Entity) =>
   Boolean(entity.metadata.annotations?.[PAGERDUTY_INTEGRATION_KEY]);

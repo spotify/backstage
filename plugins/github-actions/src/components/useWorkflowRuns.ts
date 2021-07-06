@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 import { useState } from 'react';
 import { useAsyncRetry } from 'react-use';
 import { githubActionsApiRef } from '../api/GithubActionsApi';
-import { useApi, errorApiRef } from '@backstage/core';
+import { useApi, errorApiRef } from '@backstage/core-plugin-api';
 
 export type WorkflowRun = {
   workflowName: string;

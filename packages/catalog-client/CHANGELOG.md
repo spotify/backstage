@@ -1,5 +1,19 @@
 # @backstage/catalog-client
 
+## 0.3.15
+
+### Patch Changes
+
+- ca080cab8: Don't crash if the entities response doesn't include the entities name and kind
+
+## 0.3.14
+
+### Patch Changes
+
+- 45ef515d0: Return entities sorted alphabetically by ref
+- Updated dependencies
+  - @backstage/catalog-model@0.8.4
+
 ## 0.3.13
 
 ### Patch Changes

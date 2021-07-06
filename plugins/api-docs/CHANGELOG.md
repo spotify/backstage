@@ -1,5 +1,36 @@
 # @backstage/plugin-api-docs
 
+## 0.6.0
+
+### Minor Changes
+
+- d719926d2: **BREAKING CHANGE** Remove deprecated route registrations, meaning that it is no longer enough to only import the plugin in the app and the exported page extension must be used instead.
+
+### Patch Changes
+
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- 7bd46b19d: Move `EntityTypePicker` to be consistent with `CatalogPage` and remove `api:` prefix from entity names
+- Updated dependencies
+  - @backstage/plugin-catalog@0.6.4
+  - @backstage/core-plugin-api@0.1.3
+  - @backstage/catalog-model@0.8.4
+  - @backstage/plugin-catalog-react@0.2.4
+
+## 0.5.0
+
+### Minor Changes
+
+- 2ebc430c4: Rework `ApiExplorerPage` to utilize `EntityListProvider` to provide a consistent UI with the `CatalogIndexPage` which now exposes support for starring entities, pagination, and customizing columns.
+
+### Patch Changes
+
+- 14ce64b4f: Add pagination to ApiExplorerTable
+- Updated dependencies
+  - @backstage/plugin-catalog-react@0.2.3
+  - @backstage/plugin-catalog@0.6.3
+  - @backstage/catalog-model@0.8.3
+  - @backstage/core@0.7.13
+
 ## 0.4.15
 
 ### Patch Changes

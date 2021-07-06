@@ -4,8 +4,8 @@ title: Writing Templates
 description: Details around creating your own custom Software Templates
 ---
 
-Templates are stored in the **Service Catalog** under a kind `Template`. You can
-create your own templates with a small `yaml` definition which describes the
+Templates are stored in the **Software Catalog** under a kind `Template`. You
+can create your own templates with a small `yaml` definition which describes the
 template and it's metadata, along with some input variables that your template
 will need, and then a list of actions which are then executed by the scaffolding
 service.

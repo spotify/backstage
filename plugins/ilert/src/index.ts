@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { IconComponent } from '@backstage/core';
 import ILertIconComponent from './assets/ilert.icon.svg';
+import { IconComponent } from '@backstage/core-plugin-api';
 
 export {
   ilertPlugin,
@@ -30,4 +30,4 @@ export {
 } from './components';
 export * from './api';
 export * from './route-refs';
-export const ILertIcon: IconComponent = ILertIconComponent;
+export const ILertIcon: IconComponent = ILertIconComponent as IconComponent;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import { Logger } from 'winston';
 import yn from 'yn';
 import { EntitiesCatalog, LocationsCatalog } from '../catalog';
 import { HigherOrderOperation, LocationAnalyzer } from '../ingestion/types';
+import { LocationService } from '../next/types';
 import {
   basicEntityFilter,
   parseEntityFilterParams,
@@ -45,6 +46,7 @@ export interface RouterOptions {
   locationsCatalog?: LocationsCatalog;
   higherOrderOperation?: HigherOrderOperation;
   locationAnalyzer?: LocationAnalyzer;
+  locationService?: LocationService;
   logger: Logger;
   config: Config;
 }
@@ -57,6 +59,7 @@ export async function createRouter(
     locationsCatalog,
     higherOrderOperation,
     locationAnalyzer,
+    locationService,
     config,
     logger,
   } = options;
@@ -142,6 +145,40 @@ export async function createRouter(
           );
         }
         res.status(200).json(entities[0]);
+      });
+  }
+
+  if (locationService) {
+    router
+      .post('/locations', async (req, res) => {
+        const input = await validateRequestBody(req, locationSpecSchema);
+        const dryRun = yn(req.query.dryRun, { default: false });
+
+        // when in dryRun addLocation is effectively a read operation so we don't
+        // need to disallow readonly
+        if (!dryRun) {
+          disallowReadonlyMode(readonlyEnabled);
+        }
+
+        const output = await locationService.createLocation(input, dryRun);
+        res.status(201).json(output);
+      })
+      .get('/locations', async (_req, res) => {
+        const locations = await locationService.listLocations();
+        res.status(200).json(locations.map(l => ({ data: l })));
+      })
+
+      .get('/locations/:id', async (req, res) => {
+        const { id } = req.params;
+        const output = await locationService.getLocation(id);
+        res.status(200).json(output);
+      })
+      .delete('/locations/:id', async (req, res) => {
+        disallowReadonlyMode(readonlyEnabled);
+
+        const { id } = req.params;
+        await locationService.deleteLocation(id);
+        res.status(204).end();
       });
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 import React from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { AuthenticationError } from '@backstage/errors';
-import { ResponseErrorPanel } from '@backstage/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -34,6 +33,7 @@ import { ILertCardHeaderStatus } from './ILertCardHeaderStatus';
 import { ILertCardMaintenanceModal } from './ILertCardMaintenanceModal';
 import { ILertCardEmptyState } from './ILertCardEmptyState';
 import { ILertCardOnCall } from './ILertCardOnCall';
+import { ResponseErrorPanel } from '@backstage/core-components';
 
 export const isPluginApplicableToEntity = (entity: Entity) =>
   Boolean(entity.metadata.annotations?.[ILERT_INTEGRATION_KEY_ANNOTATION]);

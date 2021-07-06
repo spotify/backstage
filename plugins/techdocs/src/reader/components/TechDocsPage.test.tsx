@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@ import {
   scmIntegrationsApiRef,
 } from '@backstage/integration-react';
 import { wrapInTestApp } from '@backstage/test-utils';
-import { ApiRegistry, ApiProvider } from '@backstage/core';
 import {
   techdocsApiRef,
   TechDocsApi,
   techdocsStorageApiRef,
   TechDocsStorageApi,
 } from '../../api';
+import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
 
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');

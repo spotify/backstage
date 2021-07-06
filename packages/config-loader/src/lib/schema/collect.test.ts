@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,15 @@ const mockSchema = {
     },
   },
 };
+
+// We need to load in actual TS libraries when using mock-fs.
+// This lookup is to allow the `typescript` dependency to exist either
+// at top level or inside node_modules of typescript-json-schema
+const typescriptModuleDir = path.dirname(
+  require.resolve('typescript/package.json', {
+    paths: [require.resolve('typescript-json-schema')],
+  }),
+);
 
 describe('collectConfigSchemas', () => {
   afterEach(() => {
@@ -157,9 +166,7 @@ describe('collectConfigSchemas', () => {
         },
       },
       // TypeScript compilation needs to load some real files inside the typescript dir
-      '../../node_modules/typescript': (mockFs as any).load(
-        '../../node_modules/typescript',
-      ),
+      [typescriptModuleDir]: (mockFs as any).load(typescriptModuleDir),
     });
 
     await expect(collectConfigSchemas(['a', 'b', 'c'])).resolves.toEqual([
@@ -218,9 +225,7 @@ describe('collectConfigSchemas', () => {
         },
       },
       // TypeScript compilation needs to load some real files inside the typescript dir
-      '../../node_modules/typescript': (mockFs as any).load(
-        '../../node_modules/typescript',
-      ),
+      [typescriptModuleDir]: (mockFs as any).load(typescriptModuleDir),
     });
 
     await expect(collectConfigSchemas(['a'])).rejects.toThrow(

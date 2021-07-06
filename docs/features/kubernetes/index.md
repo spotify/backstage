@@ -2,7 +2,7 @@
 id: overview
 title: Kubernetes
 sidebar_label: Overview
-description: Monitoring Kubernetes based services with the service catalog
+description: Monitoring Kubernetes based services with the software catalog
 ---
 
 Kubernetes in Backstage is a tool that's designed around the needs of service

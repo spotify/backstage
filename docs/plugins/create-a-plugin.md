@@ -22,9 +22,9 @@ yarn create-plugin
 This will create a new Backstage Plugin based on the ID that was provided. It
 will be built and added to the Backstage App automatically.
 
-> If `yarn start` is already running you should be able to see the default page
-> for your new plugin directly by navigating to
-> `http://localhost:3000/my-plugin`.
+> If the Backstage App is already running (with `yarn start` or `yarn dev`) you
+> should be able to see the default page for your new plugin directly by
+> navigating to `http://localhost:3000/my-plugin`.
 
 ![](../assets/my-plugin_screenshot.png)
 
@@ -32,7 +32,7 @@ You can also serve the plugin in isolation by running `yarn start` in the plugin
 directory. Or by using the yarn workspace command, for example:
 
 ```bash
-yarn workspace @backstage/plugin-welcome start # Also supports --check
+yarn workspace @backstage/my-plugin start # Also supports --check
 ```
 
 This method of serving the plugin provides quicker iteration speed and a faster

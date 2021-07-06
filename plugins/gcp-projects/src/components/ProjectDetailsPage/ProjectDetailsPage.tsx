@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Content,
-  ContentHeader,
-  Header,
-  HeaderLabel,
-  Page,
-  SupportButton,
-  useApi,
-  WarningPanel,
-} from '@backstage/core';
 import {
   Button,
   ButtonGroup,
@@ -39,6 +29,18 @@ import {
 import React from 'react';
 import { useAsync } from 'react-use';
 import { gcpApiRef } from '../../api';
+
+import {
+  Content,
+  ContentHeader,
+  Header,
+  HeaderLabel,
+  Page,
+  SupportButton,
+  WarningPanel,
+} from '@backstage/core-components';
+
+import { useApi } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles<Theme>(theme => ({
   root: {

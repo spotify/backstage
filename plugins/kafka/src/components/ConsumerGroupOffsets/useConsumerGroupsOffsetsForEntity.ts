@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { errorApiRef, useApi } from '@backstage/core';
 import { useAsyncRetry } from 'react-use';
 import { kafkaApiRef } from '../../api/types';
 import { useConsumerGroupsForEntity } from './useConsumerGroupsForEntity';
+import { errorApiRef, useApi } from '@backstage/core-plugin-api';
 
 export const useConsumerGroupsOffsetsForEntity = () => {
   const consumers = useConsumerGroupsForEntity();

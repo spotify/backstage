@@ -4,7 +4,7 @@
 # The last matching pattern takes precedence.
 # https://help.github.com/articles/about-codeowners/
 
-*                                           @backstage/maintainers
+*                                           @backstage/reviewers
 /docs/features/techdocs                     @backstage/techdocs-core
 /docs/features/search                       @backstage/techdocs-core
 /docs/assets/search                         @backstage/techdocs-core

@@ -25,7 +25,7 @@ component, which are then displayed both visually and with sample code to be
 copied.
 
 When custom Backstage components are created, they are placed in the
-`@backstage/core` package and added to the Storybook.
+`@backstage/core-components` package and added to the Storybook.
 
 There may be times where an existing Material-UI component (in
 `@material-ui/core`) is sufficient and doesn't need to be wrapped or duplicated.

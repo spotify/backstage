@@ -61,7 +61,7 @@
     "command-exists": "^1.2.9",
     "concurrently": "^6.0.0",
     "eslint-plugin-notice": "^0.9.10",
-    "fs-extra": "^9.0.0",
+    "fs-extra": "^10.0.0",
     "husky": "^6.0.0",
     "lerna": "^4.0.0",
     "lint-staged": "^10.1.0",

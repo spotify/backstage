@@ -9,7 +9,7 @@
 // site configuration options.
 
 const siteConfig = {
-  title: 'Backstage Service Catalog and Developer Platform', // Title for your website.
+  title: 'Backstage Software Catalog and Developer Platform', // Title for your website.
   tagline: 'An open platform for building developer portals',
   url: 'https://backstage.io', // Your website URL
   cname: 'backstage.io',
@@ -92,8 +92,7 @@ const siteConfig = {
   cleanUrl: true,
 
   // Open Graph and Twitter card images.
-  ogImage:
-    'logo_assets/png/Backstage_Identity_Assets_Artwork_RGB_04_Icon_Teal.png',
+  ogImage: 'img/sharing-opengraph.png',
   twitterImage: 'img/twitter-summary.png',
 
   // For sites with a sizable amount of content, set collapsible to true.

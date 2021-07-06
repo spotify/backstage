@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,20 +53,30 @@ export interface Config {
           };
         };
 
-    /** Database connection configuration, select database type using the `client` field */
-    database:
-      | {
-          client: 'sqlite3';
-          connection: ':memory:' | string | { filename: string };
-        }
-      | {
-          client: 'pg';
+    /** Database connection configuration, select base database type using the `client` field */
+    database: {
+      /** Default database client to use */
+      client: 'sqlite3' | 'pg';
+      /**
+       * Base database connection string or Knex object
+       * @secret
+       */
+      connection: string | object;
+      /** Database name prefix override */
+      prefix?: string;
+      /** Plugin specific database configuration and client override */
+      plugin?: {
+        [pluginId: string]: {
+          /** Database client override */
+          client?: 'sqlite3' | 'pg';
           /**
-           * PostgreSQL connection string or knex configuration object.
+           * Database connection string or Knex object override
            * @secret
            */
-          connection: string | object;
+          connection?: string | object;
         };
+      };
+    };
 
     /** Cache connection configuration, select cache type using the `store` field */
     cache?:

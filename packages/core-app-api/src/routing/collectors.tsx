@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import { RouteRef } from '@backstage/core-plugin-api';
 import { BackstageRouteObject } from './types';
 import { getComponentData } from '../extensions';
 import { createCollector } from '../extensions/traversal';
+import { FeatureFlagged, FeatureFlaggedProps } from './FeatureFlagged';
 
 function getMountPoint(node: ReactElement): RouteRef | undefined {
   const element: ReactNode = node.props?.element;
@@ -169,5 +170,15 @@ export const routeObjectCollector = createCollector(
     }
 
     return parentObj;
+  },
+);
+
+export const featureFlagCollector = createCollector(
+  () => new Set<string>(),
+  (acc, node) => {
+    if (node.type === FeatureFlagged) {
+      const props = node.props as FeatureFlaggedProps;
+      acc.add('with' in props ? props.with : props.without);
+    }
   },
 );

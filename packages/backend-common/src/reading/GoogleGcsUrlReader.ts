@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ import { Storage } from '@google-cloud/storage';
 import {
   ReaderFactory,
   ReadTreeResponse,
+  ReadUrlOptions,
+  ReadUrlResponse,
   SearchResponse,
   UrlReader,
 } from './types';
@@ -88,6 +90,15 @@ export class GoogleGcsUrlReader implements UrlReader {
     } catch (error) {
       throw new Error(`unable to read gcs file from ${url}, ${error}`);
     }
+  }
+
+  async readUrl(
+    url: string,
+    _options?: ReadUrlOptions,
+  ): Promise<ReadUrlResponse> {
+    // TODO etag is not implemented yet.
+    const buffer = await this.read(url);
+    return { buffer: async () => buffer };
   }
 
   async readTree(): Promise<ReadTreeResponse> {

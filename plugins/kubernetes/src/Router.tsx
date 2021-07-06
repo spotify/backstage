@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 import { Route, Routes } from 'react-router-dom';
 import { rootCatalogKubernetesRouteRef } from './plugin';
 import { KubernetesContent } from './components/KubernetesContent';
-import { MissingAnnotationEmptyState } from '@backstage/core';
 import { Button } from '@material-ui/core';
+import { MissingAnnotationEmptyState } from '@backstage/core-components';
 
 const KUBERNETES_ANNOTATION = 'backstage.io/kubernetes-id';
 const KUBERNETES_LABEL_SELECTOR_QUERY_ANNOTATION =

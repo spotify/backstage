@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ describe('GithubUrlReader', () => {
 
       worker.use(
         rest.get(
-          'https://ghe.github.com/api/v3/repos/backstage/mock/tree/contents/?ref=main',
+          'https://ghe.github.com/api/v3/repos/backstage/mock/tree/contents/',
           (req, res, ctx) => {
             expect(req.headers.get('authorization')).toBe(
               mockHeaders.Authorization,
@@ -138,6 +138,113 @@ describe('GithubUrlReader', () => {
       await gheProcessor.read(
         'https://github.com/backstage/mock/tree/blob/main',
       );
+    });
+  });
+
+  /*
+   * readUrl
+   */
+  describe('readUrl', () => {
+    it('should use the headers from the credentials provider to the fetch request when doing readUrl', async () => {
+      expect.assertions(2);
+
+      const mockHeaders = {
+        Authorization: 'bearer blah',
+        otherheader: 'something',
+      };
+
+      (mockCredentialsProvider.getCredentials as jest.Mock).mockResolvedValue({
+        headers: mockHeaders,
+      });
+
+      worker.use(
+        rest.get(
+          'https://ghe.github.com/api/v3/repos/backstage/mock/tree/contents/',
+          (req, res, ctx) => {
+            expect(req.headers.get('authorization')).toBe(
+              mockHeaders.Authorization,
+            );
+            expect(req.headers.get('otherheader')).toBe(
+              mockHeaders.otherheader,
+            );
+            return res(
+              ctx.status(200),
+              ctx.set('Content-Type', 'application/x-gzip'),
+              ctx.body('foo'),
+            );
+          },
+        ),
+      );
+
+      await gheProcessor.readUrl(
+        'https://github.com/backstage/mock/tree/blob/main',
+      );
+    });
+
+    it('should throw NotModified if GitHub responds with 304', async () => {
+      expect.assertions(4);
+
+      const mockHeaders = {
+        Authorization: 'bearer blah',
+        otherheader: 'something',
+      };
+
+      (mockCredentialsProvider.getCredentials as jest.Mock).mockResolvedValue({
+        headers: mockHeaders,
+      });
+
+      worker.use(
+        rest.get(
+          'https://ghe.github.com/api/v3/repos/backstage/mock/tree/contents/',
+          (req, res, ctx) => {
+            expect(req.headers.get('authorization')).toBe(
+              mockHeaders.Authorization,
+            );
+            expect(req.headers.get('otherheader')).toBe(
+              mockHeaders.otherheader,
+            );
+            expect(req.headers.get('if-none-match')).toBe('foo');
+            return res(
+              ctx.status(304),
+              ctx.set('Content-Type', 'application/x-gzip'),
+              ctx.body('foo'),
+            );
+          },
+        ),
+      );
+
+      await expect(
+        gheProcessor.readUrl(
+          'https://github.com/backstage/mock/tree/blob/main',
+          { etag: 'foo' },
+        ),
+      ).rejects.toThrow(NotModifiedError);
+    });
+
+    it('should return etag from the response', async () => {
+      (mockCredentialsProvider.getCredentials as jest.Mock).mockResolvedValue({
+        headers: {
+          Authorization: 'bearer blah',
+        },
+      });
+
+      worker.use(
+        rest.get(
+          'https://ghe.github.com/api/v3/repos/backstage/mock/tree/contents/',
+          (_req, res, ctx) => {
+            return res(
+              ctx.status(200),
+              ctx.set('Etag', 'foo'),
+              ctx.body('bar'),
+            );
+          },
+        ),
+      );
+
+      const response = await gheProcessor.readUrl(
+        'https://github.com/backstage/mock/tree/blob/main',
+      );
+      expect(response.etag).toBe('foo');
     });
   });
 

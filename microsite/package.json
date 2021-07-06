@@ -19,8 +19,8 @@
     "@spotify/prettier-config": "^10.0.0",
     "docusaurus": "^2.0.0-alpha.70",
     "js-yaml": "^4.1.0",
-    "prettier": "^2.3.1",
-    "yarn-lock-check": "^1.0.4"
+    "prettier": "^2.3.2",
+    "yarn-lock-check": "^1.0.5"
   },
   "prettier": "@spotify/prettier-config"
 }

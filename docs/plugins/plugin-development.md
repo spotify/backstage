@@ -36,7 +36,7 @@ to avoid import cycles, for example like this:
 
 ```tsx
 /* src/routes.ts */
-import { createRouteRef } from '@backstage/core';
+import { createRouteRef } from '@backstage/core-plugin-api';
 
 // Note: This route ref is for internal use only, don't export it from the plugin
 export const rootRouteRef = createRouteRef({
@@ -46,11 +46,11 @@ export const rootRouteRef = createRouteRef({
 
 Now that we have a `RouteRef`, we import it into `src/plugin.ts`, create our
 plugin instance with `createPlugin`, as well as create and wrap our routable
-extension using `createRoutableExtension` from `@backstage/core`:
+extension using `createRoutableExtension` from `@backstage/core-plugin-api`:
 
 ```tsx
 /* src/plugin.ts */
-import { createPlugin, createRouteRef } from '@backstage/core';
+import { createPlugin, createRouteRef } from '@backstage/core-plugin-api';
 import ExampleComponent from './components/ExampleComponent';
 
 // Create a plugin instance and export this from your plugin package

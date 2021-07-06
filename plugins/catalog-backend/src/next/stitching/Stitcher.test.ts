@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,6 +68,13 @@ describe('Stitcher', () => {
         { source_key: 'a', target_entity_ref: 'k:ns/n' },
       ]);
       await db<DbRelationsRow>('relations').insert([
+        {
+          originating_entity_id: 'my-id',
+          source_entity_ref: 'k:ns/n',
+          type: 'looksAt',
+          target_entity_ref: 'k:ns/other',
+        },
+        // handles and ignores duplicates
         {
           originating_entity_id: 'my-id',
           source_entity_ref: 'k:ns/n',

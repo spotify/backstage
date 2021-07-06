@@ -5,16 +5,16 @@
 ```ts
 
 import { ComponentType } from 'react';
-import { ErrorApi } from '@backstage/core-api';
-import { ErrorContext } from '@backstage/core-api';
-import { ExternalRouteRef } from '@backstage/core-api';
-import { Observable } from '@backstage/core-api';
+import { ErrorApi } from '@backstage/core-plugin-api';
+import { ErrorContext } from '@backstage/core-plugin-api';
+import { ExternalRouteRef } from '@backstage/core-plugin-api';
+import { Observable } from '@backstage/core-plugin-api';
 import { ReactElement } from 'react';
 import { ReactNode } from 'react';
 import { RenderResult } from '@testing-library/react';
-import { RouteRef } from '@backstage/core-api';
-import { StorageApi } from '@backstage/core-api';
-import { StorageValueChange } from '@backstage/core-api';
+import { RouteRef } from '@backstage/core-plugin-api';
+import { StorageApi } from '@backstage/core-plugin-api';
+import { StorageValueChange } from '@backstage/core-plugin-api';
 
 // @public (undocumented)
 export function mockBreakpoint(initialBreakpoint?: Breakpoint): {

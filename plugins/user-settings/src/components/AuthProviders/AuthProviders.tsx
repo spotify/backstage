@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,11 @@
 
 import React from 'react';
 import { List } from '@material-ui/core';
-import { configApiRef, InfoCard, useApi } from '@backstage/core';
 import { EmptyProviders } from './EmptyProviders';
 import { DefaultProviderSettings } from './DefaultProviderSettings';
+
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
+import { InfoCard } from '@backstage/core-components';
 
 type Props = {
   providerSettings?: JSX.Element;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,10 +48,8 @@ import {
   GithubOrgReaderProcessor,
   HigherOrderOperation,
   HigherOrderOperations,
-  LdapOrgReaderProcessor,
   LocationEntityProcessor,
   LocationReaders,
-  MicrosoftGraphOrgReaderProcessor,
   PlaceholderProcessor,
   PlaceholderResolver,
   StaticLocationProcessor,
@@ -66,6 +64,7 @@ import {
 } from '../ingestion/processors/PlaceholderProcessor';
 import { defaultEntityDataParser } from '../ingestion/processors/util/parse';
 import { LocationAnalyzer } from '../ingestion/types';
+import { NextCatalogBuilder } from '../next';
 
 export type CatalogEnvironment = {
   logger: Logger;
@@ -103,6 +102,10 @@ export class CatalogBuilder {
   private processorsReplace: boolean;
   private parser: CatalogProcessorParser | undefined;
 
+  static async create(env: CatalogEnvironment): Promise<NextCatalogBuilder> {
+    return new NextCatalogBuilder(env);
+  }
+
   constructor(env: CatalogEnvironment) {
     this.env = env;
     this.entityPolicies = [];
@@ -112,6 +115,10 @@ export class CatalogBuilder {
     this.processors = [];
     this.processorsReplace = false;
     this.parser = undefined;
+
+    env.logger.warn(
+      "Creating the catalog with 'new CatalogBuilder(env)' is deprecated! Use CatalogBuilder.create(env) instead",
+    );
   }
 
   /**
@@ -309,8 +316,6 @@ export class CatalogBuilder {
         BitbucketDiscoveryProcessor.fromConfig(config, { logger }),
         GithubDiscoveryProcessor.fromConfig(config, { logger }),
         GithubOrgReaderProcessor.fromConfig(config, { logger }),
-        LdapOrgReaderProcessor.fromConfig(config, { logger }),
-        MicrosoftGraphOrgReaderProcessor.fromConfig(config, { logger }),
         new UrlReaderProcessor({ reader, logger }),
         CodeOwnersProcessor.fromConfig(config, { logger, reader }),
         new LocationEntityProcessor({ integrations }),

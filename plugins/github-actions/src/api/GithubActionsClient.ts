@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { ConfigApi, OAuthApi } from '@backstage/core';
 import { readGitHubIntegrationConfigs } from '@backstage/integration';
 import { GithubActionsApi } from './GithubActionsApi';
 import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
+import { ConfigApi, OAuthApi } from '@backstage/core-plugin-api';
 
 export class GithubActionsClient implements GithubActionsApi {
   private readonly configApi: ConfigApi;

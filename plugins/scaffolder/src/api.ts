@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,17 @@
 
 import { EntityName } from '@backstage/catalog-model';
 import { JsonObject, JsonValue } from '@backstage/config';
-import {
-  createApiRef,
-  DiscoveryApi,
-  IdentityApi,
-  Observable,
-} from '@backstage/core';
 import { ResponseError } from '@backstage/errors';
 import { ScmIntegrationRegistry } from '@backstage/integration';
 import { Field, FieldValidation } from '@rjsf/core';
 import ObservableImpl from 'zen-observable';
 import { ListActionsResponse, ScaffolderTask, Status } from './types';
+import {
+  createApiRef,
+  DiscoveryApi,
+  IdentityApi,
+  Observable,
+} from '@backstage/core-plugin-api';
 
 export const scaffolderApiRef = createApiRef<ScaffolderApi>({
   id: 'plugin.scaffolder.service',
@@ -245,7 +245,10 @@ export class ScaffolderClient implements ScaffolderApi {
    */
   async listActions(): Promise<ListActionsResponse> {
     const baseUrl = await this.discoveryApi.getBaseUrl('scaffolder');
-    const response = await fetch(`${baseUrl}/v2/actions`);
+    const token = await this.identityApi.getIdToken();
+    const response = await fetch(`${baseUrl}/v2/actions`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
 
     if (!response.ok) {
       throw ResponseError.fromResponse(response);

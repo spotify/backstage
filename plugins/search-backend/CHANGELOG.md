@@ -1,5 +1,14 @@
 # @backstage/plugin-search-backend
 
+## 0.2.1
+
+### Patch Changes
+
+- 3108ff7bf: Make `yarn dev` respect the `PLUGIN_PORT` environment variable.
+- Updated dependencies
+  - @backstage/plugin-search-backend-node@0.2.1
+  - @backstage/backend-common@0.8.3
+
 ## 0.2.0
 
 ### Minor Changes

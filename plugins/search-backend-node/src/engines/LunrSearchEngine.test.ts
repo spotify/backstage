@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -191,6 +191,72 @@ describe('LunrSearchEngine', () => {
       });
     });
 
+    it('should perform search query with trailing punctuation and return search results on match (trimming)', async () => {
+      const mockDocuments = [
+        {
+          title: 'testTitle',
+          text: 'Hello World.',
+          location: 'test/location',
+        },
+      ];
+
+      // Mock indexing of 1 document
+      testLunrSearchEngine.index('test-index', mockDocuments);
+
+      // Perform search query
+      const mockedSearchResult = await testLunrSearchEngine.query({
+        term: 'World',
+        filters: {},
+        pageCursor: '',
+      });
+
+      // Should return 1 result as we are mocking the indexing of 1 document with match on the title field
+      expect(mockedSearchResult).toMatchObject({
+        results: [
+          {
+            document: {
+              title: 'testTitle',
+              text: 'Hello World.',
+              location: 'test/location',
+            },
+          },
+        ],
+      });
+    });
+
+    it('should perform search query by similar words and return search results on match (stemming)', async () => {
+      const mockDocuments = [
+        {
+          title: 'testTitle',
+          text: 'Searching',
+          location: 'test/location',
+        },
+      ];
+
+      // Mock indexing of 1 document
+      testLunrSearchEngine.index('test-index', mockDocuments);
+
+      // Perform search query
+      const mockedSearchResult = await testLunrSearchEngine.query({
+        term: 'Search',
+        filters: {},
+        pageCursor: '',
+      });
+
+      // Should return 1 result as we are mocking the indexing of 1 document with match on the title field
+      expect(mockedSearchResult).toMatchObject({
+        results: [
+          {
+            document: {
+              title: 'testTitle',
+              text: 'Searching',
+              location: 'test/location',
+            },
+          },
+        ],
+      });
+    });
+
     it('should perform search query and return search results on match with filters', async () => {
       const mockDocuments = [
         {
@@ -267,6 +333,46 @@ describe('LunrSearchEngine', () => {
               text: 'testText',
               location: 'test/location2',
               extraField: 'testExtraField',
+            },
+          },
+        ],
+      });
+    });
+
+    it('should perform search query and return search results on match with filters that include a : character', async () => {
+      const mockDocuments = [
+        {
+          title: 'testTitle',
+          text: 'testText',
+          location: 'test:location',
+        },
+        {
+          title: 'testTitle',
+          text: 'testText',
+          location: 'test:location2',
+        },
+      ];
+
+      // Mock indexing of 2 documents
+      testLunrSearchEngine.index('test-index', mockDocuments);
+
+      // Perform search query
+      const mockedSearchResult = await testLunrSearchEngine.query({
+        term: 'testTitle',
+        filters: { location: 'test:location2' },
+        pageCursor: '',
+      });
+
+      // Should return 1 of 2 results as we are
+      // 1. Mocking the indexing of 2 documents
+      // 2. Matching on the location field with the filter { location: 'test:location2' }
+      expect(mockedSearchResult).toMatchObject({
+        results: [
+          {
+            document: {
+              title: 'testTitle',
+              text: 'testText',
+              location: 'test:location2',
             },
           },
         ],

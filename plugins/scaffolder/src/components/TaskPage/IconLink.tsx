@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 
 import React from 'react';
-import { IconComponent, Link } from '@backstage/core';
 import { Grid, LinkProps, makeStyles, Typography } from '@material-ui/core';
 import LanguageIcon from '@material-ui/icons/Language';
+
+import { IconComponent } from '@backstage/core-plugin-api';
+import { Link } from '@backstage/core-components';
 
 const useStyles = makeStyles({
   svgIcon: {

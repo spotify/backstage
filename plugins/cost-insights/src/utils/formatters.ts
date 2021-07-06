@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import moment from 'moment';
+import { DateTime, Duration as LuxonDuration } from 'luxon';
 import pluralize from 'pluralize';
 import { ChangeStatistic, Duration } from '../types';
 import { inclusiveEndDateOf, inclusiveStartDateOf } from '../utils/duration';
@@ -67,9 +67,11 @@ export const monthOf = (date: string): string => {
 };
 
 export const quarterOf = (date: string): string => {
-  // Supports formatting YYYY-MM-DD and YYYY-[Q]Q returned in alerts
-  const d = moment(date).isValid() ? moment(date) : moment(date, 'YYYY-[Q]Q');
-  return d.format('[Q]Q YYYY');
+  // Supports formatting yyyy-LL-dd and yyyy-'Q'q returned in alerts
+  const d = DateTime.fromISO(date).isValid
+    ? DateTime.fromISO(date)
+    : DateTime.fromFormat(date, "yyyy-'Q'q");
+  return d.toFormat("'Q'q yyyy");
 };
 
 export function formatCurrency(amount: number, currency?: string): string {
@@ -100,12 +102,12 @@ export function formatPercent(n: number): string {
 }
 
 export function formatLastTwoLookaheadQuarters(inclusiveEndDate: string) {
-  const start = moment(
+  const start = DateTime.fromISO(
     inclusiveStartDateOf(Duration.P3M, inclusiveEndDate),
-  ).format('[Q]Q YYYY');
-  const end = moment(inclusiveEndDateOf(Duration.P3M, inclusiveEndDate)).format(
-    '[Q]Q YYYY',
-  );
+  ).toFormat("'Q'q yyyy");
+  const end = DateTime.fromISO(
+    inclusiveEndDateOf(Duration.P3M, inclusiveEndDate),
+  ).toFormat("'Q'q yyyy");
   return `${start} vs ${end}`;
 }
 
@@ -116,7 +118,7 @@ const formatRelativePeriod = (
 ): string => {
   const periodStart = isEndDate ? inclusiveStartDateOf(duration, date) : date;
   const periodEnd = isEndDate ? date : inclusiveEndDateOf(duration, date);
-  const days = moment.duration(duration).asDays();
+  const days = LuxonDuration.fromISO(duration).days;
   if (![periodStart, periodEnd].includes(date)) {
     throw new Error(`Invalid relative date ${date} for duration ${duration}`);
   }

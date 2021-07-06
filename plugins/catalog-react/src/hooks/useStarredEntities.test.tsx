@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 import React, { PropsWithChildren } from 'react';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useStarredEntities } from './useStarredEntities';
-import { ApiProvider, ApiRegistry, WebStorage } from '@backstage/core';
 import { storageApiRef, StorageApi } from '@backstage/core-plugin-api';
 import { MockErrorApi } from '@backstage/test-utils';
 import { Entity } from '@backstage/catalog-model';
+import { ApiProvider, ApiRegistry, WebStorage } from '@backstage/core-app-api';
 
 describe('useStarredEntities', () => {
   let mockStorage: StorageApi | undefined;

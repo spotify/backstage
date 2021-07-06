@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { ApiProvider, ApiRegistry } from '@backstage/core';
 import {
   catalogApiRef,
   CatalogApi,
@@ -25,6 +24,7 @@ import { Entity, RELATION_PART_OF } from '@backstage/catalog-model';
 import { renderInTestApp } from '@backstage/test-utils';
 import React from 'react';
 import { SystemDiagramCard } from './SystemDiagramCard';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 
 describe('<SystemDiagramCard />', () => {
   beforeAll(() => {
@@ -48,8 +48,8 @@ describe('<SystemDiagramCard />', () => {
       apiVersion: 'v1',
       kind: 'System',
       metadata: {
-        name: 'my-system2',
-        namespace: 'my-namespace2',
+        name: 'system2',
+        namespace: 'namespace2',
       },
       relations: [],
     };
@@ -68,8 +68,8 @@ describe('<SystemDiagramCard />', () => {
     );
 
     expect(queryByText(/System Diagram/)).toBeInTheDocument();
-    expect(queryByText(/my-namespace2\/my-system2/)).toBeInTheDocument();
-    expect(queryByText(/my-namespace\/my-entity/)).not.toBeInTheDocument();
+    expect(queryByText(/namespace2\/system2/)).toBeInTheDocument();
+    expect(queryByText(/namespace\/entity/)).not.toBeInTheDocument();
   });
 
   it('shows related systems', async () => {
@@ -81,13 +81,13 @@ describe('<SystemDiagramCard />', () => {
               apiVersion: 'backstage.io/v1alpha1',
               kind: 'Component',
               metadata: {
-                name: 'my-entity',
-                namespace: 'my-namespace',
+                name: 'entity',
+                namespace: 'namespace',
               },
               spec: {
                 owner: 'not-tools@example.com',
                 type: 'service',
-                system: 'my-system',
+                system: 'system',
               },
             },
           ] as Entity[],
@@ -98,15 +98,15 @@ describe('<SystemDiagramCard />', () => {
       apiVersion: 'v1',
       kind: 'System',
       metadata: {
-        name: 'my-system',
-        namespace: 'my-namespace',
+        name: 'system',
+        namespace: 'namespace',
       },
       relations: [
         {
           target: {
             kind: 'Domain',
-            namespace: 'my-namespace',
-            name: 'my-domain',
+            namespace: 'namespace',
+            name: 'domain',
           },
           type: RELATION_PART_OF,
         },
@@ -127,7 +127,66 @@ describe('<SystemDiagramCard />', () => {
     );
 
     expect(getByText('System Diagram')).toBeInTheDocument();
-    expect(getByText('my-namespace/my-system')).toBeInTheDocument();
-    expect(getByText('my-namespace/my-entity')).toBeInTheDocument();
+    expect(getByText('namespace/system')).toBeInTheDocument();
+    expect(getByText('namespace/entity')).toBeInTheDocument();
+  });
+
+  it('should truncate long domains, systems or entities', async () => {
+    const catalogApi: Partial<CatalogApi> = {
+      getEntities: () =>
+        Promise.resolve({
+          items: [
+            {
+              apiVersion: 'backstage.io/v1alpha1',
+              kind: 'Component',
+              metadata: {
+                name: 'alongentitythatshouldgettruncated',
+                namespace: 'namespace',
+              },
+              spec: {
+                owner: 'not-tools@example.com',
+                type: 'service',
+                system: 'system',
+              },
+            },
+          ] as Entity[],
+        }),
+    };
+
+    const entity: Entity = {
+      apiVersion: 'v1',
+      kind: 'System',
+      metadata: {
+        name: 'alongsystemthatshouldgettruncated',
+        namespace: 'namespace',
+      },
+      relations: [
+        {
+          target: {
+            kind: 'Domain',
+            namespace: 'namespace',
+            name: 'alongdomainthatshouldgettruncated',
+          },
+          type: RELATION_PART_OF,
+        },
+      ],
+    };
+
+    const { getByText } = await renderInTestApp(
+      <ApiProvider apis={ApiRegistry.from([[catalogApiRef, catalogApi]])}>
+        <EntityProvider entity={entity}>
+          <SystemDiagramCard />
+        </EntityProvider>
+      </ApiProvider>,
+      {
+        mountedRoutes: {
+          '/catalog/:namespace/:kind/:name': entityRouteRef,
+        },
+      },
+    );
+
+    expect(getByText('namespace/alongdomai...')).toBeInTheDocument();
+    expect(getByText('namespace/alongsyste...')).toBeInTheDocument();
+    expect(getByText('namespace/alongentit...')).toBeInTheDocument();
   });
 });

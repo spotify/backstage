@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ export const HasComponentsCard = ({ variant = 'gridItem' }: Props) => {
   return (
     <RelatedEntitiesCard
       variant={variant}
-      title="Components"
+      title="Has components"
       entityKind="Component"
       relationType={RELATION_HAS_PART}
       columns={componentEntityColumns}

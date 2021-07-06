@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { useApi } from '@backstage/core';
 import {
   catalogApiRef,
   formatEntityRefTitle,
@@ -33,6 +32,7 @@ import { PrepareResult } from '../useImportState';
 import { PreparePullRequestForm } from './PreparePullRequestForm';
 import { PreviewCatalogInfoComponent } from './PreviewCatalogInfoComponent';
 import { PreviewPullRequestComponent } from './PreviewPullRequestComponent';
+import { useApi } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles(theme => ({
   previewCard: {

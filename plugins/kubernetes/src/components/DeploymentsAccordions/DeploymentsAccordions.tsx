@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import {
   V1Pod,
   V1HorizontalPodAutoscaler,
 } from '@kubernetes/client-node';
-import { StatusError, StatusOK } from '@backstage/core';
 import { PodsTable } from '../Pods';
 import { DeploymentDrawer } from './DeploymentDrawer';
 import { HorizontalPodAutoscalerDrawer } from '../HorizontalPodAutoscalers';
@@ -41,6 +40,7 @@ import {
   GroupedResponsesContext,
   PodNamesWithErrorsContext,
 } from '../../hooks';
+import { StatusError, StatusOK } from '@backstage/core-components';
 
 type DeploymentsAccordionsProps = {
   children?: React.ReactNode;

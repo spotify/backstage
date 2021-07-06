@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Content, Header, Page, useQueryParamState } from '@backstage/core';
 import { Grid } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
 import { SearchBar } from './LegacySearchBar';
 import { SearchResult } from './LegacySearchResult';
+import {
+  Content,
+  Header,
+  Page,
+  useQueryParamState,
+} from '@backstage/core-components';
 
 /**
  * @deprecated This SearchPage, powered directly by the Catalog API, will be

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import ReplayIcon from '@material-ui/icons/Replay';
 import { makeStyles } from '@material-ui/core/styles';
 import { AlertSource } from '../../types';
 import { useAlertSourceOnCalls } from '../../hooks/useAlertSourceOnCalls';
-import { Progress } from '@backstage/core';
 import { ILertCardOnCallEmptyState } from './ILertCardOnCallEmptyState';
 import { ILertCardOnCallItem } from './ILertCardOnCallItem';
+import { Progress } from '@backstage/core-components';
 
 const useStyles = makeStyles(theme => ({
   repeatText: {

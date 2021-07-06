@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { ExtensionsV1beta1Ingress } from '@kubernetes/client-node';
-import { StructuredMetadataTable } from '@backstage/core';
 import { IngressDrawer } from './IngressDrawer';
 import { GroupedResponsesContext } from '../../hooks';
+import { StructuredMetadataTable } from '@backstage/core-components';
 
 type IngressesAccordionsProps = {};
 

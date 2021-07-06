@@ -78,11 +78,6 @@ the repository. The archive does not have any git history attached to it. Also
 it is a compressed file. Hence the file size is significantly smaller than how
 much data git clone has to transfer.
 
-Caveat: Currently TechDocs sites built using URL Reader will be cached for 30
-minutes which means they will not be re-built if new changes are made within 30
-minutes. This cache invalidation will be replaced by commit timestamp based
-implementation very soon.
-
 ## How to use a custom TechDocs home page?
 
 ### 1st way: TechDocsCustomHome with a custom configuration

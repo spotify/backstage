@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 
 import React from 'react';
-import { EmptyState, Progress } from '@backstage/core';
 import { SearchResult } from '@backstage/search-common';
 import { Alert } from '@material-ui/lab';
-
 import { useSearch } from '../SearchContext';
+
+import { EmptyState, Progress } from '@backstage/core-components';
 
 type Props = {
   children: (results: { results: SearchResult[] }) => JSX.Element;
@@ -41,7 +41,7 @@ const SearchResultComponent = ({ children }: Props) => {
     );
   }
 
-  if (!value) {
+  if (!value?.results.length) {
     return <EmptyState missing="data" title="Sorry, no results were found" />;
   }
 

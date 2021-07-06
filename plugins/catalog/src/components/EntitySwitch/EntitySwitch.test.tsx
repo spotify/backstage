@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,19 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { isKind } from './conditions';
 import { EntitySwitch } from './EntitySwitch';
+import { featureFlagsApiRef } from '@backstage/core-plugin-api';
+import {
+  LocalStorageFeatureFlags,
+  ApiProvider,
+  ApiRegistry,
+} from '@backstage/core-app-api';
+
+const mockFeatureFlagsApi = new LocalStorageFeatureFlags();
+const Wrapper = ({ children }: { children?: React.ReactNode }) => (
+  <ApiProvider apis={ApiRegistry.with(featureFlagsApiRef, mockFeatureFlagsApi)}>
+    {children}
+  </ApiProvider>
+);
 
 describe('EntitySwitch', () => {
   it('should switch child when entity switches', () => {
@@ -32,15 +45,17 @@ describe('EntitySwitch', () => {
     );
 
     const rendered = render(
-      <EntityContext.Provider
-        value={{
-          entity: { kind: 'component' } as Entity,
-          loading: false,
-          error: undefined,
-        }}
-      >
-        {content}
-      </EntityContext.Provider>,
+      <Wrapper>
+        <EntityContext.Provider
+          value={{
+            entity: { kind: 'component' } as Entity,
+            loading: false,
+            error: undefined,
+          }}
+        >
+          {content}
+        </EntityContext.Provider>
+      </Wrapper>,
     );
 
     expect(rendered.queryByText('A')).toBeInTheDocument();
@@ -48,15 +63,17 @@ describe('EntitySwitch', () => {
     expect(rendered.queryByText('C')).not.toBeInTheDocument();
 
     rendered.rerender(
-      <EntityContext.Provider
-        value={{
-          entity: { kind: 'template' } as Entity,
-          loading: false,
-          error: undefined,
-        }}
-      >
-        {content}
-      </EntityContext.Provider>,
+      <Wrapper>
+        <EntityContext.Provider
+          value={{
+            entity: { kind: 'template' } as Entity,
+            loading: false,
+            error: undefined,
+          }}
+        >
+          {content}
+        </EntityContext.Provider>
+      </Wrapper>,
     );
 
     expect(rendered.queryByText('A')).not.toBeInTheDocument();
@@ -64,15 +81,17 @@ describe('EntitySwitch', () => {
     expect(rendered.queryByText('C')).not.toBeInTheDocument();
 
     rendered.rerender(
-      <EntityContext.Provider
-        value={{
-          entity: { kind: 'derp' } as Entity,
-          loading: false,
-          error: undefined,
-        }}
-      >
-        {content}
-      </EntityContext.Provider>,
+      <Wrapper>
+        <EntityContext.Provider
+          value={{
+            entity: { kind: 'derp' } as Entity,
+            loading: false,
+            error: undefined,
+          }}
+        >
+          {content}
+        </EntityContext.Provider>
+      </Wrapper>,
     );
 
     expect(rendered.queryByText('A')).not.toBeInTheDocument();
@@ -88,24 +107,28 @@ describe('EntitySwitch', () => {
     };
 
     const rendered = render(
-      <EntityContext.Provider value={entityContextValue}>
-        <EntitySwitch>
-          <EntitySwitch.Case if={isKind('component')} children="A" />
-          <EntitySwitch.Case children="B" />
-        </EntitySwitch>
-      </EntityContext.Provider>,
+      <Wrapper>
+        <EntityContext.Provider value={entityContextValue}>
+          <EntitySwitch>
+            <EntitySwitch.Case if={isKind('component')} children="A" />
+            <EntitySwitch.Case children="B" />
+          </EntitySwitch>
+        </EntityContext.Provider>
+      </Wrapper>,
     );
 
     expect(rendered.queryByText('A')).toBeInTheDocument();
     expect(rendered.queryByText('B')).not.toBeInTheDocument();
 
     rendered.rerender(
-      <EntityContext.Provider value={entityContextValue}>
-        <EntitySwitch>
-          <EntitySwitch.Case if={isKind('template')} children="A" />
-          <EntitySwitch.Case children="B" />
-        </EntitySwitch>
-      </EntityContext.Provider>,
+      <Wrapper>
+        <EntityContext.Provider value={entityContextValue}>
+          <EntitySwitch>
+            <EntitySwitch.Case if={isKind('template')} children="A" />
+            <EntitySwitch.Case children="B" />
+          </EntitySwitch>
+        </EntityContext.Provider>
+      </Wrapper>,
     );
 
     expect(rendered.queryByText('A')).not.toBeInTheDocument();

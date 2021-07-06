@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,18 @@
 import React from 'react';
 import { MockStorageApi, wrapInTestApp } from '@backstage/test-utils';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import {
-  ApiProvider,
-  ApiRegistry,
-  IdentityApi,
-  identityApiRef,
-  storageApiRef,
-} from '@backstage/core';
 import { CatalogApi } from '@backstage/catalog-client';
 import { Entity } from '@backstage/catalog-model';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import { EntityFilterGroupsProvider } from '../../filter';
 import { ButtonGroup, ScaffolderFilter } from './ScaffolderFilter';
+
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
+import {
+  IdentityApi,
+  identityApiRef,
+  storageApiRef,
+} from '@backstage/core-plugin-api';
 
 describe('Catalog Filter', () => {
   const catalogApi: Partial<CatalogApi> = {

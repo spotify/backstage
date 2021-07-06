@@ -17,10 +17,8 @@ locations like GitHub or GitLab.
 
 ### Getting Started
 
-> Be sure to have covered [Installing in your Backstage App](./installation.md)
-> for your separate App or
-> [Getting Started with Backstage](../../getting-started) for this repo before
-> proceeding.
+> Be sure to have covered
+> [Getting Started with Backstage](../../getting-started) before proceeding.
 
 The Software Templates are available under `/create`. For local development you
 should be able to reach them at `http://localhost:3000/create`.

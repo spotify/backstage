@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAsync } from 'react-use';
-import { useApi } from '@backstage/core';
 import { catalogApiRef } from '../api';
 import {
   DefaultEntityFilters,
   useEntityListProvider,
 } from './useEntityListProvider';
 import { EntityTypeFilter } from '../types';
+import { useApi } from '@backstage/core-plugin-api';
 
 type EntityTypeReturn = {
   loading: boolean;

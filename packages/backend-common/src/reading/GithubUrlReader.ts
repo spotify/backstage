@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ import {
   SearchResponse,
   SearchResponseFile,
   UrlReader,
+  ReadUrlOptions,
+  ReadUrlResponse,
 } from './types';
 
 export type GhRepoResponse = RestEndpointMethodTypes['repos']['get']['response']['data'];
@@ -77,6 +79,14 @@ export class GithubUrlReader implements UrlReader {
   }
 
   async read(url: string): Promise<Buffer> {
+    const response = await this.readUrl(url);
+    return response.buffer();
+  }
+
+  async readUrl(
+    url: string,
+    options?: ReadUrlOptions,
+  ): Promise<ReadUrlResponse> {
     const ghUrl = getGitHubFileFetchUrl(url, this.integration.config);
     const { headers } = await this.deps.credentialsProvider.getCredentials({
       url,
@@ -86,6 +96,7 @@ export class GithubUrlReader implements UrlReader {
       response = await fetch(ghUrl.toString(), {
         headers: {
           ...headers,
+          ...(options?.etag && { 'If-None-Match': options.etag }),
           Accept: 'application/vnd.github.v3.raw',
         },
       });
@@ -93,8 +104,15 @@ export class GithubUrlReader implements UrlReader {
       throw new Error(`Unable to read ${url}, ${e}`);
     }
 
+    if (response.status === 304) {
+      throw new NotModifiedError();
+    }
+
     if (response.ok) {
-      return Buffer.from(await response.text());
+      return {
+        buffer: async () => Buffer.from(await response.text()),
+        etag: response.headers.get('ETag') ?? undefined,
+      };
     }
 
     const message = `${url} could not be read as ${ghUrl}, ${response.status} ${response.statusText}`;

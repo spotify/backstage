@@ -1,5 +1,11 @@
 # @backstage/config-loader
 
+## 0.6.4
+
+### Patch Changes
+
+- f00493739: Removed workaround for breaking change in typescript 4.3 and bump `typescript-json-schema` instead. This should again allow the usage of `@items.visibility <value>` to set the visibility of array items.
+
 ## 0.6.3
 
 ### Patch Changes

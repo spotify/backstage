@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,6 @@
  */
 
 import {
-  Content,
-  ContentHeader,
-  errorApiRef,
-  Header,
-  HeaderLabel,
-  InfoCard,
-  Page,
-  useApi,
-} from '@backstage/core';
-import {
   Button,
   Grid,
   List,
@@ -38,6 +28,16 @@ import { useNavigate } from 'react-router-dom';
 import { lighthouseApiRef } from '../../api';
 import { useQuery } from '../../utils';
 import LighthouseSupportButton from '../SupportButton';
+
+import {
+  Content,
+  ContentHeader,
+  Header,
+  HeaderLabel,
+  InfoCard,
+  Page,
+} from '@backstage/core-components';
+import { errorApiRef, useApi } from '@backstage/core-plugin-api';
 
 // TODO(freben): move all of this out of index
 

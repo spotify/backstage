@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { configApiRef, createApiFactory } from '@backstage/core';
 import { createDevApp } from '@backstage/dev-utils';
 import { ScmIntegrations } from '@backstage/integration';
 import React from 'react';
 import { scmIntegrationsApiRef } from '../src/ScmIntegrationsApi';
 import { DevPage } from './DevPage';
+import { configApiRef, createApiFactory } from '@backstage/core-plugin-api';
 
 createDevApp()
   .registerApi(

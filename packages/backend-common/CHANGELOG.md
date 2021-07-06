@@ -1,5 +1,69 @@
 # @backstage/backend-common
 
+## 0.8.4
+
+### Patch Changes
+
+- 88d742eb8: Download archives as compressed tar files for GitLab to fix the `readTree` bug in TODO Plugin.
+- ab5cc376f: Add new `isChildPath` and `resolveSafeChildPath` exports
+- Updated dependencies
+  - @backstage/cli-common@0.1.2
+  - @backstage/integration@0.5.7
+
+## 0.8.3
+
+### Patch Changes
+
+- e5cdf0560: Provide a more clear error message when database connection fails.
+- 772dbdb51: Deprecates `SingleConnectionDatabaseManager` and provides an API compatible database
+  connection manager, `DatabaseManager`, which allows developers to configure database
+  connections on a per plugin basis.
+
+  The `backend.database` config path allows you to set `prefix` to use an
+  alternate prefix for automatically generated database names, the default is
+  `backstage_plugin_`. Use `backend.database.plugin.<pluginId>` to set plugin
+  specific database connection configuration, e.g.
+
+  ```yaml
+  backend:
+    database:
+      client: 'pg',
+      prefix: 'custom_prefix_'
+      connection:
+        host: 'localhost'
+        user: 'foo'
+        password: 'bar'
+      plugin:
+        catalog:
+          connection:
+            database: 'database_name_overriden'
+        scaffolder:
+          client: 'sqlite3'
+          connection: ':memory:'
+  ```
+
+  Migrate existing backstage installations by swapping out the database manager in the
+  `packages/backend/src/index.ts` file as shown below:
+
+  ```diff
+  import {
+  -  SingleConnectionDatabaseManager,
+  +  DatabaseManager,
+  } from '@backstage/backend-common';
+
+  // ...
+
+  function makeCreateEnv(config: Config) {
+    // ...
+  -  const databaseManager = SingleConnectionDatabaseManager.fromConfig(config);
+  +  const databaseManager = DatabaseManager.fromConfig(config);
+    // ...
+  }
+  ```
+
+- Updated dependencies
+  - @backstage/config-loader@0.6.4
+
 ## 0.8.2
 
 ### Patch Changes

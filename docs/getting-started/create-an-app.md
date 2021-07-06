@@ -137,7 +137,7 @@ frontend with `yarn start` in one window, and the backend with
 
 It can often be useful to try out changes to the packages in the main Backstage
 repo within your own app. For example if you want to make modifications to
-`@backstage/core` and try them out in your app.
+`@backstage/core-plugin-api` and try them out in your app.
 
 To link in external packages, add them to your `package.json` and `lerna.json`
 workspace paths. These can be either relative or absolute paths with or without
@@ -147,7 +147,7 @@ globs. For example:
 "packages": [
   "packages/*",
   "plugins/*",
-  "../backstage/packages/core", // New path added to work on @backstage/core
+  "../backstage/packages/core-plugin-api", // New path added to work on @backstage/core-plugin-api
 ],
 ```
 
@@ -157,9 +157,10 @@ Then reinstall packages to make yarn set up symlinks:
 yarn install
 ```
 
-With this in place you can now modify the `@backstage/core` package within the
-main repo, and have those changes be reflected and tested in your app. Simply
-run your app using `yarn dev` (or `yarn start` for just frontend) as normal.
+With this in place you can now modify the `@backstage/core-plugin-api` package
+within the main repo, and have those changes be reflected and tested in your
+app. Simply run your app using `yarn dev` (or `yarn start` for just frontend) as
+normal.
 
 Note that for backend packages you need to make sure that linked packages are
 not dependencies of any non-linked package. If you for example want to work on

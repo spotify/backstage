@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-import { Entity } from '@backstage/catalog-model';
-import {
-  ApiProvider,
-  ApiRegistry,
-  storageApiRef,
-  ConfigApi,
-  configApiRef,
-  ConfigReader,
-} from '@backstage/core';
+import { Entity, RELATION_MEMBER_OF } from '@backstage/catalog-model';
 import { CatalogApi, catalogApiRef } from '@backstage/plugin-catalog-react';
 import { MockStorageApi, wrapInTestApp } from '@backstage/test-utils';
 import { render } from '@testing-library/react';
 import React from 'react';
 import { apiDocsConfigRef } from '../../config';
 import { ApiExplorerPage } from './ApiExplorerPage';
+
+import {
+  ApiProvider,
+  ApiRegistry,
+  ConfigReader,
+} from '@backstage/core-app-api';
+import {
+  storageApiRef,
+  ConfigApi,
+  configApiRef,
+} from '@backstage/core-plugin-api';
 
 describe('ApiCatalogPage', () => {
   const catalogApi: Partial<CatalogApi> = {
@@ -55,6 +58,19 @@ describe('ApiCatalogPage', () => {
       }),
     getLocationByEntity: () =>
       Promise.resolve({ id: 'id', type: 'github', target: 'url' }),
+    getEntityByName: async entityName => {
+      return {
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'User',
+        metadata: { name: entityName.name },
+        relations: [
+          {
+            type: RELATION_MEMBER_OF,
+            target: { namespace: 'default', kind: 'Group', name: 'tools' },
+          },
+        ],
+      };
+    },
   };
 
   const configApi: ConfigApi = new ConfigReader({

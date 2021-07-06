@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,22 @@
  */
 
 import { Entity, Location } from '@backstage/catalog-model';
-import {
-  Content,
-  ContentHeader,
-  errorApiRef,
-  Header,
-  InfoCard,
-  Page,
-  RouteRef,
-  SupportButton,
-  useApi,
-} from '@backstage/core';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import { Grid, makeStyles } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useMountedState } from 'react-use';
 import { RegisterComponentForm } from '../RegisterComponentForm';
 import { RegisterComponentResultDialog } from '../RegisterComponentResultDialog';
+
+import {
+  Content,
+  ContentHeader,
+  Header,
+  InfoCard,
+  Page,
+  SupportButton,
+} from '@backstage/core-components';
+import { errorApiRef, RouteRef, useApi } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles(theme => ({
   dialogPaper: {

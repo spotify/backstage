@@ -22,7 +22,7 @@ We have divided the project into three high-level _phases_:
   [UX patterns and components](https://backstage.io/storybook) help ensure a
   consistent experience between tools.
 
-- 🐢 **Phase 2:** Service Catalog
+- 🐢 **Phase 2:** Software Catalog
   ([alpha released](https://backstage.io/blog/2020/06/22/backstage-service-catalog-alpha)) -
   With a single catalog, Backstage makes it easy for a team to manage ten
   services — and makes it possible for your company to manage thousands of them.
@@ -120,13 +120,13 @@ Chances are that someone will jump in and help build it.
 - [TechDocs v1](https://backstage.io/blog/2020/09/08/announcing-tech-docs)
 - [Plugin marketplace](https://backstage.io/plugins)
 - [Improved and move documentation to backstage.io](https://backstage.io/docs/overview/what-is-backstage)
-- [Backstage Service Catalog (alpha)](https://backstage.io/blog/2020/06/22/backstage-service-catalog-alpha)
+- [Backstage Software Catalog (alpha)](https://backstage.io/blog/2020/06/22/backstage-service-catalog-alpha)
 - [Backstage Software Templates (alpha)](https://backstage.io/blog/2020/08/05/announcing-backstage-software-templates)
 - [Make it possible to add custom auth providers](https://backstage.io/blog/2020/07/01/how-to-enable-authentication-in-backstage-using-passport)
 - [TechDocs v0](https://github.com/backstage/backstage/milestone/15)
 - CI plugins: CircleCI, Jenkins, GitHub Actions and TravisCI
 - [Service API documentation](https://github.com/backstage/backstage/pull/1737)
-- Backstage Service Catalog can read from: GitHub, GitLab,
+- Backstage Software Catalog can read from: GitHub, GitLab,
   [Bitbucket](https://github.com/backstage/backstage/pull/1938)
 - Support auth providers: Google, Okta, GitHub, GitLab,
   [auth0](https://github.com/backstage/backstage/pull/1611),

@@ -30,7 +30,7 @@ type PluginHooks = {
 Showcasing adding a feature flag.
 
 ```jsx
-import { createPlugin } from '@backstage/core';
+import { createPlugin } from '@backstage/core-plugin-api';
 
 export default createPlugin({
   id: 'new-plugin',

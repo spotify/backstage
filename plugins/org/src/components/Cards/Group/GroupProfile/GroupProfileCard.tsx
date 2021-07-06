@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,27 +19,34 @@ import {
   RELATION_CHILD_OF,
   RELATION_PARENT_OF,
 } from '@backstage/catalog-model';
-import { Avatar, InfoCard, InfoCardVariants } from '@backstage/core';
 import {
   EntityRefLinks,
   getEntityRelations,
   useEntity,
+  getEntityMetadataEditUrl,
 } from '@backstage/plugin-catalog-react';
 import {
   Box,
   Grid,
-  Link,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Tooltip,
+  IconButton,
 } from '@material-ui/core';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import EmailIcon from '@material-ui/icons/Email';
 import GroupIcon from '@material-ui/icons/Group';
+import EditIcon from '@material-ui/icons/Edit';
 import Alert from '@material-ui/lab/Alert';
 import React from 'react';
+import {
+  Avatar,
+  InfoCard,
+  InfoCardVariants,
+  Link,
+} from '@backstage/core-components';
 
 const CardTitle = ({ title }: { title: string }) => (
   <Box display="flex" alignItems="center">
@@ -72,14 +79,31 @@ export const GroupProfileCard = ({
     kind: 'group',
   });
 
+  const entityMetadataEditUrl = getEntityMetadataEditUrl(group);
+
   const displayName = profile?.displayName ?? name;
-  const emailHref = profile?.email ? `mailto:${profile.email}` : undefined;
+  const emailHref = profile?.email ? `mailto:${profile.email}` : '#';
+  const infoCardAction = entityMetadataEditUrl ? (
+    <IconButton
+      aria-label="Edit"
+      title="Edit Metadata"
+      component={Link}
+      to={entityMetadataEditUrl}
+    >
+      <EditIcon />
+    </IconButton>
+  ) : (
+    <IconButton aria-label="Edit" disabled title="Edit Metadata">
+      <EditIcon />
+    </IconButton>
+  );
 
   return (
     <InfoCard
       title={<CardTitle title={displayName} />}
       subheader={description}
       variant={variant}
+      action={infoCardAction}
     >
       <Grid container spacing={3}>
         <Grid item xs={12} sm={2} xl={1}>
@@ -95,7 +119,7 @@ export const GroupProfileCard = ({
                   </Tooltip>
                 </ListItemIcon>
                 <ListItemText>
-                  <Link href={emailHref}>{profile.email}</Link>
+                  <Link to={emailHref}>{profile.email}</Link>
                 </ListItemText>
               </ListItem>
             )}

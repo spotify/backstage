@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,6 @@ const HEADERS = {
 class GithubAppManager {
   private readonly appClient: Octokit;
   private readonly baseAuthConfig: { appId: number; privateKey: string };
-  private installations?: RestEndpointMethodTypes['apps']['listInstallations']['response'];
   private readonly cache = new Cache();
 
   constructor(config: GithubAppConfig, baseUrl?: string) {
@@ -121,22 +120,15 @@ class GithubAppManager {
     });
   }
 
+  getInstallations(): Promise<
+    RestEndpointMethodTypes['apps']['listInstallations']['response']['data']
+  > {
+    return this.appClient.paginate(this.appClient.apps.listInstallations);
+  }
+
   private async getInstallationData(owner: string): Promise<InstallationData> {
-    // List all installations using the last used etag.
-    // Return cached InstallationData if error with status 304 is thrown.
-    try {
-      this.installations = await this.appClient.apps.listInstallations({
-        headers: {
-          'If-None-Match': this.installations?.headers.etag,
-          Accept: HEADERS.Accept,
-        },
-      });
-    } catch (error) {
-      if (error.status !== 304) {
-        throw error;
-      }
-    }
-    const installation = this.installations?.data.find(
+    const allInstallations = await this.getInstallations();
+    const installation = allInstallations.find(
       inst => inst.account?.login === owner,
     );
     if (installation) {
@@ -161,6 +153,20 @@ export class GithubAppCredentialsMux {
   constructor(config: GitHubIntegrationConfig) {
     this.apps =
       config.apps?.map(ac => new GithubAppManager(ac, config.apiBaseUrl)) ?? [];
+  }
+
+  async getAllInstallations(): Promise<
+    RestEndpointMethodTypes['apps']['listInstallations']['response']['data']
+  > {
+    if (!this.apps.length) {
+      return [];
+    }
+
+    const installs = await Promise.all(
+      this.apps.map(app => app.getInstallations()),
+    );
+
+    return installs.flat();
   }
 
   async getAppToken(owner: string, repo?: string): Promise<string | undefined> {

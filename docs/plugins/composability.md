@@ -511,10 +511,11 @@ clarify intent. Refer to the following table to formulate the new name:
 ## Porting Existing Apps
 
 The first step of porting any app is to replace the root `Routes` component with
-`FlatRoutes` from `@backstage/core`. As opposed to the `Routes` component,
-`FlatRoutes` only considers the first level of `Route` components in its
-children, and provides any additional children to the outlet of the route. It
-also removes the need to append `"/*"` to paths, as it is added automatically.
+`FlatRoutes` from `@backstage/core-app-api`. As opposed to the `Routes`
+component, `FlatRoutes` only considers the first level of `Route` components in
+its children, and provides any additional children to the outlet of the route.
+It also removes the need to append `"/*"` to paths, as it is added
+automatically.
 
 ```diff
 const AppRoutes = () => (

@@ -1,5 +1,23 @@
 # @backstage/techdocs-common
 
+## 0.6.6
+
+### Patch Changes
+
+- ab5cc376f: Use new utilities from `@backstage/backend-common` for safely resolving child paths
+- b47fc34bc: Update "service catalog" references to "software catalog"
+- Updated dependencies
+  - @backstage/backend-common@0.8.4
+  - @backstage/integration@0.5.7
+
+## 0.6.5
+
+### Patch Changes
+
+- c17c0fcf9: Adding additional checks on tech docs to prevent folder traversal via mkdocs.yml docs_dir value.
+- Updated dependencies
+  - @backstage/catalog-model@0.8.4
+
 ## 0.6.4
 
 ### Patch Changes

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 
-import {
-  EmptyState,
-  InfoCard,
-  InfoCardVariants,
-  MissingAnnotationEmptyState,
-  Progress,
-  ResponseErrorPanel,
-  useApi,
-} from '@backstage/core';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { Grid, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -34,6 +25,17 @@ import {
   FOSSA_PROJECT_NAME_ANNOTATION,
   getProjectName,
 } from '../getProjectName';
+
+import {
+  EmptyState,
+  InfoCard,
+  InfoCardVariants,
+  MissingAnnotationEmptyState,
+  Progress,
+  ResponseErrorPanel,
+} from '@backstage/core-components';
+
+import { useApi } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles(theme => ({
   numberError: {

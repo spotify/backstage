@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import {
   resolve as resolvePath,
   relative as relativePath,
   dirname,
+  join,
 } from 'path';
 import fs from 'fs-extra';
 import {
@@ -60,34 +61,65 @@ PackageJsonLookup.prototype.tryGetPackageJsonFilePathFor = function tryGetPackag
   return old.call(this, path);
 };
 
-const DOCUMENTED_PACKAGES = [
-  'packages/backend-common',
-  'packages/backend-test-utils',
-  'packages/catalog-client',
-  'packages/catalog-model',
-  'packages/cli-common',
-  'packages/config',
-  'packages/config-loader',
-  'packages/core-app-api',
+const PACKAGE_ROOTS = ['packages', 'plugins'];
+
+const SKIPPED_PACKAGES = [
+  'packages/app',
+  'packages/backend',
+  'packages/cli',
+  'packages/codemods',
+  'packages/create-app',
+  'packages/docgen',
+  'packages/e2e-test',
+  'packages/storybook',
+  'packages/techdocs-cli',
+
   // TODO(Rugvip): Enable these once `import * as ...` and `import()` PRs have landed, #1796 & #1916.
-  // 'packages/core-components',
-  'packages/core-plugin-api',
-  'packages/dev-utils',
-  'packages/errors',
-  'packages/integration',
-  'packages/integration-react',
-  'packages/search-common',
-  'packages/techdocs-common',
-  'packages/test-utils',
-  'packages/test-utils-core',
-  'packages/theme',
+  'packages/core-components',
+  'plugins/catalog',
+  'plugins/catalog-backend',
+  'plugins/catalog-react',
+  'plugins/github-deployments',
+  'plugins/sentry-backend',
 ];
+
+async function findPackageDirs() {
+  const packageDirs = new Array<string>();
+  const projectRoot = resolvePath(__dirname, '..');
+
+  for (const packageRoot of PACKAGE_ROOTS) {
+    const dirs = await fs.readdir(resolvePath(projectRoot, packageRoot));
+    for (const dir of dirs) {
+      const fullPackageDir = resolvePath(packageRoot, dir);
+
+      const stat = await fs.stat(fullPackageDir);
+      if (!stat.isDirectory()) {
+        continue;
+      }
+
+      try {
+        const packageJsonPath = join(fullPackageDir, 'package.json');
+        await fs.access(packageJsonPath);
+      } catch (_) {
+        continue;
+      }
+
+      const packageDir = relativePath(projectRoot, fullPackageDir);
+      if (!SKIPPED_PACKAGES.includes(packageDir)) {
+        packageDirs.push(packageDir);
+      }
+    }
+  }
+
+  return packageDirs;
+}
 
 interface ApiExtractionOptions {
   packageDirs: string[];
   outputDir: string;
   isLocalBuild: boolean;
 }
+
 async function runApiExtraction({
   packageDirs,
   outputDir,
@@ -110,7 +142,9 @@ async function runApiExtraction({
       configObject: {
         mainEntryPointFilePath: resolvePath(
           __dirname,
-          '../dist-types/packages/<unscopedPackageName>/src/index.d.ts',
+          '../dist-types',
+          packageDir,
+          'src/index.d.ts',
         ),
         bundledPackages: [],
 
@@ -307,9 +341,11 @@ async function main() {
   const isCiBuild = process.argv.includes('--ci');
   const isDocsBuild = process.argv.includes('--docs');
 
+  const packageDirs = await findPackageDirs();
+
   console.log('# Generating package API reports');
   await runApiExtraction({
-    packageDirs: DOCUMENTED_PACKAGES,
+    packageDirs,
     outputDir: tmpDir,
     isLocalBuild: !isCiBuild,
   });

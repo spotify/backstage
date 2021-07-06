@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Extension, attachComponentData } from '@backstage/core';
 import React from 'react';
 import { FieldExtensionOptions } from './types';
+import { Extension, attachComponentData } from '@backstage/core-plugin-api';
 
 export const FIELD_EXTENSION_WRAPPER_KEY = 'scaffolder.extensions.wrapper.v1';
 export const FIELD_EXTENSION_KEY = 'scaffolder.extensions.field.v1';

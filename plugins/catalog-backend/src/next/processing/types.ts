@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ export type EntityProcessingResult =
       ok: true;
       state: Map<string, JsonObject>;
       completedEntity: Entity;
-      deferredEntities: Entity[];
+      deferredEntities: DeferredEntity[];
       relations: EntityRelationSpec[];
       errors: Error[];
     }
@@ -39,3 +39,8 @@ export type EntityProcessingResult =
 export interface CatalogProcessingOrchestrator {
   process(request: EntityProcessingRequest): Promise<EntityProcessingResult>;
 }
+
+export type DeferredEntity = {
+  entity: Entity;
+  locationKey?: string;
+};

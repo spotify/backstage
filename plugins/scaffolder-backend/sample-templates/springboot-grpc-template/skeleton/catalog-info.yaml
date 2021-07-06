@@ -5,7 +5,7 @@ metadata:
   description: {{cookiecutter.description | jsonify}}
   annotations:
     github.com/project-slug: {{cookiecutter.destination.owner + "/" + cookiecutter.destination.repo}}
-    backstage.io/techdocs-ref: url:{{cookiecutter.destination.host + "/" + cookiecutter.destination.owner + "/" + cookiecutter.destination.repo}}
+    backstage.io/techdocs-ref: url:{{"https://" + cookiecutter.destination.host + "/" + cookiecutter.destination.owner + "/" + cookiecutter.destination.repo}}
 spec:
   type: service
   lifecycle: experimental

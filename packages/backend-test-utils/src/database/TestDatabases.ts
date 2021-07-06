@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SingleConnectionDatabaseManager } from '@backstage/backend-common';
+import { DatabaseManager } from '@backstage/backend-common';
 import { ConfigReader } from '@backstage/config';
 import { Knex } from 'knex';
 import { isDockerDisabledForTests } from '../util/isDockerDisabledForTests';
@@ -142,7 +142,7 @@ export class TestDatabases {
 
     // Ensure that a unique logical database is created in the instance
     const connection = await instance.databaseManager
-      .forPlugin(String(this.lastDatabaseIndex++))
+      .forPlugin(String(`db${this.lastDatabaseIndex++}`))
       .getClient();
 
     instance.connections.push(connection);
@@ -157,7 +157,7 @@ export class TestDatabases {
       if (envVarName) {
         const connectionString = process.env[envVarName];
         if (connectionString) {
-          const databaseManager = SingleConnectionDatabaseManager.fromConfig(
+          const databaseManager = DatabaseManager.fromConfig(
             new ConfigReader({
               backend: {
                 database: {
@@ -195,7 +195,7 @@ export class TestDatabases {
       properties.dockerImageName!,
     );
 
-    const databaseManager = SingleConnectionDatabaseManager.fromConfig(
+    const databaseManager = DatabaseManager.fromConfig(
       new ConfigReader({
         backend: {
           database: {
@@ -220,7 +220,7 @@ export class TestDatabases {
       properties.dockerImageName!,
     );
 
-    const databaseManager = SingleConnectionDatabaseManager.fromConfig(
+    const databaseManager = DatabaseManager.fromConfig(
       new ConfigReader({
         backend: {
           database: {
@@ -241,7 +241,7 @@ export class TestDatabases {
   private async initSqlite(
     _properties: TestDatabaseProperties,
   ): Promise<Instance> {
-    const databaseManager = SingleConnectionDatabaseManager.fromConfig(
+    const databaseManager = DatabaseManager.fromConfig(
       new ConfigReader({
         backend: {
           database: {

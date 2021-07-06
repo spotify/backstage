@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,22 @@ type AddBaseUrlOptions = {
   techdocsStorageApi: TechDocsStorageApi;
   entityId: EntityName;
   path: string;
+};
+
+/**
+ * TechDocs backend serves SVGs with text/plain content-type for security. This
+ * helper determines if an SVG is being loaded from the backend, and thus needs
+ * inlining to be displayed properly.
+ */
+const isSvgNeedingInlining = (
+  attrName: string,
+  attrVal: string,
+  apiOrigin: string,
+) => {
+  const isSrcToSvg = attrName === 'src' && attrVal.endsWith('.svg');
+  const isRelativeUrl = !attrVal.match(/^([a-z]*:)?\/\//i);
+  const pointsToOurBackend = attrVal.startsWith(apiOrigin);
+  return isSrcToSvg && (isRelativeUrl || pointsToOurBackend);
 };
 
 export const addBaseUrl = ({
@@ -45,9 +61,10 @@ export const addBaseUrl = ({
             entityId,
             path,
           );
-          if (attributeName === 'src' && elemAttribute.endsWith('.svg')) {
+          const apiOrigin = await techdocsStorageApi.getApiOrigin();
+          if (isSvgNeedingInlining(attributeName, elemAttribute, apiOrigin)) {
             try {
-              const svg = await fetch(newValue);
+              const svg = await fetch(newValue, { credentials: 'include' });
               const svgContent = await svg.text();
               elem.setAttribute(
                 attributeName,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,12 @@ import {
 import { Logger } from 'winston';
 import { CatalogProcessorResult } from '../../ingestion';
 import { locationSpecToLocationEntity } from '../util';
-import { getEntityOriginLocationRef, validateEntityEnvelope } from './util';
+import { DeferredEntity } from './types';
+import {
+  getEntityLocationRef,
+  getEntityOriginLocationRef,
+  validateEntityEnvelope,
+} from './util';
 
 /**
  * Helper class for aggregating all of the emitted data from processors.
@@ -32,7 +37,7 @@ import { getEntityOriginLocationRef, validateEntityEnvelope } from './util';
 export class ProcessorOutputCollector {
   private readonly errors = new Array<Error>();
   private readonly relations = new Array<EntityRelationSpec>();
-  private readonly deferredEntities = new Array<Entity>();
+  private readonly deferredEntities = new Array<DeferredEntity>();
   private done = false;
 
   constructor(
@@ -73,6 +78,8 @@ export class ProcessorOutputCollector {
         return;
       }
 
+      const location = stringifyLocationReference(i.location);
+
       // Note that at this point, we have only validated the envelope part of
       // the entity data. Annotations are not part of that, so we have to be
       // defensive. If the annotations were malformed (e.g. were not a valid
@@ -81,7 +88,6 @@ export class ProcessorOutputCollector {
       const annotations = entity.metadata.annotations || {};
       if (typeof annotations === 'object' && !Array.isArray(annotations)) {
         const originLocation = getEntityOriginLocationRef(this.parentEntity);
-        const location = stringifyLocationReference(i.location);
         entity = {
           ...entity,
           metadata: {
@@ -95,11 +101,14 @@ export class ProcessorOutputCollector {
         };
       }
 
-      this.deferredEntities.push(entity);
+      this.deferredEntities.push({ entity, locationKey: location });
     } else if (i.type === 'location') {
-      this.deferredEntities.push(
-        locationSpecToLocationEntity(i.location, this.parentEntity),
+      const entity = locationSpecToLocationEntity(
+        i.location,
+        this.parentEntity,
       );
+      const locationKey = getEntityLocationRef(entity);
+      this.deferredEntities.push({ entity, locationKey });
     } else if (i.type === 'relation') {
       this.relations.push(i.relation);
     } else if (i.type === 'error') {

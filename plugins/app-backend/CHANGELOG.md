@@ -1,5 +1,14 @@
 # @backstage/plugin-app-backend
 
+## 0.3.14
+
+### Patch Changes
+
+- 3108ff7bf: Make `yarn dev` respect the `PLUGIN_PORT` environment variable.
+- Updated dependencies
+  - @backstage/backend-common@0.8.3
+  - @backstage/config-loader@0.6.4
+
 ## 0.3.13
 
 ### Patch Changes

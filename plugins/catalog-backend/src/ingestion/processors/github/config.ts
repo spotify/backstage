@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,4 +81,28 @@ export function readGithubConfig(config: Config): ProviderConfig[] {
   }
 
   return providers;
+}
+
+/**
+ * The configuration parameters for a multi-org GitHub processor.
+ */
+export type GithubMultiOrgConfig = Array<{
+  /**
+   * The name of the GitHub org to process.
+   */
+  name: string;
+  /**
+   * The namespace of the group created for this org.
+   */
+  groupNamespace: string;
+}>;
+
+export function readGithubMultiOrgConfig(config: Config): GithubMultiOrgConfig {
+  const orgConfigs = config.getOptionalConfigArray('orgs') ?? [];
+  return orgConfigs.map(c => ({
+    name: c.getString('name'),
+    groupNamespace: (
+      c.getOptionalString('groupNamespace') ?? c.getString('name')
+    ).toLowerCase(),
+  }));
 }

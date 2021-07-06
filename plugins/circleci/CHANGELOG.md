@@ -1,5 +1,25 @@
 # @backstage/plugin-circleci
 
+## 0.2.17
+
+### Patch Changes
+
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+  - @backstage/catalog-model@0.8.4
+  - @backstage/plugin-catalog-react@0.2.4
+
+## 0.2.16
+
+### Patch Changes
+
+- 2ec118cc2: Remove moment as part 1 of migration to `lexon`
+- Updated dependencies
+  - @backstage/plugin-catalog-react@0.2.3
+  - @backstage/catalog-model@0.8.3
+  - @backstage/core@0.7.13
+
 ## 0.2.15
 
 ### Patch Changes

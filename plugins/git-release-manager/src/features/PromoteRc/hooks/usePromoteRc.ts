@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,8 @@
 
 import { useState, useEffect } from 'react';
 import { useAsync, useAsyncFn } from 'react-use';
-import { useApi } from '@backstage/core';
-
 import { CardHook, ComponentConfigPromoteRc } from '../../../types/types';
+
 import { GetLatestReleaseResult } from '../../../api/GitReleaseClient';
 import { gitReleaseManagerApiRef } from '../../../api/serviceApiRef';
 import { GitReleaseManagerError } from '../../../errors/GitReleaseManagerError';
@@ -26,6 +25,7 @@ import { TAG_OBJECT_MESSAGE } from '../../../constants/constants';
 import { useProjectContext } from '../../../contexts/ProjectContext';
 import { useResponseSteps } from '../../../hooks/useResponseSteps';
 import { useUserContext } from '../../../contexts/UserContext';
+import { useApi } from '@backstage/core-plugin-api';
 
 interface PromoteRc {
   rcRelease: NonNullable<GetLatestReleaseResult['latestRelease']>;

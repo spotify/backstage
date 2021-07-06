@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { MissingAnnotationEmptyState } from '@backstage/core';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
 import { Route, Routes } from 'react-router';
 import { ROLLBAR_ANNOTATION } from '../constants';
 import { rootRouteRef } from '../plugin';
 import { EntityPageRollbar } from './EntityPageRollbar/EntityPageRollbar';
+import { MissingAnnotationEmptyState } from '@backstage/core-components';
 
 export const isPluginApplicableToEntity = (entity: Entity) =>
   Boolean(entity.metadata.annotations?.[ROLLBAR_ANNOTATION]);

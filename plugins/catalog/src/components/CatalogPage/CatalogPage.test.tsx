@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,7 @@ import {
   RELATION_MEMBER_OF,
   RELATION_OWNED_BY,
 } from '@backstage/catalog-model';
-import {
-  ApiProvider,
-  ApiRegistry,
-  IdentityApi,
-  identityApiRef,
-  ProfileInfo,
-  storageApiRef,
-} from '@backstage/core';
+import { TableColumn, TableProps } from '@backstage/core-components';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import {
   MockStorageApi,
@@ -37,7 +30,17 @@ import {
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 import { createComponentRouteRef } from '../../routes';
+import { EntityRow } from '../CatalogTable/types';
 import { CatalogPage } from './CatalogPage';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
+import {
+  IdentityApi,
+  identityApiRef,
+  ProfileInfo,
+  storageApiRef,
+} from '@backstage/core-plugin-api';
 
 describe('CatalogPage', () => {
   const catalogApi: Partial<CatalogApi> = {
@@ -127,6 +130,81 @@ describe('CatalogPage', () => {
         },
       ),
     );
+
+  it('should render the default column of the grid', async () => {
+    const { getAllByRole } = await renderWrapped(<CatalogPage />);
+
+    const columnHeader = getAllByRole('button').filter(
+      c => c.tagName === 'SPAN',
+    );
+    const columnHeaderLabels = columnHeader.map(c => c.textContent);
+
+    expect(columnHeaderLabels).toEqual([
+      'Name',
+      'System',
+      'Owner',
+      'Type',
+      'Lifecycle',
+      'Description',
+      'Tags',
+      'Actions',
+    ]);
+  });
+
+  it('should render the custom column passed as prop', async () => {
+    const columns: TableColumn<EntityRow>[] = [
+      { title: 'Foo', field: 'entity.foo' },
+      { title: 'Bar', field: 'entity.bar' },
+      { title: 'Baz', field: 'entity.spec.lifecycle' },
+    ];
+    const { getAllByRole } = await renderWrapped(
+      <CatalogPage columns={columns} />,
+    );
+
+    const columnHeader = getAllByRole('button').filter(
+      c => c.tagName === 'SPAN',
+    );
+    const columnHeaderLabels = columnHeader.map(c => c.textContent);
+
+    expect(columnHeaderLabels).toEqual(['Foo', 'Bar', 'Baz', 'Actions']);
+  });
+
+  it('should render the default actions of an item in the grid', async () => {
+    const { findByTitle, findByText } = await renderWrapped(<CatalogPage />);
+    expect(await findByText(/Owned \(1\)/)).toBeInTheDocument();
+    expect(await findByTitle(/View/)).toBeInTheDocument();
+    expect(await findByTitle(/Edit/)).toBeInTheDocument();
+    expect(await findByTitle(/Add to favorites/)).toBeInTheDocument();
+  });
+
+  it('should render the custom actions of an item passed as prop', async () => {
+    const actions: TableProps<EntityRow>['actions'] = [
+      () => {
+        return {
+          icon: () => <DashboardIcon fontSize="small" />,
+          tooltip: 'Foo Action',
+          disabled: false,
+          onClick: () => jest.fn(),
+        };
+      },
+      () => {
+        return {
+          icon: () => <DashboardIcon fontSize="small" />,
+          tooltip: 'Bar Action',
+          disabled: true,
+          onClick: () => jest.fn(),
+        };
+      },
+    ];
+
+    const { findByTitle, findByText } = await renderWrapped(
+      <CatalogPage actions={actions} />,
+    );
+    expect(await findByText(/Owned \(1\)/)).toBeInTheDocument();
+    expect(await findByTitle(/Foo Action/)).toBeInTheDocument();
+    expect(await findByTitle(/Bar Action/)).toBeInTheDocument();
+    expect((await findByTitle(/Bar Action/)).firstChild).toBeDisabled();
+  });
 
   // this test right now causes some red lines in the log output when running tests
   // related to some theme issues in mui-table

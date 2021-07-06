@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import { ConflictError, NotFoundError } from '@backstage/errors';
 import { Knex } from 'knex';
 import { v4 as uuid } from 'uuid';
 import { DbLocationsRow } from './database/tables';
+import { getEntityLocationRef } from './processing/util';
 import {
   EntityProvider,
   EntityProviderConnection,
@@ -60,10 +61,10 @@ export class DefaultLocationStore implements LocationStore, EntityProvider {
 
       return inner;
     });
-
+    const entity = locationSpecToLocationEntity(location);
     await this.connection.applyMutation({
       type: 'delta',
-      added: [locationSpecToLocationEntity(location)],
+      added: [{ entity, locationKey: getEntityLocationRef(entity) }],
       removed: [],
     });
 
@@ -102,11 +103,11 @@ export class DefaultLocationStore implements LocationStore, EntityProvider {
       await tx<DbLocationsRow>('locations').where({ id }).del();
       return location;
     });
-
+    const entity = locationSpecToLocationEntity(deleted);
     await this.connection.applyMutation({
       type: 'delta',
       added: [],
-      removed: [locationSpecToLocationEntity(deleted)],
+      removed: [{ entity, locationKey: getEntityLocationRef(entity) }],
     });
   }
 
@@ -124,7 +125,8 @@ export class DefaultLocationStore implements LocationStore, EntityProvider {
     const locations = await this.locations();
 
     const entities = locations.map(location => {
-      return locationSpecToLocationEntity(location);
+      const entity = locationSpecToLocationEntity(location);
+      return { entity, locationKey: getEntityLocationRef(entity) };
     });
 
     await this.connection.applyMutation({

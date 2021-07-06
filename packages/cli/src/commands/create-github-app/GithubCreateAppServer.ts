@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,6 +120,7 @@ export class GithubCreateAppServer {
       redirect_url: `${baseUrl}/callback`,
       hook_attributes: {
         url: this.webhookUrl,
+        active: false,
       },
     };
     const manifestJson = JSON.stringify(manifest).replace(/\"/g, '&quot;');

@@ -55,3 +55,20 @@ INFO    -  Start watching changes
 [I 210115 19:00:45 handlers:64] Start detecting changes
 INFO    -  Start detecting changes
 ```
+
+## PlantUML with `svg_object` doesn't render
+
+The [plantuml-markdown](https://pypi.org/project/plantuml-markdown/) MkDocs
+plugin available in
+[`mkdocs-techdocs-core`](https://github.com/backstage/mkdocs-techdocs-core)
+supports different formats for rendering diagrams. TechDocs does however not
+support all of them.
+
+The `svg_object` format renders a diagram as an HTML `<object>` tag but this is
+not allowed as it enables bad actors to inject malicious content into
+documentation pages. See
+[CVE-2021-32661](https://github.com/advisories/GHSA-gg96-f8wr-p89f) for more
+details.
+
+Instead use `svg_inline` which renders as an `<svg>` tag and provides the same
+benefits as `svg_object`.

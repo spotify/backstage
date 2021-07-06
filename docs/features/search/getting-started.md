@@ -29,7 +29,7 @@ Backstage app with the following contents:
 
 ```tsx
 import React from 'react';
-import { Content, Header, Page } from '@backstage/core';
+import { Content, Header, Page } from '@backstage/core-components';
 import { Grid, List, Card, CardContent } from '@material-ui/core';
 import {
   SearchBar,

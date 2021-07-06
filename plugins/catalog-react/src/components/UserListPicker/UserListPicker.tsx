@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { compact } from 'lodash';
-import { configApiRef, IconComponent, useApi } from '@backstage/core';
 import { UserListFilter, UserListFilterKind } from '../../types';
 import {
   useEntityListProvider,
@@ -37,6 +36,11 @@ import {
 import SettingsIcon from '@material-ui/icons/Settings';
 import StarIcon from '@material-ui/icons/Star';
 import { reduceEntityFilters } from '../../utils';
+import {
+  configApiRef,
+  IconComponent,
+  useApi,
+} from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles<Theme>(theme => ({
   root: {

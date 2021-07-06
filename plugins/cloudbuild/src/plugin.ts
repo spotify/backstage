@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { cloudbuildApiRef, CloudbuildClient } from './api';
+import { rootRouteRef } from './routes';
 import {
   createPlugin,
   createApiFactory,
   googleAuthApiRef,
   createRoutableExtension,
   createComponentExtension,
-} from '@backstage/core';
-import { cloudbuildApiRef, CloudbuildClient } from './api';
-import { rootRouteRef } from './routes';
+} from '@backstage/core-plugin-api';
 
 export const cloudbuildPlugin = createPlugin({
   id: 'cloudbuild',

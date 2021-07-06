@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 
 import { Config } from '@backstage/config';
-import { ApiRef, createApiRef } from '@backstage/core';
 import {
   ScmIntegrationRegistry,
   ScmIntegrations,
 } from '@backstage/integration';
+import { ApiRef, createApiRef } from '@backstage/core-plugin-api';
 
 export class ScmIntegrationsApi {
   static fromConfig(config: Config): ScmIntegrationRegistry {

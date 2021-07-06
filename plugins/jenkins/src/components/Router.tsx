@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import { buildRouteRef, rootRouteRef } from '../plugin';
 import { DetailedViewPage } from './BuildWithStepsPage/';
 import { JENKINS_ANNOTATION } from '../constants';
 import { Entity } from '@backstage/catalog-model';
-import { MissingAnnotationEmptyState } from '@backstage/core';
 import { CITable } from './BuildsPage/lib/CITable';
+import { MissingAnnotationEmptyState } from '@backstage/core-components';
 
 export const isJenkinsAvailable = (entity: Entity) =>
   Boolean(entity.metadata.annotations?.[JENKINS_ANNOTATION]);

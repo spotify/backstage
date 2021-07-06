@@ -1,5 +1,21 @@
 # @backstage/plugin-tech-radar
 
+## 0.4.2
+
+### Patch Changes
+
+- 846168da2: Add optional id prop passing it to the load API
+- Updated dependencies
+  - @backstage/core-components@0.1.4
+
+## 0.4.1
+
+### Patch Changes
+
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+
 ## 0.4.0
 
 ### Minor Changes

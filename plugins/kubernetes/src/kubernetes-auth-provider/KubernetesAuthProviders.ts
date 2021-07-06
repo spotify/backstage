@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { OAuthApi } from '@backstage/core';
 import { KubernetesRequestBody } from '@backstage/plugin-kubernetes-common';
 import { KubernetesAuthProvider, KubernetesAuthProvidersApi } from './types';
 import { GoogleKubernetesAuthProvider } from './GoogleKubernetesAuthProvider';
 import { ServiceAccountKubernetesAuthProvider } from './ServiceAccountKubernetesAuthProvider';
 import { AwsKubernetesAuthProvider } from './AwsKubernetesAuthProvider';
+import { OAuthApi } from '@backstage/core-plugin-api';
 
 export class KubernetesAuthProviders implements KubernetesAuthProvidersApi {
   private readonly kubernetesAuthProviderMap: Map<

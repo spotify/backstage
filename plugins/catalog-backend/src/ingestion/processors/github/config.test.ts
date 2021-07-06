@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 import { ConfigReader } from '@backstage/config';
-import { readGithubConfig } from './config';
+import { readGithubConfig, readGithubMultiOrgConfig } from './config';
 
 describe('config', () => {
   describe('readGithubConfig', () => {
@@ -74,6 +74,37 @@ describe('config', () => {
           config([{ target: 'https://github.com', token: 7 } as any]),
         ),
       ).toThrow(/token/);
+    });
+  });
+
+  describe('readGithubMultiOrgConfig', () => {
+    function config(orgs: { name: string; groupNamespace?: string }[]) {
+      return new ConfigReader({ orgs });
+    }
+
+    it('reads org configs', () => {
+      const output = readGithubMultiOrgConfig(
+        config([
+          { name: 'foo', groupNamespace: 'apple' },
+          { name: 'bar', groupNamespace: 'Orange' },
+        ]),
+      );
+
+      expect(output).toEqual([
+        { name: 'foo', groupNamespace: 'apple' },
+        { name: 'bar', groupNamespace: 'orange' },
+      ]);
+    });
+
+    it('defaults groupNamespace to org name if undefined', () => {
+      const output = readGithubMultiOrgConfig(
+        config([{ name: 'foo' }, { name: 'bar' }]),
+      );
+
+      expect(output).toEqual([
+        { name: 'foo', groupNamespace: 'foo' },
+        { name: 'bar', groupNamespace: 'bar' },
+      ]);
     });
   });
 });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,8 +72,14 @@ export async function run() {
     print('Testing the backend startup');
     await testBackendStart(appDir, isPostgres);
 
-    print('All tests successful, removing test dir');
-    await fs.remove(rootDir);
+    if (process.env.CI) {
+      // Cleanup actually takes significant time, so skip it in CI since the
+      // runner will be destroyed anyway
+      print('All tests successful');
+    } else {
+      print('All tests successful, removing test dir');
+      await fs.remove(rootDir);
+    }
 
     // Just in case some child process was left hanging
     process.exit(0);

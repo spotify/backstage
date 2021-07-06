@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
+import { DateTime } from 'luxon';
 import {
   useTheme,
   Box,
@@ -53,8 +52,6 @@ import { getPreviousPeriodTotalCost } from '../../utils/change';
 import { formatPeriod } from '../../utils/formatters';
 import { aggregationSum } from '../../utils/sum';
 import { BarChartLegendOptions } from '../BarChart/BarChartLegend';
-
-dayjs.extend(utc);
 
 export type CostOverviewBreakdownChartProps = {
   costBreakdown: Cost[];
@@ -184,7 +181,11 @@ export const CostOverviewBreakdownChart = ({
   }) => {
     if (isInvalid({ label, payload })) return null;
 
-    const dateTitle = dayjs(label).utc().format(DEFAULT_DATE_FORMAT);
+    const date =
+      typeof label === 'number'
+        ? DateTime.fromMillis(label)
+        : DateTime.fromISO(label!);
+    const dateTitle = date.toUTC().toFormat(DEFAULT_DATE_FORMAT);
     const items = payload.map(p => ({
       label: p.dataKey as string,
       value: formatGraphValue(p.value as number),

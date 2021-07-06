@@ -6,8 +6,8 @@ description: Architecture Decision Record (ADR) log on Module Export Structure
 
 ## Context
 
-With a growing number of exports of packages like `@backstage/core`, it is
-becoming more and more difficult to answer questions such as
+With a growing number of exports of packages like `@backstage/core-components`,
+it is becoming more and more difficult to answer questions such as
 
 > Is the export in this module also exported by the package?
 
@@ -86,7 +86,7 @@ import { helperFunc } from '../../lib/UtilityX/helper';
 ## Consequences
 
 We will actively work to rework the export structure in our codebase,
-prioritizing the library packages such as `@backstage/core` and
+prioritizing the library packages such as `@backstage/core-components` and
 `@backstage/backend-common`.
 
 If possible, we will add tools, such as lint rules, to help enforce the export

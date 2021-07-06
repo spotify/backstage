@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { DiscoveryApi } from '@backstage/core';
 import { BitriseApi } from './bitriseApi';
 import {
   BitriseBuildResponseItem,
@@ -28,6 +27,7 @@ import {
 import qs from 'qs';
 import { DateTime, Interval } from 'luxon';
 import { pickBy, identity } from 'lodash';
+import { DiscoveryApi } from '@backstage/core-plugin-api';
 
 export class BitriseClientApi implements BitriseApi {
   constructor(private readonly discoveryApi: DiscoveryApi) {}

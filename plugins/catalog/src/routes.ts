@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createExternalRouteRef } from '@backstage/core';
+import { createExternalRouteRef } from '@backstage/core-plugin-api';
 
 export const createComponentRouteRef = createExternalRouteRef({
   id: 'create-component',

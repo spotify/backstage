@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { Button, Grid, TextField } from '@material-ui/core';
+import React, { useState } from 'react';
 import {
   Content,
   ContentHeader,
@@ -25,9 +27,7 @@ import {
   SimpleStepperStep,
   StructuredMetadataTable,
   SupportButton,
-} from '@backstage/core';
-import { Button, Grid, TextField } from '@material-ui/core';
-import React, { useState } from 'react';
+} from '@backstage/core-components';
 
 export const Project = () => {
   const [projectName, setProjectName] = useState('');

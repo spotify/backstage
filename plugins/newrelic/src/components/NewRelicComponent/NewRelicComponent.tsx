@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { Grid } from '@material-ui/core';
+import NewRelicFetchComponent from '../NewRelicFetchComponent';
 import {
   Header,
   Page,
@@ -23,8 +24,7 @@ import {
   ContentHeader,
   HeaderLabel,
   SupportButton,
-} from '@backstage/core';
-import NewRelicFetchComponent from '../NewRelicFetchComponent';
+} from '@backstage/core-components';
 
 const NewRelicComponent = () => (
   <Page themeId="tool">

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import React, { useState } from 'react';
-import { HeaderTabs } from '@backstage/core';
 import { Dialog, IconButton } from '@material-ui/core';
 import { default as CloseButton } from '@material-ui/icons/Close';
 import { useEntityDialogStyles as useStyles } from '../../utils/styles';
@@ -25,6 +24,7 @@ import {
   ProductEntityTableOptions,
 } from './ProductEntityTable';
 import { findAlways } from '../../utils/assert';
+import { HeaderTabs } from '@backstage/core-components';
 
 type ProductEntityDialogProps = {
   open: boolean;

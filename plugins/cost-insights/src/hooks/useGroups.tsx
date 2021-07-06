@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,11 @@ import React, {
   useState,
 } from 'react';
 import { Alert } from '@material-ui/lab';
-import { useApi, identityApiRef } from '@backstage/core';
 import { costInsightsApiRef } from '../api';
 import { MapLoadingToProps, useLoading } from './useLoading';
 import { Group, Maybe } from '../types';
 import { DefaultLoadingAction } from '../utils/loading';
+import { useApi, identityApiRef } from '@backstage/core-plugin-api';
 
 type GroupsProviderLoadingProps = {
   dispatchLoadingGroups: (isLoading: boolean) => void;

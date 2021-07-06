@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 import React from 'react';
-import {
-  ApiProvider,
-  ApiRegistry,
-  errorApiRef,
-  configApiRef,
-  ConfigReader,
-  ConfigApi,
-  OAuthApi,
-} from '@backstage/core';
 
 import { fireEvent } from '@testing-library/react';
 import { msw, renderInTestApp } from '@backstage/test-utils';
@@ -47,6 +38,18 @@ import { ScmIntegrations } from '@backstage/integration';
 import { Entity } from '@backstage/catalog-model';
 import { GithubDeploymentsTable } from './GithubDeploymentsTable';
 import { Box } from '@material-ui/core';
+
+import {
+  ApiProvider,
+  ApiRegistry,
+  ConfigReader,
+} from '@backstage/core-app-api';
+import {
+  errorApiRef,
+  configApiRef,
+  ConfigApi,
+  OAuthApi,
+} from '@backstage/core-plugin-api';
 
 let entity: { entity: Entity };
 

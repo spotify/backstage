@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,13 @@ export async function initRepoAndPush({
   remoteUrl,
   auth,
   logger,
+  defaultBranch = 'master',
 }: {
   dir: string;
   remoteUrl: string;
   auth: { username: string; password: string };
   logger: Logger;
+  defaultBranch?: string;
 }): Promise<void> {
   const git = Git.fromAuth({
     username: auth.username,
@@ -38,6 +40,7 @@ export async function initRepoAndPush({
 
   await git.init({
     dir,
+    defaultBranch,
   });
 
   const paths = await globby(['./**', './**/.*', '!.git'], {
@@ -74,6 +77,7 @@ type BranchProtectionOptions = {
   owner: string;
   repoName: string;
   logger: Logger;
+  defaultBranch?: string;
 };
 
 export const enableBranchProtectionOnDefaultRepoBranch = async ({
@@ -81,6 +85,7 @@ export const enableBranchProtectionOnDefaultRepoBranch = async ({
   client,
   owner,
   logger,
+  defaultBranch = 'master',
 }: BranchProtectionOptions): Promise<void> => {
   const tryOnce = async () => {
     try {
@@ -97,7 +102,7 @@ export const enableBranchProtectionOnDefaultRepoBranch = async ({
         },
         owner,
         repo: repoName,
-        branch: 'master',
+        branch: defaultBranch,
         required_status_checks: { strict: true, contexts: [] },
         restrictions: null,
         enforce_admins: true,

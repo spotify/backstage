@@ -1,5 +1,17 @@
 # @backstage/plugin-newrelic
 
+## 0.3.0
+
+### Minor Changes
+
+- d719926d2: **BREAKING CHANGE** Remove deprecated route registrations, meaning that it is no longer enough to only import the plugin in the app and the exported page extension must be used instead.
+
+### Patch Changes
+
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+
 ## 0.2.7
 
 ### Patch Changes

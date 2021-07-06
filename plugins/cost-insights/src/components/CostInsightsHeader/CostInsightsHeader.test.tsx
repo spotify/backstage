@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,10 @@
 
 import { CostInsightsHeader } from './CostInsightsHeader';
 import { renderInTestApp } from '@backstage/test-utils';
-import {
-  ApiProvider,
-  ApiRegistry,
-  IdentityApi,
-  identityApiRef,
-} from '@backstage/core';
 import React from 'react';
+
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
+import { IdentityApi, identityApiRef } from '@backstage/core-plugin-api';
 
 describe('<CostInsightsHeader/>', () => {
   const identityApi: Partial<IdentityApi> = {

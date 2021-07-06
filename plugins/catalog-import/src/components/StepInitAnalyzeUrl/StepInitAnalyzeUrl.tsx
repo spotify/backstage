@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { errorApiRef, useApi } from '@backstage/core';
 import { FormHelperText, Grid, TextField } from '@material-ui/core';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AnalyzeResult, catalogImportApiRef } from '../../api';
 import { NextButton } from '../Buttons';
 import { ImportFlows, PrepareResult } from '../useImportState';
+import { errorApiRef, useApi } from '@backstage/core-plugin-api';
 
 type FormData = {
   url: string;

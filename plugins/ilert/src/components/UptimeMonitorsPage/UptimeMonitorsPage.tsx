@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 import React from 'react';
+import { AuthenticationError } from '@backstage/errors';
+import { UptimeMonitorsTable } from './UptimeMonitorsTable';
+import { MissingAuthorizationHeaderError } from '../Errors';
+import { useUptimeMonitors } from '../../hooks/useUptimeMonitors';
 import {
   Content,
   ContentHeader,
   SupportButton,
   ResponseErrorPanel,
-} from '@backstage/core';
-import { AuthenticationError } from '@backstage/errors';
-import { UptimeMonitorsTable } from './UptimeMonitorsTable';
-import { MissingAuthorizationHeaderError } from '../Errors';
-import { useUptimeMonitors } from '../../hooks/useUptimeMonitors';
+} from '@backstage/core-components';
 
 export const UptimeMonitorsPage = () => {
   const [

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { DiscoveryApi } from '@backstage/core';
 import fetch from 'cross-fetch';
 import { FindingSummary, Metrics, SonarQubeApi } from './SonarQubeApi';
 import { ComponentWrapper, MeasuresWrapper } from './types';
+import { DiscoveryApi } from '@backstage/core-plugin-api';
 
 export class SonarQubeClient implements SonarQubeApi {
   discoveryApi: DiscoveryApi;

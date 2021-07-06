@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,8 +44,12 @@ export function basicIntegrations<T extends ScmIntegration>(
       return integrations;
     },
     byUrl(url: string | URL): T | undefined {
-      const parsed = typeof url === 'string' ? new URL(url) : url;
-      return integrations.find(i => getHost(i) === parsed.hostname);
+      try {
+        const parsed = typeof url === 'string' ? new URL(url) : url;
+        return integrations.find(i => getHost(i) === parsed.hostname);
+      } catch {
+        return undefined;
+      }
     },
     byHost(host: string): T | undefined {
       return integrations.find(i => getHost(i) === host);

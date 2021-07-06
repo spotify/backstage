@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { RELATION_MEMBER_OF, UserEntity } from '@backstage/catalog-model';
-import { Avatar, InfoCard, InfoCardVariants } from '@backstage/core';
 import {
   EntityRefLinks,
   getEntityRelations,
@@ -35,6 +34,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import PersonIcon from '@material-ui/icons/Person';
 import Alert from '@material-ui/lab/Alert';
 import React from 'react';
+import { Avatar, InfoCard, InfoCardVariants } from '@backstage/core-components';
 
 const CardTitle = ({ title }: { title?: string }) =>
   title ? (

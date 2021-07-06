@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ export function createPublishAzureAction(options: {
   return createTemplateAction<{
     repoUrl: string;
     description?: string;
+    defaultBranch?: string;
     sourcePath?: string;
   }>({
     id: 'publish:azure',
@@ -47,6 +48,11 @@ export function createPublishAzureAction(options: {
           description: {
             title: 'Repository Description',
             type: 'string',
+          },
+          defaultBranch: {
+            title: 'Default Branch',
+            type: 'string',
+            description: `Sets the default branch on the repository. The default value is 'master'`,
           },
           sourcePath: {
             title:
@@ -70,9 +76,9 @@ export function createPublishAzureAction(options: {
       },
     },
     async handler(ctx) {
-      const { owner, repo, host, organization } = parseRepoUrl(
-        ctx.input.repoUrl,
-      );
+      const { repoUrl, defaultBranch = 'master' } = ctx.input;
+
+      const { owner, repo, host, organization } = parseRepoUrl(repoUrl);
 
       if (!organization) {
         throw new InputError(
@@ -120,6 +126,7 @@ export function createPublishAzureAction(options: {
       await initRepoAndPush({
         dir: getRepoSourceDirectory(ctx.workspacePath, ctx.input.sourcePath),
         remoteUrl,
+        defaultBranch,
         auth: {
           username: 'notempty',
           password: integrationConfig.config.token,

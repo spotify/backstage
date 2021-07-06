@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ import {
   Navigate,
   RouteMatch,
 } from 'react-router';
-import { Tab, HeaderTabs, Content } from '@backstage/core';
 import { Helmet } from 'react-helmet';
+import { Tab, HeaderTabs, Content } from '@backstage/core-components';
 
 const getSelectedIndexOrDefault = (
   matchedRoute: RouteMatch,

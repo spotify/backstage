@@ -1,5 +1,63 @@
 # example-app
 
+## 0.2.34
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-catalog@0.6.4
+  - @backstage/plugin-search@0.4.1
+  - @backstage/plugin-explore@0.3.7
+  - @backstage/core-app-api@0.1.3
+  - @backstage/core-plugin-api@0.1.3
+  - @backstage/plugin-scaffolder@0.9.9
+  - @backstage/cli@0.7.2
+  - @backstage/plugin-api-docs@0.6.0
+  - @backstage/plugin-cost-insights@0.11.0
+  - @backstage/plugin-gcp-projects@0.3.0
+  - @backstage/plugin-newrelic@0.3.0
+  - @backstage/plugin-techdocs@0.9.7
+  - @backstage/catalog-model@0.8.4
+  - @backstage/integration-react@0.1.4
+  - @backstage/plugin-badges@0.2.3
+  - @backstage/plugin-catalog-import@0.5.11
+  - @backstage/plugin-catalog-react@0.2.4
+  - @backstage/plugin-circleci@0.2.17
+  - @backstage/plugin-cloudbuild@0.2.17
+  - @backstage/plugin-code-coverage@0.1.5
+  - @backstage/plugin-github-actions@0.4.10
+  - @backstage/plugin-graphiql@0.2.12
+  - @backstage/plugin-jenkins@0.4.6
+  - @backstage/plugin-kafka@0.2.9
+  - @backstage/plugin-kubernetes@0.4.6
+  - @backstage/plugin-lighthouse@0.2.18
+  - @backstage/plugin-org@0.3.15
+  - @backstage/plugin-pagerduty@0.3.6
+  - @backstage/plugin-rollbar@0.3.7
+  - @backstage/plugin-sentry@0.3.13
+  - @backstage/plugin-shortcuts@0.1.4
+  - @backstage/plugin-tech-radar@0.4.1
+  - @backstage/plugin-todo@0.1.3
+  - @backstage/plugin-user-settings@0.2.12
+
+## 0.2.33
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-catalog-react@0.2.3
+  - @backstage/plugin-catalog@0.6.3
+  - @backstage/cli@0.7.1
+  - @backstage/plugin-api-docs@0.5.0
+  - @backstage/plugin-jenkins@0.4.5
+  - @backstage/plugin-techdocs@0.9.6
+  - @backstage/plugin-circleci@0.2.16
+  - @backstage/plugin-catalog-import@0.5.10
+  - @backstage/plugin-sentry@0.3.12
+  - @backstage/plugin-user-settings@0.2.11
+  - @backstage/catalog-model@0.8.3
+  - @backstage/core@0.7.13
+
 ## 0.2.32
 
 ### Patch Changes

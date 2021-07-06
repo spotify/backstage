@@ -1,0 +1,50 @@
+{
+  "name": "@backstage/plugin-catalog-backend-module-ldap",
+  "version": "0.1.1",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.cjs.js",
+    "types": "dist/index.d.ts"
+  },
+  "homepage": "https://backstage.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/backstage/backstage",
+    "directory": "plugins/catalog-backend-module-ldap"
+  },
+  "keywords": [
+    "backstage"
+  ],
+  "scripts": {
+    "build": "backstage-cli backend:build",
+    "lint": "backstage-cli lint",
+    "test": "backstage-cli test",
+    "prepack": "backstage-cli prepack",
+    "postpack": "backstage-cli postpack",
+    "clean": "backstage-cli clean"
+  },
+  "dependencies": {
+    "@backstage/catalog-model": "^0.8.3",
+    "@backstage/config": "^0.1.5",
+    "@backstage/plugin-catalog-backend": "^0.11.0",
+    "@types/ldapjs": "^1.0.10",
+    "ldapjs": "^2.2.0",
+    "lodash": "^4.17.15",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@backstage/cli": "^0.7.3",
+    "@backstage/test-utils": "^0.1.13",
+    "@types/lodash": "^4.14.151",
+    "msw": "^0.29.0"
+  },
+  "files": [
+    "dist",
+    "config.d.ts"
+  ],
+  "configSchema": "config.d.ts"
+}

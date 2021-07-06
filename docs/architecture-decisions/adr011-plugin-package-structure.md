@@ -35,6 +35,8 @@ example `catalog` or `techdocs`):
 
 - `x`: Contains the main frontend code of the plugin.
 - `x-backend`: Contains the main backend code of the plugin.
+- `x-backend-module-<name>`: Contains optional modules related to the backend
+  plugin.
 - `x-react`: Contains shared widgets, hooks and similar that both the plugin
   itself (`x`) and third-party frontend plugins can depend on.
 - `x-node`: Contains utilities for backends that both the plugin backend itself
@@ -60,6 +62,10 @@ We will actively migrate existing packages that are part of a plugin to the
 - While the new location of `packages/catalog-model` should be
   `plugins/catalog-common` we might want to do an exception here, as it's a very
   central package.
+
+We will actively migrate optional features of backend plugins into separate
+`x-backend-module-<name>` packages, for example the more specialized processors
+in the catalog backend.
 
 The limited set of rules might not be sufficient in the future. If additional
 packages are required, we will revisit this decision and extend the pattern.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router';
 import { SubmitHandler } from 'react-hook-form';
-import { alertApiRef, useApi } from '@backstage/core';
 import {
   Button,
   Card,
@@ -28,6 +27,7 @@ import {
 import { ShortcutForm } from './ShortcutForm';
 import { FormValues, Shortcut } from './types';
 import { ShortcutApi } from './api';
+import { alertApiRef, useApi } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles(theme => ({
   card: {

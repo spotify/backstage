@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { Entity } from '@backstage/catalog-model';
-import { configApiRef, Breadcrumbs, Link, useApi } from '@backstage/core';
 import { readGitHubIntegrationConfigs } from '@backstage/integration';
 import {
   Accordion,
@@ -37,7 +36,7 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExternalLinkIcon from '@material-ui/icons/Launch';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import React from 'react';
 import { Job, Jobs, Step } from '../../api';
 import { useProjectName } from '../useProjectName';
@@ -45,6 +44,9 @@ import { WorkflowRunStatus } from '../WorkflowRunStatus';
 import { useWorkflowRunJobs } from './useWorkflowRunJobs';
 import { useWorkflowRunsDetails } from './useWorkflowRunsDetails';
 import { WorkflowRunLogs } from '../WorkflowRunLogs';
+
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
+import { Breadcrumbs, Link } from '@backstage/core-components';
 
 const useStyles = makeStyles<Theme>(theme => ({
   root: {
@@ -72,8 +74,10 @@ const useStyles = makeStyles<Theme>(theme => ({
 }));
 
 const getElapsedTime = (start: string, end: string) => {
-  const diff = moment(moment(end || moment()).diff(moment(start)));
-  const timeElapsed = diff.format('m [minutes] s [seconds]');
+  const startDate = DateTime.fromISO(start);
+  const endDate = end ? DateTime.fromISO(end) : DateTime.now();
+  const diff = endDate.diff(startDate);
+  const timeElapsed = diff.toFormat(`m 'minutes' s 'seconds'`);
   return timeElapsed;
 };
 

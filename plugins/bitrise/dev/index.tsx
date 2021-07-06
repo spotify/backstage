@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { Content, Header, Page } from '@backstage/core';
 import { createDevApp, EntityGridItem } from '@backstage/dev-utils';
 import React from 'react';
 import { EntityBitriseContent } from '../src';
@@ -28,6 +27,7 @@ import {
 } from '../src/api/bitriseApi.model';
 import { BITRISE_APP_ANNOTATION } from '../src/components/BitriseBuildsComponent';
 import { bitriseApiRef } from '../src/plugin';
+import { Content, Header, Page } from '@backstage/core-components';
 
 const mockedPagingResponse: BitrisePagingResponse = {
   next: 'fae3232de3d2',

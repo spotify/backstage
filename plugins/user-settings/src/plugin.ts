@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import {
   createPlugin,
   createRoutableExtension,
   createRouteRef,
-} from '@backstage/core';
+} from '@backstage/core-plugin-api';
 
 export const settingsRouteRef = createRouteRef({
   path: '/settings',

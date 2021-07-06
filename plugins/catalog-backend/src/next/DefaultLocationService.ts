@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,10 @@ import {
   LOCATION_ANNOTATION,
   ORIGIN_LOCATION_ANNOTATION,
 } from '@backstage/catalog-model';
-import { CatalogProcessingOrchestrator } from './processing/types';
+import {
+  CatalogProcessingOrchestrator,
+  DeferredEntity,
+} from './processing/types';
 import { LocationService, LocationStore } from './types';
 import { locationSpecToMetadataName } from './util';
 
@@ -73,7 +76,9 @@ export class DefaultLocationService implements LocationService {
         target: spec.target,
       },
     };
-    const unprocessedEntities: Entity[] = [entity];
+    const unprocessedEntities: DeferredEntity[] = [
+      { entity, locationKey: `${spec.type}:${spec.target}` },
+    ];
     const entities: Entity[] = [];
     const state = new Map(); // ignored
     while (unprocessedEntities.length) {
@@ -82,7 +87,7 @@ export class DefaultLocationService implements LocationService {
         continue;
       }
       const processed = await this.orchestrator.process({
-        entity: currentEntity,
+        entity: currentEntity.entity,
         state,
       });
 

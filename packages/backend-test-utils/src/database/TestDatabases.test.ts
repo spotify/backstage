@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ describe('TestDatabases', () => {
         await input.insert({ x: 'y' }).into('a');
 
         // Look for the mark
-        const database = 'backstage_plugin_0';
+        const database = 'backstage_plugin_db0';
         const output = knexFactory({
           client: 'pg',
           connection: { host, port, user, password, database },
@@ -105,7 +105,7 @@ describe('TestDatabases', () => {
         await input.insert({ x: 'y' }).into('a');
 
         // Look for the mark
-        const database = 'backstage_plugin_0';
+        const database = 'backstage_plugin_db0';
         const output = knexFactory({
           client: 'pg',
           connection: { host, port, user, password, database },
@@ -139,7 +139,7 @@ describe('TestDatabases', () => {
         await input.insert({ x: 'y' }).into('a');
 
         // Look for the mark
-        const database = 'backstage_plugin_0';
+        const database = 'backstage_plugin_db0';
         const output = knexFactory({
           client: 'mysql2',
           connection: { host, port, user, password, database },

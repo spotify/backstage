@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import {
 } from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import { Link, Progress, useApi } from '@backstage/core';
 
 import {
   GetBranchResult,
@@ -49,6 +48,9 @@ import { SemverTagParts } from '../../helpers/tagParts/getSemverTagParts';
 import { TEST_IDS } from '../../test-helpers/test-ids';
 import { usePatch } from './hooks/usePatch';
 import { useProjectContext } from '../../contexts/ProjectContext';
+
+import { Link, Progress } from '@backstage/core-components';
+import { useApi } from '@backstage/core-plugin-api';
 
 interface PatchBodyProps {
   bumpedTag: string;

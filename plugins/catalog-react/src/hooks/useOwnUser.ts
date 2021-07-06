@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
 import { UserEntity } from '@backstage/catalog-model';
-import { identityApiRef, useApi } from '@backstage/core';
 import { useAsync } from 'react-use';
 import { AsyncState } from 'react-use/lib/useAsync';
 import { catalogApiRef } from '../api';
+import { identityApiRef, useApi } from '@backstage/core-plugin-api';
 
 /**
  * Get the catalog User entity (if any) that matches the logged-in user.

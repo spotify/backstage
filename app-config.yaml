@@ -72,7 +72,7 @@ proxy:
   '/pagerduty':
     target: https://api.pagerduty.com
     headers:
-      Authorization: ${PAGERDUTY_TOKEN}
+      Authorization: Token token=${PAGERDUTY_TOKEN}
 
   '/buildkite/api':
     target: https://api.buildkite.com/v2/

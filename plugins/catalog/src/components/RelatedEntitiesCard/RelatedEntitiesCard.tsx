@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,6 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import {
-  InfoCard,
-  Link,
-  Progress,
-  ResponseErrorPanel,
-  TableColumn,
-} from '@backstage/core';
 import { Typography } from '@material-ui/core';
 import {
   EntityTable,
@@ -29,6 +22,13 @@ import {
   useRelatedEntities,
 } from '@backstage/plugin-catalog-react';
 import React from 'react';
+import {
+  InfoCard,
+  Link,
+  Progress,
+  ResponseErrorPanel,
+  TableColumn,
+} from '@backstage/core-components';
 
 type Props<T extends Entity> = {
   variant?: 'gridItem';

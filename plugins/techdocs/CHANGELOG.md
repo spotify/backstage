@@ -1,5 +1,43 @@
 # @backstage/plugin-techdocs
 
+## 0.9.8
+
+### Patch Changes
+
+- 99a2873c7: Include cookies when making fetch requests for SVG from techdocs plugin
+- a444c7431: Filter fetched entity fields to optimize loading techdocs list
+- Updated dependencies
+  - @backstage/plugin-catalog-react@0.2.5
+  - @backstage/core-components@0.1.4
+  - @backstage/integration@0.5.7
+
+## 0.9.7
+
+### Patch Changes
+
+- aefd54da6: Fix the overlapping between the sidebar and the tabs navigation when enabled in mkdocs (features: navigation.tabs)
+- 48c9fcd33: Migrated to use the new `@backstage/core-*` packages rather than `@backstage/core`.
+- 1dfec7a2a: Refactor the implicit logic from `<Reader />` into an explicit state machine. This resolves some state synchronization issues when content is refreshed or rebuilt in the backend.
+- Updated dependencies
+  - @backstage/core-plugin-api@0.1.3
+  - @backstage/catalog-model@0.8.4
+  - @backstage/integration-react@0.1.4
+  - @backstage/plugin-catalog-react@0.2.4
+
+## 0.9.6
+
+### Patch Changes
+
+- 938aee2fb: Fix the link to the documentation page when no owned documents are displayed
+- 2e1fbe203: Do not add trailing slash for .html pages during doc links rewriting
+- 9b57fda8b: Fixes a bug that could prevent some externally hosted images (like icons or
+  build badges) from rendering within TechDocs documentation.
+- 667656c8b: Adding support for user owned document filter for TechDocs custom Homepage
+- Updated dependencies
+  - @backstage/plugin-catalog-react@0.2.3
+  - @backstage/catalog-model@0.8.3
+  - @backstage/core@0.7.13
+
 ## 0.9.5
 
 ### Patch Changes

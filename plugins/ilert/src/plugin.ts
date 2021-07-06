@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ILertClient, ilertApiRef } from './api';
+import { iLertRouteRef } from './route-refs';
 import {
   configApiRef,
   createApiFactory,
@@ -21,9 +23,7 @@ import {
   identityApiRef,
   createRoutableExtension,
   createComponentExtension,
-} from '@backstage/core';
-import { ILertClient, ilertApiRef } from './api';
-import { iLertRouteRef } from './route-refs';
+} from '@backstage/core-plugin-api';
 
 export const ilertPlugin = createPlugin({
   id: 'ilert',

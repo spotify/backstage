@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
  */
 
 import React from 'react';
-import { ApiProvider, ApiRegistry } from '@backstage/core';
 import { EntityLayout } from '@backstage/plugin-catalog';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { renderInTestApp } from '@backstage/test-utils';
 import { cicdContent } from './EntityPage';
 import { githubActionsApiRef } from '@backstage/plugin-github-actions';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 
 describe('EntityPage Test', () => {
   const entity = {

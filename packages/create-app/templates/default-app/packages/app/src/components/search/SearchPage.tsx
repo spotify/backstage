@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles, Theme, Grid, List, Paper } from '@material-ui/core';
 
-import { Content, Header, Page } from '@backstage/core';
 import { CatalogResultListItem } from '@backstage/plugin-catalog';
 import {
   SearchBar,
@@ -9,6 +8,7 @@ import {
   SearchResult,
   DefaultResultListItem,
 } from '@backstage/plugin-search';
+import { Content, Header, Page } from '@backstage/core-components';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bar: {

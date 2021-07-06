@@ -4,7 +4,7 @@
 
 ```ts
 
-import { ApiRef } from '@backstage/core';
+import { ApiRef } from '@backstage/core-plugin-api';
 import { Config } from '@backstage/config';
 import { ScmIntegrationRegistry } from '@backstage/integration';
 

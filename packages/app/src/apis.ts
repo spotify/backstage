@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,6 @@
  */
 
 import {
-  AnyApiFactory,
-  configApiRef,
-  createApiFactory,
-  errorApiRef,
-  githubAuthApiRef,
-} from '@backstage/core';
-import {
   ScmIntegrationsApi,
   scmIntegrationsApiRef,
 } from '@backstage/integration-react';
@@ -33,6 +26,13 @@ import {
   graphQlBrowseApiRef,
   GraphQLEndpoints,
 } from '@backstage/plugin-graphiql';
+import {
+  AnyApiFactory,
+  configApiRef,
+  createApiFactory,
+  errorApiRef,
+  githubAuthApiRef,
+} from '@backstage/core-plugin-api';
 
 export const apis: AnyApiFactory[] = [
   createApiFactory({

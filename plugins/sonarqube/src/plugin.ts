@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+import { sonarQubeApiRef, SonarQubeClient } from './api';
 import {
   configApiRef,
   createApiFactory,
   createComponentExtension,
   createPlugin,
   discoveryApiRef,
-} from '@backstage/core';
-import { sonarQubeApiRef, SonarQubeClient } from './api';
+} from '@backstage/core-plugin-api';
 
 export const sonarQubePlugin = createPlugin({
   id: 'sonarqube',

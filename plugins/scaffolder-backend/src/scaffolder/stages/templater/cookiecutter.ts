@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 
 import { ContainerRunner } from '@backstage/backend-common';
 import { JsonValue } from '@backstage/config';
+import commandExists from 'command-exists';
 import fs from 'fs-extra';
 import path from 'path';
 import { runCommand } from './helpers';
 import { TemplaterBase, TemplaterRunOptions } from './types';
-
-const commandExists = require('command-exists-promise');
 
 export class CookieCutter implements TemplaterBase {
   private readonly containerRunner: ContainerRunner;
@@ -71,7 +70,10 @@ export class CookieCutter implements TemplaterBase {
       [intermediateDir]: '/output',
     };
 
-    const cookieCutterInstalled = await commandExists('cookiecutter');
+    // the command-exists package returns `true` or throws an error
+    const cookieCutterInstalled = await commandExists('cookiecutter').catch(
+      () => false,
+    );
     if (cookieCutterInstalled) {
       await runCommand({
         command: 'cookiecutter',

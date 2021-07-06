@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { DomainEntity, RELATION_OWNED_BY } from '@backstage/catalog-model';
-import { Button, ItemCardHeader, useRouteRef } from '@backstage/core';
 import {
   EntityRefLinks,
   entityRouteParams,
@@ -30,6 +29,9 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { catalogEntityRouteRef } from '../../routes';
+
+import { Button, ItemCardHeader } from '@backstage/core-components';
+import { useRouteRef } from '@backstage/core-plugin-api';
 
 type DomainCardProps = {
   entity: DomainEntity;

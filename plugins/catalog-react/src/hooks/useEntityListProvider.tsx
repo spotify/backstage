@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { useApi } from '@backstage/core';
 import { compact, isEqual } from 'lodash';
 import React, {
   createContext,
@@ -29,16 +28,21 @@ import { catalogApiRef } from '../api';
 import {
   EntityFilter,
   EntityKindFilter,
+  EntityLifecycleFilter,
+  EntityOwnerFilter,
   EntityTagFilter,
   EntityTypeFilter,
   UserListFilter,
 } from '../types';
 import { reduceCatalogFilters, reduceEntityFilters } from '../utils';
+import { useApi } from '@backstage/core-plugin-api';
 
 export type DefaultEntityFilters = {
   kind?: EntityKindFilter;
   type?: EntityTypeFilter;
   user?: UserListFilter;
+  owners?: EntityOwnerFilter;
+  lifecycles?: EntityLifecycleFilter;
   tags?: EntityTagFilter;
 };
 

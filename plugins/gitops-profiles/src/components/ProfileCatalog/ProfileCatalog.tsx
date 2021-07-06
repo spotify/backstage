@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,13 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { TextField, List, ListItem, Link } from '@material-ui/core';
+
+import ClusterTemplateCardList from '../ClusterTemplateCardList';
+import ProfileCardList from '../ProfileCardList';
+import { useLocalStorage } from 'react-use';
+import { gitOpsApiRef, Status } from '../../api';
+
 import {
   Header,
   Page,
@@ -33,15 +40,9 @@ import {
   StatusError,
   StatusPending,
   StatusAborted,
-  useApi,
-  githubAuthApiRef,
-} from '@backstage/core';
-import { TextField, List, ListItem, Link } from '@material-ui/core';
+} from '@backstage/core-components';
 
-import ClusterTemplateCardList from '../ClusterTemplateCardList';
-import ProfileCardList from '../ProfileCardList';
-import { useLocalStorage } from 'react-use';
-import { gitOpsApiRef, Status } from '../../api';
+import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 
 // OK = (completed, success)
 // Error = (?,failure)

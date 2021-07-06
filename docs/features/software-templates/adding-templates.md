@@ -83,7 +83,7 @@ spec:
 [Template Entity](../software-catalog/descriptor-format.md#kind-template)
 contains more information about the required fields.
 
-Once we have a `template.yaml` ready, we can then add it to the service catalog
+Once we have a `template.yaml` ready, we can then add it to the software catalog
 for use by the scaffolder.
 
 You can add the template files to the catalog through

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 /* eslint-disable no-restricted-imports */
 
-import dayjs from 'dayjs';
+import { DateTime } from 'luxon';
 import { CostInsightsApi, ProductInsightsOptions } from '../api';
 import {
   Alert,
@@ -46,7 +46,7 @@ export class ExampleCostInsightsClient implements CostInsightsApi {
 
   getLastCompleteBillingDate(): Promise<string> {
     return Promise.resolve(
-      dayjs().subtract(1, 'day').format(DEFAULT_DATE_FORMAT),
+      DateTime.now().minus({ days: 1 }).toFormat(DEFAULT_DATE_FORMAT),
     );
   }
 
@@ -175,13 +175,13 @@ export class ExampleCostInsightsClient implements CostInsightsApi {
       ],
     };
 
-    const today = dayjs();
+    const today = DateTime.now();
     const alerts: Alert[] = await this.request({ group }, [
       new ProjectGrowthAlert(projectGrowthData),
       new UnlabeledDataflowAlert(unlabeledDataflowData),
       new KubernetesMigrationAlert(this, {
-        startDate: today.subtract(30, 'day').format(DEFAULT_DATE_FORMAT),
-        endDate: today.format(DEFAULT_DATE_FORMAT),
+        startDate: today.minus({ days: 30 }).toFormat(DEFAULT_DATE_FORMAT),
+        endDate: today.toFormat(DEFAULT_DATE_FORMAT),
         change: {
           ratio: 0,
           amount: 0,

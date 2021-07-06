@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
+import { waitFor } from '@testing-library/react';
 import { createTestShadowDom } from '../../test-utils';
 import { addBaseUrl } from '../transformers';
 import { TechDocsStorageApi } from '../../api';
 
 const DOC_STORAGE_URL = 'https://example-host.storage.googleapis.com';
+const API_ORIGIN_URL = 'https://backstage.example.com/api/techdocs';
 
 const techdocsStorageApi: TechDocsStorageApi = {
-  getBaseUrl: jest.fn(() => Promise.resolve(DOC_STORAGE_URL)),
+  getBaseUrl: jest.fn(o =>
+    Promise.resolve(new URL(o, DOC_STORAGE_URL).toString()),
+  ),
   getEntityDocs: () => new Promise(resolve => resolve('yes!')),
-  syncEntityDocs: () => new Promise(resolve => resolve(true)),
-  getApiOrigin: jest.fn(),
+  syncEntityDocs: () => new Promise(resolve => resolve('updated')),
+  getApiOrigin: jest.fn(() => new Promise(resolve => resolve(API_ORIGIN_URL))),
   getBuilder: jest.fn(),
   getStorageUrl: jest.fn(),
 };
@@ -96,7 +100,7 @@ describe('addBaseUrl', () => {
     );
   });
 
-  it('transforms svg img src to data uri', async () => {
+  it('inlines svg img src to data uri', async () => {
     const svgContent = '<svg></svg>';
     const expectedSrc = `data:image/svg+xml;base64,${Buffer.from(
       svgContent,
@@ -117,10 +121,63 @@ describe('addBaseUrl', () => {
       postTransformers: [],
     });
 
+    await waitFor(() => {
+      const actualSrc = root.getElementById('x')?.getAttribute('src');
+      expect(expectedSrc).toEqual(actualSrc);
+    });
+  });
+
+  it('inlines absolute url svgs pointed at our backend', async () => {
+    const svgContent = '<svg></svg>';
+    const expectedSrc = `data:image/svg+xml;base64,${Buffer.from(
+      svgContent,
+    ).toString('base64')}`;
+
+    (global.fetch as jest.Mock).mockReturnValue({
+      text: jest.fn().mockResolvedValue(svgContent),
+    });
+
+    const root = createTestShadowDom(
+      `<img id="x" src="${API_ORIGIN_URL}/test.svg" />`,
+      {
+        preTransformers: [
+          addBaseUrl({
+            techdocsStorageApi,
+            entityId: mockEntityId,
+            path: '',
+          }),
+        ],
+        postTransformers: [],
+      },
+    );
+
+    await waitFor(() => {
+      const actualSrc = root.getElementById('x')?.getAttribute('src');
+      expect(expectedSrc).toEqual(actualSrc);
+      expect(global.fetch).toHaveBeenCalledWith(`${API_ORIGIN_URL}/test.svg`, {
+        credentials: 'include',
+      });
+    });
+  });
+
+  it('does not inline external svgs', async () => {
+    const expectedSrc = 'https://example.com/test.svg';
+    const root = createTestShadowDom(`<img id="x" src="${expectedSrc}" />`, {
+      preTransformers: [
+        addBaseUrl({
+          techdocsStorageApi,
+          entityId: mockEntityId,
+          path: '',
+        }),
+      ],
+      postTransformers: [],
+    });
+
     await new Promise<void>(done => {
       process.nextTick(() => {
-        const actualSrc = root.getElementById('x')?.getAttribute('src');
-        expect(expectedSrc).toEqual(actualSrc);
+        const actualElem = root.getElementById('x');
+        expect(actualElem?.getAttribute('src')).toEqual(expectedSrc);
+        expect(actualElem?.getAttribute('alt')).toEqual(null);
         done();
       });
     });

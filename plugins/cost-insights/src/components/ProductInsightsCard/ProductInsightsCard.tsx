@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import React, {
   useState,
 } from 'react';
 import pluralize from 'pluralize';
-import { InfoCard } from '@backstage/core';
 import { Typography } from '@material-ui/core';
 import { default as Alert } from '@material-ui/lab/Alert';
 import { PeriodSelect } from '../PeriodSelect';
@@ -37,6 +36,7 @@ import {
 } from '../../hooks';
 import { findAnyKey } from '../../utils/assert';
 import { ScrollAnchor } from '../../utils/scroll';
+import { InfoCard } from '@backstage/core-components';
 
 type LoadingProps = (isLoading: boolean) => void;
 

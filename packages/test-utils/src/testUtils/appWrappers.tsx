@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,21 @@ import React, { ComponentType, ReactNode, ReactElement } from 'react';
 import { MemoryRouter } from 'react-router';
 import { Route } from 'react-router-dom';
 import { lightTheme } from '@backstage/theme';
-import privateExports, {
-  defaultSystemIcons,
+import { createApp } from '@backstage/core-app-api';
+import {
   BootErrorPageProps,
   RouteRef,
   ExternalRouteRef,
   attachComponentData,
   createRouteRef,
-} from '@backstage/core-api';
+} from '@backstage/core-plugin-api';
 import { RenderResult } from '@testing-library/react';
 import { renderWithEffects } from '@backstage/test-utils-core';
 import { mockApis } from './mockApis';
 
-const { PrivateAppImpl } = privateExports;
-
+const ErrorBoundaryFallback = ({ error }: { error: Error }) => {
+  throw new Error(`Reached ErrorBoundaryFallback Page with error, ${error}`);
+};
 const NotFoundErrorPage = () => {
   throw new Error('Reached NotFound Page');
 };
@@ -87,17 +88,20 @@ export function wrapInTestApp(
   const { routeEntries = ['/'] } = options;
   const boundRoutes = new Map<ExternalRouteRef, RouteRef>();
 
-  const app = new PrivateAppImpl({
-    apis: [],
+  const app = createApp({
+    apis: mockApis,
+    // Bit of a hack to make sure that the default config loader isn't used
+    // as that would force every single test to wait for config loading.
+    configLoader: (false as unknown) as undefined,
     components: {
-      NotFoundErrorPage,
-      BootErrorPage,
       Progress,
+      BootErrorPage,
+      NotFoundErrorPage,
+      ErrorBoundaryFallback,
       Router: ({ children }) => (
         <MemoryRouter initialEntries={routeEntries} children={children} />
       ),
     },
-    icons: defaultSystemIcons,
     plugins: [],
     themes: [
       {
@@ -107,7 +111,6 @@ export function wrapInTestApp(
         variant: 'light',
       },
     ],
-    defaultApis: mockApis,
     bindRoutes: ({ bind }) => {
       for (const [externalRef, absoluteRef] of boundRoutes) {
         bind(

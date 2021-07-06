@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 import React from 'react';
 import pluralize from 'pluralize';
 import { KubernetesMigrationAlertCard } from '../components';
-import { Lifecycle } from '@backstage/core';
 import { CostInsightsApi } from '../../api';
 import {
   Alert,
@@ -32,6 +31,7 @@ import {
   KubernetesMigrationDismissForm,
   KubernetesMigrationDismissFormData,
 } from '../forms';
+import { Lifecycle } from '@backstage/core-components';
 
 export interface KubernetesMigrationData {
   startDate: string;

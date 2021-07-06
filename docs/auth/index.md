@@ -66,7 +66,8 @@ built-in providers:
 
 ```diff
 # packages/app/src/App.tsx
-+ import { githubAuthApiRef, SignInProviderConfig, SignInPage } from '@backstage/core';
++ import { githubAuthApiRef } from '@backstage/core-plugin-api';
++ import { SignInProviderConfig, SignInPage } from '@backstage/core-components';
 
 + const githubProvider: SignInProviderConfig = {
 +  id: 'github-auth-provider',

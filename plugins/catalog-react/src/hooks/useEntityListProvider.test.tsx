@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,6 @@
 
 import React, { PropsWithChildren } from 'react';
 import { act, renderHook } from '@testing-library/react-hooks';
-import {
-  ApiProvider,
-  ApiRegistry,
-  ConfigApi,
-  configApiRef,
-  IdentityApi,
-  identityApiRef,
-  storageApiRef,
-} from '@backstage/core';
 import { MockStorageApi } from '@backstage/test-utils';
 import { CatalogApi } from '@backstage/catalog-client';
 import { Entity, UserEntity } from '@backstage/catalog-model';
@@ -40,6 +31,15 @@ import {
   UserListFilterKind,
 } from '../types';
 import { EntityKindPicker, UserListPicker } from '../components';
+
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
+import {
+  ConfigApi,
+  configApiRef,
+  IdentityApi,
+  identityApiRef,
+  storageApiRef,
+} from '@backstage/core-plugin-api';
 
 const mockUser: UserEntity = {
   apiVersion: 'backstage.io/v1beta1',
