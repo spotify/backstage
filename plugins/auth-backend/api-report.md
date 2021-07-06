@@ -9,6 +9,7 @@ import { Config } from '@backstage/config';
 import { Entity } from '@backstage/catalog-model';
 import express from 'express';
 import { JSONWebKey } from 'jose';
+import { JWKS } from 'jose';
 import { Logger } from 'winston';
 import { PluginDatabaseManager } from '@backstage/backend-common';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
@@ -83,12 +84,16 @@ export type GoogleProviderOptions = {
 
 // @public
 export class IdentityClient {
-    constructor(options: {
-        discovery: PluginEndpointDiscovery;
-        issuer: string;
-    });
+    constructor(issuer: string, tokenFactory: TokenFactory, publicKeyStore: JWKS.KeyStore, publicKeyStoreUpdated: number);
     authenticate(token: string | undefined): Promise<BackstageIdentity>;
+    // (undocumented)
+    static create(options: {
+        database: PluginDatabaseManager;
+        discovery: PluginEndpointDiscovery;
+        logger: Logger;
+    }): Promise<IdentityClient>;
     static getBearerToken(authorizationHeader: string | undefined): string | undefined;
+    issueToken(params: TokenParams): Promise<string>;
     listPublicKeys(): Promise<{
         keys: JSONWebKey[];
     }>;
@@ -96,11 +101,11 @@ export class IdentityClient {
 
 // @public (undocumented)
 export class OAuthAdapter implements AuthProviderRouteHandlers {
-    constructor(handlers: OAuthHandlers, options: Options);
+    constructor(handlers: OAuthHandlers, options: Options_2);
     // (undocumented)
     frameHandler(req: express.Request, res: express.Response): Promise<void>;
     // (undocumented)
-    static fromConfig(config: AuthProviderConfig, handlers: OAuthHandlers, options: Pick<Options, 'providerId' | 'persistScopes' | 'disableRefresh' | 'tokenIssuer'>): OAuthAdapter;
+    static fromConfig(config: AuthProviderConfig, handlers: OAuthHandlers, options: Pick<Options_2, 'providerId' | 'persistScopes' | 'disableRefresh' | 'tokenIssuer'>): OAuthAdapter;
     // (undocumented)
     logout(req: express.Request, res: express.Response): Promise<void>;
     // (undocumented)

@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import { JWT, JSONWebKey } from 'jose';
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
+import { JWT } from 'jose';
 import {
+  DatabaseManager,
   getVoidLogger,
+  PluginDatabaseManager,
   PluginEndpointDiscovery,
 } from '@backstage/backend-common';
+import { ConfigReader } from '@backstage/config';
 import { IdentityClient } from './IdentityClient';
 import { MemoryKeyStore } from './MemoryKeyStore';
 import { TokenFactory } from './TokenFactory';
-import { KeyStore } from './types';
 
-const logger = getVoidLogger();
+const keyDurationSeconds = 3600;
 
 function jwtKid(jwt: string): string {
   const { header } = JWT.decode(jwt, { complete: true }) as {
@@ -35,7 +35,19 @@ function jwtKid(jwt: string): string {
   return header.kid;
 }
 
-const server = setupServer();
+function createDatabase(): PluginDatabaseManager {
+  return DatabaseManager.fromConfig(
+    new ConfigReader({
+      backend: {
+        database: {
+          client: 'sqlite3',
+          connection: ':memory:',
+        },
+      },
+    }),
+  ).forPlugin('auth-backend');
+}
+
 const mockBaseUrl = 'http://backstage:9191/i-am-a-mock-base';
 const discovery: PluginEndpointDiscovery = {
   async getBaseUrl() {
@@ -48,45 +60,16 @@ const discovery: PluginEndpointDiscovery = {
 
 describe('IdentityClient', () => {
   let client: IdentityClient;
-  let factory: TokenFactory;
-  let keyStore: KeyStore;
-  const keyDurationSeconds = 5;
 
-  beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-  afterAll(() => server.close());
-  afterEach(() => server.resetHandlers());
-
-  beforeEach(() => {
-    client = new IdentityClient({ discovery, issuer: mockBaseUrl });
-    keyStore = new MemoryKeyStore();
-    factory = new TokenFactory({
-      issuer: mockBaseUrl,
-      keyStore: keyStore,
-      keyDurationSeconds,
-      logger,
+  beforeEach(async () => {
+    client = await IdentityClient.create({
+      database: createDatabase(),
+      discovery,
+      logger: getVoidLogger(),
     });
   });
 
   describe('authenticate', () => {
-    beforeEach(() => {
-      server.use(
-        rest.get(
-          `${mockBaseUrl}/.well-known/jwks.json`,
-          async (_, res, ctx) => {
-            const keys = await factory.listPublicKeys();
-            return res(ctx.json(keys));
-          },
-        ),
-      );
-    });
-
-    it('should use the correct endpoint', async () => {
-      await factory.issueToken({ claims: { sub: 'foo' } });
-      const keys = await factory.listPublicKeys();
-      const response = await client.listPublicKeys();
-      expect(response).toEqual(keys);
-    });
-
     it('should throw on undefined header', async () => {
       return expect(async () => {
         await client.authenticate(undefined);
@@ -94,7 +77,7 @@ describe('IdentityClient', () => {
     });
 
     it('should accept fresh token', async () => {
-      const token = await factory.issueToken({ claims: { sub: 'foo' } });
+      const token = await client.issueToken({ claims: { sub: 'foo' } });
       const response = await client.authenticate(token);
       expect(response).toEqual({ id: 'foo', idToken: token });
     });
@@ -102,9 +85,9 @@ describe('IdentityClient', () => {
     it('should throw on incorrect issuer', async () => {
       const hackerFactory = new TokenFactory({
         issuer: 'hacker',
-        keyStore,
+        keyStore: new MemoryKeyStore(),
         keyDurationSeconds,
-        logger,
+        logger: getVoidLogger(),
       });
       return expect(async () => {
         const token = await hackerFactory.issueToken({
@@ -120,7 +103,7 @@ describe('IdentityClient', () => {
         jest
           .spyOn(Date, 'now')
           .mockImplementation(() => fixedTime - keyDurationSeconds * 1000 * 2);
-        const token = await factory.issueToken({
+        const token = await client.issueToken({
           claims: { sub: 'foo' },
         });
         jest.spyOn(Date, 'now').mockImplementation(() => fixedTime);
@@ -133,7 +116,7 @@ describe('IdentityClient', () => {
         issuer: mockBaseUrl,
         keyStore: new MemoryKeyStore(),
         keyDurationSeconds,
-        logger,
+        logger: getVoidLogger(),
       });
       return expect(async () => {
         const token = await hackerFactory.issueToken({
@@ -148,7 +131,7 @@ describe('IdentityClient', () => {
       jest
         .spyOn(Date, 'now')
         .mockImplementation(() => fixedTime - keyDurationSeconds * 1000 * 2);
-      const token1 = await factory.issueToken({ claims: { sub: 'foo1' } });
+      const token1 = await client.issueToken({ claims: { sub: 'foo1' } });
       try {
         // This throws as token has already expired
         await client.authenticate(token1);
@@ -157,14 +140,14 @@ describe('IdentityClient', () => {
       }
       // Move forward in time where the signing key has been rotated
       jest.spyOn(Date, 'now').mockImplementation(() => fixedTime);
-      const token = await factory.issueToken({ claims: { sub: 'foo' } });
+      const token = await client.issueToken({ claims: { sub: 'foo' } });
       const response = await client.authenticate(token);
       expect(response).toEqual({ id: 'foo', idToken: token });
     });
 
     it('should not be fooled by the none algorithm', async () => {
       return expect(async () => {
-        const token = await factory.issueToken({ claims: { sub: 'foo' } });
+        const token = await client.issueToken({ claims: { sub: 'foo' } });
         const header = btoa(
           JSON.stringify({ alg: 'none', kid: jwtKid(token) }),
         );
@@ -180,6 +163,14 @@ describe('IdentityClient', () => {
         const fakeToken = `${header}.${payload}.`;
         return await client.authenticate(fakeToken);
       }).rejects.toThrow();
+    });
+  });
+
+  describe('issueToken', () => {
+    it('should issue a valid token', async () => {
+      const token = await client.issueToken({ claims: { sub: 'foo' } });
+      const response = await client.authenticate(token);
+      expect(response).toEqual({ id: 'foo', idToken: token });
     });
   });
 
@@ -212,37 +203,6 @@ describe('IdentityClient', () => {
     it('should return Bearer token despite unconventionial case', async () => {
       const token = IdentityClient.getBearerToken('bEARER token');
       expect(token).toEqual('token');
-    });
-  });
-
-  describe('listPublicKeys', () => {
-    const defaultServiceResponse: {
-      keys: JSONWebKey[];
-    } = {
-      keys: [
-        {
-          crv: 'P-256',
-          x: 'JWy80Goa-8C3oaeDLnk0ANVPPMfI9T3u_T5T7W2b_ls',
-          y: 'Ge6jAhCDW1PFBfme2RA5ZsXN0cESiCwW29LMRPX5wkw',
-          kty: 'EC',
-          kid: 'kid-a',
-          alg: 'ES256',
-          use: 'sig',
-        },
-      ],
-    };
-
-    beforeEach(() => {
-      server.use(
-        rest.get(`${mockBaseUrl}/.well-known/jwks.json`, (_, res, ctx) => {
-          return res(ctx.json(defaultServiceResponse));
-        }),
-      );
-    });
-
-    it('should use the correct endpoint', async () => {
-      const response = await client.listPublicKeys();
-      expect(response).toEqual(defaultServiceResponse);
     });
   });
 });

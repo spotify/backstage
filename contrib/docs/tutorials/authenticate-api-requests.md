@@ -43,11 +43,7 @@ function setTokenCookie(
 async function main() {
   // ...
 
-  const discovery = SingleHostDiscovery.fromConfig(config);
-  const identity = new IdentityClient({
-    discovery,
-    issuer: await discovery.getExternalBaseUrl('auth'),
-  });
+  const identity = await IdentityClient.create(authEnv);
   const baseUrl = config.getString('backend.baseUrl');
   const secure = baseUrl.startsWith('https://');
   const cookieDomain = new URL(baseUrl).hostname;
@@ -88,6 +84,8 @@ async function main() {
   });
   // Only authenticated requests are allowed to the routes below
   apiRouter.use('/catalog', authMiddleware, await catalog(catalogEnv));
+  // Forward identity client to search plugin for authorized document collation
+  apiRouter.use('/search', authMiddleware, await search(searchEnv, identity));
   apiRouter.use('/techdocs', authMiddleware, await techdocs(techdocsEnv));
   apiRouter.use('/proxy', authMiddleware, await proxy(proxyEnv));
   apiRouter.use(authMiddleware, notFoundHandler());
@@ -180,6 +178,81 @@ const app = createApp({
 });
 
 // ...
+```
+
+Copy the default catalog collator locally and add auth support to search
+
+1. `cp ~/backstage-master/plugins/catalog-backend/src/search/DefaultCatalogCollator.ts packages/backend/src/plugins/DefaultCatalogCollator.ts`
+2. Add `@backstage/search-common` and `cross-fetch` to `packages/backend/package.json` dependencies
+3. Add an Authorization header to fetch requests as suggested below
+
+```typescript
+// packages/backend/src/plugins/DefaultCatalogCollator.ts
+
+// ...
+import { IdentityClient } from '@backstage/plugin-auth-backend';
+
+// ...
+
+// Add IdentityClient to constructor
+export class DefaultCatalogCollator implements DocumentCollator {
+  protected discovery: PluginEndpointDiscovery;
+  protected identity?: IdentityClient;
+  protected locationTemplate: string;
+  public readonly type: string = 'software-catalog';
+
+  constructor({
+    discovery,
+    identity,
+    locationTemplate,
+  }: {
+    discovery: PluginEndpointDiscovery;
+    identity?: IdentityClient;
+    locationTemplate?: string;
+  }) {
+    this.discovery = discovery;
+    this.identity = identity;
+    this.locationTemplate =
+      locationTemplate || '/catalog/:namespace/:kind/:name';
+  }
+  // ...
+
+  async execute() {
+    const baseUrl = await this.discovery.getBaseUrl('catalog');
+    // Add Authorization header to fetch request, issuing a token on the fly
+    const res = await fetch(`${baseUrl}/entities`, {
+      headers: this.identity
+        ? {
+            Authorization: `Bearer ${await this.identity.issueToken({
+              claims: { sub: 'DefaultCatalogCollator' },
+            })}`,
+          }
+        : {},
+    });
+```
+
+```typescript
+// packages/backend/src/plugins/search.ts from a create-app deployment
+
+// ...
+import { IdentityClient } from '@backstage/plugin-auth-backend';
+import { DefaultCatalogCollator } from './DefaultCatalogCollator';
+
+export default async function createPlugin(
+  { logger, discovery }: PluginEnvironment,
+  // Add identity client parameter
+  identity: IdentityClient,
+) {
+  // ...
+
+  indexBuilder.addCollator({
+    defaultRefreshIntervalSeconds: 600,
+    // Add identity client parameter
+    collator: new DefaultCatalogCollator({ discovery, identity }),
+  });
+
+  // ...
+}
 ```
 
 **NOTE**: Most Backstage frontend plugins come with the support for the `IdentityApi`.
