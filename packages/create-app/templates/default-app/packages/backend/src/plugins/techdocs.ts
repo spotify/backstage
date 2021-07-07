@@ -14,6 +14,7 @@ export default async function createPlugin({
   config,
   discovery,
   reader,
+  cache,
 }: PluginEnvironment): Promise<Router> {
   // Preparers are responsible for fetching source files for documentation.
   const preparers = await Preparers.fromConfig(config, {
@@ -49,5 +50,6 @@ export default async function createPlugin({
     logger,
     config,
     discovery,
+    cache,
   });
 }

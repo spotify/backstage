@@ -98,6 +98,16 @@ techdocs:
         # https://docs.microsoft.com/en-us/azure/storage/common/storage-auth?toc=/azure/storage/blobs/toc.json
         accountKey: ${TECHDOCS_AZURE_BLOB_STORAGE_ACCOUNT_KEY}
 
+  # techdocs.cache is optional, and is only recommended when you've configured
+  # an external techdocs.publisher.type above. Also requires backend.cache to
+  # be configured with a valid cache store.
+
+  cache:
+    # Represents the number of milliseconds a statically built asset should
+    # stay cached. Cache invalidation is handled automatically if you publish
+    # to storage using the techdocs-cli, allowing long TTLs (e.g. 1 month/year)
+    ttl: 3600000
+
   # (Optional and Legacy) TechDocs makes API calls to techdocs-backend using this URL. e.g. get docs of an entity, get metadata, etc.
   # You don't have to specify this anymore.
 

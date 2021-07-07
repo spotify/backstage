@@ -40,7 +40,7 @@ storage system (e.g. AWS S3, GCS or Azure Blob Storage). Read more in
 
 ## Recommended deployment
 
-This is how we recommend deploying TechDocs in production environment.
+This is how we recommend deploying TechDocs in a production environment.
 
 <img data-zoomable src="../../assets/techdocs/architecture-recommended.drawio.svg" alt="TechDocs Architecture diagram" />
 
@@ -58,12 +58,12 @@ Similar to how it is done in the Basic setup, the TechDocs Reader requests
 your configured storage solution for the necessary files and returns them to
 TechDocs Reader.
 
-Note about caching: We have noticed internally that some storage providers can
-be quite slow, which is why we are recommending a cache that sits between the
-TechDocs Reader and the Storage.
-
-_Feel free to suggest better ideas to us in #docs-like-code channel in Discord
-or via a GitHub issue._
+Depending on your chosen cloud storage provider and its real-world proximity to
+your backend server, there may be a comparably high amount of latency when
+loading TechDocs sites using this deployment approach. If you encounter this,
+you can optionally configure the `techdocs-backend` to cache responses in a
+cache store
+[supported by Backstage](../../overview/architecture-overview.md#cache).
 
 ### Security consideration
 

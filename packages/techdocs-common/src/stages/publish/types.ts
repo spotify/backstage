@@ -32,9 +32,21 @@ export type PublishRequest = {
   directory: string;
 };
 
-/* `remoteUrl` is the URL which serves files from the local publisher's static directory. */
+/**
+ * Response containing metadata about where files were published and what may
+ * have been published or updated.
+ */
 export type PublishResponse = {
+  /**
+   * The URL which serves files from the local publisher's static directory.
+   */
   remoteUrl?: string;
+  /**
+   * The list of objects (specifically their paths) that were published.
+   * Objects do not have a preceding slash, and match how one would load the
+   * object over the `/static/docs/*` TechDocs Backend Plugin endpoint.
+   */
+  objects?: string[];
 } | void;
 
 /**

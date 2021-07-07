@@ -211,6 +211,22 @@ export interface Config {
         };
 
     /**
+     * Techdocs cache information
+     */
+    cache?: {
+      /**
+       * The cache time-to-live for TechDocs sites (in milliseconds). Set this
+       * to a non-zero value to cache TechDocs sites and assets as they are
+       * read from storage.
+       *
+       * Note: you must also configure `backend.cache` appropriately as well,
+       * and to pass a PluginCacheManager instance to TechDocs Backend's
+       * createRouter method in your backend.
+       */
+      ttl: number;
+    };
+
+    /**
      * @example http://localhost:7000/api/techdocs
      * @visibility frontend
      * @deprecated

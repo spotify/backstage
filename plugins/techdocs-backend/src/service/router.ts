@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import {
+  PluginEndpointDiscovery,
+  PluginCacheManager,
+} from '@backstage/backend-common';
 import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
 import { NotFoundError, NotModifiedError } from '@backstage/errors';
@@ -28,6 +31,7 @@ import express from 'express';
 import Router from 'express-promise-router';
 import { Knex } from 'knex';
 import { Logger } from 'winston';
+import { createCacheMiddleware, TechDocsCache } from '../cache';
 import { DocsBuilder } from '../DocsBuilder';
 import { shouldCheckForUpdate } from '../DocsBuilder/BuildMetadataStorage';
 
@@ -39,6 +43,7 @@ type RouterOptions = {
   discovery: PluginEndpointDiscovery;
   database?: Knex; // TODO: Make database required when we're implementing database stuff.
   config: Config;
+  cache?: PluginCacheManager;
 };
 
 export async function createRouter({
@@ -48,8 +53,17 @@ export async function createRouter({
   config,
   logger,
   discovery,
+  cache: cacheManager,
 }: RouterOptions): Promise<express.Router> {
   const router = Router();
+
+  // Set up a cache client if configured.
+  let cache: TechDocsCache | undefined;
+  const defaultTtl = config.getOptionalNumber('techdocs.cache.ttl');
+  if (cacheManager && defaultTtl) {
+    const cacheClient = cacheManager.getClient({ defaultTtl });
+    cache = new TechDocsCache({ cache: cacheClient, logger });
+  }
 
   router.get('/metadata/techdocs/:namespace/:kind/:name', async (req, res) => {
     const { kind, namespace, name } = req.params;
@@ -165,6 +179,7 @@ export async function createRouter({
       logger,
       entity,
       config,
+      cache,
     });
     let foundDocs = false;
     switch (publisherType) {
@@ -212,6 +227,11 @@ export async function createRouter({
         );
     }
   });
+
+  // If a cache manager was provided, attach the cache middleware.
+  if (cache) {
+    router.use(createCacheMiddleware({ logger, cache }));
+  }
 
   // Route middleware which serves files from the storage set in the publisher.
   router.use('/static/docs', publisher.docsRouter());

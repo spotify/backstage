@@ -29,6 +29,7 @@ import { getFileTreeRecursively, getHeadersForFileExtension } from './helpers';
 import {
   PublisherBase,
   PublishRequest,
+  PublishResponse,
   ReadinessResponse,
   TechDocsMetadata,
 } from './types';
@@ -128,8 +129,13 @@ export class AzureBlobStoragePublish implements PublisherBase {
    * Upload all the files from the generated `directory` to the Azure Blob Storage container.
    * Directory structure used in the container is - entityNamespace/entityKind/entityName/index.html
    */
-  async publish({ entity, directory }: PublishRequest): Promise<void> {
+  async publish({
+    entity,
+    directory,
+  }: PublishRequest): Promise<PublishResponse> {
     try {
+      const objects: string[] = [];
+
       // Note: Azure Blob Storage manages creation of parent directories if they do not exist.
       // So collecting path of only the files is good enough.
       const allFilesToUpload = await getFileTreeRecursively(directory);
@@ -157,6 +163,7 @@ export class AzureBlobStoragePublish implements PublisherBase {
         // The / delimiter is intentional since it represents the cloud storage and not the local file system.
         const entityRootDir = `${entity.metadata.namespace}/${entity.kind}/${entity.metadata.name}`;
         const destination = `${entityRootDir}/${relativeFilePathPosix}`; // Azure Blob Storage Container file relative path
+        objects.push(destination);
         return limiter(async () => {
           const response = await this.storageClient
             .getContainerClient(this.containerName)
@@ -185,14 +192,14 @@ export class AzureBlobStoragePublish implements PublisherBase {
         this.logger.info(
           `Successfully uploaded the ${responses.length} generated file(s) for Entity ${entity.metadata.name}. Total number of files: ${allFilesToUpload.length}`,
         );
-      } else {
-        throw new Error(
-          failed
-            .map(r => r.error?.message)
-            .filter(Boolean)
-            .join(' '),
-        );
+        return { objects };
       }
+      throw new Error(
+        failed
+          .map(r => r.error?.message)
+          .filter(Boolean)
+          .join(' '),
+      );
     } catch (e) {
       const errorMessage = `Unable to upload file(s) to Azure Blob Storage. ${e}`;
       this.logger.error(errorMessage);

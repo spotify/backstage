@@ -144,7 +144,13 @@ describe('GoogleGCSPublish', () => {
           entity,
           directory: entityRootDir,
         }),
-      ).toBeUndefined();
+      ).toMatchObject({
+        objects: expect.arrayContaining([
+          'test-namespace/TestKind/test-component-name/404.html',
+          `test-namespace/TestKind/test-component-name/index.html`,
+          `test-namespace/TestKind/test-component-name/assets/main.css`,
+        ]),
+      });
       mockFs.restore();
     });
 

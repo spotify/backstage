@@ -9,12 +9,13 @@ import express from 'express';
 import { GeneratorBuilder } from '@backstage/techdocs-common';
 import { Knex } from 'knex';
 import { Logger } from 'winston';
+import { PluginCacheManager } from '@backstage/backend-common';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { PreparerBuilder } from '@backstage/techdocs-common';
 import { PublisherBase } from '@backstage/techdocs-common';
 
 // @public (undocumented)
-export function createRouter({ preparers, generators, publisher, config, logger, discovery, }: RouterOptions): Promise<express.Router>;
+export function createRouter({ preparers, generators, publisher, config, logger, discovery, cache: cacheManager, }: RouterOptions): Promise<express.Router>;
 
 
 export * from "@backstage/techdocs-common";

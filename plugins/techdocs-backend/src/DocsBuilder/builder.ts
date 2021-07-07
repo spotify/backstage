@@ -34,6 +34,7 @@ import path from 'path';
 import { Logger } from 'winston';
 import { Config } from '@backstage/config';
 import { BuildMetadataStorage } from './BuildMetadataStorage';
+import { TechDocsCache } from '../cache';
 
 type DocsBuilderArguments = {
   preparers: PreparerBuilder;
@@ -42,6 +43,7 @@ type DocsBuilderArguments = {
   entity: Entity;
   logger: Logger;
   config: Config;
+  cache?: TechDocsCache;
 };
 
 export class DocsBuilder {
@@ -51,6 +53,7 @@ export class DocsBuilder {
   private entity: Entity;
   private logger: Logger;
   private config: Config;
+  private cache?: TechDocsCache;
 
   constructor({
     preparers,
@@ -59,6 +62,7 @@ export class DocsBuilder {
     entity,
     logger,
     config,
+    cache,
   }: DocsBuilderArguments) {
     this.preparer = preparers.get(entity);
     this.generator = generators.get(entity);
@@ -66,6 +70,7 @@ export class DocsBuilder {
     this.entity = entity;
     this.logger = logger;
     this.config = config;
+    this.cache = cache;
   }
 
   /**
@@ -192,10 +197,15 @@ export class DocsBuilder {
       )}`,
     );
 
-    await this.publisher.publish({
+    const published = await this.publisher.publish({
       entity: this.entity,
       directory: outputDir,
     });
+
+    // Invalidate the cache for any published objects.
+    if (this.cache && published && published?.objects?.length) {
+      await this.cache.invalidateMultiple(published.objects);
+    }
 
     try {
       // Not a blocker hence no need to await this.

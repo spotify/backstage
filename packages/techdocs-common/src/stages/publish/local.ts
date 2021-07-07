@@ -31,7 +31,7 @@ import {
   ReadinessResponse,
   TechDocsMetadata,
 } from './types';
-import { getHeadersForFileExtension } from './helpers';
+import { getFileTreeRecursively, getHeadersForFileExtension } from './helpers';
 
 // TODO: Use a more persistent storage than node_modules or /tmp directory.
 // Make it configurable with techdocs.publisher.local.publishDirectory
@@ -89,7 +89,7 @@ export class LocalPublish implements PublisherBase {
     }
 
     return new Promise((resolve, reject) => {
-      fs.copy(directory, publishDir, err => {
+      fs.copy(directory, publishDir, async err => {
         if (err) {
           this.logger.debug(
             `Failed to copy docs from ${directory} to ${publishDir}`,
@@ -97,16 +97,21 @@ export class LocalPublish implements PublisherBase {
           reject(err);
         }
         this.logger.info(`Published site stored at ${publishDir}`);
-        this.discovery
-          .getBaseUrl('techdocs')
-          .then(techdocsApiUrl => {
-            resolve({
-              remoteUrl: `${techdocsApiUrl}/static/docs/${entity.metadata.name}`,
-            });
-          })
-          .catch(reason => {
-            reject(reason);
+
+        try {
+          const techdocsApiUrl = await this.discovery.getBaseUrl('techdocs');
+          const objects = (await getFileTreeRecursively(publishDir)).map(
+            abs => {
+              return abs.split(`${staticDocsDir}/`)[1];
+            },
+          );
+          resolve({
+            remoteUrl: `${techdocsApiUrl}/static/docs/${entity.metadata.name}`,
+            objects,
           });
+        } catch (reason) {
+          reject(reason);
+        }
       });
     });
   }
