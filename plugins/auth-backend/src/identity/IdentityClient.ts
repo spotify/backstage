@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-import fetch from 'cross-fetch';
 import { JWK, JWT, JWKS, JSONWebKey } from 'jose';
+import { Logger } from 'winston';
+import {
+  PluginDatabaseManager,
+  PluginEndpointDiscovery,
+} from '@backstage/backend-common';
 import { BackstageIdentity } from '../providers';
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import { DatabaseKeyStore } from './DatabaseKeyStore';
+import { TokenFactory } from './TokenFactory';
+import { TokenParams } from './types';
 
 const CLOCK_MARGIN_S = 10;
 
@@ -28,16 +34,37 @@ const CLOCK_MARGIN_S = 10;
  * @experimental This is not a stable API yet
  */
 export class IdentityClient {
-  private readonly discovery: PluginEndpointDiscovery;
-  private readonly issuer: string;
-  private keyStore: JWKS.KeyStore;
-  private keyStoreUpdated: number;
+  static async create(options: {
+    database: PluginDatabaseManager;
+    discovery: PluginEndpointDiscovery;
+    logger: Logger;
+  }): Promise<IdentityClient> {
+    const issuer = await options.discovery.getExternalBaseUrl('auth');
+    return new IdentityClient(
+      issuer,
+      new TokenFactory({
+        issuer: issuer,
+        logger: options.logger.child({ component: 'token-factory' }),
+        keyStore: await DatabaseKeyStore.create({
+          database: await options.database.getClient(),
+        }),
+        keyDurationSeconds: 3600,
+      }),
+      new JWKS.KeyStore(),
+      0,
+    );
+  }
 
-  constructor(options: { discovery: PluginEndpointDiscovery; issuer: string }) {
-    this.discovery = options.discovery;
-    this.issuer = options.issuer;
-    this.keyStore = new JWKS.KeyStore();
-    this.keyStoreUpdated = 0;
+  constructor(
+    private readonly issuer: string,
+    private readonly tokenFactory: TokenFactory,
+    private publicKeyStore: JWKS.KeyStore,
+    private publicKeyStoreUpdated: number,
+  ) {
+    // Clearly throw to identify breaking change from earlier version
+    if (typeof tokenFactory === 'undefined') {
+      throw Error('tokenFactory required when initializing IdentityClient');
+    }
   }
 
   /**
@@ -73,6 +100,19 @@ export class IdentityClient {
   }
 
   /**
+   * Issues a backstage identity token that can be used
+   * to authenticate server to server requests.
+   * This should be used with care - use default flows to
+   * authenticate users and forward their tokens where appropriate instead
+   */
+  async issueToken(params: TokenParams): Promise<string> {
+    if (typeof params.claims?.sub === 'undefined') {
+      throw Error('claims.sub required when issuing token');
+    }
+    return this.tokenFactory.issueToken(params);
+  }
+
+  /**
    * Parses the given authorization header and returns
    * the bearer token, or null if no bearer token is given
    */
@@ -100,14 +140,14 @@ export class IdentityClient {
 
     // Refresh public keys if needed
     // Add a small margin in case clocks are out of sync
-    const keyStoreHasKey = !!this.keyStore.get({ kid: header.kid });
+    const keyStoreHasKey = !!this.publicKeyStore.get({ kid: header.kid });
     const issuedAfterLastRefresh =
-      payload?.iat && payload.iat > this.keyStoreUpdated - CLOCK_MARGIN_S;
+      payload?.iat && payload.iat > this.publicKeyStoreUpdated - CLOCK_MARGIN_S;
     if (!keyStoreHasKey && issuedAfterLastRefresh) {
       await this.refreshKeyStore();
     }
 
-    return this.keyStore.get({ kid: header.kid });
+    return this.publicKeyStore.get({ kid: header.kid });
   }
 
   /**
@@ -116,20 +156,7 @@ export class IdentityClient {
   async listPublicKeys(): Promise<{
     keys: JSONWebKey[];
   }> {
-    const url = `${await this.discovery.getBaseUrl(
-      'auth',
-    )}/.well-known/jwks.json`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      const payload = await response.text();
-      const message = `Request failed with ${response.status} ${response.statusText}, ${payload}`;
-      throw new Error(message);
-    }
-
-    const publicKeys: { keys: JSONWebKey[] } = await response.json();
-
-    return publicKeys;
+    return (await this.tokenFactory.listPublicKeys()) as { keys: JSONWebKey[] };
   }
 
   /**
@@ -138,9 +165,9 @@ export class IdentityClient {
   private async refreshKeyStore(): Promise<void> {
     const now = Date.now() / 1000;
     const publicKeys = await this.listPublicKeys();
-    this.keyStore = JWKS.asKeyStore({
+    this.publicKeyStore = JWKS.asKeyStore({
       keys: publicKeys.keys.map(key => key as JSONWebKey),
     });
-    this.keyStoreUpdated = now;
+    this.publicKeyStoreUpdated = now;
   }
 }
