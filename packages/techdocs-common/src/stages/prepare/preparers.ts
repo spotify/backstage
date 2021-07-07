@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { UrlReader } from '@backstage/backend-common';
 import { Entity } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
+import { ScmIntegrations } from '@backstage/integration';
 import { Logger } from 'winston';
 import { parseReferenceAnnotation } from '../../helpers';
-import { DirectoryPreparer } from './dir';
 import { CommonGitPreparer } from './commonGit';
-import { UrlPreparer } from './url';
+import { DirectoryPreparer } from './dir';
 import { PreparerBase, PreparerBuilder, RemoteProtocol } from './types';
+import { UrlPreparer } from './url';
 
 type factoryOptions = {
   logger: Logger;
@@ -37,7 +39,9 @@ export class Preparers implements PreparerBuilder {
   ): Promise<PreparerBuilder> {
     const preparers = new Preparers();
 
-    const urlPreparer = new UrlPreparer(reader, logger);
+    const scmIntegrations = ScmIntegrations.fromConfig(config);
+
+    const urlPreparer = new UrlPreparer(reader, scmIntegrations, logger);
     preparers.register('url', urlPreparer);
 
     /**

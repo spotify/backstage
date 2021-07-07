@@ -16,7 +16,12 @@
 
 import { Git, UrlReader } from '@backstage/backend-common';
 import { InputError } from '@backstage/errors';
-import { Entity, parseLocationReference } from '@backstage/catalog-model';
+import {
+  Entity,
+  LOCATION_ANNOTATION,
+  parseLocationReference,
+  SOURCE_LOCATION_ANNOTATION,
+} from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
 import fs from 'fs-extra';
 import parseGitUrl from 'git-url-parse';
@@ -26,6 +31,7 @@ import { Logger } from 'winston';
 import { getDefaultBranch } from './default-branch';
 import { getGitRepoType, getTokenForGitRepo } from './git-auth';
 import { PreparerResponse, RemoteProtocol } from './stages/prepare/types';
+import { ScmIntegrations } from '@backstage/integration';
 
 export type ParsedLocationAnnotation = {
   type: RemoteProtocol;
@@ -195,15 +201,51 @@ export const getLastCommitTimestamp = async (
   return commit.commit.committer.timestamp;
 };
 
+/**
+ * Get the source location of the entity. This might be provided by the
+ * backstage.io/source-location annotation or the backstage.io/managed-by-location annotation.
+ * This only works if the resolved target is of type 'url'.
+ *
+ * @param entity the entity to process
+ * @returns the source location or undefined if not found or of invalid type.
+ */
+export const getSourceLocation = (entity: Entity): string | undefined => {
+  const sourceLocation =
+    entity.metadata.annotations?.[SOURCE_LOCATION_ANNOTATION] ??
+    entity.metadata.annotations?.[LOCATION_ANNOTATION];
+
+  if (!sourceLocation) {
+    return undefined;
+  }
+
+  const { type, target } = parseLocationReference(sourceLocation);
+
+  // we only support url references
+  if (type !== 'url') {
+    return undefined;
+  }
+
+  return target;
+};
+
 export const getDocFilesFromRepository = async (
   reader: UrlReader,
+  scmIntegrations: ScmIntegrations,
   entity: Entity,
   opts?: { etag?: string; logger?: Logger },
 ): Promise<PreparerResponse> => {
-  const { target } = parseReferenceAnnotation(
+  let { target } = parseReferenceAnnotation(
     'backstage.io/techdocs-ref',
     entity,
   );
+
+  const sourceLocation = getSourceLocation(entity);
+  if (sourceLocation !== undefined) {
+    target = scmIntegrations.resolveUrl({
+      url: target,
+      base: sourceLocation,
+    });
+  }
 
   opts?.logger?.debug(`Reading files from ${target}`);
   // readTree will throw NotModifiedError if etag has not changed.

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { NotModifiedError } from '@backstage/errors';
 import { UrlReader } from '@backstage/backend-common';
 import { Entity } from '@backstage/catalog-model';
+import { NotModifiedError } from '@backstage/errors';
+import { ScmIntegrations } from '@backstage/integration';
 import { Logger } from 'winston';
 import { getDocFilesFromRepository } from '../../helpers';
 import { PreparerBase, PreparerResponse } from './types';
@@ -24,10 +25,16 @@ import { PreparerBase, PreparerResponse } from './types';
 export class UrlPreparer implements PreparerBase {
   private readonly logger: Logger;
   private readonly reader: UrlReader;
+  private readonly scmIntegrations: ScmIntegrations;
 
-  constructor(reader: UrlReader, logger: Logger) {
+  constructor(
+    reader: UrlReader,
+    scmIntegrations: ScmIntegrations,
+    logger: Logger,
+  ) {
     this.logger = logger;
     this.reader = reader;
+    this.scmIntegrations = scmIntegrations;
   }
 
   async prepare(
@@ -35,10 +42,15 @@ export class UrlPreparer implements PreparerBase {
     options?: { etag?: string },
   ): Promise<PreparerResponse> {
     try {
-      return await getDocFilesFromRepository(this.reader, entity, {
-        etag: options?.etag,
-        logger: this.logger,
-      });
+      return await getDocFilesFromRepository(
+        this.reader,
+        this.scmIntegrations,
+        entity,
+        {
+          etag: options?.etag,
+          logger: this.logger,
+        },
+      );
     } catch (error) {
       // NotModifiedError means that etag based cache is still valid.
       if (error instanceof NotModifiedError) {

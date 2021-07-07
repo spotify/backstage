@@ -14,6 +14,7 @@ import { GitHubIntegrationConfig } from '@backstage/integration';
 import { GitLabIntegrationConfig } from '@backstage/integration';
 import { Logger } from 'winston';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import { ScmIntegrations } from '@backstage/integration';
 import { UrlReader } from '@backstage/backend-common';
 import { Writable } from 'stream';
 
@@ -67,7 +68,7 @@ export const getAzureIntegrationConfig: (config: Config, host: string) => AzureI
 export const getDefaultBranch: (repositoryUrl: string, config: Config) => Promise<string>;
 
 // @public (undocumented)
-export const getDocFilesFromRepository: (reader: UrlReader, entity: Entity, opts?: {
+export const getDocFilesFromRepository: (reader: UrlReader, scmIntegrations: ScmIntegrations, entity: Entity, opts?: {
     etag?: string | undefined;
     logger?: Logger | undefined;
 } | undefined) => Promise<PreparerResponse>;
@@ -92,6 +93,9 @@ export const getLastCommitTimestamp: (repositoryLocation: string, logger: Logger
 
 // @public (undocumented)
 export const getLocationForEntity: (entity: Entity) => ParsedLocationAnnotation;
+
+// @public
+export const getSourceLocation: (entity: Entity) => string | undefined;
 
 // @public (undocumented)
 export const getTokenForGitRepo: (repositoryUrl: string, config: Config) => Promise<string | undefined>;
@@ -170,7 +174,7 @@ export type TechDocsMetadata = {
 
 // @public (undocumented)
 export class UrlPreparer implements PreparerBase {
-    constructor(reader: UrlReader, logger: Logger);
+    constructor(reader: UrlReader, scmIntegrations: ScmIntegrations, logger: Logger);
     // (undocumented)
     prepare(entity: Entity, options?: {
         etag?: string;
