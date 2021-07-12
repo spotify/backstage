@@ -113,7 +113,7 @@ export type EntitiesSearchFilter = {
   /**
    * Match on plain equality of values.
    *
-   * If undefined, this factor is not taken into account. Otherwise, match on
+   * If undefined, will match on existence of the associated key. Otherwise, match on
    * values that are equal to any of the given array items. Matches are always
    * case insensitive.
    */

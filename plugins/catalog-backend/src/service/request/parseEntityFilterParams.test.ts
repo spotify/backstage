@@ -69,9 +69,11 @@ describe('parseEntityFilterParams', () => {
 describe('parseEntityFilterString', () => {
   it('works for the happy path', () => {
     expect(parseEntityFilterString('')).toBeUndefined();
-    expect(parseEntityFilterString('a=1,b=2,a=3')).toEqual([
+    expect(parseEntityFilterString('a=1,b=2,a=3,c,d=')).toEqual([
       { key: 'a', matchValueIn: ['1', '3'] },
       { key: 'b', matchValueIn: ['2'] },
+      { key: 'c' },
+      { key: 'd' },
     ]);
   });
 
@@ -83,17 +85,11 @@ describe('parseEntityFilterString', () => {
   });
 
   it('rejects malformed strings', () => {
-    expect(() => parseEntityFilterString('x=2,a=')).toThrow(
-      "Invalid filter, 'a=' is not a valid statement (expected a string on the form a=b)",
-    );
     expect(() => parseEntityFilterString('x=2,=a')).toThrow(
-      "Invalid filter, '=a' is not a valid statement (expected a string on the form a=b)",
+      "Invalid filter, '=a' is not a valid statement (expected a string on the form a=b or a= or a)",
     );
     expect(() => parseEntityFilterString('x=2,=')).toThrow(
-      "Invalid filter, '=' is not a valid statement (expected a string on the form a=b)",
-    );
-    expect(() => parseEntityFilterString('x=2,a')).toThrow(
-      "Invalid filter, 'a' is not a valid statement (expected a string on the form a=b)",
+      "Invalid filter, '=' is not a valid statement (expected a string on the form a=b or a= or a)",
     );
   });
 });
