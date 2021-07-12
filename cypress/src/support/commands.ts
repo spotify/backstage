@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint-disable jest/no-standalone-expect */
 /// <reference types="cypress" />
 import 'os';
 
@@ -22,6 +23,34 @@ Cypress.Commands.add('loginAsGuest', () => {
 
 Cypress.Commands.add('getTechDocsShadowRoot', () => {
   cy.get('[data-testid="techdocs-content-shadowroot"]').shadow();
+});
+
+Cypress.Commands.add('isNotInViewport', element => {
+  cy.get(element).then($el => {
+    const bottom = Cypress.config(`viewportHeight`);
+    const rect = $el[0].getBoundingClientRect();
+
+    if (bottom) {
+      expect(rect.top).to.be.greaterThan(bottom);
+      expect(rect.bottom).to.be.greaterThan(bottom);
+      expect(rect.top).to.be.greaterThan(bottom);
+      expect(rect.bottom).to.be.greaterThan(bottom);
+    }
+  });
+});
+
+Cypress.Commands.add('isInViewport', element => {
+  cy.get(element).then($el => {
+    const bottom = Cypress.config(`viewportHeight`);
+    const rect = $el[0].getBoundingClientRect();
+
+    if (bottom) {
+      expect(rect.top).not.to.be.greaterThan(bottom);
+      expect(rect.bottom).not.to.be.greaterThan(bottom);
+      expect(rect.top).not.to.be.greaterThan(bottom);
+      expect(rect.bottom).not.to.be.greaterThan(bottom);
+    }
+  });
 });
 
 Cypress.Commands.add('getTechDocsTableOfContents', () => {

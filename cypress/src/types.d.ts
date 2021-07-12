@@ -64,8 +64,18 @@ declare namespace Cypress {
     waitHomePage(): Chainable<Element>;
     /**
      * Wait TechDocs API response for Section 2 page
-     * @example cy.waitRoadmapPage
+     * @example cy.waitSectionTwoPage
      */
     waitSectionTwoPage(): Chainable<Element>;
+    /**
+     * Check if the element is in viewport
+     * @example cy.isInViewport
+     */
+    isInViewport(element: string): Chainable<Element>;
+    /**
+     * Check if the element is not in viewport
+     * @example cy.isNotInViewport
+     */
+    isNotInViewport(element: string): Chainable<Element>;
   }
 }

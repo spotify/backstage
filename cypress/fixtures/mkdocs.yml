@@ -2,9 +2,9 @@ site_name: e2e Fixture Documentation
 site_description: Documentation used for end-to-end tests of TechDocs in Backstage.
 nav:
   - Home: index.md
-  - Subpage 1: sub-page-one.md
-  - Subpage 2: sub-page-two.md
-  - Nested Subpages:
-      - Subpage 3: sub-page-three.md
+  - Sub-page 1: sub-page-one.md
+  - Sub-page 2: sub-page-two.md
+  - Nested Sub-pages:
+      - Sub-page 3: sub-page-three.md
 plugins:
   - techdocs-core

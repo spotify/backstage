@@ -27,6 +27,8 @@ describe('TechDocs', () => {
   describe('Navigating to TechDocs', () => {
     it('should navigate to the TechDocs home page via the primary navigation bar', () => {
       cy.visit('/');
+      cy.wait(500);
+
       cy.get('[data-testid="sidebar-root"]')
         .get('div')
         .get('a[href="/docs"]')
@@ -37,6 +39,9 @@ describe('TechDocs', () => {
 
     it('should navigate to the TechDocs home page from the URL', () => {
       cy.visit('/docs');
+
+      cy.wait(500);
+
       cy.contains('Documentation');
     });
 
@@ -47,18 +52,6 @@ describe('TechDocs', () => {
         .eq(2)
         .contains('Read Docs')
         .click();
-
-      cy.location().should(loc => {
-        expect(loc.pathname).to.eq(
-          '/docs/default/Component/techdocs-e2e-fixture',
-        );
-      });
-    });
-
-    it('should navigate to a specific TechDocs entity from the "Owned documents" tab', () => {
-      cy.visit('/docs');
-      cy.get('[data-testid="header-tab-1"]').click();
-      cy.get('[value="techdocs-e2e-fixture"] > div > a').click();
 
       cy.location().should(loc => {
         expect(loc.pathname).to.eq(
@@ -85,7 +78,7 @@ describe('TechDocs', () => {
       cy.window().its('scrollY').should('equal', 0);
 
       cy.getTechDocsShadowRoot().within(() => {
-        cy.contains('Subpage 2');
+        cy.contains('Sub-page 2');
       });
     });
 
@@ -98,14 +91,8 @@ describe('TechDocs', () => {
       // This is used to test the post-render behavior of the techdocs Reader
       cy.wait(500);
 
-      return cy.getTechDocsShadowRoot().within(() => {
-        cy.get('#section-23').then($el => {
-          cy.window()
-            .its('scrollY')
-            .should($scrollY => {
-              expect($scrollY).to.be.closeTo($el[0].offsetTop, 200);
-            });
-        });
+      cy.getTechDocsShadowRoot().within(() => {
+        cy.isInViewport('#section-23');
       });
     });
 
@@ -125,7 +112,7 @@ describe('TechDocs', () => {
         cy.getTechDocsNavigation()
           .find('> div > div > [data-md-level="0"] > ul > li:nth-child(2) > a')
           .click();
-        cy.contains('Subpage 1');
+        cy.contains('Sub-page 1');
         cy.window().its('scrollY').should('eq', 0);
       });
     });
@@ -142,18 +129,13 @@ describe('TechDocs', () => {
             cy.get('> div > div > nav > ul > li:nth-child(3) > a').click();
           });
 
-          cy.get('#section-23').then($el => {
-            cy.window()
-              .its('scrollY')
-              .should($scrollY => {
-                expect($scrollY).to.be.closeTo($el[0].offsetTop, 200);
-              });
-          });
+          cy.isInViewport('#section-23');
         });
       });
 
       it('should navigate to a specific fragment within the page via the table of contents - Level 2', () => {
         return cy.getTechDocsShadowRoot().within(() => {
+          cy.isNotInViewport('#sub-section-222');
           // Section 2.2
           cy.getTechDocsTableOfContents()
             .find(
@@ -161,13 +143,7 @@ describe('TechDocs', () => {
             )
             .click();
 
-          cy.get('#sub-section-222').then($el => {
-            cy.window()
-              .its('scrollY')
-              .should($scrollY => {
-                expect($scrollY).to.be.closeTo($el[0].offsetTop, 200);
-              });
-          });
+          cy.isInViewport('#sub-section-222');
         });
       });
 
@@ -187,8 +163,6 @@ describe('TechDocs', () => {
       });
 
       it('should navigate to the next page within a TechDocs entity', () => {
-        cy.scrollTo('bottom');
-
         return cy.getTechDocsShadowRoot().within(() => {
           cy.get('.md-footer-nav__link--next').click();
 
@@ -201,8 +175,6 @@ describe('TechDocs', () => {
       });
 
       it('should navigate to the previous page within a TechDocs entity', () => {
-        cy.scrollTo('bottom');
-
         return cy.getTechDocsShadowRoot().within(() => {
           cy.get('.md-footer-nav__link--prev').click();
 

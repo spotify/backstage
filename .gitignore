@@ -133,3 +133,6 @@ site
 
 # Sensitive credentials
 *-credentials.yaml
+
+# e2e tests
+cypress/cypress/*
