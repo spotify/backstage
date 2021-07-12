@@ -7,6 +7,7 @@
 import { BackstageTheme } from '@backstage/theme';
 import { ComponentType } from 'react';
 import { Config } from '@backstage/config';
+import { default as fetch_2 } from 'cross-fetch';
 import { default as React_2 } from 'react';
 import { ReactElement } from 'react';
 import { ReactNode } from 'react';
@@ -319,6 +320,12 @@ export enum FeatureFlagState {
     // (undocumented)
     None = 0
 }
+
+// @public (undocumented)
+export type FetchApi = typeof fetch_2;
+
+// @public (undocumented)
+export const fetchApiRef: ApiRef<FetchApi>;
 
 // @public (undocumented)
 export function getComponentData<T>(node: ReactNode, type: string): T | undefined;

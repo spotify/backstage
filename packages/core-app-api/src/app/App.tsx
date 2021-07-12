@@ -30,6 +30,7 @@ import {
   ApiRegistry,
   AppThemeSelector,
   ConfigReader,
+  IdentityAwareFetchApi,
   LocalStorageFeatureFlags,
 } from '../apis';
 import {
@@ -43,6 +44,7 @@ import {
   AppThemeApi,
   ConfigApi,
   featureFlagsApiRef,
+  fetchApiRef,
   identityApiRef,
   BackstagePlugin,
   RouteRef,
@@ -409,6 +411,16 @@ export class PrivateAppImpl implements BackstageApp {
       api: identityApiRef,
       deps: {},
       factory: () => this.identityApi,
+    });
+    registry.register('static', {
+      api: fetchApiRef,
+      deps: {},
+      factory: () => {
+        const result = new IdentityAwareFetchApi();
+        this.identityApi.onSignIn(result.onSignIn);
+        this.identityApi.onSignOut(result.onSignOut);
+        return result.fetch;
+      },
     });
 
     // It's possible to replace the feature flag API, but since we must have at least

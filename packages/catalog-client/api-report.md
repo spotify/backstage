@@ -4,6 +4,7 @@
 
 ```ts
 
+import crossFetch from 'cross-fetch';
 import { Entity } from '@backstage/catalog-model';
 import { EntityName } from '@backstage/catalog-model';
 import { Location as Location_2 } from '@backstage/catalog-model';
@@ -46,6 +47,7 @@ export interface CatalogApi {
 export class CatalogClient implements CatalogApi {
     constructor(options: {
         discoveryApi: DiscoveryApi;
+        fetch?: typeof crossFetch;
     });
     // (undocumented)
     addLocation({ type, target, dryRun, presence }: AddLocationRequest, options?: CatalogRequestOptions): Promise<AddLocationResponse>;

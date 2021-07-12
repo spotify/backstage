@@ -17,6 +17,10 @@
 import { IdentityApi, ProfileInfo } from '@backstage/core-plugin-api';
 import { SignInResult } from './types';
 
+type UnregisterFunction = () => void;
+type SignInListener = (result: SignInResult) => void;
+type SignOutListener = () => void;
+
 /**
  * Implementation of the connection between the App-wide IdentityApi
  * and sign-in page.
@@ -27,6 +31,8 @@ export class AppIdentity implements IdentityApi {
   private profile?: ProfileInfo;
   private idTokenFunc?: () => Promise<string>;
   private signOutFunc?: () => Promise<void>;
+  private signInListeners = new Set<SignInListener>();
+  private signOutListeners = new Set<SignOutListener>();
 
   getUserId(): string {
     if (!this.hasIdentity) {
@@ -81,5 +87,19 @@ export class AppIdentity implements IdentityApi {
     this.profile = result.profile;
     this.idTokenFunc = result.getIdToken;
     this.signOutFunc = result.signOut;
+  }
+
+  onSignIn(listener: SignInListener): UnregisterFunction {
+    this.signInListeners.add(listener);
+    return () => {
+      this.signInListeners.delete(listener);
+    };
+  }
+
+  onSignOut(listener: SignOutListener): UnregisterFunction {
+    this.signOutListeners.add(listener);
+    return () => {
+      this.signOutListeners.delete(listener);
+    };
   }
 }

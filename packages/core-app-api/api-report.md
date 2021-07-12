@@ -31,6 +31,7 @@ import { ExternalRouteRef } from '@backstage/core-plugin-api';
 import { FeatureFlag } from '@backstage/core-plugin-api';
 import { FeatureFlagsApi } from '@backstage/core-plugin-api';
 import { FeatureFlagsSaveOptions } from '@backstage/core-plugin-api';
+import { FetchApi } from '@backstage/core-plugin-api';
 import { gitlabAuthApiRef } from '@backstage/core-plugin-api';
 import { googleAuthApiRef } from '@backstage/core-plugin-api';
 import { IconComponent } from '@backstage/core-plugin-api';
@@ -294,6 +295,18 @@ export class GitlabAuth {
 export class GoogleAuth {
     // (undocumented)
     static create({ discoveryApi, oauthRequestApi, environment, provider, defaultScopes, }: OAuthApiCreateOptions): typeof googleAuthApiRef.T;
+}
+
+// @public (undocumented)
+export class IdentityAwareFetchApi {
+    // (undocumented)
+    get fetch(): FetchApi;
+    // (undocumented)
+    onSignIn(result: {
+        getIdToken?: () => Promise<string>;
+    }): void;
+    // (undocumented)
+    onSignOut(): void;
 }
 
 // @public
