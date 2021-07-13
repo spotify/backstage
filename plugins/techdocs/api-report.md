@@ -5,6 +5,7 @@
 ```ts
 /// <reference types="react" />
 
+import { Action } from 'material-table';
 import { ApiRef } from '@backstage/core-plugin-api';
 import { BackstagePlugin } from '@backstage/core-plugin-api';
 import { Config } from '@backstage/config';
@@ -31,9 +32,18 @@ export const DocsCardGrid: ({
 export const DocsTable: ({
   entities,
   title,
+  loading,
+  actions,
 }: {
   entities: Entity[] | undefined;
   title?: string | undefined;
+  loading?: boolean | undefined;
+  actions?:
+    | (
+        | Action<DocsTableRow>
+        | ((rowData: DocsTableRow) => Action<DocsTableRow>)
+      )[]
+    | undefined;
 }) => JSX.Element | null;
 
 // Warning: (ae-forgotten-export) The symbol "Props" needs to be exported by the entry point index.d.ts
@@ -244,7 +254,8 @@ export class TechDocsStorageClient implements TechDocsStorageApi {
 
 // Warnings were encountered during analysis:
 //
-// src/plugin.d.ts:18:5 - (ae-forgotten-export) The symbol "TabsConfig" needs to be exported by the entry point index.d.ts
+// src/plugin.d.ts:17:5 - (ae-forgotten-export) The symbol "DocsTableRow" needs to be exported by the entry point index.d.ts
+// src/plugin.d.ts:20:5 - (ae-forgotten-export) The symbol "TabsConfig" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 ```

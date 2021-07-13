@@ -18,24 +18,35 @@ import React from 'react';
 import { useCopyToClipboard } from 'react-use';
 import { generatePath } from 'react-router-dom';
 
-import { IconButton, Tooltip } from '@material-ui/core';
 import ShareIcon from '@material-ui/icons/Share';
 import { Entity } from '@backstage/catalog-model';
 import { rootDocsRouteRef } from '../../routes';
 import {
-  Table,
-  EmptyState,
   Button,
-  SubvalueCell,
+  EmptyState,
   Link,
+  SubvalueCell,
+  Table,
+  TableProps,
 } from '@backstage/core-components';
+
+export type DocsTableRow = {
+  entity: Entity;
+  resolved: {
+    docsUrl: string;
+  };
+};
 
 export const DocsTable = ({
   entities,
   title,
+  loading,
+  actions,
 }: {
   entities: Entity[] | undefined;
   title?: string | undefined;
+  loading?: boolean | undefined;
+  actions?: TableProps<DocsTableRow>['actions'];
 }) => {
   const [, copyToClipboard] = useCopyToClipboard();
 
@@ -43,15 +54,14 @@ export const DocsTable = ({
 
   const documents = entities.map(entity => {
     return {
-      name: entity.metadata.name,
-      description: entity.metadata.description,
-      owner: entity?.spec?.owner,
-      type: entity?.spec?.type,
-      docsUrl: generatePath(rootDocsRouteRef.path, {
-        namespace: entity.metadata.namespace ?? 'default',
-        kind: entity.kind,
-        name: entity.metadata.name,
-      }),
+      entity,
+      resolved: {
+        docsUrl: generatePath(rootDocsRouteRef.path, {
+          namespace: entity.metadata.namespace ?? 'default',
+          kind: entity.kind,
+          name: entity.metadata.name,
+        }),
+      },
     };
   });
 
@@ -60,49 +70,52 @@ export const DocsTable = ({
       title: 'Document',
       field: 'name',
       highlight: true,
-      render: (row: any): React.ReactNode => (
+      render: (row: DocsTableRow): React.ReactNode => (
         <SubvalueCell
-          value={<Link to={row.docsUrl}>{row.name}</Link>}
-          subvalue={row.description}
+          value={
+            <Link to={row.resolved.docsUrl}>{row.entity.metadata.name}</Link>
+          }
+          subvalue={row.entity.metadata.description}
         />
       ),
     },
     {
       title: 'Owner',
-      field: 'owner',
+      field: 'entity.spec.owner',
     },
     {
       title: 'Type',
-      field: 'type',
+      field: 'entity.spec.type',
     },
-    {
-      title: 'Actions',
-      width: '10%',
-      render: (row: any) => (
-        <Tooltip title="Click to copy documentation link to clipboard">
-          <IconButton
-            onClick={() =>
-              copyToClipboard(`${window.location.href}/${row.docsUrl}`)
-            }
-          >
-            <ShareIcon />
-          </IconButton>
-        </Tooltip>
-      ),
+  ];
+
+  const defaultActions: TableProps<DocsTableRow>['actions'] = [
+    (row: DocsTableRow) => {
+      return {
+        icon: () => <ShareIcon fontSize="small" />,
+        tooltip: 'Click to copy documentation link to clipboard',
+        onClick: () =>
+          copyToClipboard(
+            `${window.location.href.split('/?')[0]}/${row.resolved.docsUrl}`,
+          ),
+      };
     },
   ];
 
   return (
     <>
-      {documents && documents.length > 0 ? (
-        <Table
+      {loading || (documents && documents.length > 0) ? (
+        <Table<DocsTableRow>
+          isLoading={loading}
           options={{
             paging: true,
             pageSize: 20,
             search: true,
+            actionsColumnIndex: -1,
           }}
           data={documents}
           columns={columns}
+          actions={actions || defaultActions}
           title={
             title
               ? `${title} (${documents.length})`

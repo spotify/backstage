@@ -24,6 +24,7 @@ export { EntityLayout } from './components/EntityLayout';
 export * from './components/EntityOrphanWarning';
 export { EntityPageLayout } from './components/EntityPageLayout';
 export * from './components/EntitySwitch';
+export * from './components/FavouriteEntity';
 export { Router } from './components/Router';
 export {
   CatalogEntityPage,
