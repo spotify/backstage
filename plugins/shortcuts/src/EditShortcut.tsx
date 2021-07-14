@@ -27,7 +27,12 @@ import { ShortcutForm } from './ShortcutForm';
 import { FormValues, Shortcut } from './types';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { ShortcutApi } from './api';
-import { alertApiRef, useApi } from '@backstage/core-plugin-api';
+import {
+  alertApiRef,
+  analyticsApiRef,
+  useAnalytics,
+  useApi,
+} from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -51,6 +56,7 @@ type Props = {
 export const EditShortcut = ({ shortcut, onClose, anchorEl, api }: Props) => {
   const classes = useStyles();
   const alertApi = useApi(alertApiRef);
+  const analytics = useAnalytics(analyticsApiRef);
   const open = Boolean(anchorEl);
 
   const handleSave: SubmitHandler<FormValues> = async ({ url, title }) => {
@@ -62,6 +68,7 @@ export const EditShortcut = ({ shortcut, onClose, anchorEl, api }: Props) => {
 
     try {
       await api.update(newShortcut);
+      analytics.captureEvent('update', url);
       alertApi.post({
         message: `Updated shortcut '${title}'`,
         severity: 'success',
@@ -79,6 +86,7 @@ export const EditShortcut = ({ shortcut, onClose, anchorEl, api }: Props) => {
   const handleRemove = async () => {
     try {
       await api.remove(shortcut.id);
+      analytics.captureEvent('remove', shortcut.url);
       alertApi.post({
         message: `Removed shortcut '${shortcut.title}' from your sidebar`,
         severity: 'success',

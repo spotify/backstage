@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Backstage Authors
+ * Copyright 2021 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-export { useApi, useApiHolder, withApis } from './useApi';
-export { createApiRef } from './ApiRef';
-export { useAnalytics } from './useAnalytics';
-export * from './types';
-export * from './helpers';
+import { AnalyticsApi, AnalyticsTracker } from '../definitions/AnalyticsApi';
+import { useExtensionAwareness } from '../../extensions';
+import { useApi, ApiRef } from './';
+
+/**
+ * Get a pre-configured analytics tracker.
+ */
+export function useAnalytics(apiRef: ApiRef<AnalyticsApi>): AnalyticsTracker {
+  const analyticsApi = useApi(apiRef);
+  const extensionManifest = useExtensionAwareness();
+  return analyticsApi.getTrackerForExtension(extensionManifest);
+}

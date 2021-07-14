@@ -23,6 +23,7 @@
 export * from './auth';
 
 export * from './AlertApi';
+export * from './AnalyticsApi';
 export * from './AppThemeApi';
 export * from './ConfigApi';
 export * from './DiscoveryApi';

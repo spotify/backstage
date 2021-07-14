@@ -21,4 +21,5 @@ export {
   createComponentExtension,
 } from './extensions';
 export { useElementFilter } from './useElementFilter';
+export { useExtensionAwareness } from './ExtensionAwareContext';
 export type { ElementCollection } from './useElementFilter';

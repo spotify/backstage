@@ -23,7 +23,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { useAsync } from 'react-use';
 import {
   ApiProvider,
@@ -48,6 +48,8 @@ import {
   RouteRef,
   SubRouteRef,
   ExternalRouteRef,
+  analyticsApiRef,
+  useAnalytics,
 } from '@backstage/core-plugin-api';
 import { ApiFactoryRegistry, ApiResolver } from '../apis/system';
 import {
@@ -168,6 +170,18 @@ class AppContextImpl implements AppContext {
     return this.app.getComponents();
   }
 }
+
+const RouteTracker = () => {
+  const { pathname, search, hash } = useLocation();
+  const analytics = useAnalytics(analyticsApiRef);
+
+  useEffect(() => {
+    analytics.captureEvent('navigate', `${pathname}${search}${hash}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, search, hash]);
+
+  return null;
+};
 
 export class PrivateAppImpl implements BackstageApp {
   private apiHolder?: ApiHolder;
@@ -360,6 +374,7 @@ export class PrivateAppImpl implements BackstageApp {
 
         return (
           <RouterComponent>
+            <RouteTracker />
             <Routes>
               <Route path={`${pathname}/*`} element={<>{children}</>} />
             </Routes>
@@ -369,6 +384,7 @@ export class PrivateAppImpl implements BackstageApp {
 
       return (
         <RouterComponent>
+          <RouteTracker />
           <SignInPageWrapper component={SignInPageComponent}>
             <Routes>
               <Route path={`${pathname}/*`} element={<>{children}</>} />

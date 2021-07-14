@@ -19,6 +19,7 @@ import { useApp } from '../app';
 import { RouteRef, useRouteRef } from '../routing';
 import { attachComponentData } from './componentData';
 import { Extension, BackstagePlugin } from '../plugin/types';
+import { ExtensionAwareContext } from './ExtensionAwareContext';
 import { PluginErrorBoundary } from './PluginErrorBoundary';
 
 type ComponentLoader<T> =
@@ -131,7 +132,11 @@ export function createReactExtension<
         return (
           <Suspense fallback={<Progress />}>
             <PluginErrorBoundary app={app} plugin={plugin}>
-              <Component {...props} />
+              <ExtensionAwareContext.Provider
+                value={{ pluginId: plugin.getId(), componentName }}
+              >
+                <Component {...props} />
+              </ExtensionAwareContext.Provider>
             </PluginErrorBoundary>
           </Suspense>
         );

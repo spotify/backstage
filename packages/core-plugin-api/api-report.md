@@ -28,6 +28,30 @@ export type AlertMessage = {
   severity?: 'success' | 'info' | 'warning' | 'error';
 };
 
+// @public
+export type AnalyticsApi = {
+    getTrackerForExtension(extension: ExtensionManifest): AnalyticsTracker;
+    event$(): Observable<ExtensionAwareAnalyticsEvent>;
+};
+
+// @public (undocumented)
+export const analyticsApiRef: ApiRef<AnalyticsApi>;
+
+// @public
+export type AnalyticsEvent = {
+    verb: string;
+    noun: string;
+    value?: number;
+};
+
+// @public
+export type AnalyticsEventContext = ExtraDimensions & ExtraMetrics;
+
+// @public
+export type AnalyticsTracker = {
+    captureEvent: (verb: string, noun: string, value?: number, context?: AnalyticsEventContext) => void;
+};
+
 // @public (undocumented)
 export type AnyApiFactory = ApiFactory<
   unknown,
@@ -316,6 +340,12 @@ export type ErrorContext = {
 // @public (undocumented)
 export type Extension<T> = {
   expose(plugin: BackstagePlugin<any, any>): T;
+};
+
+// @public
+export type ExtensionAwareAnalyticsEvent = AnalyticsEvent & {
+    plugin: string;
+    componentName: string;
 };
 
 // @public (undocumented)
@@ -627,6 +657,9 @@ export type TypesToApiRefs<T> = {
   [key in keyof T]: ApiRef<T[key]>;
 };
 
+// @public
+export function useAnalytics(apiRef: ApiRef<AnalyticsApi>): AnalyticsTracker;
+
 // @public (undocumented)
 export function useApi<T>(apiRef: ApiRef<T>): T;
 
@@ -642,6 +675,9 @@ export function useElementFilter<T>(
   filterFn: (arg: ElementCollection) => T,
   dependencies?: any[],
 ): T;
+
+// @public (undocumented)
+export const useExtensionAwareness: () => ExtensionManifest;
 
 // @public (undocumented)
 export type UserFlags = {};

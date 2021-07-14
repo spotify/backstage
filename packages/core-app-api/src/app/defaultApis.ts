@@ -31,6 +31,7 @@ import {
   SamlAuth,
   OneLoginAuth,
   UnhandledErrorForwarder,
+  AnalyticsApiForwarder,
 } from '../apis';
 
 import {
@@ -51,6 +52,7 @@ import {
   samlAuthApiRef,
   oneloginAuthApiRef,
   oidcAuthApiRef,
+  analyticsApiRef,
 } from '@backstage/core-plugin-api';
 
 import OAuth2Icon from '@material-ui/icons/AcUnit';
@@ -65,6 +67,7 @@ export const defaultApis = [
       ),
   }),
   createApiFactory(alertApiRef, new AlertApiForwarder()),
+  createApiFactory(analyticsApiRef, new AnalyticsApiForwarder()),
   createApiFactory({
     api: errorApiRef,
     deps: { alertApi: alertApiRef },
