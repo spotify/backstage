@@ -11,9 +11,13 @@ import { KubernetesRequestBody } from '@backstage/plugin-kubernetes-common';
 import { Logger as Logger_2 } from 'winston';
 
 // @public (undocumented)
-export interface ClusterDetails {
+export interface AWSClusterDetails extends ClusterDetails {
   // (undocumented)
   assumeRole?: string;
+}
+
+// @public (undocumented)
+export interface ClusterDetails {
   // (undocumented)
   authProvider: string;
   // (undocumented)
@@ -46,6 +50,9 @@ export interface FetchResponseWrapper {
   // (undocumented)
   responses: FetchResponse[];
 }
+
+// @public (undocumented)
+export interface GKEClusterDetails extends ClusterDetails {}
 
 // @public (undocumented)
 export interface KubernetesClustersSupplier {
@@ -88,7 +95,10 @@ export const makeRouter: (
 // @public (undocumented)
 export interface ObjectFetchParams {
   // (undocumented)
-  clusterDetails: ClusterDetails;
+  clusterDetails:
+    | AWSClusterDetails
+    | GKEClusterDetails
+    | ServiceAccountClusterDetails;
   // (undocumented)
   customResources: CustomResource[];
   // (undocumented)
@@ -108,6 +118,9 @@ export interface RouterOptions {
   // (undocumented)
   logger: Logger_2;
 }
+
+// @public (undocumented)
+export interface ServiceAccountClusterDetails extends ClusterDetails {}
 
 // @public (undocumented)
 export type ServiceLocatorMethod = 'multiTenant' | 'http';

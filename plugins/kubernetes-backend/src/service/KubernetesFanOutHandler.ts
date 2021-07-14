@@ -63,15 +63,15 @@ export class KubernetesFanOutHandler {
         'backstage.io/kubernetes-id'
       ] || requestBody.entity?.metadata?.name;
 
-    const clusterDetails: ClusterDetails[] =
-      await this.serviceLocator.getClustersByServiceId(entityName);
+    const clusterDetails: ClusterDetails[] = await this.serviceLocator.getClustersByServiceId(
+      entityName,
+    );
 
     // Execute all of these async actions simultaneously/without blocking sequentially as no common object is modified by them
     const promises: Promise<ClusterDetails>[] = clusterDetails.map(cd => {
-      const kubernetesAuthTranslator: KubernetesAuthTranslator =
-        KubernetesAuthTranslatorGenerator.getKubernetesAuthTranslatorInstance(
-          cd.authProvider,
-        );
+      const kubernetesAuthTranslator: KubernetesAuthTranslator = KubernetesAuthTranslatorGenerator.getKubernetesAuthTranslatorInstance(
+        cd.authProvider,
+      );
       return kubernetesAuthTranslator.decorateClusterDetailsWithAuth(
         cd,
         requestBody,

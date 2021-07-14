@@ -70,8 +70,9 @@ export const makeRouter = (
     const serviceId = req.params.serviceId;
     const requestBody: KubernetesRequestBody = req.body;
     try {
-      const response =
-        await kubernetesFanOutHandler.getKubernetesObjectsByEntity(requestBody);
+      const response = await kubernetesFanOutHandler.getKubernetesObjectsByEntity(
+        requestBody,
+      );
       res.json(response);
     } catch (e) {
       logger.error(

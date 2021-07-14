@@ -27,7 +27,6 @@ describe('getCombinedClusterDetails', () => {
               type: 'config',
               clusters: [
                 {
-                  assumeRole: 'SomeRole',
                   name: 'cluster1',
                   serviceAccountToken: 'token',
                   url: 'http://localhost:8080',
@@ -50,7 +49,6 @@ describe('getCombinedClusterDetails', () => {
 
     expect(result).toStrictEqual([
       {
-        assumeRole: 'SomeRole',
         name: 'cluster1',
         serviceAccountToken: 'token',
         url: 'http://localhost:8080',
@@ -58,7 +56,6 @@ describe('getCombinedClusterDetails', () => {
         skipTLSVerify: false,
       },
       {
-        assumeRole: undefined,
         name: 'cluster2',
         serviceAccountToken: undefined,
         url: 'http://localhost:8081',

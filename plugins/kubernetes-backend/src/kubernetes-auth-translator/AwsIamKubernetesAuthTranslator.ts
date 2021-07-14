@@ -15,19 +15,17 @@
  */
 import AWS from 'aws-sdk';
 import { sign } from 'aws4';
-import { ClusterDetails } from '../types/types';
+import { AWSClusterDetails } from '../types/types';
 import { KubernetesAuthTranslator } from './types';
 
 const base64 = (str: string) =>
   Buffer.from(str.toString(), 'binary').toString('base64');
 const prepend = (prep: string) => (str: string) => prep + str;
-const replace =
-  (search: string | RegExp, substitution: string) => (str: string) =>
-    str.replace(search, substitution);
-const pipe =
-  (fns: ReadonlyArray<any>) =>
-  (thing: string): string =>
-    fns.reduce((val, fn) => fn(val), thing);
+const replace = (search: string | RegExp, substitution: string) => (
+  str: string,
+) => str.replace(search, substitution);
+const pipe = (fns: ReadonlyArray<any>) => (thing: string): string =>
+  fns.reduce((val, fn) => fn(val), thing);
 const removePadding = replace(/=+$/, '');
 const makeUrlSafe = pipe([replace('+', '-'), replace('/', '_')]);
 
@@ -38,8 +36,7 @@ type SigningCreds = {
 };
 
 export class AwsIamKubernetesAuthTranslator
-  implements KubernetesAuthTranslator
-{
+  implements KubernetesAuthTranslator {
   validCredentials(creds: SigningCreds): boolean {
     if (!creds.accessKeyId || !creds.secretAccessKey || !creds.sessionToken) {
       return false;
@@ -116,9 +113,9 @@ export class AwsIamKubernetesAuthTranslator
   }
 
   async decorateClusterDetailsWithAuth(
-    clusterDetails: ClusterDetails,
-  ): Promise<ClusterDetails> {
-    const clusterDetailsWithAuthToken: ClusterDetails = Object.assign(
+    clusterDetails: AWSClusterDetails,
+  ): Promise<AWSClusterDetails> {
+    const clusterDetailsWithAuthToken: AWSClusterDetails = Object.assign(
       {},
       clusterDetails,
     );
