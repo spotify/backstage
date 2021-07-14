@@ -35,6 +35,7 @@ describe('ConfigClusterLocator', () => {
     const config: Config = new ConfigReader({
       clusters: [
         {
+          assumeRole: 'SomeRole',
           name: 'cluster1',
           url: 'http://localhost:8080',
           authProvider: 'serviceAccount',
@@ -48,6 +49,7 @@ describe('ConfigClusterLocator', () => {
 
     expect(result).toStrictEqual([
       {
+        assumeRole: 'SomeRole',
         name: 'cluster1',
         serviceAccountToken: undefined,
         url: 'http://localhost:8080',
@@ -61,6 +63,7 @@ describe('ConfigClusterLocator', () => {
     const config: Config = new ConfigReader({
       clusters: [
         {
+          assumeRole: 'SomeRole',
           name: 'cluster1',
           serviceAccountToken: 'token',
           url: 'http://localhost:8080',
@@ -68,6 +71,7 @@ describe('ConfigClusterLocator', () => {
           skipTLSVerify: false,
         },
         {
+          assumeRole: undefined,
           name: 'cluster2',
           url: 'http://localhost:8081',
           authProvider: 'google',
@@ -82,6 +86,7 @@ describe('ConfigClusterLocator', () => {
 
     expect(result).toStrictEqual([
       {
+        assumeRole: 'SomeRole',
         name: 'cluster1',
         serviceAccountToken: 'token',
         url: 'http://localhost:8080',
@@ -89,6 +94,7 @@ describe('ConfigClusterLocator', () => {
         skipTLSVerify: false,
       },
       {
+        assumeRole: undefined,
         name: 'cluster2',
         serviceAccountToken: undefined,
         url: 'http://localhost:8081',

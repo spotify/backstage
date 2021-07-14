@@ -167,10 +167,9 @@ export class KubernetesClientBasedFetcher implements KubernetesFetcher {
           labelSelector,
         ).then(r => ({ type: type, resources: r }));
       case 'services':
-        return this.fetchServicesForService(
-          clusterDetails,
-          labelSelector,
-        ).then(r => ({ type: type, resources: r }));
+        return this.fetchServicesForService(clusterDetails, labelSelector).then(
+          r => ({ type: type, resources: r }),
+        );
       case 'horizontalpodautoscalers':
         return this.fetchHorizontalPodAutoscalersForService(
           clusterDetails,
@@ -192,9 +191,8 @@ export class KubernetesClientBasedFetcher implements KubernetesFetcher {
     customResource: CustomResource,
     labelSelector: string,
   ): Promise<FetchResponse> {
-    const customObjects = this.kubernetesClientProvider.getCustomObjectsClient(
-      clusterDetails,
-    );
+    const customObjects =
+      this.kubernetesClientProvider.getCustomObjectsClient(clusterDetails);
 
     return customObjects
       .listClusterCustomObject(
@@ -217,18 +215,20 @@ export class KubernetesClientBasedFetcher implements KubernetesFetcher {
       client: Clients,
     ) => Promise<{ body: { items: Array<T> }; response: http.IncomingMessage }>,
   ): Promise<Array<T>> {
-    const core = this.kubernetesClientProvider.getCoreClientByClusterDetails(
-      clusterDetails,
-    );
-    const apps = this.kubernetesClientProvider.getAppsClientByClusterDetails(
-      clusterDetails,
-    );
-    const autoscaling = this.kubernetesClientProvider.getAutoscalingClientByClusterDetails(
-      clusterDetails,
-    );
-    const networkingBeta1 = this.kubernetesClientProvider.getNetworkingBeta1Client(
-      clusterDetails,
-    );
+    const core =
+      this.kubernetesClientProvider.getCoreClientByClusterDetails(
+        clusterDetails,
+      );
+    const apps =
+      this.kubernetesClientProvider.getAppsClientByClusterDetails(
+        clusterDetails,
+      );
+    const autoscaling =
+      this.kubernetesClientProvider.getAutoscalingClientByClusterDetails(
+        clusterDetails,
+      );
+    const networkingBeta1 =
+      this.kubernetesClientProvider.getNetworkingBeta1Client(clusterDetails);
 
     this.logger.debug(`calling cluster=${clusterDetails.name}`);
     return fn({ core, apps, autoscaling, networkingBeta1 }).then(({ body }) => {

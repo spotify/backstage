@@ -24,23 +24,20 @@ describe('getKubernetesAuthTranslatorInstance', () => {
   const sut = KubernetesAuthTranslatorGenerator;
 
   it('can return an auth translator for google auth', () => {
-    const authTranslator: KubernetesAuthTranslator = sut.getKubernetesAuthTranslatorInstance(
-      'google',
-    );
+    const authTranslator: KubernetesAuthTranslator =
+      sut.getKubernetesAuthTranslatorInstance('google');
     expect(authTranslator instanceof GoogleKubernetesAuthTranslator).toBe(true);
   });
 
   it('can return an auth translator for aws auth', () => {
-    const authTranslator: KubernetesAuthTranslator = sut.getKubernetesAuthTranslatorInstance(
-      'aws',
-    );
+    const authTranslator: KubernetesAuthTranslator =
+      sut.getKubernetesAuthTranslatorInstance('aws');
     expect(authTranslator instanceof AwsIamKubernetesAuthTranslator).toBe(true);
   });
 
   it('can return an auth translator for serviceAccount auth', () => {
-    const authTranslator: KubernetesAuthTranslator = sut.getKubernetesAuthTranslatorInstance(
-      'serviceAccount',
-    );
+    const authTranslator: KubernetesAuthTranslator =
+      sut.getKubernetesAuthTranslatorInstance('serviceAccount');
     expect(
       authTranslator instanceof ServiceAccountKubernetesAuthTranslator,
     ).toBe(true);
