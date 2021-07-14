@@ -16,7 +16,16 @@
 import { JsonObject, JsonValue } from '@backstage/config';
 import { LinearProgress } from '@material-ui/core';
 import { FormValidation, IChangeEvent } from '@rjsf/core';
-import React, { useCallback, useState } from 'react';
+import {
+  githubAuthApiRef,
+  ApiHolder,
+  configApiRef,
+  errorApiRef,
+  useApi,
+  useApiHolder,
+  useRouteRef,
+} from '@backstage/core-plugin-api';
+import React, { useCallback, useState, useEffect } from 'react';
 import { generatePath, Navigate, useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { useAsync } from 'react-use';
@@ -32,13 +41,6 @@ import {
   Lifecycle,
   Page,
 } from '@backstage/core-components';
-import {
-  ApiHolder,
-  errorApiRef,
-  useApi,
-  useApiHolder,
-  useRouteRef,
-} from '@backstage/core-plugin-api';
 
 const useTemplateParameterSchema = (templateName: string) => {
   const scaffolderApi = useApi(scaffolderApiRef);
@@ -113,6 +115,7 @@ export const TemplatePage = ({
 }: {
   customFieldExtensions?: FieldExtensionOptions[];
 }) => {
+  const configApi = useApi(configApiRef);
   const apiHolder = useApiHolder();
   const errorApi = useApi(errorApiRef);
   const scaffolderApi = useApi(scaffolderApiRef);
@@ -127,9 +130,33 @@ export const TemplatePage = ({
     [setFormState],
   );
 
+  const [githubAccessToken, setGithubAccessToken] = useState('');
+  const githubAuth = useApi(githubAuthApiRef);
+
+  const githubConfig = configApi.getOptionalConfig('auth.providers.github');
+
+  useEffect(() => {
+    const fetchGithubUserInfo = async () => {
+      const accessToken = await githubAuth.getAccessToken([
+        'repo',
+        'user',
+        'workflow',
+      ]);
+      setGithubAccessToken(accessToken);
+    };
+
+    if (githubConfig && !githubAccessToken) {
+      fetchGithubUserInfo();
+    }
+  });
+
   const handleCreate = async () => {
     try {
-      const id = await scaffolderApi.scaffold(templateName, formState);
+      const id = await scaffolderApi.scaffold(
+        templateName,
+        formState,
+        githubAccessToken,
+      );
 
       navigate(generatePath(`${rootLink()}/tasks/:taskId`, { taskId: id }));
     } catch (e) {

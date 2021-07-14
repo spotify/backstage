@@ -75,7 +75,7 @@ export interface ScaffolderApi {
   ): Promise<TemplateParameterSchema>;
   // (undocumented)
   listActions(): Promise<ListActionsResponse>;
-  scaffold(templateName: string, values: Record<string, any>): Promise<string>;
+  scaffold(templateName: string, values: Record<string, any>, githubAccessToken?: string): Promise<string>;
   // (undocumented)
   streamLogs({
     taskId,
@@ -114,7 +114,7 @@ export class ScaffolderClient implements ScaffolderApi {
   ): Promise<TemplateParameterSchema>;
   // (undocumented)
   listActions(): Promise<ListActionsResponse>;
-  scaffold(templateName: string, values: Record<string, any>): Promise<string>;
+  scaffold(templateName: string, values: Record<string, any>, githubAccessToken: string): Promise<string>;
   // (undocumented)
   streamLogs({
     taskId,

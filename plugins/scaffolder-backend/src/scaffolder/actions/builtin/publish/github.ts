@@ -170,7 +170,7 @@ export function createPublishGithubAction(options: {
       }
 
       const client = new Octokit({
-        auth: token,
+        auth: ctx.token ?? token,
         baseUrl: integrationConfig.config.apiBaseUrl,
         previews: ['nebula-preview'],
       });
@@ -250,9 +250,15 @@ export function createPublishGithubAction(options: {
       const remoteUrl = newRepo.clone_url;
       const repoContentsUrl = `${newRepo.html_url}/blob/${defaultBranch}`;
 
+      const authenticatedUser = await client.users.getAuthenticated();
+
       const gitAuthorInfo = {
-        name: config.getOptionalString('scaffolder.defaultAuthor.name'),
-        email: config.getOptionalString('scaffolder.defaultAuthor.email'),
+        name:
+          authenticatedUser?.data?.name ??
+          config.getOptionalString('scaffolder.defaultAuthor.name'),
+        email:
+          authenticatedUser?.data?.email ??
+          config.getOptionalString('scaffolder.defaultAuthor.email'),
       };
 
       await initRepoAndPush({
@@ -261,7 +267,7 @@ export function createPublishGithubAction(options: {
         defaultBranch,
         auth: {
           username: 'x-access-token',
-          password: token,
+          password: ctx.token ?? token,
         },
         logger: ctx.logger,
         gitAuthorInfo,

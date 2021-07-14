@@ -70,8 +70,13 @@ export interface ScaffolderApi {
    *
    * @param templateName Name of the Template entity for the scaffolder to use. New project is going to be created out of this template.
    * @param values Parameters for the template, e.g. name, description
+   * @param [githubAccessToken] GitHub User access token
    */
-  scaffold(templateName: string, values: Record<string, any>): Promise<string>;
+  scaffold(
+    templateName: string,
+    values: Record<string, any>,
+    githubAccessToken?: string,
+  ): Promise<string>;
 
   getTask(taskId: string): Promise<ScaffolderTask>;
 
@@ -153,8 +158,9 @@ export class ScaffolderClient implements ScaffolderApi {
   async scaffold(
     templateName: string,
     values: Record<string, any>,
+    githubAccessToken: string,
   ): Promise<string> {
-    const token = await this.identityApi.getIdToken();
+    const token = githubAccessToken ?? (await this.identityApi.getIdToken());
     const url = `${await this.discoveryApi.getBaseUrl('scaffolder')}/v2/tasks`;
     const response = await fetch(url, {
       method: 'POST',
