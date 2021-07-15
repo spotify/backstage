@@ -33,7 +33,7 @@ export const DefaultResultListItem = ({ result }: Props) => {
           secondary={result.text}
         />
       </ListItem>
-      <Divider component="li" />
+      <Divider />
     </Link>
   );
 };

@@ -30,13 +30,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   bar: {
     padding: theme.spacing(1, 0),
   },
-  filters: {
-    padding: theme.spacing(2),
-  },
   filter: {
     '& + &': {
       marginTop: theme.spacing(2.5),
     },
+  },
+  filters: {
+    padding: theme.spacing(2),
   },
 }));
 
