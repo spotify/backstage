@@ -3,6 +3,8 @@ kind: API
 metadata:
   name: starwars-graphql
   description: SWAPI GraphQL Schema
+  annotations:
+    graphql/endpoint: 'https://swapi-graphql.netlify.app/.netlify/functions/index'
   links:
     - url: https://github.com/graphql/swapi-graphql
       title: GitHub Repo

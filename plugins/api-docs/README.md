@@ -16,6 +16,7 @@ Right now, the following API formats are supported:
 - [AsyncAPI](https://www.asyncapi.com/docs/specifications/latest/)
 - [GraphQL](https://graphql.org/learn/schema/)
 
+For GraphQL API, add the annotation "graphql/endpoint:" to add query execution.
 Other formats are displayed as plain text, but this can easily be extended.
 
 To fill the catalog with APIs, [provide entities of kind API](https://backstage.io/docs/features/software-catalog/descriptor-format#kind-api).

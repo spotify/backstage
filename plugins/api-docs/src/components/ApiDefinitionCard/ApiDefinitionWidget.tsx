@@ -21,7 +21,7 @@ import { OpenApiDefinitionWidget } from '../OpenApiDefinitionWidget';
 export type ApiDefinitionWidget = {
   type: string;
   title: string;
-  component: (definition: string) => React.ReactElement;
+  component: (definition: string, graphqlLink: any) => React.ReactElement;
   rawLanguage?: string;
 };
 
@@ -47,8 +47,11 @@ export function defaultDefinitionWidgets(): ApiDefinitionWidget[] {
       type: 'graphql',
       title: 'GraphQL',
       rawLanguage: 'graphql',
-      component: definition => (
-        <GraphQlDefinitionWidget definition={definition} />
+      component: (definition, graphqlLink) => (
+        <GraphQlDefinitionWidget
+          definition={definition}
+          graphqlLink={graphqlLink}
+        />
       ),
     },
   ];

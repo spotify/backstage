@@ -53,9 +53,89 @@ type Film {
     };
 
     const { getByText } = await renderInTestApp(
-      <GraphQlDefinitionWidget definition={definition} />,
+      <GraphQlDefinitionWidget definition={definition} graphqlLink={null} />,
     );
 
     expect(getByText(/Film/i)).toBeInTheDocument();
+  });
+
+  it('renders a warning when graphqlLink is null', async () => {
+    const definition = `
+"""Hello World!"""
+schema {
+  query: Film
+}
+
+"""A single film."""
+type Film {
+  """The ID of an object"""
+  id: ID!
+  """The title of this film."""
+  title: String
+}
+    `;
+    // CodeMirror uses features that jsdom doesn't support so we have to patch
+    // it here, see: https://github.com/jsdom/jsdom/issues/3002
+    document.createRange = () => {
+      const range = new Range();
+
+      range.getBoundingClientRect = jest.fn();
+
+      range.getClientRects = () => {
+        return {
+          item: () => null,
+          length: 0,
+          [Symbol.iterator]: jest.fn(),
+        };
+      };
+
+      return range;
+    };
+
+    const withoutLinkRendered = await renderInTestApp(
+      <GraphQlDefinitionWidget definition={definition} graphqlLink={null} />,
+    );
+
+    expect(withoutLinkRendered.getByText('Read-Only')).toBeInTheDocument();
+  });
+
+  it('does not render a warning when graphqlLink is not null', async () => {
+    const definition = `
+"""Hello World!"""
+schema {
+  query: Film
+}
+
+"""A single film."""
+type Film {
+  """The ID of an object"""
+  id: ID!
+  """The title of this film."""
+  title: String
+}
+    `;
+    // CodeMirror uses features that jsdom doesn't support so we have to patch
+    // it here, see: https://github.com/jsdom/jsdom/issues/3002
+    document.createRange = () => {
+      const range = new Range();
+
+      range.getBoundingClientRect = jest.fn();
+
+      range.getClientRects = () => {
+        return {
+          item: () => null,
+          length: 0,
+          [Symbol.iterator]: jest.fn(),
+        };
+      };
+
+      return range;
+    };
+
+    const withLinkRendered = await renderInTestApp(
+      <GraphQlDefinitionWidget definition={definition} graphqlLink="test" />,
+    );
+
+    expect(withLinkRendered.getByText('Read-Only')).not.toBeInTheDocument();
   });
 });
