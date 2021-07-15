@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Backstage Authors
+ * Copyright 2021 Spotify AB
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,4 @@
  * limitations under the License.
  */
 
-export * from './Filters';
-export * from './SearchFilter';
-export * from './SearchBar';
-export * from './SearchPage';
-export * from './SearchResult';
-export * from './DefaultResultListItem';
-export * from './SidebarSearch';
-export * from './SearchContext';
-export * from './StackOverflowResultListItem';
+export { StackOverflowCollator } from './StackOverflowCollator';

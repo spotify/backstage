@@ -126,3 +126,14 @@ export const DefaultResultListItem = searchPlugin.provide(
     },
   }),
 );
+
+export const StackOverflowResultListItem = searchPlugin.provide(
+  createComponentExtension({
+    component: {
+      lazy: () =>
+        import('./components/StackOverflowResultListItem').then(
+          m => m.StackOverflowResultListItem,
+        ),
+    },
+  }),
+);

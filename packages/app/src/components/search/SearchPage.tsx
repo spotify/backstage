@@ -23,6 +23,7 @@ import {
   SearchFilter,
   SearchResult,
   DefaultResultListItem,
+  StackOverflowResultListItem,
 } from '@backstage/plugin-search';
 import { Content, Header, Lifecycle, Page } from '@backstage/core-components';
 
@@ -76,6 +77,13 @@ const SearchPage = () => {
                       case 'software-catalog':
                         return (
                           <CatalogResultListItem
+                            key={document.location}
+                            result={document}
+                          />
+                        );
+                      case 'stack-overflow':
+                        return (
+                          <StackOverflowResultListItem
                             key={document.location}
                             result={document}
                           />

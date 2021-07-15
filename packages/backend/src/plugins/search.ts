@@ -18,6 +18,7 @@ import { createRouter } from '@backstage/plugin-search-backend';
 import {
   IndexBuilder,
   LunrSearchEngine,
+  StackOverflowCollator,
 } from '@backstage/plugin-search-backend-node';
 import { PluginEnvironment } from '../types';
 import { DefaultCatalogCollator } from '@backstage/plugin-catalog-backend';
@@ -25,6 +26,7 @@ import { DefaultCatalogCollator } from '@backstage/plugin-catalog-backend';
 export default async function createPlugin({
   logger,
   discovery,
+  config,
 }: PluginEnvironment) {
   // Initialize a connection to a search engine.
   const searchEngine = new LunrSearchEngine({ logger });
@@ -35,6 +37,11 @@ export default async function createPlugin({
   indexBuilder.addCollator({
     defaultRefreshIntervalSeconds: 600,
     collator: new DefaultCatalogCollator({ discovery }),
+  });
+
+  indexBuilder.addCollator({
+    defaultRefreshIntervalSeconds: 600,
+    collator: new StackOverflowCollator({ config }),
   });
 
   // The scheduler controls when documents are gathered from collators and sent

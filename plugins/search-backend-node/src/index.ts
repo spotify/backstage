@@ -17,4 +17,5 @@
 export { IndexBuilder } from './IndexBuilder';
 export { Scheduler } from './Scheduler';
 export { LunrSearchEngine } from './engines';
+export { StackOverflowCollator } from './collators';
 export type { SearchEngine } from './types';

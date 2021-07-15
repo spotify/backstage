@@ -251,6 +251,11 @@ catalog:
     - type: file
       target: ../catalog-model/examples/acme-corp.yaml
 
+search:
+  integrations:
+    stackoverflow:
+      baseUrl: https://api.stackexchange.com/2.2
+
 scaffolder:
   # Use to customize default commit author info used when new components are created
   # defaultAuthor:

@@ -23,6 +23,7 @@ export {
   SearchBarNext,
   SearchResult,
   DefaultResultListItem,
+  StackOverflowResultListItem,
 } from './plugin';
 export {
   Filters,
