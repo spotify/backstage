@@ -68,6 +68,11 @@ export class ZipArchiveResponse implements ReadTreeResponse {
 
   private shouldBeIncluded(entry: Entry): boolean {
     const strippedPath = stripFirstDirectoryFromPath(entry.path);
+    const size = entry.vars.compressedSize;
+
+    if (size >= 20000) {
+      return false;
+    }
 
     if (this.subPath) {
       if (!strippedPath.startsWith(this.subPath)) {

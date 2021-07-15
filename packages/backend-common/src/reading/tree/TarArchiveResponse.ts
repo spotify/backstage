@@ -98,6 +98,11 @@ export class TarArchiveResponse implements ReadTreeResponse {
         }
       }
 
+      if (entry.size && entry.size >= 20000) {
+        entry.resume();
+        return;
+      }
+
       const content = new Promise<Buffer>(async resolve => {
         await pipeline(entry, concatStream(resolve));
       });

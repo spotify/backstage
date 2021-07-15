@@ -27,6 +27,7 @@ import {
 } from './types';
 import { Config } from '@backstage/config';
 import { createTodoParser } from './createTodoParser';
+import path from 'path';
 
 type Options = {
   logger: Logger;
@@ -80,10 +81,25 @@ export class TodoScmReader implements TodoReader {
     { url }: ReadTodosOptions,
     etag?: string,
   ): Promise<CacheItem> {
+    const shouldNotInclude = [
+      '.png',
+      '.svg',
+      '.jpg',
+      '.jpeg',
+      '.gif',
+      '.raw',
+      '.lock',
+      '.ico',
+    ];
     const tree = await this.reader.readTree(url, {
       etag,
-      filter(path) {
-        return !path.startsWith('.') && !path.includes('/.');
+      filter(filePath) {
+        const extname = path.extname(filePath);
+        return (
+          !filePath.startsWith('.') &&
+          !filePath.includes('/.') &&
+          !shouldNotInclude.includes(extname)
+        );
       },
     });
 
