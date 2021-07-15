@@ -104,7 +104,6 @@ export function createGithubActionsDispatchAction(options: {
           `No token available for host: ${host}, with owner ${owner}, and repo ${repoName}`,
         );
       }
-
       const client = new Octokit({
         auth: ctx.token ?? token,
         baseUrl: integrationConfig.config.apiBaseUrl,
@@ -113,7 +112,7 @@ export function createGithubActionsDispatchAction(options: {
 
       await client.rest.actions.createWorkflowDispatch({
         owner,
-        repo,
+        repo: repoName,
         workflow_id: workflowId,
         ref: branchOrTagName,
       });

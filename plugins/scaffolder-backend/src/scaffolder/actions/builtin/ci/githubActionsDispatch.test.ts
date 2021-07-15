@@ -13,16 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// @ts-nocheck
 
-jest.mock('@octokit/rest');
 jest.mock('@backstage/integration');
+jest.mock('@octokit/rest', () => ({ Octokit: jest.fn() }));
 
 import { createGithubActionsDispatchAction } from './githubActionsDispatch';
-import { ScmIntegrations } from '@backstage/integration';
+import {
+  ScmIntegrations,
+  GithubCredentialsProvider,
+} from '@backstage/integration';
 import { ConfigReader } from '@backstage/config';
 import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream';
-// import { when } from 'jest-when';
+
+import { Octokit } from '@octokit/rest';
 
 describe('ci:github-actions-dispatch', () => {
   const config = new ConfigReader({
@@ -33,9 +38,6 @@ describe('ci:github-actions-dispatch', () => {
       ],
     },
   });
-
-  const integrations = ScmIntegrations.fromConfig(config);
-  const action = createGithubActionsDispatchAction({ integrations, config });
 
   const mockContext = {
     input: {
@@ -52,66 +54,100 @@ describe('ci:github-actions-dispatch', () => {
     createTemporaryDirectory: jest.fn(),
   };
 
-  const { mockGithubClient } = require('@octokit/rest');
-  mockGithubClient.rest = {
-    actions: {
-      createWorkflowDispatch: jest.fn(),
-    },
-  };
-
   beforeEach(() => {
     jest.resetAllMocks();
   });
 
-  // it('should throw if there is no integration config provided', async () => {
-  //   const actionWithNoIntegrations = createGithubActionsDispatchAction({
-  //     integrations: {
-  //       ...integrations,
-  //       github: {
-  //         list: () => [],
-  //         byHost: jest.fn(),
-  //         byUrl: jest.fn(),
-  //       },
-  //     },
-  //     config,
-  //   });
-  //   await expect(actionWithNoIntegrations.handler(mockContext)).rejects.toThrow(
-  //     /No matching integration configuration/,
-  //   );
-  // });
+  it('should throw if there is no integration config provided', async () => {
+    const integrations = {
+      github: {
+        list: () => [],
+        byHost: jest.fn(),
+        byUrl: jest.fn(),
+      },
+    } as ScmIntegrations;
+    const actionWithNoIntegrations = createGithubActionsDispatchAction({
+      integrations,
+      config,
+    });
+    await expect(actionWithNoIntegrations.handler(mockContext)).rejects.toThrow(
+      /No matching integration configuration/,
+    );
+  });
 
-  // it('should throw if there is no token in the integration config that is returned', async () => {
-  //   const mockedProvider = jest.fn();
-  //   const mockedIntegrationConfig = jest.fn();
-  //   GithubCredentialsProvider.create.mockReturnOnce(mockedProvider);
-  //   const mockedArray = [
-  //     {
-  //       config: {
-  //         host: 'github.com',
-  //       },
-  //     },
-  //   ] as GitHubIntegration[];
-  //   const integrations1 = {
-  //     github: {
-  //       list: () => mockedArray,
-  //       byHost: mockedIntegrationConfig,
-  //       byUrl: jest.fn(),
-  //     },
-  //   } as ScmIntegrationRegistry;
-  //   const actionWithNoIntegrations = createGithubActionsDispatchAction({
-  //     integrations: integrations1,
-  //     config,
-  //   });
-  //   mockedProvider.mockResolvedValue(undefined);
-
-  //   await expect(actionWithNoIntegrations.handler(mockContext)).rejects.toThrow(
-  //     /No token available for host/,
-  //   );
-  // });
+  it('should throw if no token is provided', async () => {
+    const integrations = {
+      github: {
+        list: () => [
+          {
+            config: {
+              host: 'github.com',
+            },
+          },
+        ],
+        byHost: () => ({
+          config: {
+            apiBaseUrl: 'https://api.github.com',
+          },
+        }),
+        byUrl: jest.fn(),
+      },
+    } as ScmIntegrations;
+    const mockedCredentialsProvider = {
+      getCredentials: jest.fn(),
+    };
+    mockedCredentialsProvider.getCredentials.mockResolvedValue({});
+    GithubCredentialsProvider.create.mockReturnValueOnce(
+      mockedCredentialsProvider,
+    );
+    const actionWithNoIntegrations = createGithubActionsDispatchAction({
+      integrations,
+      config,
+    });
+    await expect(actionWithNoIntegrations.handler(mockContext)).rejects.toThrow(
+      /No token available for host/,
+    );
+  });
 
   it('should call the githubApis for creating WorkflowDispatch', async () => {
-    mockGithubClient.rest.actions.createWorkflowDispatch.mockResolvedValue({
+    const integrations = {
+      github: {
+        list: () => [
+          {
+            config: {
+              host: 'github.com',
+            },
+          },
+        ],
+        byHost: () => ({
+          config: {
+            apiBaseUrl: 'https://api.github.com',
+          },
+        }),
+        byUrl: jest.fn(),
+      },
+    } as ScmIntegrations;
+    const mockedCredentialsProvider = {
+      getCredentials: jest.fn(),
+    };
+    mockedCredentialsProvider.getCredentials.mockResolvedValue({
+      token: 'test-token',
+    });
+    GithubCredentialsProvider.create.mockReturnValueOnce(
+      mockedCredentialsProvider,
+    );
+    const mockedCreateWorkflowDispatch = jest.fn();
+    mockedCreateWorkflowDispatch.mockResolvedValue({
       message: 'Success',
+    });
+    Octokit.mockImplementation(() => {
+      return {
+        rest: {
+          actions: {
+            createWorkflowDispatch: mockedCreateWorkflowDispatch,
+          },
+        },
+      };
     });
     const owner = 'dx';
     const repoName = 'test1';
@@ -120,11 +156,10 @@ describe('ci:github-actions-dispatch', () => {
     const ctx = Object.assign({}, mockContext, {
       input: { owner, repoName, workflowId, branchOrTagName },
     });
+    const action = createGithubActionsDispatchAction({ integrations, config });
     await action.handler(ctx);
 
-    expect(
-      mockGithubClient.rest.actions.createWorkflowDispatch,
-    ).toHaveBeenCalledWith({
+    expect(mockedCreateWorkflowDispatch).toHaveBeenCalledWith({
       owner,
       repo: repoName,
       workflow_id: workflowId,
