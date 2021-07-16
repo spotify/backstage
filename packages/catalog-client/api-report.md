@@ -34,8 +34,6 @@ export interface CatalogApi {
     location: AddLocationRequest,
     options?: CatalogRequestOptions,
   ): Promise<AddLocationResponse>;
-  // Warning: (ae-forgotten-export) The symbol "CatalogRequestOptions" needs to be exported by the entry point index.d.ts
-  //
   // (undocumented)
   getEntities(
     request?: CatalogEntitiesRequest,
@@ -136,6 +134,13 @@ export type CatalogEntitiesRequest = {
 // @public (undocumented)
 export type CatalogListResponse<T> = {
   items: T[];
+};
+
+// Warning: (ae-missing-release-tag) "CatalogRequestOptions" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public (undocumented)
+export type CatalogRequestOptions = {
+  token?: string;
 };
 
 // Warning: (ae-missing-release-tag) "ENTITY_STATUS_CATALOG_PROCESSING_TYPE" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)

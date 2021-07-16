@@ -19,15 +19,12 @@ import {
   AddLocationRequest,
   AddLocationResponse,
   CatalogApi,
+  CatalogClient,
   CatalogEntitiesRequest,
   CatalogListResponse,
-  CatalogClient,
+  CatalogRequestOptions,
 } from '@backstage/catalog-client';
 import { IdentityApi } from '@backstage/core-plugin-api';
-
-type CatalogRequestOptions = {
-  token?: string;
-};
 
 /**
  * CatalogClient wrapper that injects identity token for all requests

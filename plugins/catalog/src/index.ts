@@ -15,6 +15,7 @@
  */
 
 export * from './components/AboutCard';
+export { CatalogClientWrapper } from './CatalogClientWrapper';
 export { CatalogLayout } from './components/CatalogPage';
 export { CatalogResultListItem } from './components/CatalogResultListItem';
 export { CatalogTable } from './components/CatalogTable';
