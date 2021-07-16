@@ -250,7 +250,9 @@ catalog:
     # Backstage example groups and users
     - type: file
       target: ../catalog-model/examples/acme-corp.yaml
-
+    # Backstage end-to-end tests of TechDocs
+    - type: file
+      target: ../../cypress/e2e-fixture.catalog.info.yaml
 scaffolder:
   # Use to customize default commit author info used when new components are created
   # defaultAuthor:

@@ -108,7 +108,7 @@ const CustomPanel = ({
         ) : null}
       </ContentHeader>
       <div className={classes.panelContainer}>
-        <Panel entities={shownEntities} />
+        <Panel data-testid="techdocs-custom-panel" entities={shownEntities} />
       </div>
     </>
   );
@@ -183,7 +183,7 @@ export const TechDocsCustomHome = ({
           label,
         }))}
       />
-      <Content>
+      <Content data-testid="techdocs-content">
         {currentTabConfig.panels.map((config, index) => (
           <CustomPanel
             key={index}

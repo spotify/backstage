@@ -1,8 +1,10 @@
 {
-  "baseUrl": "http://localhost:7000",
+  "baseUrl": "http://localhost:3000",
   "integrationFolder": "./src/integration",
   "supportFile": "./src/support",
-  "fixturesFolder": "./src/fixures",
+  "fixturesFolder": "./src/fixtures",
   "pluginsFile": "./src/plugins",
-  "defaultCommandTimeout": 10000
+  "defaultCommandTimeout": 10000,
+  "viewportHeight": 900,
+  "viewportWidth": 1440
 }

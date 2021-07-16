@@ -97,6 +97,11 @@ export class TechDocsClient implements TechDocsApi {
     const request = await fetch(`${requestUrl}`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
+
+    if (request.status === 404) {
+      throw new NotFoundError('Entity not found.');
+    }
+
     const res = await request.json();
 
     return res;

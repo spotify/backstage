@@ -14,4 +14,3 @@
  * limitations under the License.
  */
 import '@testing-library/cypress/add-commands';
-import './commands';

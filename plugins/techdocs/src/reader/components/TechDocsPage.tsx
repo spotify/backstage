@@ -19,6 +19,7 @@ import { useParams } from 'react-router-dom';
 import { useAsync } from 'react-use';
 import { techdocsApiRef } from '../../api';
 import { Reader } from './Reader';
+import { TechDocsNotFound } from './TechDocsNotFound';
 import { TechDocsPageHeader } from './TechDocsPageHeader';
 
 import { Content, Page } from '@backstage/core-components';
@@ -45,6 +46,12 @@ export const TechDocsPage = () => {
   const onReady = useCallback(() => {
     setDocumentReady(true);
   }, [setDocumentReady]);
+
+  if (entityMetadataRequest?.error) {
+    return (
+      <TechDocsNotFound errorMessage={entityMetadataRequest.error.message} />
+    );
+  }
 
   return (
     <Page themeId="documentation">

@@ -84,6 +84,7 @@ export const HeaderTabs = ({
         {tabs.map((tab, index) => (
           <TabUI
             {...tab.tabProps}
+            data-testid={`header-tab-${index}`}
             label={tab.label}
             key={tab.id}
             value={index}
