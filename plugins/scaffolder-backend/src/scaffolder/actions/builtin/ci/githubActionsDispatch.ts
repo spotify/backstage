@@ -91,8 +91,6 @@ export function createGithubActionsDispatchAction(options: {
         );
       }
 
-      // TODO(blam): Consider changing this API to have owner, repo interface instead of URL as the it's
-      // needless to create URL and then parse again the other side.
       const { token } = await credentialsProvider.getCredentials({
         url: `https://${host}/${encodeURIComponent(owner)}/${encodeURIComponent(
           repoName,
@@ -104,6 +102,7 @@ export function createGithubActionsDispatchAction(options: {
           `No token available for host: ${host}, with owner ${owner}, and repo ${repoName}`,
         );
       }
+
       const client = new Octokit({
         auth: token,
         baseUrl: integrationConfig.config.apiBaseUrl,
