@@ -52,8 +52,8 @@ export const MockEntityListContextProvider = ({
   const defaultContext: EntityListContextProps = {
     entities: [],
     backendEntities: [],
-    updateFilters: updateFilters,
-    filters: filters,
+    updateFilters,
+    filters,
     loading: false,
     queryParameters: {},
   };

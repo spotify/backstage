@@ -15,16 +15,15 @@ import { RouteRef } from '@backstage/core-plugin-api';
 import { StorageApi } from '@backstage/core-plugin-api';
 import { StorageValueChange } from '@backstage/core-plugin-api';
 
-// Warning: (ae-forgotten-export) The symbol "Breakpoint" needs to be exported by the entry point index.d.ts
+// Warning: (tsdoc-param-tag-missing-hyphen) The @param block should be followed by a parameter name and then a hyphen
 // Warning: (ae-missing-release-tag) "mockBreakpoint" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
 //
-// @public (undocumented)
-export function mockBreakpoint(
-  initialBreakpoint?: Breakpoint,
-): {
-  set(breakpoint: Breakpoint): void;
-  remove(): void;
-};
+// @public
+export function mockBreakpoint({
+  matches,
+}: {
+  matches?: boolean | undefined;
+}): void;
 
 // Warning: (ae-missing-release-tag) "MockErrorApi" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
 //

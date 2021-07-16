@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { Grid } from '@material-ui/core';
+import {
+  Content,
+  ContentHeader,
+  PageWithHeader,
+  SupportButton,
+  TableColumn,
+  TableProps,
+} from '@backstage/core-components';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import {
   EntityKindPicker,
   EntityLifecyclePicker,
@@ -26,18 +33,15 @@ import {
   UserListFilterKind,
   UserListPicker,
 } from '@backstage/plugin-catalog-react';
+import React from 'react';
 import { CatalogTable } from '../CatalogTable';
-
 import { EntityRow } from '../CatalogTable/types';
-import CatalogLayout from './CatalogLayout';
-import { CreateComponentButton } from '../CreateComponentButton';
+import { CreateComponentButton } from '../CreateComponentButton/CreateComponentButton';
 import {
-  Content,
-  ContentHeader,
-  SupportButton,
-  TableColumn,
-  TableProps,
-} from '@backstage/core-components';
+  FilteredEntityLayout,
+  EntityListContainer,
+  FilterContainer,
+} from '../FilteredEntityLayout';
 
 export type CatalogPageProps = {
   initiallySelectedFilter?: UserListFilterKind;
@@ -46,39 +50,36 @@ export type CatalogPageProps = {
 };
 
 export const CatalogPage = ({
-  initiallySelectedFilter = 'owned',
   columns,
   actions,
-}: CatalogPageProps) => (
-  <CatalogLayout>
-    <Content>
-      <ContentHeader title="Components">
-        <CreateComponentButton />
-        <SupportButton>All your software catalog entities</SupportButton>
-      </ContentHeader>
-      <Grid container spacing={2}>
+  initiallySelectedFilter = 'owned',
+}: CatalogPageProps) => {
+  const orgName =
+    useApi(configApiRef).getOptionalString('organization.name') ?? 'Backstage';
+
+  return (
+    <PageWithHeader title={`${orgName} Catalog`} themeId="home">
+      <Content>
+        <ContentHeader title="Components">
+          <CreateComponentButton />
+          <SupportButton>All your software catalog entities</SupportButton>
+        </ContentHeader>
         <EntityListProvider>
-          <Grid item sm={12} lg={2} alignContent="flex-start">
-            <Grid container>
-              <Grid item xs={12} sm={4} lg={12}>
-                <EntityKindPicker initialFilter="component" hidden />
-                <EntityTypePicker />
-              </Grid>
-              <Grid item xs={12} sm={4} lg={12}>
-                <UserListPicker initialFilter={initiallySelectedFilter} />
-              </Grid>
-              <Grid item xs={12} sm={4} lg={12}>
-                <EntityOwnerPicker />
-                <EntityLifecyclePicker />
-                <EntityTagPicker />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} sm={12} lg={10}>
-            <CatalogTable columns={columns} actions={actions} />
-          </Grid>
+          <FilteredEntityLayout>
+            <FilterContainer>
+              <EntityKindPicker initialFilter="component" hidden />
+              <EntityTypePicker />
+              <UserListPicker initialFilter={initiallySelectedFilter} />
+              <EntityOwnerPicker />
+              <EntityLifecyclePicker />
+              <EntityTagPicker />
+            </FilterContainer>
+            <EntityListContainer>
+              <CatalogTable columns={columns} actions={actions} />
+            </EntityListContainer>
+          </FilteredEntityLayout>
         </EntityListProvider>
-      </Grid>
-    </Content>
-  </CatalogLayout>
-);
+      </Content>
+    </PageWithHeader>
+  );
+};

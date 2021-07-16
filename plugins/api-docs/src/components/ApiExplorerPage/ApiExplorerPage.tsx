@@ -15,6 +15,21 @@
  */
 
 import {
+  Content,
+  ContentHeader,
+  PageWithHeader,
+  SupportButton,
+  TableColumn,
+} from '@backstage/core-components';
+import { configApiRef, useApi, useRouteRef } from '@backstage/core-plugin-api';
+import {
+  CatalogTable,
+  CatalogTableRow,
+  FilteredEntityLayout,
+  EntityListContainer,
+  FilterContainer,
+} from '@backstage/plugin-catalog';
+import {
   EntityKindPicker,
   EntityLifecyclePicker,
   EntityListProvider,
@@ -24,29 +39,10 @@ import {
   UserListFilterKind,
   UserListPicker,
 } from '@backstage/plugin-catalog-react';
-import { CatalogTable, CatalogTableRow } from '@backstage/plugin-catalog';
-import { Button, makeStyles } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { createComponentRouteRef } from '../../routes';
-import { ApiExplorerLayout } from './ApiExplorerLayout';
-
-import {
-  Content,
-  ContentHeader,
-  SupportButton,
-  TableColumn,
-} from '@backstage/core-components';
-import { useRouteRef } from '@backstage/core-plugin-api';
-
-const useStyles = makeStyles(theme => ({
-  contentWrapper: {
-    display: 'grid',
-    gridTemplateAreas: "'filters' 'table'",
-    gridTemplateColumns: '250px 1fr',
-    gridColumnGap: theme.spacing(2),
-  },
-}));
 
 const defaultColumns: TableColumn<CatalogTableRow>[] = [
   CatalogTable.columns.createNameColumn({ defaultKind: 'API' }),
@@ -58,7 +54,7 @@ const defaultColumns: TableColumn<CatalogTableRow>[] = [
   CatalogTable.columns.createTagsColumn(),
 ];
 
-export type ApiExplorerPageProps = {
+type ApiExplorerPageProps = {
   initiallySelectedFilter?: UserListFilterKind;
   columns?: TableColumn<CatalogTableRow>[];
 };
@@ -67,11 +63,19 @@ export const ApiExplorerPage = ({
   initiallySelectedFilter = 'all',
   columns,
 }: ApiExplorerPageProps) => {
-  const styles = useStyles();
   const createComponentLink = useRouteRef(createComponentRouteRef);
+  const configApi = useApi(configApiRef);
+  const generatedSubtitle = `${
+    configApi.getOptionalString('organization.name') ?? 'Backstage'
+  } API Explorer`;
 
   return (
-    <ApiExplorerLayout>
+    <PageWithHeader
+      themeId="apis"
+      title="APIs"
+      subtitle={generatedSubtitle}
+      pageTitleOverride="APIs"
+    >
       <Content>
         <ContentHeader title="">
           {createComponentLink && (
@@ -86,20 +90,22 @@ export const ApiExplorerPage = ({
           )}
           <SupportButton>All your APIs</SupportButton>
         </ContentHeader>
-        <div className={styles.contentWrapper}>
-          <EntityListProvider>
-            <div>
+        <EntityListProvider>
+          <FilteredEntityLayout>
+            <FilterContainer>
               <EntityKindPicker initialFilter="api" hidden />
               <EntityTypePicker />
               <UserListPicker initialFilter={initiallySelectedFilter} />
               <EntityOwnerPicker />
               <EntityLifecyclePicker />
               <EntityTagPicker />
-            </div>
-            <CatalogTable columns={columns || defaultColumns} />
-          </EntityListProvider>
-        </div>
+            </FilterContainer>
+            <EntityListContainer>
+              <CatalogTable columns={columns || defaultColumns} />
+            </EntityListContainer>
+          </FilteredEntityLayout>
+        </EntityListProvider>
       </Content>
-    </ApiExplorerLayout>
+    </PageWithHeader>
   );
 };

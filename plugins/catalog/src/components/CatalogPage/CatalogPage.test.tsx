@@ -26,6 +26,7 @@ import {
   MockStorageApi,
   renderWithEffects,
   wrapInTestApp,
+  mockBreakpoint,
 } from '@backstage/test-utils';
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
@@ -243,5 +244,17 @@ describe('CatalogPage', () => {
     await expect(
       screen.findByText(/Starred \(1\)/),
     ).resolves.toBeInTheDocument();
+  });
+
+  it('should wrap filter in drawer on smaller screens', async () => {
+    mockBreakpoint({ matches: true });
+    const { getByTestId } = await renderWrapped(<CatalogPage />);
+    expect(getByTestId('entity-filters-drawer')).toBeInTheDocument();
+  });
+
+  it('should wrap filter in grid on larger screens', async () => {
+    mockBreakpoint({ matches: false });
+    const { getByTestId } = await renderWrapped(<CatalogPage />);
+    expect(getByTestId('entity-filters-grid')).toBeInTheDocument();
   });
 });

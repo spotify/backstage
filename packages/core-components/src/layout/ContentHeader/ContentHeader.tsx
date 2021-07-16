@@ -57,15 +57,15 @@ const useStyles = (props: ContentHeaderProps) =>
     },
   }));
 
-type DefaultTitleProps = {
+type ContentHeaderTitleProps = {
   title?: string;
-  className: string;
+  className?: string;
 };
 
-const DefaultTitle = ({
+const ContentHeaderTitle = ({
   title = 'Unknown page',
   className,
-}: DefaultTitleProps) => (
+}: ContentHeaderTitleProps) => (
   <Typography
     variant="h4"
     component="h2"
@@ -77,7 +77,7 @@ const DefaultTitle = ({
 );
 
 type ContentHeaderProps = {
-  title?: DefaultTitleProps['title'];
+  title?: ContentHeaderTitleProps['title'];
   titleComponent?: ComponentType;
   description?: string;
   textAlign?: 'left' | 'right' | 'center';
@@ -95,7 +95,7 @@ export const ContentHeader = ({
   const renderedTitle = TitleComponent ? (
     <TitleComponent />
   ) : (
-    <DefaultTitle title={title} className={classes.title} />
+    <ContentHeaderTitle title={title} className={classes.title} />
   );
   return (
     <Fragment>

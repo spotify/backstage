@@ -14,27 +14,22 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { PropsWithChildren, ComponentProps } from 'react';
 
-import { Header, Page } from '@backstage/core-components';
-import { useApi, configApiRef } from '@backstage/core-plugin-api';
+import { Header } from '../Header';
+import { Page } from './Page';
 
-type Props = {
-  children?: React.ReactNode;
+export type ThemedHeaderProps = ComponentProps<typeof Header> & {
+  themeId: string;
 };
-export const ApiExplorerLayout = ({ children }: Props) => {
-  const configApi = useApi(configApiRef);
-  const generatedSubtitle = `${
-    configApi.getOptionalString('organization.name') ?? 'Backstage'
-  } API Explorer`;
-  return (
-    <Page themeId="apis">
-      <Header
-        title="APIs"
-        subtitle={generatedSubtitle}
-        pageTitleOverride="APIs"
-      />
-      {children}
-    </Page>
-  );
-};
+
+export const PageWithHeader = ({
+  themeId,
+  children,
+  ...props
+}: PropsWithChildren<ThemedHeaderProps>) => (
+  <Page themeId={themeId}>
+    <Header {...props} />
+    {children}
+  </Page>
+);

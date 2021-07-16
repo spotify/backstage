@@ -15,11 +15,9 @@
  */
 
 export * from './components/AboutCard';
-export { CatalogLayout } from './components/CatalogPage';
 export { CatalogResultListItem } from './components/CatalogResultListItem';
 export { CatalogTable } from './components/CatalogTable';
 export type { EntityRow as CatalogTableRow } from './components/CatalogTable';
-export { CreateComponentButton } from './components/CreateComponentButton';
 export { EntityLayout } from './components/EntityLayout';
 export * from './components/EntityOrphanWarning';
 export { EntityPageLayout } from './components/EntityPageLayout';
@@ -42,3 +40,4 @@ export {
   EntitySystemDiagramCard,
 } from './plugin';
 export * from './components/CatalogTable/columns';
+export * from './components/FilteredEntityLayout';

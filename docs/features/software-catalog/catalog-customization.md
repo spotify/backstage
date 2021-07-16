@@ -29,25 +29,27 @@ default catalog page and create a component in a
 // https://github.com/backstage/backstage/blob/master/plugins/catalog/src/components/CatalogPage/CatalogPage.tsx
 export const CustomCatalogPage = () => {
   return (
-    <CatalogLayout>
+    <PageWithHeader title={`${orgName} Catalog`} themeId="home">
       <Content>
         <ContentHeader title="Components">
           <CreateComponentButton />
           <SupportButton>All your software catalog entities</SupportButton>
         </ContentHeader>
-        <div className={styles.contentWrapper}>
-          <EntityListProvider>
-            <div>
+        <EntityListProvider>
+          <FilteredEntityLayout>
+            <FilterContainer>
               <EntityKindPicker initialFilter="component" hidden />
               <EntityTypePicker />
-              <UserListPicker />
+              <UserListPicker initialFilter={initiallySelectedFilter} />
               <EntityTagPicker />
-            </div>
-            <CatalogTable />
-          </EntityListProvider>
-        </div>
+            </FilterContainer>
+            <EntityListContainer>
+              <CatalogTable columns={columns} actions={actions} />
+            </EntityListContainer>
+          </FilteredEntityLayout>
+        </EntityListProvider>
       </Content>
-    </CatalogLayout>
+    </PageWithHeader>
   );
 };
 ```
@@ -141,14 +143,18 @@ export const CustomCatalogPage = () => {
   return (
     ...
           <EntityListProvider>
-            <div>
-              <EntityKindPicker initialFilter="component" hidden />
-              <EntityTypePicker />
-              <UserListPicker />
-+              <EntitySecurityTierPicker />
-              <EntityTagPicker />
-            </div>
-            <CatalogTable />
+            <FilteredEntityLayout>
+              <FilterContainer>
+                <EntityKindPicker initialFilter="component" hidden />
+                <EntityTypePicker />
+                <UserListPicker />
++               <EntitySecurityTierPicker />
+                <EntityTagPicker />
+              <FilterContainer>
+              <EntityListContainer>
+                <CatalogTable />
+              </EntityListContainer>
+            </FilteredEntityLayout>
           </EntityListProvider>
     ...
 };
