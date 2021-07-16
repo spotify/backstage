@@ -47,6 +47,9 @@ const mkdocsYmlWithExtensions = fs.readFileSync(
 const mkdocsYmlWithRepoUrl = fs.readFileSync(
   resolvePath(__filename, '../__fixtures__/mkdocs_with_repo_url.yml'),
 );
+const mkdocsYmlWithValidDocDir = fs.readFileSync(
+  resolvePath(__filename, '../__fixtures__/mkdocs_valid_doc_dir.yml'),
+);
 const mkdocsYmlWithInvalidDocDir = fs.readFileSync(
   resolvePath(__filename, '../__fixtures__/mkdocs_invalid_doc_dir.yml'),
 );
@@ -336,6 +339,7 @@ describe('helpers', () => {
       mockFs({
         '/mkdocs.yml': mkdocsYml,
         '/mkdocs_with_extensions.yml': mkdocsYmlWithExtensions,
+        '/mkdocs_valid_doc_dir.yml': mkdocsYmlWithValidDocDir,
         '/mkdocs_invalid_doc_dir.yml': mkdocsYmlWithInvalidDocDir,
       });
     });
@@ -348,6 +352,12 @@ describe('helpers', () => {
     it('should return true on when no docs_dir present', async () => {
       await expect(
         validateMkdocsYaml(inputDir, '/mkdocs.yml'),
+      ).resolves.toBeUndefined();
+    });
+
+    it('should return true on when a valid docs_dir is present', async () => {
+      await expect(
+        validateMkdocsYaml(inputDir, '/mkdocs_valid_doc_dir.yml'),
       ).resolves.toBeUndefined();
     });
 

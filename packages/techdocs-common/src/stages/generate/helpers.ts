@@ -19,6 +19,7 @@ import { isChildPath } from '@backstage/backend-common';
 import { spawn } from 'child_process';
 import fs from 'fs-extra';
 import yaml, { DEFAULT_SCHEMA, Type } from 'js-yaml';
+import { resolve as resolvePath } from 'path';
 import { PassThrough, Writable } from 'stream';
 import { Logger } from 'winston';
 import { ParsedLocationAnnotation } from '../../helpers';
@@ -178,7 +179,10 @@ export const validateMkdocsYaml = async (
     schema: MKDOCS_SCHEMA,
   });
 
-  if (mkdocsYml.docs_dir && !isChildPath(inputDir, mkdocsYml.docs_dir)) {
+  if (
+    mkdocsYml.docs_dir &&
+    !isChildPath(inputDir, resolvePath(inputDir, mkdocsYml.docs_dir))
+  ) {
     throw new Error(
       `docs_dir configuration value in mkdocs can't be an absolute directory or start with ../ for security reasons.
        Use relative paths instead which are resolved relative to your mkdocs.yml file location.`,
