@@ -17,6 +17,7 @@
 /plugins/techdocs                           @backstage/techdocs-core
 /plugins/techdocs-backend                   @backstage/techdocs-core
 /plugins/ilert                              @yacut
+/plugins/home                               @backstage/techdocs-core
 /packages/search-common                     @backstage/techdocs-core
 /packages/techdocs-common                   @backstage/techdocs-core
 /.changeset/cost-insights-*                 @backstage/silver-lining
