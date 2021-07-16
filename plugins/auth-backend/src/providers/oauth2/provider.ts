@@ -18,15 +18,15 @@ import express from 'express';
 import passport from 'passport';
 import { Strategy as OAuth2Strategy } from 'passport-oauth2';
 import {
-  OAuthAdapter,
-  OAuthProviderOptions,
-  OAuthHandlers,
-  OAuthResponse,
-  OAuthEnvironmentHandler,
-  OAuthStartRequest,
   encodeState,
+  OAuthAdapter,
+  OAuthEnvironmentHandler,
+  OAuthHandlers,
+  OAuthProviderOptions,
   OAuthRefreshRequest,
+  OAuthResponse,
   OAuthResult,
+  OAuthStartRequest,
 } from '../../lib/oauth';
 import {
   executeFetchUserProfileStrategy,
@@ -36,22 +36,46 @@ import {
   makeProfileInfo,
   PassportDoneCallback,
 } from '../../lib/passport';
-import { RedirectInfo, AuthProviderFactory } from '../types';
+import {
+  AuthHandler,
+  AuthProviderFactory,
+  RedirectInfo,
+  SignInResolver,
+} from '../types';
+import { CatalogIdentityClient, getEntityClaims } from '../../lib/catalog';
+import { TokenIssuer } from '../../identity';
+import { Logger } from 'winston';
 
 type PrivateInfo = {
   refreshToken: string;
 };
 
 export type OAuth2AuthProviderOptions = OAuthProviderOptions & {
+  signInResolver?: SignInResolver<OAuthResult>;
+  authHandler: AuthHandler<OAuthResult>;
+  tokenIssuer: TokenIssuer;
+  catalogIdentityClient: CatalogIdentityClient;
   authorizationUrl: string;
   tokenUrl: string;
   scope?: string;
+  logger: Logger;
 };
 
 export class OAuth2AuthProvider implements OAuthHandlers {
   private readonly _strategy: OAuth2Strategy;
+  private readonly signInResolver?: SignInResolver<OAuthResult>;
+  private readonly authHandler: AuthHandler<OAuthResult>;
+  private readonly tokenIssuer: TokenIssuer;
+  private readonly catalogIdentityClient: CatalogIdentityClient;
+  private readonly logger: Logger;
 
   constructor(options: OAuth2AuthProviderOptions) {
+    this.signInResolver = options.signInResolver;
+    this.authHandler = options.authHandler;
+    this.tokenIssuer = options.tokenIssuer;
+    this.catalogIdentityClient = options.catalogIdentityClient;
+    this.logger = options.logger;
+
     this._strategy = new OAuth2Strategy(
       {
         clientID: options.clientId,
@@ -102,18 +126,8 @@ export class OAuth2AuthProvider implements OAuthHandlers {
       PrivateInfo
     >(req, this._strategy);
 
-    const profile = makeProfileInfo(result.fullProfile, result.params.id_token);
-
     return {
-      response: await this.populateIdentity({
-        profile,
-        providerInfo: {
-          idToken: result.params.id_token,
-          accessToken: result.accessToken,
-          scope: result.params.scope,
-          expiresInSeconds: result.params.expires_in,
-        },
-      }),
+      response: await this.handleResult(result),
       refreshToken: privateInfo.refreshToken,
     };
   }
@@ -130,46 +144,124 @@ export class OAuth2AuthProvider implements OAuthHandlers {
       refreshToken: updatedRefreshToken,
     } = refreshTokenResponse;
 
-    const rawProfile = await executeFetchUserProfileStrategy(
+    const fullProfile = await executeFetchUserProfileStrategy(
       this._strategy,
       accessToken,
     );
-    const profile = makeProfileInfo(rawProfile, params.id_token);
 
-    return this.populateIdentity({
-      providerInfo: {
-        accessToken,
-        refreshToken: updatedRefreshToken,
-        idToken: params.id_token,
-        expiresInSeconds: params.expires_in,
-        scope: params.scope,
-      },
-      profile,
+    return this.handleResult({
+      fullProfile,
+      params,
+      accessToken,
+      refreshToken: updatedRefreshToken,
     });
   }
 
-  // Use this function to grab the user profile info from the token
-  // Then populate the profile with it
-  private async populateIdentity(
-    response: OAuthResponse,
-  ): Promise<OAuthResponse> {
-    const { profile } = response;
+  private async handleResult(result: OAuthResult) {
+    const { profile } = await this.authHandler(result);
 
-    if (!profile.email) {
-      throw new Error('Profile does not contain an email');
+    const response: OAuthResponse = {
+      providerInfo: {
+        idToken: result.params.id_token,
+        accessToken: result.accessToken,
+        scope: result.params.scope,
+        expiresInSeconds: result.params.expires_in,
+      },
+      profile,
+    };
+
+    if (this.signInResolver) {
+      response.backstageIdentity = await this.signInResolver(
+        {
+          result,
+          profile,
+        },
+        {
+          tokenIssuer: this.tokenIssuer,
+          catalogIdentityClient: this.catalogIdentityClient,
+          logger: this.logger,
+        },
+      );
     }
-    const id = profile.email.split('@')[0];
 
-    return { ...response, backstageIdentity: { id } };
+    return response;
   }
 }
 
-export type OAuth2ProviderOptions = {};
+export const oAuth2EmailSignInResolver: SignInResolver<OAuthResult> = async (
+  info,
+  ctx,
+) => {
+  const { profile } = info;
+
+  if (!profile.email) {
+    throw new Error('OAuth2 profile contained no email');
+  }
+
+  const entity = await ctx.catalogIdentityClient.findUser({
+    annotations: {
+      'oauth2/email': profile.email,
+    },
+  });
+
+  const claims = getEntityClaims(entity);
+  const token = await ctx.tokenIssuer.issueToken({ claims });
+
+  return { id: entity.metadata.name, entity, token };
+};
+
+export const oAuth2DefaultSignInResolver: SignInResolver<OAuthResult> = async (
+  info,
+  ctx,
+) => {
+  const { profile } = info;
+
+  if (!profile.email) {
+    throw new Error('Profile contained no email');
+  }
+
+  let userId: string;
+
+  try {
+    const entity = await ctx.catalogIdentityClient.findUser({
+      annotations: {
+        'oauth2/email': profile.email,
+      },
+    });
+    userId = entity.metadata.name;
+  } catch (error) {
+    ctx.logger.warn(
+      `Failed to look up user, ${error}, falling back to allowing login based on email pattern, this will probably break in the future`,
+    );
+    userId = profile.email.split('@')[0];
+  }
+
+  const token = await ctx.tokenIssuer.issueToken({
+    claims: { sub: userId, ent: [`user:default/${userId}`] },
+  });
+
+  return { id: userId, token };
+};
+
+export type OAuth2ProviderOptions = {
+  authHandler?: AuthHandler<OAuthResult>;
+
+  signIn?: {
+    resolver?: SignInResolver<OAuthResult>;
+  };
+};
 
 export const createOAuth2Provider = (
-  _options?: OAuth2ProviderOptions,
+  options?: OAuth2ProviderOptions,
 ): AuthProviderFactory => {
-  return ({ providerId, globalConfig, config, tokenIssuer }) =>
+  return ({
+    providerId,
+    globalConfig,
+    config,
+    tokenIssuer,
+    catalogApi,
+    logger,
+  }) =>
     OAuthEnvironmentHandler.mapConfig(config, envConfig => {
       const clientId = envConfig.getString('clientId');
       const clientSecret = envConfig.getString('clientSecret');
@@ -178,13 +270,39 @@ export const createOAuth2Provider = (
       const tokenUrl = envConfig.getString('tokenUrl');
       const scope = envConfig.getOptionalString('scope');
 
+      const catalogIdentityClient = new CatalogIdentityClient({
+        catalogApi,
+        tokenIssuer,
+      });
+
+      const authHandler: AuthHandler<OAuthResult> = options?.authHandler
+        ? options.authHandler
+        : async ({ fullProfile, params }) => ({
+            profile: makeProfileInfo(fullProfile, params.id_token),
+          });
+
+      const signInResolverFn =
+        options?.signIn?.resolver ?? oAuth2DefaultSignInResolver;
+
+      const signInResolver: SignInResolver<OAuthResult> = info =>
+        signInResolverFn(info, {
+          catalogIdentityClient,
+          tokenIssuer,
+          logger,
+        });
+
       const provider = new OAuth2AuthProvider({
         clientId,
         clientSecret,
+        tokenIssuer,
+        catalogIdentityClient,
         callbackUrl,
+        signInResolver,
+        authHandler,
         authorizationUrl,
         tokenUrl,
         scope,
+        logger,
       });
 
       return OAuthAdapter.fromConfig(globalConfig, provider, {

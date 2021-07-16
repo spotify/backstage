@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export { createOAuth2Provider } from './provider';
+export { createOAuth2Provider, oAuth2EmailSignInResolver } from './provider';
 export type { OAuth2ProviderOptions } from './provider';
