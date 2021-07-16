@@ -6,9 +6,11 @@
 /// <reference types="react" />
 
 import { BackstagePlugin } from '@backstage/core-plugin-api';
+import { ComponentProps } from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { EntityName } from '@backstage/catalog-model';
 import { ExternalRouteRef } from '@backstage/core-plugin-api';
+import { IconButton } from '@material-ui/core';
 import { IconComponent } from '@backstage/core-plugin-api';
 import { InfoCardVariants } from '@backstage/core-components';
 import { PropsWithChildren } from 'react';
@@ -286,6 +288,25 @@ export const EntitySwitch: {
 //
 // @public (undocumented)
 export const EntitySystemDiagramCard: SystemDiagramCard;
+
+// Warning: (tsdoc-param-tag-missing-hyphen) The @param block should be followed by a parameter name and then a hyphen
+// Warning: (ae-forgotten-export) The symbol "Props" needs to be exported by the entry point index.d.ts
+// Warning: (ae-missing-release-tag) "FavouriteEntity" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public
+export const FavouriteEntity: (props: Props_4) => JSX.Element;
+
+// Warning: (ae-missing-release-tag) "favouriteEntityIcon" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public (undocumented)
+export const favouriteEntityIcon: (isStarred: boolean) => JSX.Element;
+
+// Warning: (ae-missing-release-tag) "favouriteEntityTooltip" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public (undocumented)
+export const favouriteEntityTooltip: (
+  isStarred: boolean,
+) => 'Remove from favorites' | 'Add to favorites';
 
 // Warning: (ae-missing-release-tag) "isComponentType" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
 //

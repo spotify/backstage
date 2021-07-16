@@ -15,7 +15,7 @@
  */
 
 import { CatalogApi, catalogApiRef } from '@backstage/plugin-catalog-react';
-import { renderInTestApp } from '@backstage/test-utils';
+import { MockStorageApi, renderInTestApp } from '@backstage/test-utils';
 import { screen } from '@testing-library/react';
 import React from 'react';
 import { TechDocsHome } from './TechDocsHome';
@@ -25,7 +25,11 @@ import {
   ApiRegistry,
   ConfigReader,
 } from '@backstage/core-app-api';
-import { ConfigApi, configApiRef } from '@backstage/core-plugin-api';
+import {
+  ConfigApi,
+  configApiRef,
+  storageApiRef,
+} from '@backstage/core-plugin-api';
 
 jest.mock('@backstage/plugin-catalog-react', () => {
   const actual = jest.requireActual('@backstage/plugin-catalog-react');
@@ -36,7 +40,7 @@ jest.mock('@backstage/plugin-catalog-react', () => {
 });
 
 const mockCatalogApi = {
-  getEntityByName: jest.fn(),
+  getEntityByName: () => Promise.resolve(),
   getEntities: async () => ({
     items: [
       {
@@ -61,6 +65,7 @@ describe('TechDocs Home', () => {
   const apiRegistry = ApiRegistry.from([
     [catalogApiRef, mockCatalogApi],
     [configApiRef, configApi],
+    [storageApiRef, MockStorageApi.create()],
   ]);
 
   it('should render a TechDocs home page', async () => {
@@ -75,8 +80,5 @@ describe('TechDocs Home', () => {
     expect(
       await screen.findByText(/Documentation available in My Company/i),
     ).toBeInTheDocument();
-
-    // Explore Content
-    expect(await screen.findByTestId('docs-explore')).toBeDefined();
   });
 });

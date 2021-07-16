@@ -15,41 +15,54 @@
  */
 
 import React from 'react';
-import { PanelType, TechDocsCustomHome } from './TechDocsCustomHome';
+import { makeStyles } from '@material-ui/core';
+import {
+  Content,
+  ContentHeader,
+  SupportButton,
+} from '@backstage/core-components';
+import {
+  EntityListProvider,
+  EntityOwnerPicker,
+  EntityTagPicker,
+  UserListPicker,
+} from '@backstage/plugin-catalog-react';
+import { EntityListDocsTable } from './EntityListDocsTable';
+import { TechDocsHomeLayout } from './TechDocsHomeLayout';
+import { TechDocsPicker } from './TechDocsPicker';
+
+const useStyles = makeStyles(theme => ({
+  contentWrapper: {
+    display: 'grid',
+    gridTemplateAreas: "'filters' 'table'",
+    gridTemplateColumns: '250px 1fr',
+    gridColumnGap: theme.spacing(2),
+  },
+}));
 
 export const TechDocsHome = () => {
-  const tabsConfig = [
-    {
-      label: 'Overview',
-      panels: [
-        {
-          title: 'Overview',
-          description:
-            'Explore your internal technical ecosystem through documentation.',
-          panelType: 'DocsCardGrid' as PanelType,
-          filterPredicate: () => true,
-        },
-        // uncomment this if you would like to have a secondary panel with owned documents
-        // {
-        //   title: 'Owned',
-        //   description: 'Explore your owned internal documentation.',
-        //   panelType: 'DocsCardGrid' as PanelType,
-        //   filterPredicate: 'ownedByUser',
-        // },
-      ],
-    },
-    {
-      label: 'Owned Documents',
-      panels: [
-        {
-          title: 'Owned documents',
-          description: 'Access your documentation.',
-          panelType: 'DocsTable' as PanelType,
-          // ownedByUser filters out entities owned by signed in user
-          filterPredicate: 'ownedByUser',
-        },
-      ],
-    },
-  ];
-  return <TechDocsCustomHome tabsConfig={tabsConfig} />;
+  const styles = useStyles();
+
+  return (
+    <TechDocsHomeLayout>
+      <Content>
+        <ContentHeader title="">
+          <SupportButton>
+            Discover documentation in your ecosystem.
+          </SupportButton>
+        </ContentHeader>
+        <div className={styles.contentWrapper}>
+          <EntityListProvider>
+            <div>
+              <TechDocsPicker />
+              <UserListPicker initialFilter="all" />
+              <EntityOwnerPicker />
+              <EntityTagPicker />
+            </div>
+            <EntityListDocsTable />
+          </EntityListProvider>
+        </div>
+      </Content>
+    </TechDocsHomeLayout>
+  );
 };
