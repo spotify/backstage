@@ -15,6 +15,8 @@
  */
 
 import { EntityName, RELATION_OWNED_BY } from '@backstage/catalog-model';
+import { Header, HeaderLabel } from '@backstage/core-components';
+import { useRouteRef } from '@backstage/core-plugin-api';
 import {
   EntityRefLink,
   EntityRefLinks,
@@ -22,45 +24,30 @@ import {
 } from '@backstage/plugin-catalog-react';
 import CodeIcon from '@material-ui/icons/Code';
 import React from 'react';
-import { AsyncState } from 'react-use/lib/useAsync';
 import { rootRouteRef } from '../../routes';
-import { TechDocsMetadata } from '../../types';
-
-import { Header, HeaderLabel } from '@backstage/core-components';
-import { useRouteRef } from '@backstage/core-plugin-api';
+import { TechDocsEntityMetadata, TechDocsMetadata } from '../../types';
 
 type TechDocsPageHeaderProps = {
   entityId: EntityName;
-  metadataRequest: {
-    entity: AsyncState<any>;
-    techdocs: AsyncState<TechDocsMetadata>;
-  };
+  entityMetadata?: TechDocsEntityMetadata;
+  techDocsMetadata?: TechDocsMetadata;
 };
 
 export const TechDocsPageHeader = ({
   entityId,
-  metadataRequest,
+  entityMetadata,
+  techDocsMetadata,
 }: TechDocsPageHeaderProps) => {
-  const {
-    techdocs: techdocsMetadata,
-    entity: entityMetadata,
-  } = metadataRequest;
-
-  const { value: techdocsMetadataValues } = techdocsMetadata;
-  const { value: entityMetadataValues } = entityMetadata;
-
   const { name } = entityId;
 
   const { site_name: siteName, site_description: siteDescription } =
-    techdocsMetadataValues || {};
+    techDocsMetadata || {};
 
-  const {
-    locationMetadata,
-    spec: { lifecycle },
-  } = entityMetadataValues || { spec: {} };
+  const { locationMetadata, spec } = entityMetadata || {};
+  const lifecycle = spec?.lifecycle;
 
-  const ownedByRelations = entityMetadataValues
-    ? getEntityRelations(entityMetadataValues, RELATION_OWNED_BY)
+  const ownedByRelations = entityMetadata
+    ? getEntityRelations(entityMetadata, RELATION_OWNED_BY)
     : [];
 
   const docsRootLink = useRouteRef(rootRouteRef)();

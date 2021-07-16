@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import { Entity, Location } from '@backstage/catalog-model';
+import { Entity, LocationSpec } from '@backstage/catalog-model';
 
 export type TechDocsMetadata = {
   site_name: string;
   site_description: string;
 };
 
-export type TechDocsEntityMetadata = Entity & { locationMetadata?: Location };
+export type TechDocsEntityMetadata = Entity & {
+  locationMetadata?: LocationSpec;
+};

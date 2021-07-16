@@ -17,7 +17,7 @@
 import { EntityName } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
 import { DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
-import { NotFoundError } from '@backstage/errors';
+import { NotFoundError, ResponseError } from '@backstage/errors';
 import EventSource from 'eventsource';
 import { SyncResult, TechDocsApi, TechDocsStorageApi } from './api';
 import { TechDocsEntityMetadata, TechDocsMetadata } from './types';
@@ -72,9 +72,12 @@ export class TechDocsClient implements TechDocsApi {
     const request = await fetch(`${requestUrl}`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
-    const res = await request.json();
 
-    return res;
+    if (!request.ok) {
+      throw await ResponseError.fromResponse(request);
+    }
+
+    return await request.json();
   }
 
   /**
@@ -97,9 +100,12 @@ export class TechDocsClient implements TechDocsApi {
     const request = await fetch(`${requestUrl}`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
-    const res = await request.json();
 
-    return res;
+    if (!request.ok) {
+      throw await ResponseError.fromResponse(request);
+    }
+
+    return await request.json();
   }
 }
 

@@ -30,26 +30,23 @@ describe('<TechDocsPageHeader />', () => {
             name: 'test-name',
             namespace: 'test-namespace',
           }}
-          metadataRequest={{
-            entity: {
-              loading: false,
-              value: {
-                locationMetadata: {
-                  type: 'github',
-                  target: 'https://example.com/',
-                },
-                spec: {
-                  owner: 'test',
-                },
-              },
+          entityMetadata={{
+            locationMetadata: {
+              type: 'github',
+              target: 'https://example.com/',
             },
-            techdocs: {
-              loading: false,
-              value: {
-                site_name: 'test-site-name',
-                site_description: 'test-site-desc',
-              },
+            apiVersion: 'v1',
+            kind: 'Component',
+            metadata: {
+              name: 'test',
             },
+            spec: {
+              owner: 'test',
+            },
+          }}
+          techDocsMetadata={{
+            site_name: 'test-site-name',
+            site_description: 'test-site-desc',
           }}
         />,
         {
@@ -75,14 +72,6 @@ describe('<TechDocsPageHeader />', () => {
             name: 'test-name',
             namespace: 'test-namespace',
           }}
-          metadataRequest={{
-            entity: {
-              loading: false,
-            },
-            techdocs: {
-              loading: false,
-            },
-          }}
         />,
         {
           mountedRoutes: {
@@ -105,17 +94,9 @@ describe('<TechDocsPageHeader />', () => {
             name: 'test-name',
             namespace: 'test-namespace',
           }}
-          metadataRequest={{
-            entity: {
-              loading: false,
-            },
-            techdocs: {
-              loading: false,
-              value: {
-                site_name: 'test-site-name',
-                site_description: 'test-site-desc',
-              },
-            },
+          techDocsMetadata={{
+            site_name: 'test-site-name',
+            site_description: 'test-site-desc',
           }}
         />,
         {

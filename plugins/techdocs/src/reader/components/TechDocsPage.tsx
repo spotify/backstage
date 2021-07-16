@@ -30,7 +30,7 @@ export const TechDocsPage = () => {
 
   const techdocsApi = useApi(techdocsApiRef);
 
-  const techdocsMetadataRequest = useAsync(() => {
+  const { value: techdocsMetadataValue } = useAsync(() => {
     if (documentReady) {
       return techdocsApi.getTechDocsMetadata({ kind, namespace, name });
     }
@@ -38,7 +38,7 @@ export const TechDocsPage = () => {
     return Promise.resolve(undefined);
   }, [kind, namespace, name, techdocsApi, documentReady]);
 
-  const entityMetadataRequest = useAsync(() => {
+  const { value: entityMetadataValue } = useAsync(() => {
     return techdocsApi.getEntityMetadata({ kind, namespace, name });
   }, [kind, namespace, name, techdocsApi]);
 
@@ -49,10 +49,8 @@ export const TechDocsPage = () => {
   return (
     <Page themeId="documentation">
       <TechDocsPageHeader
-        metadataRequest={{
-          techdocs: techdocsMetadataRequest,
-          entity: entityMetadataRequest,
-        }}
+        techDocsMetadata={techdocsMetadataValue}
+        entityMetadata={entityMetadataValue}
         entityId={{
           kind,
           namespace,
