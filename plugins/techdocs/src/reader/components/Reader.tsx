@@ -23,6 +23,7 @@ import { Button, CircularProgress, useTheme } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAsync } from 'react-use';
 import { techdocsStorageApiRef } from '../../api';
 import {
   addBaseUrl,
@@ -94,15 +95,16 @@ export const Reader = ({ entityId, onReady }: Props) => {
     // an update to "state" might lead to an updated UI so we include it as a trigger
   }, [updateSidebarPosition, state]);
 
-  useEffect(() => {
+  useAsync(async () => {
     if (!rawPage || !shadowDomRef.current) {
       return;
     }
     if (onReady) {
       onReady();
     }
+
     // Pre-render
-    const transformedElement = transformer(rawPage, [
+    const transformedElement = await transformer(rawPage, [
       sanitizeDOM(),
       addBaseUrl({
         techdocsStorageApi,
@@ -236,7 +238,7 @@ export const Reader = ({ entityId, onReady }: Props) => {
       }),
     ]);
 
-    if (!transformedElement) {
+    if (!transformedElement?.innerHTML) {
       return; // An unexpected error occurred
     }
 
@@ -252,7 +254,7 @@ export const Reader = ({ entityId, onReady }: Props) => {
     window.scroll({ top: 0 });
 
     // Post-render
-    transformer(shadowRoot.children[0], [
+    await transformer(shadowRoot.children[0], [
       dom => {
         setTimeout(() => {
           // Scoll to the desired anchor on initial navigation
@@ -281,7 +283,7 @@ export const Reader = ({ entityId, onReady }: Props) => {
         },
       }),
       onCssReady({
-        docStorageUrl: techdocsStorageApi.getApiOrigin(),
+        docStorageUrl: await techdocsStorageApi.getApiOrigin(),
         onLoading: (dom: Element) => {
           (dom as HTMLElement).style.setProperty('opacity', '0');
         },

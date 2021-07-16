@@ -15,16 +15,15 @@
  */
 
 import {
-  createTestShadowDom,
-  mockStylesheetEventListener,
-  executeStylesheetEventListeners,
   clearStylesheetEventListeners,
+  createTestShadowDom,
+  executeStylesheetEventListeners,
+  mockStylesheetEventListener,
 } from '../../test-utils';
-import { onCssReady } from '../transformers';
+import { onCssReady } from './onCssReady';
 
-const docStorageUrl: Promise<string> = Promise.resolve(
-  'https://techdocs-mock-sites.storage.googleapis.com',
-);
+const docStorageUrl: string =
+  'https://techdocs-mock-sites.storage.googleapis.com';
 
 const fixture = `
   <link rel="stylesheet" href="${docStorageUrl}/test.css" />
@@ -48,11 +47,11 @@ describe('onCssReady', () => {
     clearStylesheetEventListeners();
   });
 
-  it('does not call onLoading and onLoaded without the onCssReady transformer', () => {
+  it('does not call onLoading and onLoaded without the onCssReady transformer', async () => {
     const onLoading = jest.fn();
     const onLoaded = jest.fn();
 
-    createTestShadowDom(fixture, {
+    await createTestShadowDom(fixture, {
       preTransformers: [],
       postTransformers: [],
     });
@@ -62,11 +61,11 @@ describe('onCssReady', () => {
     expect(onLoaded).not.toHaveBeenCalled();
   });
 
-  it('calls the onLoading and onLoaded correctly', () => {
+  it('calls the onLoading and onLoaded correctly', async () => {
     const onLoading = jest.fn();
     const onLoaded = jest.fn();
 
-    createTestShadowDom(fixture, {
+    await createTestShadowDom(fixture, {
       preTransformers: [],
       postTransformers: [
         onCssReady({

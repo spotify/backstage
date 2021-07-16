@@ -18,9 +18,9 @@ import { createTestShadowDom } from '../../test-utils';
 import { addLinkClickListener } from './addLinkClickListener';
 
 describe('addLinkClickListener', () => {
-  it('calls onClick when a link has been clicked', () => {
+  it('calls onClick when a link has been clicked', async () => {
     const fn = jest.fn();
-    const shadowDom = createTestShadowDom(
+    const shadowDom = await createTestShadowDom(
       `
       <!DOCTYPE html>
       <html>
@@ -45,9 +45,9 @@ describe('addLinkClickListener', () => {
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it('does not call onClick when a link links to another baseUrl', () => {
+  it('does not call onClick when a link links to another baseUrl', async () => {
     const fn = jest.fn();
-    const shadowDom = createTestShadowDom(
+    const shadowDom = await createTestShadowDom(
       `
       <!DOCTYPE html>
       <html>

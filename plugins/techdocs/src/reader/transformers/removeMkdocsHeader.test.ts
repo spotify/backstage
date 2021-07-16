@@ -18,20 +18,26 @@ import { createTestShadowDom, FIXTURES } from '../../test-utils';
 import { removeMkdocsHeader } from '../transformers';
 
 describe('removeMkdocsHeader', () => {
-  it('does not remove mkdocs header', () => {
-    const shadowDom = createTestShadowDom(FIXTURES.FIXTURE_STANDARD_PAGE, {
-      preTransformers: [],
-      postTransformers: [],
-    });
+  it('does not remove mkdocs header', async () => {
+    const shadowDom = await createTestShadowDom(
+      FIXTURES.FIXTURE_STANDARD_PAGE,
+      {
+        preTransformers: [],
+        postTransformers: [],
+      },
+    );
 
     expect(shadowDom.querySelector('.md-header')).toBeTruthy();
   });
 
-  it('does remove mkdocs header', () => {
-    const shadowDom = createTestShadowDom(FIXTURES.FIXTURE_STANDARD_PAGE, {
-      preTransformers: [removeMkdocsHeader()],
-      postTransformers: [],
-    });
+  it('does remove mkdocs header', async () => {
+    const shadowDom = await createTestShadowDom(
+      FIXTURES.FIXTURE_STANDARD_PAGE,
+      {
+        preTransformers: [removeMkdocsHeader()],
+        postTransformers: [],
+      },
+    );
 
     expect(shadowDom.querySelector('.md-header')).toBeFalsy();
   });

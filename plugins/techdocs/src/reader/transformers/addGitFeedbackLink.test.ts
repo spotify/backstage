@@ -28,8 +28,8 @@ const integrations = ScmIntegrations.fromConfig(
 );
 
 describe('addGitFeedbackLink', () => {
-  it('adds a feedback link when a Gitlab source edit link is available', () => {
-    const shadowDom = createTestShadowDom(
+  it('adds a feedback link when a Gitlab source edit link is available', async () => {
+    const shadowDom = await createTestShadowDom(
       `
       <!DOCTYPE html>
       <html>
@@ -53,8 +53,8 @@ describe('addGitFeedbackLink', () => {
     );
   });
 
-  it('adds a feedback link when a Github source edit link is available', () => {
-    const shadowDom = createTestShadowDom(
+  it('adds a feedback link when a Github source edit link is available', async () => {
+    const shadowDom = await createTestShadowDom(
       `
       <!DOCTYPE html>
       <html>
@@ -78,8 +78,8 @@ describe('addGitFeedbackLink', () => {
     );
   });
 
-  it('does not add a feedback link when no source edit link is available', () => {
-    const shadowDom = createTestShadowDom(
+  it('does not add a feedback link when no source edit link is available', async () => {
+    const shadowDom = await createTestShadowDom(
       `
       <!DOCTYPE html>
       <html>
@@ -97,8 +97,8 @@ describe('addGitFeedbackLink', () => {
     expect(shadowDom.querySelector('#git-feedback-link')).toBeFalsy();
   });
 
-  it('does not add a feedback link when a Gitlab or Github source edit link is not available', () => {
-    const shadowDom = createTestShadowDom(
+  it('does not add a feedback link when a Gitlab or Github source edit link is not available', async () => {
+    const shadowDom = await createTestShadowDom(
       `
       <!DOCTYPE html>
       <html>
@@ -117,8 +117,8 @@ describe('addGitFeedbackLink', () => {
     expect(shadowDom.querySelector('#git-feedback-link')).toBeFalsy();
   });
 
-  it('adds a feedback link when a Gitlab or Github source edit link is not available but hostname matches an integrations host', () => {
-    const shadowDom = createTestShadowDom(
+  it('adds a feedback link when a Gitlab or Github source edit link is not available but hostname matches an integrations host', async () => {
+    const shadowDom = await createTestShadowDom(
       `
       <!DOCTYPE html>
       <html>

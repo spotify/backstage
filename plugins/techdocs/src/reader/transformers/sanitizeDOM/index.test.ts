@@ -16,7 +16,7 @@
 
 import { createTestShadowDom, FIXTURES } from '../../../test-utils';
 import { Transformer } from '../index';
-import { sanitizeDOM } from '../sanitizeDOM';
+import { sanitizeDOM } from './index';
 
 const injectMaliciousLink = (): Transformer => dom => {
   const link = document.createElement('a');
@@ -27,55 +27,64 @@ const injectMaliciousLink = (): Transformer => dom => {
 };
 
 describe('sanitizeDOM', () => {
-  it('contains a script tag', () => {
-    const shadowDom = createTestShadowDom(FIXTURES.FIXTURE_STANDARD_PAGE);
+  it('contains a script tag', async () => {
+    const shadowDom = await createTestShadowDom(FIXTURES.FIXTURE_STANDARD_PAGE);
 
     expect(shadowDom.querySelectorAll('script').length).toBeGreaterThan(0);
   });
 
-  it('does not contain a script tag', () => {
-    const shadowDom = createTestShadowDom(FIXTURES.FIXTURE_STANDARD_PAGE, {
-      preTransformers: [sanitizeDOM()],
-      postTransformers: [],
-    });
+  it('does not contain a script tag', async () => {
+    const shadowDom = await createTestShadowDom(
+      FIXTURES.FIXTURE_STANDARD_PAGE,
+      {
+        preTransformers: [sanitizeDOM()],
+        postTransformers: [],
+      },
+    );
 
     expect(shadowDom.querySelectorAll('script').length).toBe(0);
   });
 
-  it('contains link with a onClick attribute', () => {
-    const shadowDom = createTestShadowDom(FIXTURES.FIXTURE_STANDARD_PAGE, {
-      preTransformers: [injectMaliciousLink()],
-      postTransformers: [],
-    });
+  it('contains link with a onClick attribute', async () => {
+    const shadowDom = await createTestShadowDom(
+      FIXTURES.FIXTURE_STANDARD_PAGE,
+      {
+        preTransformers: [injectMaliciousLink()],
+        postTransformers: [],
+      },
+    );
 
     expect(
       shadowDom.querySelector('#test-malicious-link')?.hasAttribute('onclick'),
     ).toBeTruthy();
   });
 
-  it('does not contain link with a onClick attribute', () => {
-    const shadowDom = createTestShadowDom(FIXTURES.FIXTURE_STANDARD_PAGE, {
-      preTransformers: [sanitizeDOM()],
-      postTransformers: [],
-    });
+  it('does not contain link with a onClick attribute', async () => {
+    const shadowDom = await createTestShadowDom(
+      FIXTURES.FIXTURE_STANDARD_PAGE,
+      {
+        preTransformers: [sanitizeDOM()],
+        postTransformers: [],
+      },
+    );
 
     expect(
       shadowDom.querySelector('#test-malicious-link')?.hasAttribute('onclick'),
     ).toBeFalsy();
   });
 
-  it('removes style tags', () => {
+  it('removes style tags', async () => {
     const html = `
       <html>
         <head>
-          <style>* {color: #f0f;}<style>
+          <style>* {color: #f0f;}</style>
         </head>
         <body>
         </body>
       </html>
     `;
 
-    const shadowDom = createTestShadowDom(html, {
+    const shadowDom = await createTestShadowDom(html, {
       preTransformers: [sanitizeDOM()],
       postTransformers: [],
     });
@@ -83,7 +92,7 @@ describe('sanitizeDOM', () => {
     expect(shadowDom.querySelectorAll('style').length).toEqual(0);
   });
 
-  it('does not remove link tags', () => {
+  it('does not remove link tags', async () => {
     const html = `
       <html>
         <head>
@@ -94,7 +103,7 @@ describe('sanitizeDOM', () => {
       </html>
     `;
 
-    const shadowDom = createTestShadowDom(html, {
+    const shadowDom = await createTestShadowDom(html, {
       preTransformers: [sanitizeDOM()],
       postTransformers: [],
     });

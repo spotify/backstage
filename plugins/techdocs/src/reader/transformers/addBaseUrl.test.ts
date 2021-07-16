@@ -15,9 +15,9 @@
  */
 
 import { waitFor } from '@testing-library/react';
-import { createTestShadowDom } from '../../test-utils';
-import { addBaseUrl } from '../transformers';
 import { TechDocsStorageApi } from '../../api';
+import { createTestShadowDom } from '../../test-utils';
+import { addBaseUrl } from './addBaseUrl';
 
 const DOC_STORAGE_URL = 'https://example-host.storage.googleapis.com';
 const API_ORIGIN_URL = 'https://backstage.example.com/api/techdocs';
@@ -62,8 +62,8 @@ describe('addBaseUrl', () => {
     global.fetch = originalFetch;
   });
 
-  it('contains relative paths', () => {
-    createTestShadowDom(fixture, {
+  it('contains relative paths', async () => {
+    await createTestShadowDom(fixture, {
       preTransformers: [
         addBaseUrl({
           techdocsStorageApi,
@@ -110,7 +110,7 @@ describe('addBaseUrl', () => {
       text: jest.fn().mockResolvedValue(svgContent),
     });
 
-    const root = createTestShadowDom('<img id="x" src="test.svg" />', {
+    const root = await createTestShadowDom('<img id="x" src="test.svg" />', {
       preTransformers: [
         addBaseUrl({
           techdocsStorageApi,
@@ -137,7 +137,7 @@ describe('addBaseUrl', () => {
       text: jest.fn().mockResolvedValue(svgContent),
     });
 
-    const root = createTestShadowDom(
+    const root = await createTestShadowDom(
       `<img id="x" src="${API_ORIGIN_URL}/test.svg" />`,
       {
         preTransformers: [
@@ -162,16 +162,19 @@ describe('addBaseUrl', () => {
 
   it('does not inline external svgs', async () => {
     const expectedSrc = 'https://example.com/test.svg';
-    const root = createTestShadowDom(`<img id="x" src="${expectedSrc}" />`, {
-      preTransformers: [
-        addBaseUrl({
-          techdocsStorageApi,
-          entityId: mockEntityId,
-          path: '',
-        }),
-      ],
-      postTransformers: [],
-    });
+    const root = await createTestShadowDom(
+      `<img id="x" src="${expectedSrc}" />`,
+      {
+        preTransformers: [
+          addBaseUrl({
+            techdocsStorageApi,
+            entityId: mockEntityId,
+            path: '',
+          }),
+        ],
+        postTransformers: [],
+      },
+    );
 
     await new Promise<void>(done => {
       process.nextTick(() => {

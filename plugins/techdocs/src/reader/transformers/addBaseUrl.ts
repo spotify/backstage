@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { EntityName } from '@backstage/catalog-model';
-import type { Transformer } from './transformer';
 import { TechDocsStorageApi } from '../../api';
+import type { Transformer } from './transformer';
 
 type AddBaseUrlOptions = {
   techdocsStorageApi: TechDocsStorageApi;
@@ -44,14 +44,15 @@ export const addBaseUrl = ({
   entityId,
   path,
 }: AddBaseUrlOptions): Transformer => {
-  return dom => {
-    const updateDom = <T extends Element>(
+  return async dom => {
+    const apiOrigin = await techdocsStorageApi.getApiOrigin();
+
+    const updateDom = async <T extends Element>(
       list: HTMLCollectionOf<T> | NodeListOf<T>,
       attributeName: string,
-    ): void => {
-      Array.from(list)
-        .filter(elem => !!elem.getAttribute(attributeName))
-        .forEach(async (elem: T) => {
+    ) => {
+      for (const elem of list) {
+        if (elem.hasAttribute(attributeName)) {
           const elemAttribute = elem.getAttribute(attributeName);
           if (!elemAttribute) return;
 
@@ -61,7 +62,7 @@ export const addBaseUrl = ({
             entityId,
             path,
           );
-          const apiOrigin = await techdocsStorageApi.getApiOrigin();
+
           if (isSvgNeedingInlining(attributeName, elemAttribute, apiOrigin)) {
             try {
               const svg = await fetch(newValue, { credentials: 'include' });
@@ -76,13 +77,16 @@ export const addBaseUrl = ({
           } else {
             elem.setAttribute(attributeName, newValue);
           }
-        });
+        }
+      }
     };
 
-    updateDom<HTMLImageElement>(dom.querySelectorAll('img'), 'src');
-    updateDom<HTMLScriptElement>(dom.querySelectorAll('script'), 'src');
-    updateDom<HTMLLinkElement>(dom.querySelectorAll('link'), 'href');
-    updateDom<HTMLAnchorElement>(dom.querySelectorAll('a[download]'), 'href');
+    await Promise.all([
+      updateDom<HTMLImageElement>(dom.querySelectorAll('img'), 'src'),
+      updateDom<HTMLScriptElement>(dom.querySelectorAll('script'), 'src'),
+      updateDom<HTMLLinkElement>(dom.querySelectorAll('link'), 'href'),
+      updateDom<HTMLAnchorElement>(dom.querySelectorAll('a[download]'), 'href'),
+    ]);
 
     return dom;
   };

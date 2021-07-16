@@ -19,8 +19,8 @@ import { rewriteDocLinks } from '../transformers';
 import { normalizeUrl } from './rewriteDocLinks';
 
 describe('rewriteDocLinks', () => {
-  it('should not do anything', () => {
-    const shadowDom = createTestShadowDom(`
+  it('should not do anything', async () => {
+    const shadowDom = await createTestShadowDom(`
         <a href="http://example.org/">Test</a>
         <a href="../example">Test</a>
         <a href="example-docs">Test</a>
@@ -35,8 +35,8 @@ describe('rewriteDocLinks', () => {
     ]);
   });
 
-  it('should transform a href with localhost as baseUrl', () => {
-    const shadowDom = createTestShadowDom(
+  it('should transform a href with localhost as baseUrl', async () => {
+    const shadowDom = await createTestShadowDom(
       `
         <a href="http://example.org/">Test</a>
         <a href="../example">Test</a>
@@ -57,9 +57,9 @@ describe('rewriteDocLinks', () => {
     ]);
   });
 
-  it('should rewrite non-parseable URLs as text', () => {
+  it('should rewrite non-parseable URLs as text', async () => {
     const expectedText = `www.my-internet.[top-level-domain]/pathname/[URLkey]`;
-    const shadowDom = createTestShadowDom(
+    const shadowDom = await createTestShadowDom(
       `<a href="http://${expectedText}">${expectedText}</a>`,
       {
         preTransformers: [rewriteDocLinks()],

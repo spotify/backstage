@@ -18,20 +18,26 @@ import { createTestShadowDom, FIXTURES } from '../../test-utils';
 import { simplifyMkdocsFooter } from './simplifyMkdocsFooter';
 
 describe('simplifyMkdocsFooter', () => {
-  it('does not remove mkdocs copyright', () => {
-    const shadowDom = createTestShadowDom(FIXTURES.FIXTURE_STANDARD_PAGE, {
-      preTransformers: [],
-      postTransformers: [],
-    });
+  it('does not remove mkdocs copyright', async () => {
+    const shadowDom = await createTestShadowDom(
+      FIXTURES.FIXTURE_STANDARD_PAGE,
+      {
+        preTransformers: [],
+        postTransformers: [],
+      },
+    );
 
     expect(shadowDom.querySelector('.md-footer-copyright')).toBeTruthy();
   });
 
-  it('does remove mkdocs copyright', () => {
-    const shadowDom = createTestShadowDom(FIXTURES.FIXTURE_STANDARD_PAGE, {
-      preTransformers: [simplifyMkdocsFooter()],
-      postTransformers: [],
-    });
+  it('does remove mkdocs copyright', async () => {
+    const shadowDom = await createTestShadowDom(
+      FIXTURES.FIXTURE_STANDARD_PAGE,
+      {
+        preTransformers: [simplifyMkdocsFooter()],
+        postTransformers: [],
+      },
+    );
 
     expect(shadowDom.querySelector('.md-footer-copyright')).toBeFalsy();
   });

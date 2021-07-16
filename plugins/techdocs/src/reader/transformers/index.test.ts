@@ -17,14 +17,14 @@
 import { Transformer, transform } from './transformer';
 
 describe('transform', () => {
-  it('calls the transformers', () => {
+  it('calls the transformers', async () => {
     const fn = jest.fn();
     const mockTransformer = (): Transformer => (dom: Element) => {
       fn(dom);
       return dom;
     };
 
-    transform('<html></html>', [mockTransformer()]);
+    await transform('<html></html>', [mockTransformer()]);
 
     expect(fn).toHaveBeenCalledTimes(1);
     expect(fn).toHaveBeenCalledWith(expect.any(Element));
