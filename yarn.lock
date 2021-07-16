@@ -3783,16 +3783,17 @@
   dependencies:
     "@octokit/types" "^6.0.0"
 
-"@octokit/core@^3.2.3":
-  version "3.2.4"
-  resolved "https://registry.npmjs.org/@octokit/core/-/core-3.2.4.tgz#5791256057a962eca972e31818f02454897fd106"
-  integrity sha512-d9dTsqdePBqOn7aGkyRFe7pQpCXdibSJ5SFnrTr0axevObZrpz3qkWm7t/NjYv5a66z6vhfteriaq4FRz3e0Qg==
+"@octokit/core@^3.5.0":
+  version "3.5.1"
+  resolved "https://registry.npmjs.org/@octokit/core/-/core-3.5.1.tgz#8601ceeb1ec0e1b1b8217b960a413ed8e947809b"
+  integrity sha512-omncwpLVxMP+GLpLPgeGJBF6IWJFjXDS5flY5VbppePYX9XehevbDykRH9PdCdvqt9TS5AOTiDide7h0qrkHjw==
   dependencies:
     "@octokit/auth-token" "^2.4.4"
     "@octokit/graphql" "^4.5.8"
-    "@octokit/request" "^5.4.12"
+    "@octokit/request" "^5.6.0"
+    "@octokit/request-error" "^2.0.5"
     "@octokit/types" "^6.0.3"
-    before-after-hook "^2.1.0"
+    before-after-hook "^2.2.0"
     universal-user-agent "^6.0.0"
 
 "@octokit/endpoint@^6.0.1":
@@ -3839,6 +3840,11 @@
   resolved "https://registry.npmjs.org/@octokit/openapi-types/-/openapi-types-7.3.2.tgz#065ce49b338043ec7f741316ce06afd4d459d944"
   integrity sha512-oJhK/yhl9Gt430OrZOzAl2wJqR0No9445vmZ9Ey8GjUZUpwuu/vmEFP0TDhDXdpGDoxD6/EIFHJEcY8nHXpDTA==
 
+"@octokit/openapi-types@^8.3.0":
+  version "8.3.0"
+  resolved "https://registry.npmjs.org/@octokit/openapi-types/-/openapi-types-8.3.0.tgz#8bc912edae8c03e002882cf1e29b595b7da9b441"
+  integrity sha512-ZFyQ30tNpoATI7o+Z9MWFUzUgWisB8yduhcky7S4UYsRijgIGSnwUKzPBDGzf/Xkx1DuvUtqzvmuFlDSqPJqmQ==
+
 "@octokit/plugin-enterprise-rest@^6.0.1":
   version "6.0.1"
   resolved "https://registry.npmjs.org/@octokit/plugin-enterprise-rest/-/plugin-enterprise-rest-6.0.1.tgz#e07896739618dab8da7d4077c658003775f95437"
@@ -3856,12 +3862,12 @@
   resolved "https://registry.npmjs.org/@octokit/plugin-request-log/-/plugin-request-log-1.0.2.tgz#394d59ec734cd2f122431fbaf05099861ece3c44"
   integrity sha512-oTJSNAmBqyDR41uSMunLQKMX0jmEXbwD1fpz8FG27lScV3RhtGfBa1/BBLym+PxcC16IBlF7KH9vP1BUYxA+Eg==
 
-"@octokit/plugin-rest-endpoint-methods@5.3.1":
-  version "5.3.1"
-  resolved "https://registry.npmjs.org/@octokit/plugin-rest-endpoint-methods/-/plugin-rest-endpoint-methods-5.3.1.tgz#deddce769b4ec3179170709ab42e4e9e6195aaa9"
-  integrity sha512-3B2iguGmkh6bQQaVOtCsS0gixrz8Lg0v4JuXPqBcFqLKuJtxAUf3K88RxMEf/naDOI73spD+goJ/o7Ie7Cvdjg==
+"@octokit/plugin-rest-endpoint-methods@5.4.1":
+  version "5.4.1"
+  resolved "https://registry.npmjs.org/@octokit/plugin-rest-endpoint-methods/-/plugin-rest-endpoint-methods-5.4.1.tgz#540ec90bb753dcaa682ee9f2cd6efdde9132fa90"
+  integrity sha512-Nx0g7I5ayAYghsLJP4Q1Ch2W9jYYM0FlWWWZocUro8rNxVwuZXGfFd7Rcqi9XDWepSXjg1WByiNJnZza2hIOvQ==
   dependencies:
-    "@octokit/types" "^6.16.2"
+    "@octokit/types" "^6.18.1"
     deprecation "^2.3.1"
 
 "@octokit/request-error@^2.0.0", "@octokit/request-error@^2.0.5", "@octokit/request-error@^2.1.0":
@@ -3886,14 +3892,14 @@
     universal-user-agent "^6.0.0"
 
 "@octokit/rest@^18.1.0", "@octokit/rest@^18.5.3":
-  version "18.5.6"
-  resolved "https://registry.npmjs.org/@octokit/rest/-/rest-18.5.6.tgz#8c9a7c9329c7bbf478af20df78ddeab0d21f6d89"
-  integrity sha512-8HdG6ZjQdZytU6tCt8BQ2XLC7EJ5m4RrbyU/EARSkAM1/HP3ceOzMG/9atEfe17EDMer3IVdHWLedz2wDi73YQ==
+  version "18.6.7"
+  resolved "https://registry.npmjs.org/@octokit/rest/-/rest-18.6.7.tgz#89b8ecd13edd9603f00453640d1fb0b4175d4b31"
+  integrity sha512-Kn6WrI2ZvmAztdx+HEaf88RuJn+LK72S8g6OpciE4kbZddAN84fu4fiPGxcEu052WmqKVnA/cnQsbNlrYC6rqQ==
   dependencies:
-    "@octokit/core" "^3.2.3"
+    "@octokit/core" "^3.5.0"
     "@octokit/plugin-paginate-rest" "^2.6.2"
     "@octokit/plugin-request-log" "^1.0.2"
-    "@octokit/plugin-rest-endpoint-methods" "5.3.1"
+    "@octokit/plugin-rest-endpoint-methods" "5.4.1"
 
 "@octokit/types@^5.0.0", "@octokit/types@^5.0.1":
   version "5.5.0"
@@ -3902,12 +3908,19 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@octokit/types@^6.0.0", "@octokit/types@^6.0.1", "@octokit/types@^6.0.3", "@octokit/types@^6.10.0", "@octokit/types@^6.12.2", "@octokit/types@^6.14.2", "@octokit/types@^6.16.1", "@octokit/types@^6.16.2", "@octokit/types@^6.8.2":
+"@octokit/types@^6.0.0", "@octokit/types@^6.0.1", "@octokit/types@^6.0.3", "@octokit/types@^6.10.0", "@octokit/types@^6.12.2", "@octokit/types@^6.14.2", "@octokit/types@^6.16.1", "@octokit/types@^6.8.2":
   version "6.16.4"
   resolved "https://registry.npmjs.org/@octokit/types/-/types-6.16.4.tgz#d24f5e1bacd2fe96d61854b5bda0e88cf8288dfe"
   integrity sha512-UxhWCdSzloULfUyamfOg4dJxV9B+XjgrIZscI0VCbp4eNrjmorGEw+4qdwcpTsu6DIrm9tQsFQS2pK5QkqQ04A==
   dependencies:
     "@octokit/openapi-types" "^7.3.2"
+
+"@octokit/types@^6.18.1":
+  version "6.19.0"
+  resolved "https://registry.npmjs.org/@octokit/types/-/types-6.19.0.tgz#e2b6fedb10c8b53cf4574aa5d1a8a5611295297a"
+  integrity sha512-9wdZFiJfonDyU6DjIgDHxAIn92vdSUBOwAXbO2F9rOFt6DJwuAkyGLu1CvdJPphCbPBoV9iSDMX7y4fu0v6AtA==
+  dependencies:
+    "@octokit/openapi-types" "^8.3.0"
 
 "@open-draft/until@^1.0.3":
   version "1.0.3"
@@ -8408,10 +8421,10 @@ bcrypt-pbkdf@^1.0.0, bcrypt-pbkdf@^1.0.2:
   dependencies:
     tweetnacl "^0.14.3"
 
-before-after-hook@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.npmjs.org/before-after-hook/-/before-after-hook-2.1.0.tgz#b6c03487f44e24200dd30ca5e6a1979c5d2fb635"
-  integrity sha512-IWIbu7pMqyw3EAJHzzHbWa85b6oud/yfKYg5rqB5hNE8CeMi3nX+2C2sj0HswfblST86hpVEOAb9x34NZd6P7A==
+before-after-hook@^2.2.0:
+  version "2.2.2"
+  resolved "https://registry.npmjs.org/before-after-hook/-/before-after-hook-2.2.2.tgz#a6e8ca41028d90ee2c24222f201c90956091613e"
+  integrity sha512-3pZEU3NT5BFUo/AD5ERPWOgQOCZITni6iavr5AUw5AUwQjMlI0kzu5btnyD39AF0gUEsDPwJT+oY1ORBJijPjQ==
 
 better-opn@^2.0.0:
   version "2.0.0"
