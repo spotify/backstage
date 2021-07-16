@@ -25,8 +25,20 @@ import {
 import { ClusterDetails } from '../types/types';
 
 export class KubernetesClientProvider {
-  // visible for testing
-  getKubeConfig(clusterDetails: ClusterDetails) {
+  getKubeConfigFromFile(clusterDetails: ClusterDetails) {
+    const kc = new KubeConfig();
+
+    if (clusterDetails.kubeConfigFile) {
+      kc.loadFromFile(clusterDetails.kubeConfigFile);
+    } else {
+      kc.loadFromDefault();
+    }
+
+    kc.setCurrentContext(clusterDetails.kubeConfigContext);
+    return kc;
+  }
+
+  getKubeConfigFromClusterDetails(clusterDetails: ClusterDetails) {
     const cluster = {
       name: clusterDetails.name,
       server: clusterDetails.url,
@@ -52,6 +64,20 @@ export class KubernetesClientProvider {
       contexts: [context],
       currentContext: context.name,
     });
+
+    return kc;
+  }
+
+  // visible for testing
+  getKubeConfig(clusterDetails: ClusterDetails) {
+    let kc;
+
+    if (clusterDetails.kubeConfigContext) {
+      kc = this.getKubeConfigFromFile(clusterDetails);
+    } else {
+      kc = this.getKubeConfigFromClusterDetails(clusterDetails);
+    }
+   
     return kc;
   }
 

@@ -72,8 +72,10 @@ export type ServiceLocatorMethod = 'multiTenant' | 'http'; // TODO implement htt
 
 export interface ClusterDetails {
   name: string;
-  url: string;
+  url?: string;
   authProvider: string;
   serviceAccountToken?: string | undefined;
   skipTLSVerify?: boolean;
+  kubeConfigContext?: string;
+  kubeConfigFile?: string;
 }
