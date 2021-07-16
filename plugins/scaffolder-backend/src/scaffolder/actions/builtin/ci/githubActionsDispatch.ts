@@ -105,7 +105,7 @@ export function createGithubActionsDispatchAction(options: {
         );
       }
       const client = new Octokit({
-        auth: ctx.token ?? token,
+        auth: token,
         baseUrl: integrationConfig.config.apiBaseUrl,
         previews: ['nebula-preview'],
       });
