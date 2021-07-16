@@ -1,0 +1,64 @@
+name: Prettier
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  autofix-markdown:
+    name: Autofix Markdown files using Prettier
+    runs-ons: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Fetch changes to previous commit - required for 'only_changed' in Prettier action
+          fetch-depth: 0
+
+      # Beginning of yarn setup, keep in sync between all workflows, see ci.yml
+      - name: use node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org/ # Needed for auth
+      - name: cache all node_modules
+        id: cache-modules
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-v${{ matrix.node-version }}-node_modules-${{ hashFiles('yarn.lock', '**/package.json') }}
+      - name: find location of global yarn cache
+        id: yarn-cache
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: cache global yarn cache
+        uses: actions/cache@v2
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: yarn install
+        run: yarn install --frozen-lockfile
+      # End of yarn setup
+
+      - name: Run Prettier on docs
+        uses: creyD/prettier_action@v3.1
+        with:
+          # Modifies commit only if prettier autofixed a Markdown file
+          prettier_options: --config docs/prettier.config.js --write docs/**/*.md
+          only_changed: true
+          commit_message: 'Autofix documentation Markdown files using Prettier'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Prettier on root
+        uses: creyD/prettier_action@v3.1
+        with:
+          # Modifies commit only if prettier autofixed a Markdown file
+          prettier_options: --write *.md
+          only_changed: true
+          commit_message: 'Autofix Markdown files using Prettier'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
