@@ -19,6 +19,7 @@ export { techdocsApiRef, techdocsStorageApiRef } from './api';
 export type { TechDocsApi, TechDocsStorageApi } from './api';
 export { TechDocsClient, TechDocsStorageClient } from './client';
 export type { PanelType } from './home/components/TechDocsCustomHome';
+export * from './components/DocsResultListItem';
 export {
   DocsCardGrid,
   DocsTable,

@@ -143,6 +143,17 @@ export const SearchResult: ({
   children: (results: { results: SearchResult_2[] }) => JSX.Element;
 }) => JSX.Element;
 
+// Warning: (ae-forgotten-export) The symbol "SearchTypeProps" needs to be exported by the entry point index.d.ts
+// Warning: (ae-missing-release-tag) "SearchType" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public (undocumented)
+export const SearchType: ({
+  values,
+  className,
+  name,
+  defaultValue,
+}: SearchTypeProps) => JSX.Element;
+
 // Warning: (ae-missing-release-tag) "SidebarSearch" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
 //
 // @public (undocumented)

@@ -21,6 +21,7 @@ import {
 } from '@backstage/plugin-search-backend-node';
 import { PluginEnvironment } from '../types';
 import { DefaultCatalogCollator } from '@backstage/plugin-catalog-backend';
+import { DefaultTechDocsCollator } from '@backstage/plugin-techdocs-backend';
 
 export default async function createPlugin({
   logger,
@@ -35,6 +36,11 @@ export default async function createPlugin({
   indexBuilder.addCollator({
     defaultRefreshIntervalSeconds: 600,
     collator: new DefaultCatalogCollator({ discovery }),
+  });
+
+  indexBuilder.addCollator({
+    defaultRefreshIntervalSeconds: 600,
+    collator: new DefaultTechDocsCollator({ discovery, logger }),
   });
 
   // The scheduler controls when documents are gathered from collators and sent

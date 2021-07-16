@@ -15,4 +15,5 @@
  */
 
 export { createRouter } from './service/router';
+export * from './search';
 export * from '@backstage/techdocs-common';

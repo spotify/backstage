@@ -25,6 +25,17 @@ export const DocsCardGrid: ({
   entities: Entity[] | undefined;
 }) => JSX.Element | null;
 
+// Warning: (ae-missing-release-tag) "DocsResultListItem" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public (undocumented)
+export const DocsResultListItem: ({
+  result,
+  lineClamp,
+}: {
+  result: any;
+  lineClamp?: number | undefined;
+}) => JSX.Element;
+
 // Warning: (ae-missing-release-tag) "DocsTable" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
 //
 // @public (undocumented)
