@@ -15,104 +15,57 @@
  */
 
 import { UrlReader } from '@backstage/backend-common';
-import { InputError, NotModifiedError } from '@backstage/errors';
 import { Entity } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
-import parseGitUrl from 'git-url-parse';
-import path from 'path';
-import { Logger } from 'winston';
+import { InputError } from '@backstage/errors';
 import {
-  checkoutGitRepository,
-  getLastCommitTimestamp,
-  parseReferenceAnnotation,
-} from '../../helpers';
+  ScmIntegrationRegistry,
+  ScmIntegrations,
+} from '@backstage/integration';
+import { Logger } from 'winston';
+import { transformDirLocation } from '../../helpers';
 import { PreparerBase, PreparerResponse } from './types';
 
 export class DirectoryPreparer implements PreparerBase {
-  constructor(
-    private readonly config: Config,
-    private readonly logger: Logger,
-    private readonly reader: UrlReader,
-  ) {
-    this.config = config;
-    this.logger = logger;
+  private readonly scmIntegrations: ScmIntegrationRegistry;
+  private readonly reader: UrlReader;
+
+  constructor(config: Config, _logger: Logger, reader: UrlReader) {
     this.reader = reader;
+    this.scmIntegrations = ScmIntegrations.fromConfig(config);
   }
 
-  private async resolveManagedByLocationToDir(
+  async prepare(
     entity: Entity,
-    options?: { etag?: string },
+    options?: { logger?: Logger; etag?: string },
   ): Promise<PreparerResponse> {
-    const { type, target } = parseReferenceAnnotation(
-      'backstage.io/managed-by-location',
-      entity,
-    );
+    const { type, target } = transformDirLocation(entity, this.scmIntegrations);
 
-    this.logger.debug(
-      `Building docs for entity with type 'dir' and managed-by-location '${type}'`,
-    );
     switch (type) {
       case 'url': {
+        options?.logger?.info(`Download documentation from ${target}`);
+        // the target is an absolute url since it has already been transformed
         const response = await this.reader.readTree(target, {
           etag: options?.etag,
         });
-        const preparedDir = await response.dir();
+
         return {
-          preparedDir,
+          preparedDir: await response.dir(),
           etag: response.etag,
         };
       }
-      case 'github':
-      case 'gitlab':
-      case 'azure/api': {
-        const parsedGitLocation = parseGitUrl(target);
-        const repoLocation = await checkoutGitRepository(
-          target,
-          this.config,
-          this.logger,
-        );
 
-        // Check if etag has changed for cache invalidation.
-        const etag = await getLastCommitTimestamp(repoLocation, this.logger);
-        if (options?.etag === etag.toString()) {
-          throw new NotModifiedError();
-        }
+      case 'dir': {
         return {
-          preparedDir: path.dirname(
-            path.join(repoLocation, parsedGitLocation.filepath),
-          ),
-          etag: etag.toString(),
-        };
-      }
-      case 'file':
-        return {
-          preparedDir: path.dirname(target),
+          // the transformation already validated that the target is in a safe location
+          preparedDir: target,
           // Instead of supporting caching on local sources, use techdocs-cli for local development and debugging.
           etag: '',
         };
+      }
+
       default:
         throw new InputError(`Unable to resolve location type ${type}`);
     }
-  }
-
-  async prepare(entity: Entity): Promise<PreparerResponse> {
-    this.logger.warn(
-      'You are using the legacy dir preparer in TechDocs which will be removed in near future (March 2021). ' +
-        'Migrate to URL reader by updating `backstage.io/techdocs-ref` annotation in `catalog-info.yaml` ' +
-        'to be prefixed with `url:`. Read the migration guide and benefits at https://github.com/backstage/backstage/issues/4409 ',
-    );
-
-    const { target } = parseReferenceAnnotation(
-      'backstage.io/techdocs-ref',
-      entity,
-    );
-
-    // This will throw NotModified error if etag has not changed.
-    const response = await this.resolveManagedByLocationToDir(entity);
-
-    return {
-      preparedDir: path.resolve(response.preparedDir, target),
-      etag: response.etag,
-    };
   }
 }

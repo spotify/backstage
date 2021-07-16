@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-import { Git, UrlReader } from '@backstage/backend-common';
-import { InputError } from '@backstage/errors';
-import { Entity, parseLocationReference } from '@backstage/catalog-model';
+import {
+  Git,
+  resolveSafeChildPath,
+  UrlReader,
+} from '@backstage/backend-common';
+import {
+  Entity,
+  getEntitySourceLocation,
+  parseLocationReference,
+  stringifyEntityRef,
+} from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
+import { InputError } from '@backstage/errors';
+import { ScmIntegrationRegistry } from '@backstage/integration';
 import fs from 'fs-extra';
 import parseGitUrl from 'git-url-parse';
 import os from 'os';
@@ -50,9 +60,113 @@ export const parseReferenceAnnotation = (
   };
 };
 
+/**
+ * Check if the entity provides a `backstage.io/techdocs-ref` annotation of type `dir`
+ * and return the annotation. It accepts the two variants `<target>` and `dir:<target>`.
+ *
+ * @param entity - the entity to check
+ */
+export const getDirLocation = (
+  entity: Entity,
+): { type: 'dir'; target: string } | undefined => {
+  const annotation = entity.metadata.annotations?.['backstage.io/techdocs-ref'];
+
+  if (!annotation) {
+    return undefined;
+  }
+
+  if (typeof annotation !== 'string') {
+    return undefined;
+  }
+
+  // if the string doesn't contain `:`, interpret it as the target of a dir type
+  if (!annotation.includes(':')) {
+    return { type: 'dir', target: annotation };
+  }
+
+  // note that `backstage.io/techdocs-ref: https://...` is invalid and will throw
+  const reference = parseLocationReference(annotation);
+
+  if (reference.type === 'dir') {
+    return {
+      type: 'dir',
+      target: reference.target,
+    };
+  }
+
+  // ignore any other types
+  return undefined;
+};
+
+/**
+ * TechDocs references of type `dir` are relative the source location of the entity.
+ * This function transforms relative references to absolute ones, based on the
+ * location the entity was ingested from. If the entity was registered by a `url`
+ * location, it returns a `url` location with a resolved target that points to the
+ * targeted subfolder. If the entity was registered by a `file` location, it returns
+ * an absolute `dir` location.
+ *
+ * @param entity - the entity with annotations
+ * @param scmIntegrations - access to the scmIntegrationt to do url transformations
+ * @throws if the entity doesn't specify a `dir` location or is ingested from an unsupported location.
+ * @returns the transformed location with an absolute target.
+ */
+export const transformDirLocation = (
+  entity: Entity,
+  scmIntegrations: ScmIntegrationRegistry,
+): { type: 'dir' | 'url'; target: string } => {
+  const dirLocation = getDirLocation(entity);
+
+  if (!dirLocation) {
+    throw new InputError(
+      `No techdocs location annotation provided in entity: ${stringifyEntityRef(
+        entity,
+      )}`,
+    );
+  }
+
+  const location = getEntitySourceLocation(entity);
+
+  switch (location.type) {
+    case 'url': {
+      const target = scmIntegrations.resolveUrl({
+        url: dirLocation.target,
+        base: location.target,
+      });
+
+      return {
+        type: 'url',
+        target,
+      };
+    }
+
+    case 'file': {
+      // only permit targets in the same folder as the target of the `file` location!
+      const target = resolveSafeChildPath(
+        path.dirname(location.target),
+        dirLocation.target,
+      );
+
+      return {
+        type: 'dir',
+        target,
+      };
+    }
+
+    default:
+      throw new InputError(`Unable to resolve location type ${location.type}`);
+  }
+};
+
 export const getLocationForEntity = (
   entity: Entity,
+  scmIntegration: ScmIntegrationRegistry,
 ): ParsedLocationAnnotation => {
+  // try to resolve relative references first
+  if (getDirLocation(entity) !== undefined) {
+    return transformDirLocation(entity, scmIntegration);
+  }
+
   const { type, target } = parseReferenceAnnotation(
     'backstage.io/techdocs-ref',
     entity,
@@ -64,14 +178,6 @@ export const getLocationForEntity = (
     case 'azure/api':
     case 'url':
       return { type, target };
-    case 'dir':
-      if (path.isAbsolute(target)) {
-        return { type, target };
-      }
-      return parseReferenceAnnotation(
-        'backstage.io/managed-by-location',
-        entity,
-      );
     default:
       throw new Error(`Invalid reference annotation ${type}`);
   }

@@ -29,6 +29,7 @@ import express, { Response } from 'express';
 import Router from 'express-promise-router';
 import { Knex } from 'knex';
 import { Logger } from 'winston';
+import { ScmIntegrations } from '@backstage/integration';
 import { DocsSynchronizer, DocsSynchronizerSyncOpts } from './DocsSynchronizer';
 
 /**
@@ -79,10 +80,12 @@ export async function createRouter(
   const router = Router();
   const { publisher, config, logger, discovery } = options;
   const catalogClient = new CatalogClient({ discoveryApi: discovery });
+  const scmIntegrations = ScmIntegrations.fromConfig(config);
   const docsSynchronizer = new DocsSynchronizer({
-    publisher: publisher,
-    logger: logger,
-    config: config,
+    publisher,
+    logger,
+    config,
+    scmIntegrations,
   });
 
   router.get('/metadata/techdocs/:namespace/:kind/:name', async (req, res) => {
@@ -126,7 +129,7 @@ export async function createRouter(
         )
       ).json()) as Entity;
 
-      const locationMetadata = getLocationForEntity(entity);
+      const locationMetadata = getLocationForEntity(entity, scmIntegrations);
       res.json({ ...entity, locationMetadata });
     } catch (err) {
       logger.info(

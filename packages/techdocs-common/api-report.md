@@ -15,6 +15,7 @@ import { GitHubIntegrationConfig } from '@backstage/integration';
 import { GitLabIntegrationConfig } from '@backstage/integration';
 import { Logger as Logger_2 } from 'winston';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import { ScmIntegrationRegistry } from '@backstage/integration';
 import { UrlReader } from '@backstage/backend-common';
 import { Writable } from 'stream';
 
@@ -47,9 +48,15 @@ export class CommonGitPreparer implements PreparerBase {
 //
 // @public (undocumented)
 export class DirectoryPreparer implements PreparerBase {
-  constructor(config: Config, logger: Logger_2, reader: UrlReader);
+  constructor(config: Config, _logger: Logger_2, reader: UrlReader);
   // (undocumented)
-  prepare(entity: Entity): Promise<PreparerResponse>;
+  prepare(
+    entity: Entity,
+    options?: {
+      logger?: Logger_2;
+      etag?: string;
+    },
+  ): Promise<PreparerResponse>;
 }
 
 // Warning: (ae-missing-release-tag) "GeneratorBase" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
@@ -130,6 +137,18 @@ export const getDefaultBranch: (
   config: Config,
 ) => Promise<string>;
 
+// Warning: (ae-missing-release-tag) "getDirLocation" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public
+export const getDirLocation: (
+  entity: Entity,
+) =>
+  | {
+      type: 'dir';
+      target: string;
+    }
+  | undefined;
+
 // Warning: (ae-missing-release-tag) "getDocFilesFromRepository" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
 //
 // @public (undocumented)
@@ -189,7 +208,10 @@ export const getLastCommitTimestamp: (
 // Warning: (ae-missing-release-tag) "getLocationForEntity" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
 //
 // @public (undocumented)
-export const getLocationForEntity: (entity: Entity) => ParsedLocationAnnotation;
+export const getLocationForEntity: (
+  entity: Entity,
+  scmIntegration: ScmIntegrationRegistry,
+) => ParsedLocationAnnotation;
 
 // Warning: (ae-missing-release-tag) "getTokenForGitRepo" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
 //
@@ -353,6 +375,17 @@ export type TechDocsMetadata = {
   site_name: string;
   site_description: string;
   etag: string;
+};
+
+// Warning: (ae-missing-release-tag) "transformDirLocation" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public
+export const transformDirLocation: (
+  entity: Entity,
+  scmIntegrations: ScmIntegrationRegistry,
+) => {
+  type: 'dir' | 'url';
+  target: string;
 };
 
 // Warning: (ae-missing-release-tag) "UrlPreparer" is exported by the package, but it is missing a release tag (@alpha, @beta, @public, or @internal)

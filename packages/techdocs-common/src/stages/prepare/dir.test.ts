@@ -15,7 +15,6 @@
  */
 import { getVoidLogger, UrlReader } from '@backstage/backend-common';
 import { ConfigReader } from '@backstage/config';
-import { checkoutGitRepository } from '../../helpers';
 import { DirectoryPreparer } from './dir';
 
 function normalizePath(path: string) {
@@ -27,8 +26,6 @@ function normalizePath(path: string) {
 
 jest.mock('../../helpers', () => ({
   ...jest.requireActual<{}>('../../helpers'),
-  checkoutGitRepository: jest.fn(() => '/tmp/backstage-repo/org/name/branch/'),
-  getLastCommitTimestamp: jest.fn(() => 12345678),
 }));
 
 const logger = getVoidLogger();
@@ -71,7 +68,7 @@ describe('directory preparer', () => {
     expect(normalizePath(preparedDir)).toEqual('/directory/our-documentation');
   });
 
-  it('should merge managed-by-location and techdocs-ref when techdocs-ref is absolute', async () => {
+  it('should reject when techdocs-ref is absolute', async () => {
     const directoryPreparer = new DirectoryPreparer(
       mockConfig,
       logger,
@@ -84,11 +81,12 @@ describe('directory preparer', () => {
       'backstage.io/techdocs-ref': 'dir:/our-documentation/techdocs',
     });
 
-    const { preparedDir } = await directoryPreparer.prepare(mockEntity);
-    expect(normalizePath(preparedDir)).toEqual('/our-documentation/techdocs');
+    await expect(directoryPreparer.prepare(mockEntity)).rejects.toThrow(
+      /Relative path is not allowed to refer to a directory outside its parent/,
+    );
   });
 
-  it('should merge managed-by-location and techdocs-ref when managed-by-location is a git repository', async () => {
+  it('should reject when managed-by-location is a git repository', async () => {
     const directoryPreparer = new DirectoryPreparer(
       mockConfig,
       logger,
@@ -101,10 +99,8 @@ describe('directory preparer', () => {
       'backstage.io/techdocs-ref': 'dir:./docs',
     });
 
-    const { preparedDir } = await directoryPreparer.prepare(mockEntity);
-    expect(normalizePath(preparedDir)).toEqual(
-      '/tmp/backstage-repo/org/name/branch/docs',
+    await expect(directoryPreparer.prepare(mockEntity)).rejects.toThrow(
+      /Unable to resolve location type github/,
     );
-    expect(checkoutGitRepository).toHaveBeenCalledTimes(1);
   });
 });

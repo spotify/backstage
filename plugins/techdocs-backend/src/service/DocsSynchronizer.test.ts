@@ -19,6 +19,7 @@ import {
   PluginEndpointDiscovery,
 } from '@backstage/backend-common';
 import { ConfigReader } from '@backstage/config';
+import { ScmIntegrations } from '@backstage/integration';
 import {
   GeneratorBuilder,
   PreparerBuilder,
@@ -69,6 +70,7 @@ describe('DocsSynchronizer', () => {
       publisher,
       config: new ConfigReader({}),
       logger: getVoidLogger(),
+      scmIntegrations: ScmIntegrations.fromConfig(new ConfigReader({})),
     });
   });
 

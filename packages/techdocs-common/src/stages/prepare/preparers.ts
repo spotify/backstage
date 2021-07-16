@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { UrlReader } from '@backstage/backend-common';
-import { Entity } from '@backstage/catalog-model';
+import { Entity, parseLocationReference } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
+import { InputError } from '@backstage/errors';
 import { Logger } from 'winston';
-import { parseReferenceAnnotation } from '../../helpers';
-import { DirectoryPreparer } from './dir';
+import { getDirLocation } from '../../helpers';
 import { CommonGitPreparer } from './commonGit';
-import { UrlPreparer } from './url';
+import { DirectoryPreparer } from './dir';
 import { PreparerBase, PreparerBuilder, RemoteProtocol } from './types';
+import { UrlPreparer } from './url';
 
 type factoryOptions = {
   logger: Logger;
@@ -61,11 +63,21 @@ export class Preparers implements PreparerBuilder {
   }
 
   get(entity: Entity): PreparerBase {
-    const { type } = parseReferenceAnnotation(
-      'backstage.io/techdocs-ref',
-      entity,
-    );
-    const preparer = this.preparerMap.get(type);
+    const annotation =
+      entity.metadata.annotations?.['backstage.io/techdocs-ref'];
+    if (!annotation) {
+      throw new InputError(
+        `No location annotation provided in entity: ${entity.metadata.name}`,
+      );
+    }
+
+    // the dir processor handles both `<target>` and `dir:<target>`
+    if (getDirLocation(entity) !== undefined) {
+      return this.preparerMap.get('dir')!;
+    }
+
+    const { type } = parseLocationReference(annotation);
+    const preparer = this.preparerMap.get(type as RemoteProtocol);
 
     if (!preparer) {
       throw new Error(`No preparer registered for type: "${type}"`);

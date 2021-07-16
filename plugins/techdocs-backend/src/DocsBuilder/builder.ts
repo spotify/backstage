@@ -20,6 +20,7 @@ import {
 } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
 import { NotModifiedError } from '@backstage/errors';
+import { ScmIntegrationRegistry } from '@backstage/integration';
 import {
   GeneratorBase,
   GeneratorBuilder,
@@ -43,6 +44,7 @@ type DocsBuilderArguments = {
   entity: Entity;
   logger: Logger;
   config: Config;
+  scmIntegrations: ScmIntegrationRegistry;
   logStream?: Writable;
 };
 
@@ -53,6 +55,7 @@ export class DocsBuilder {
   private entity: Entity;
   private logger: Logger;
   private config: Config;
+  private scmIntegrations: ScmIntegrationRegistry;
   private logStream: Writable | undefined;
 
   constructor({
@@ -62,6 +65,7 @@ export class DocsBuilder {
     entity,
     logger,
     config,
+    scmIntegrations,
     logStream,
   }: DocsBuilderArguments) {
     this.preparer = preparers.get(entity);
@@ -70,6 +74,7 @@ export class DocsBuilder {
     this.entity = entity;
     this.logger = logger;
     this.config = config;
+    this.scmIntegrations = scmIntegrations;
     this.logStream = logStream;
   }
 
@@ -166,7 +171,10 @@ export class DocsBuilder {
       path.join(tmpdirResolvedPath, 'techdocs-tmp-'),
     );
 
-    const parsedLocationAnnotation = getLocationForEntity(this.entity);
+    const parsedLocationAnnotation = getLocationForEntity(
+      this.entity,
+      this.scmIntegrations,
+    );
     await this.generator.run({
       inputDir: preparedDir,
       outputDir,
