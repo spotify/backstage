@@ -87,7 +87,7 @@ export class TechDocsClient implements TechDocsApi {
    */
   async getEntityMetadata(
     entityId: EntityName,
-  ): Promise<TechDocsEntityMetadata> {
+  ): Promise<TechDocsEntityMetadata | undefined> {
     const { kind, namespace, name } = entityId;
 
     const apiOrigin = await this.getApiOrigin();
@@ -97,8 +97,10 @@ export class TechDocsClient implements TechDocsApi {
     const request = await fetch(`${requestUrl}`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
+    if (request.status === 404) {
+      return undefined;
+    }
     const res = await request.json();
-
     return res;
   }
 }

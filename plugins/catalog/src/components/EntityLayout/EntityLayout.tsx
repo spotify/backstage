@@ -44,6 +44,7 @@ import {
   Page,
   Progress,
   RoutedTabs,
+  ErrorPage,
 } from '@backstage/core-components';
 
 type SubRoute = {
@@ -228,11 +229,20 @@ export const EntityLayout = ({
 
       {entity && <RoutedTabs routes={routes} />}
 
+      {!loading && !error && !entity && (
+        <ErrorPage
+          status="404"
+          statusMessage="Not Found"
+          additionalInfo="There is no catalog entity with that kind, namespace, and name"
+        />
+      )}
+
       {error && (
         <Content>
           <Alert severity="error">{error.toString()}</Alert>
         </Content>
       )}
+
       <UnregisterEntityDialog
         open={confirmationDialogOpen}
         entity={entity!}

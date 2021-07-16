@@ -79,7 +79,9 @@ export interface TechDocsApi {
   // Warning: (ae-forgotten-export) The symbol "TechDocsEntityMetadata" needs to be exported by the entry point index.d.ts
   //
   // (undocumented)
-  getEntityMetadata(entityId: EntityName): Promise<TechDocsEntityMetadata>;
+  getEntityMetadata(
+    entityId: EntityName,
+  ): Promise<TechDocsEntityMetadata | undefined>;
   // Warning: (ae-forgotten-export) The symbol "TechDocsMetadata" needs to be exported by the entry point index.d.ts
   //
   // (undocumented)
@@ -115,7 +117,9 @@ export class TechDocsClient implements TechDocsApi {
   getApiOrigin(): Promise<string>;
   // Warning: (tsdoc-param-tag-missing-hyphen) The @param block should be followed by a parameter name and then a hyphen
   // Warning: (tsdoc-param-tag-with-invalid-type) The @param block should not include a JSDoc-style '{type}'
-  getEntityMetadata(entityId: EntityName): Promise<TechDocsEntityMetadata>;
+  getEntityMetadata(
+    entityId: EntityName,
+  ): Promise<TechDocsEntityMetadata | undefined>;
   // Warning: (tsdoc-param-tag-missing-hyphen) The @param block should be followed by a parameter name and then a hyphen
   // Warning: (tsdoc-param-tag-with-invalid-type) The @param block should not include a JSDoc-style '{type}'
   getTechDocsMetadata(entityId: EntityName): Promise<TechDocsMetadata>;

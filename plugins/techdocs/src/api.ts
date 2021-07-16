@@ -49,5 +49,7 @@ export interface TechDocsStorageApi {
 export interface TechDocsApi {
   getApiOrigin(): Promise<string>;
   getTechDocsMetadata(entityId: EntityName): Promise<TechDocsMetadata>;
-  getEntityMetadata(entityId: EntityName): Promise<TechDocsEntityMetadata>;
+  getEntityMetadata(
+    entityId: EntityName,
+  ): Promise<TechDocsEntityMetadata | undefined>;
 }
