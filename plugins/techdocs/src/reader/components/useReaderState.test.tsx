@@ -86,7 +86,7 @@ describe('useReaderState', () => {
     };
 
     it('should return a copy of the state', () => {
-      expect(reducer(oldState, { type: 'navigate', path: '/' })).toEqual({
+      expect(reducer(oldState, { type: 'content', path: '/' })).toEqual({
         activeSyncState: 'CHECKING',
         contentLoading: false,
         path: '/',
@@ -102,13 +102,13 @@ describe('useReaderState', () => {
     });
 
     it.each`
-      type          | oldActiveSyncState      | newActiveSyncState
-      ${'content'}  | ${'BUILD_READY'}        | ${'UP_TO_DATE'}
-      ${'content'}  | ${'BUILD_READY_RELOAD'} | ${'UP_TO_DATE'}
-      ${'navigate'} | ${'BUILD_READY'}        | ${'UP_TO_DATE'}
-      ${'navigate'} | ${'BUILD_READY_RELOAD'} | ${'UP_TO_DATE'}
-      ${'sync'}     | ${'BUILD_READY'}        | ${undefined}
-      ${'sync'}     | ${'BUILD_READY_RELOAD'} | ${undefined}
+      type                | oldActiveSyncState      | newActiveSyncState
+      ${'contentLoading'} | ${'BUILD_READY'}        | ${'UP_TO_DATE'}
+      ${'contentLoading'} | ${'BUILD_READY_RELOAD'} | ${'UP_TO_DATE'}
+      ${'content'}        | ${'BUILD_READY'}        | ${'UP_TO_DATE'}
+      ${'content'}        | ${'BUILD_READY_RELOAD'} | ${'UP_TO_DATE'}
+      ${'sync'}           | ${'BUILD_READY'}        | ${undefined /* undefined, because we don't set an input */}
+      ${'sync'}           | ${'BUILD_READY_RELOAD'} | ${undefined /* undefined, because we don't set an input */}
     `(
       'should, when type=$type and activeSyncState=$oldActiveSyncState, set activeSyncState=$newActiveSyncState',
       ({ type, oldActiveSyncState, newActiveSyncState }) => {
@@ -124,18 +124,45 @@ describe('useReaderState', () => {
       },
     );
 
-    describe('"content" action', () => {
+    describe('"contentLoading" action', () => {
       it('should set loading', () => {
+        expect(
+          reducer(oldState, {
+            type: 'contentLoading',
+          }),
+        ).toEqual({
+          ...oldState,
+          contentLoading: true,
+        });
+      });
+
+      it('should keep content', () => {
         expect(
           reducer(
             {
               ...oldState,
               content: 'some-old-content',
+            },
+            {
+              type: 'contentLoading',
+            },
+          ),
+        ).toEqual({
+          ...oldState,
+          contentLoading: true,
+          content: 'some-old-content',
+        });
+      });
+
+      it('should reset errors', () => {
+        expect(
+          reducer(
+            {
+              ...oldState,
               contentError: new Error(),
             },
             {
-              type: 'content',
-              contentLoading: true,
+              type: 'contentLoading',
             },
           ),
         ).toEqual({
@@ -143,7 +170,9 @@ describe('useReaderState', () => {
           contentLoading: true,
         });
       });
+    });
 
+    describe('"content" action', () => {
       it('should set content', () => {
         expect(
           reducer(
@@ -164,6 +193,27 @@ describe('useReaderState', () => {
         });
       });
 
+      it('should set content and update path', () => {
+        expect(
+          reducer(
+            {
+              ...oldState,
+              contentLoading: true,
+            },
+            {
+              type: 'content',
+              content: 'asdf',
+              path: '/new-path',
+            },
+          ),
+        ).toEqual({
+          ...oldState,
+          contentLoading: false,
+          content: 'asdf',
+          path: '/new-path',
+        });
+      });
+
       it('should set error', () => {
         expect(
           reducer(
@@ -181,20 +231,6 @@ describe('useReaderState', () => {
           ...oldState,
           contentLoading: false,
           contentError: new Error(),
-        });
-      });
-    });
-
-    describe('"navigate" action', () => {
-      it('should work', () => {
-        expect(
-          reducer(oldState, {
-            type: 'navigate',
-            path: '/',
-          }),
-        ).toEqual({
-          ...oldState,
-          path: '/',
         });
       });
     });
@@ -256,6 +292,7 @@ describe('useReaderState', () => {
 
         expect(result.current).toEqual({
           state: 'CHECKING',
+          path: '/example',
           content: undefined,
           contentErrorMessage: undefined,
           syncErrorMessage: undefined,
@@ -267,6 +304,7 @@ describe('useReaderState', () => {
 
         expect(result.current).toEqual({
           state: 'CONTENT_FRESH',
+          path: '/example',
           content: 'my content',
           contentErrorMessage: undefined,
           syncErrorMessage: undefined,
@@ -313,6 +351,7 @@ describe('useReaderState', () => {
 
         expect(result.current).toEqual({
           state: 'CHECKING',
+          path: '/example',
           content: undefined,
           contentErrorMessage: undefined,
           syncErrorMessage: undefined,
@@ -324,6 +363,7 @@ describe('useReaderState', () => {
 
         expect(result.current).toEqual({
           state: 'INITIAL_BUILD',
+          path: '/example',
           content: undefined,
           contentErrorMessage: 'NotFoundError: Page Not Found',
           syncErrorMessage: undefined,
@@ -335,6 +375,7 @@ describe('useReaderState', () => {
 
         expect(result.current).toEqual({
           state: 'CHECKING',
+          path: '/example',
           content: undefined,
           contentErrorMessage: undefined,
           syncErrorMessage: undefined,
@@ -346,6 +387,7 @@ describe('useReaderState', () => {
 
         expect(result.current).toEqual({
           state: 'CONTENT_FRESH',
+          path: '/example',
           content: 'my content',
           contentErrorMessage: undefined,
           syncErrorMessage: undefined,
@@ -394,6 +436,7 @@ describe('useReaderState', () => {
 
         expect(result.current).toEqual({
           state: 'CHECKING',
+          path: '/example',
           content: undefined,
           contentErrorMessage: undefined,
           syncErrorMessage: undefined,
@@ -405,6 +448,7 @@ describe('useReaderState', () => {
         await waitForValueToChange(() => result.current.state);
         expect(result.current).toEqual({
           state: 'CONTENT_FRESH',
+          path: '/example',
           content: 'my content',
           contentErrorMessage: undefined,
           syncErrorMessage: undefined,
@@ -416,6 +460,7 @@ describe('useReaderState', () => {
         await waitForValueToChange(() => result.current.state);
         expect(result.current).toEqual({
           state: 'CONTENT_STALE_REFRESHING',
+          path: '/example',
           content: 'my content',
           contentErrorMessage: undefined,
           syncErrorMessage: undefined,
@@ -427,6 +472,7 @@ describe('useReaderState', () => {
         await waitForValueToChange(() => result.current.state);
         expect(result.current).toEqual({
           state: 'CONTENT_STALE_READY',
+          path: '/example',
           content: 'my content',
           contentErrorMessage: undefined,
           syncErrorMessage: undefined,
@@ -441,7 +487,8 @@ describe('useReaderState', () => {
         await waitForValueToChange(() => result.current.state);
         expect(result.current).toEqual({
           state: 'CHECKING',
-          content: undefined,
+          path: '/example',
+          content: 'my content',
           contentErrorMessage: undefined,
           syncErrorMessage: undefined,
           buildLog: [],
@@ -452,6 +499,7 @@ describe('useReaderState', () => {
         await waitForValueToChange(() => result.current.state);
         expect(result.current).toEqual({
           state: 'CONTENT_FRESH',
+          path: '/example',
           content: 'my new content',
           contentErrorMessage: undefined,
           syncErrorMessage: undefined,
@@ -463,6 +511,103 @@ describe('useReaderState', () => {
         expect(techdocsStorageApi.getEntityDocs).toBeCalledWith(
           { kind: 'Component', namespace: 'default', name: 'backstage' },
           '/example',
+        );
+        expect(techdocsStorageApi.syncEntityDocs).toBeCalledWith(
+          {
+            kind: 'Component',
+            namespace: 'default',
+            name: 'backstage',
+          },
+          expect.any(Function),
+        );
+      });
+    });
+
+    it('should handle navigation', async () => {
+      techdocsStorageApi.getEntityDocs
+        .mockResolvedValueOnce('my content')
+        .mockImplementationOnce(async () => {
+          await new Promise(resolve => setTimeout(resolve, 1100));
+          return 'my new content';
+        })
+        .mockRejectedValueOnce(new NotFoundError('Some error description'));
+      techdocsStorageApi.syncEntityDocs.mockResolvedValue('cached');
+
+      await act(async () => {
+        const { result, waitForValueToChange, rerender } = await renderHook(
+          ({ path }: { path: string }) =>
+            useReaderState('Component', 'default', 'backstage', path),
+          { initialProps: { path: '/example' }, wrapper: Wrapper as any },
+        );
+
+        expect(result.current).toEqual({
+          state: 'CHECKING',
+          path: '/example',
+          content: undefined,
+          contentErrorMessage: undefined,
+          syncErrorMessage: undefined,
+          buildLog: [],
+          contentReload: expect.any(Function),
+        });
+
+        // show the content
+        await waitForValueToChange(() => result.current.state);
+        expect(result.current).toEqual({
+          state: 'CONTENT_FRESH',
+          path: '/example',
+          content: 'my content',
+          contentErrorMessage: undefined,
+          syncErrorMessage: undefined,
+          buildLog: [],
+          contentReload: expect.any(Function),
+        });
+
+        // navigate
+        rerender({ path: '/new' });
+
+        await waitForValueToChange(() => result.current.state);
+        expect(result.current).toEqual({
+          state: 'CHECKING',
+          path: '/example',
+          content: 'my content',
+          contentErrorMessage: undefined,
+          syncErrorMessage: undefined,
+          buildLog: [],
+          contentReload: expect.any(Function),
+        });
+
+        await waitForValueToChange(() => result.current.state);
+        expect(result.current).toEqual({
+          state: 'CONTENT_FRESH',
+          path: '/new',
+          content: 'my new content',
+          contentErrorMessage: undefined,
+          syncErrorMessage: undefined,
+          buildLog: [],
+          contentReload: expect.any(Function),
+        });
+
+        // navigate
+        rerender({ path: '/missing' });
+
+        await waitForValueToChange(() => result.current.state);
+        expect(result.current).toEqual({
+          state: 'CONTENT_NOT_FOUND',
+          path: '/missing',
+          content: undefined,
+          contentErrorMessage: 'NotFoundError: Some error description',
+          syncErrorMessage: undefined,
+          buildLog: [],
+          contentReload: expect.any(Function),
+        });
+
+        expect(techdocsStorageApi.getEntityDocs).toBeCalledWith(
+          { kind: 'Component', namespace: 'default', name: 'backstage' },
+          '/example',
+        );
+        expect(techdocsStorageApi.getEntityDocs).toBeCalledWith(
+          { kind: 'Component', namespace: 'default', name: 'backstage' },
+          '/new',
         );
         expect(techdocsStorageApi.syncEntityDocs).toBeCalledWith(
           {
@@ -489,6 +634,7 @@ describe('useReaderState', () => {
 
         expect(result.current).toEqual({
           state: 'CHECKING',
+          path: '/example',
           content: undefined,
           contentErrorMessage: undefined,
           syncErrorMessage: undefined,
@@ -500,6 +646,7 @@ describe('useReaderState', () => {
         await waitForValueToChange(() => result.current.state);
         expect(result.current).toEqual({
           state: 'CONTENT_NOT_FOUND',
+          path: '/example',
           content: undefined,
           contentErrorMessage: 'NotFoundError: Some error description',
           syncErrorMessage: undefined,

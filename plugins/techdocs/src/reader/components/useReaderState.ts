@@ -15,7 +15,7 @@
  */
 
 import { useApi } from '@backstage/core-plugin-api';
-import { useEffect, useMemo, useReducer, useRef } from 'react';
+import { useMemo, useReducer, useRef } from 'react';
 import { useAsync, useAsyncRetry } from 'react-use';
 import { techdocsStorageApiRef } from '../../api';
 
@@ -131,13 +131,13 @@ type ReducerActions =
       state: SyncStates;
       syncError?: Error;
     }
+  | { type: 'contentLoading' }
   | {
       type: 'content';
+      path?: string;
       content?: string;
-      contentLoading?: true;
       contentError?: Error;
     }
-  | { type: 'navigate'; path: string }
   | { type: 'buildLog'; log: string };
 
 type ReducerState = {
@@ -186,14 +186,22 @@ export function reducer(
       newState.syncError = action.syncError;
       break;
 
-    case 'content':
-      newState.content = action.content;
-      newState.contentLoading = action.contentLoading ?? false;
-      newState.contentError = action.contentError;
+    case 'contentLoading':
+      newState.contentLoading = true;
+
+      // only reset errors but keep the old content until it is replaced by the 'content' action
+      newState.contentError = undefined;
       break;
 
-    case 'navigate':
-      newState.path = action.path;
+    case 'content':
+      // only override the path if it is part of the action
+      if (typeof action.path === 'string') {
+        newState.path = action.path;
+      }
+
+      newState.contentLoading = false;
+      newState.content = action.content;
+      newState.contentError = action.contentError;
       break;
 
     case 'buildLog':
@@ -204,10 +212,10 @@ export function reducer(
       throw new Error();
   }
 
-  // a navigation or a content update loads fresh content so the build is updated to being up-to-date
+  // a content update loads fresh content so the build is updated to being up-to-date
   if (
     ['BUILD_READY', 'BUILD_READY_RELOAD'].includes(newState.activeSyncState) &&
-    ['content', 'navigate'].includes(action.type)
+    ['contentLoading', 'content'].includes(action.type)
   ) {
     newState.activeSyncState = 'UP_TO_DATE';
     newState.buildLog = [];
@@ -223,6 +231,7 @@ export function useReaderState(
   path: string,
 ): {
   state: ContentStateTypes;
+  path: string;
   contentReload: () => void;
   content?: string;
   contentErrorMessage?: string;
@@ -238,14 +247,9 @@ export function useReaderState(
 
   const techdocsStorageApi = useApi(techdocsStorageApiRef);
 
-  // convert all path changes into actions
-  useEffect(() => {
-    dispatch({ type: 'navigate', path });
-  }, [path]);
-
   // try to load the content. the function will fire events and we don't care for the return values
   const { retry: contentReload } = useAsyncRetry(async () => {
-    dispatch({ type: 'content', contentLoading: true });
+    dispatch({ type: 'contentLoading' });
 
     try {
       const entityDocs = await techdocsStorageApi.getEntityDocs(
@@ -253,11 +257,12 @@ export function useReaderState(
         path,
       );
 
-      dispatch({ type: 'content', content: entityDocs });
+      // update content and path at the same time
+      dispatch({ type: 'content', content: entityDocs, path });
 
       return entityDocs;
     } catch (e) {
-      dispatch({ type: 'content', contentError: e });
+      dispatch({ type: 'content', contentError: e, path });
     }
 
     return undefined;
@@ -335,6 +340,7 @@ export function useReaderState(
   return {
     state: displayState,
     contentReload,
+    path: state.path,
     content: state.content,
     contentErrorMessage: state.contentError?.toString(),
     syncErrorMessage: state.syncError?.toString(),
