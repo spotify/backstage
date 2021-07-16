@@ -26,6 +26,8 @@ import { ConflictError } from '@backstage/errors';
 import { chunk, groupBy } from 'lodash';
 import limiterFactory from 'p-limit';
 import { Logger } from 'winston';
+import g from 'glob';
+import { promisify } from 'util';
 import type { Database, DbEntityResponse, Transaction } from '../database';
 import { DbEntitiesRequest } from '../database/types';
 import { basicEntityFilter } from '../service/request';
@@ -57,6 +59,7 @@ const BATCH_ATTEMPTS = 3;
 // The number of batches that may be ongoing at the same time.
 const BATCH_CONCURRENCY = 3;
 
+const glob = promisify(g);
 export class DatabaseEntitiesCatalog implements EntitiesCatalog {
   constructor(
     private readonly database: Database,
@@ -248,6 +251,24 @@ export class DatabaseEntitiesCatalog implements EntitiesCatalog {
     const toAdd: EntityUpsertRequest[] = [];
     const toUpdate: EntityUpsertRequest[] = [];
     const toIgnore: EntityUpsertRequest[] = [];
+    const matchesGlob = async (
+      oldLocation: string | undefined,
+      newLocation: string | undefined,
+    ) => {
+      if (!oldLocation || !newLocation) return false;
+      const getFileName = (location: string) => location.split(':')[1];
+      const fileMatches = await glob(getFileName(oldLocation));
+      return !!fileMatches.find(
+        fileName => fileName === getFileName(newLocation),
+      );
+    };
+    const locationsMatch = async (
+      oldLocation: string | undefined,
+      newLocation: string | undefined,
+    ) => {
+      if (oldLocation === newLocation) return true;
+      return await matchesGlob(oldLocation, newLocation);
+    };
 
     for (const request of requests) {
       const newEntity = request.entity;
@@ -257,7 +278,7 @@ export class DatabaseEntitiesCatalog implements EntitiesCatalog {
         oldEntity?.metadata.annotations?.[LOCATION_ANNOTATION];
       if (!oldEntity) {
         toAdd.push(request);
-      } else if (oldLocation !== newLocation) {
+      } else if (!locationsMatch(oldLocation, newLocation)) {
         this.logger.warn(
           `Rejecting write of entity ${serializeEntityRef(
             newEntity,
