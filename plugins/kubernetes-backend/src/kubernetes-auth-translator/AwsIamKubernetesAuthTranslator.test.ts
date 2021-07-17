@@ -14,15 +14,49 @@
  * limitations under the License.
  */
 import AWS from 'aws-sdk';
+import AWSMock from 'aws-sdk-mock';
 import { AwsIamKubernetesAuthTranslator } from './AwsIamKubernetesAuthTranslator';
+import { get, def } from 'bdd-lazy-var';
 
 describe('AwsIamKubernetesAuthTranslator tests', () => {
+  let valid: boolean = true;
+  let role: any = undefined;
+  let response: any = {
+    Credentials: {
+      AccessKeyId: 'bloop',
+      SecretAccessKey: 'omg-so-secret',
+      SessionToken: 'token',
+    },
+  };
+
+  AWSMock.setSDKInstance(AWS);
+
   beforeEach(() => {
     jest.resetAllMocks();
   });
-  it('returns a signed url for aws credentials', async () => {
-    const authTranslator = new AwsIamKubernetesAuthTranslator();
 
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
+
+  def('subject', () => {
+    AWSMock.mock('STS', 'assumeRole', (_params: any, callback: Function) => {
+      callback(null, response);
+    });
+
+    const authTranslator = new AwsIamKubernetesAuthTranslator();
+    jest
+      .spyOn(authTranslator, 'validCredentials')
+      .mockImplementation(() => valid);
+    return authTranslator.decorateClusterDetailsWithAuth({
+      assumeRole: role,
+      name: 'test-cluster',
+      url: '',
+      authProvider: 'aws',
+    });
+  });
+
+  it('returns a signed url for aws credentials', async () => {
     // These credentials are not real.
     // Pulled from example in docs: https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html
     AWS.config.credentials = new AWS.Credentials(
@@ -30,24 +64,38 @@ describe('AwsIamKubernetesAuthTranslator tests', () => {
       'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
     );
 
-    const clusterDetails = await authTranslator.decorateClusterDetailsWithAuth({
-      name: 'test-cluster',
-      url: '',
-      authProvider: 'aws',
+    const subject = await get('subject');
+    expect(subject.serviceAccountToken).toBeDefined();
+  });
+
+  describe('When the role is assumed', () => {
+    // These credentials are not real.
+    // Pulled from example in docs: https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html
+    AWS.config.credentials = new AWS.Credentials(
+      'AKIAIOSFODNN7EXAMPLE',
+      'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
+    );
+    role = 'SomeRole';
+
+    describe('When the role is valid', () => {
+      it('returns a signed url for aws credentials', async () => {
+        const subject = await get('subject');
+        expect(subject.serviceAccountToken).toBeDefined();
+      });
     });
-    expect(clusterDetails.serviceAccountToken).toBeDefined();
+
+    describe('When the role is invalid', () => {
+      it('returns the original AWS credentials', async () => {
+        response = undefined;
+
+        await expect(get('subject')).rejects.toThrow(/Unable to assume role:/);
+      });
+    });
   });
 
   it('throws when unable to get aws credentials', async () => {
+    valid = false;
     AWS.config.credentials = undefined;
-    const authTranslator = new AwsIamKubernetesAuthTranslator();
-    const promise = authTranslator.decorateClusterDetailsWithAuth({
-      name: 'test-cluster',
-      url: '',
-      authProvider: 'aws',
-    });
-    await expect(promise).rejects.toThrow(
-      'Could not load credentials from any providers',
-    );
+    await expect(get('subject')).rejects.toThrow('No AWS credentials found');
   });
 });
