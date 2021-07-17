@@ -27,6 +27,7 @@ describe('DefaultLocationServiceTest', () => {
     createLocation: jest.fn(),
     listLocations: jest.fn(),
     getLocation: jest.fn(),
+    refreshLocation: jest.fn(),
   };
   const locationService = new DefaultLocationService(store, orchestrator);
 

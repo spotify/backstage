@@ -53,6 +53,9 @@ export class DefaultLocationService implements LocationService {
   deleteLocation(id: string): Promise<void> {
     return this.store.deleteLocation(id);
   }
+  refreshLocation(type: string): Promise<string> {
+    return this.store.refreshLocation(type);
+  }
 
   private async dryRunCreateLocation(
     spec: LocationSpec,

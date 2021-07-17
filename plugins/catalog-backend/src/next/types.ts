@@ -25,6 +25,7 @@ export interface LocationService {
   listLocations(): Promise<Location[]>;
   getLocation(id: string): Promise<Location>;
   deleteLocation(id: string): Promise<void>;
+  refreshLocation(type: string): Promise<string>;
 }
 
 export interface LocationStore {
@@ -32,6 +33,7 @@ export interface LocationStore {
   listLocations(): Promise<Location[]>;
   getLocation(id: string): Promise<Location>;
   deleteLocation(id: string): Promise<void>;
+  refreshLocation(type: string): Promise<string>;
 }
 
 export interface CatalogProcessingEngine {

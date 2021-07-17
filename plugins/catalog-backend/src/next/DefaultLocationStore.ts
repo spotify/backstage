@@ -18,7 +18,7 @@ import { Location, LocationSpec } from '@backstage/catalog-model';
 import { ConflictError, NotFoundError } from '@backstage/errors';
 import { Knex } from 'knex';
 import { v4 as uuid } from 'uuid';
-import { DbLocationsRow } from './database/tables';
+import { DbLocationsRow, DbRefreshStateRow } from './database/tables';
 import { getEntityLocationRef } from './processing/util';
 import {
   EntityProvider,
@@ -109,6 +109,39 @@ export class DefaultLocationStore implements LocationStore, EntityProvider {
       added: [],
       removed: [{ entity, locationKey: getEntityLocationRef(entity) }],
     });
+  }
+
+  async refreshLocation(type: string): Promise<string> {
+    if (!this.connection) {
+      throw new Error('location store is not initialized');
+    }
+
+    const location = await this.db<DbLocationsRow>('locations')
+      .where({ type })
+      .select('id');
+
+    if (!location[0]) {
+      throw new NotFoundError(`Found no location with type ${type}`);
+    }
+
+    const id = location[0].id;
+
+    const isRefreshRowExists = await this.db<DbRefreshStateRow>('refresh_state')
+      .where('entity_id', id)
+      .select();
+
+    let result = `Location found, refresh row not found for type ${type}, please wait a while and try again`;
+    if (isRefreshRowExists.length) {
+      const refreshResult = await this.db<DbRefreshStateRow>('refresh_state')
+        .update({ next_update_at: Date.now().toString() }, [id])
+        .where('entity_id', id);
+
+      if (refreshResult.length) {
+        result = `Refresh row for type ${type} updated`;
+      }
+    }
+
+    return result;
   }
 
   private get connection(): EntityProviderConnection {

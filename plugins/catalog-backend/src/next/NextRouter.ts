@@ -142,6 +142,11 @@ export async function createNextRouter(
         const output = await locationService.getLocation(id);
         res.status(200).json(output);
       })
+      .get('/locations/:type/refresh', async (req, res) => {
+        const { type } = req.params;
+        const output = await locationService.refreshLocation(type);
+        res.status(200).json(output);
+      })
       .delete('/locations/:id', async (req, res) => {
         disallowReadonlyMode(readonlyEnabled);
 

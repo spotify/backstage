@@ -173,6 +173,11 @@ export async function createRouter(
         const output = await locationService.getLocation(id);
         res.status(200).json(output);
       })
+      .get('/locations/:type/refresh', async (req, res) => {
+        const { type } = req.params;
+        const output = await locationService.refreshLocation(type);
+        res.status(200).json(output).end();
+      })
       .delete('/locations/:id', async (req, res) => {
         disallowReadonlyMode(readonlyEnabled);
 
@@ -193,7 +198,9 @@ export async function createRouter(
         disallowReadonlyMode(readonlyEnabled);
       }
 
-      const output = await higherOrderOperation.addLocation(input, { dryRun });
+      const output = await higherOrderOperation.addLocation(input, {
+        dryRun,
+      });
       res.status(201).json(output);
     });
   }

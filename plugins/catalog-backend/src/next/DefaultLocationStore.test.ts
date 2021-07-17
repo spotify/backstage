@@ -178,4 +178,36 @@ describe('DefaultLocationStore', () => {
       60_000,
     );
   });
+
+  describe('refreshLocation', () => {
+    it.each(databases.eachSupportedId())(
+      'type not found',
+      async databaseId => {
+        const type = 'url';
+        const { store } = await createLocationStore(databaseId);
+        await expect(() => store.refreshLocation(type)).rejects.toThrow(
+          new RegExp(`Found no location with type ${type}`),
+        );
+      },
+      60_000,
+    );
+
+    it.each(databases.eachSupportedId())(
+      'happy enough path: type found, refresh row not found',
+      async databaseId => {
+        const type = 'url';
+        const { store } = await createLocationStore(databaseId);
+        await store.createLocation({
+          target:
+            'https://github.com/backstage/demo/blob/master/catalog-info.yml',
+          type,
+        });
+        const result = await store.refreshLocation(type);
+        expect(result).toEqual(
+          `Location found, refresh row not found for type ${type}, please wait a while and try again`,
+        );
+      },
+      60_000,
+    );
+  });
 });
