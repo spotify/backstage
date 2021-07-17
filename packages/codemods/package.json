@@ -1,7 +1,7 @@
 {
   "name": "@backstage/codemods",
   "description": "A collection of codemods for Backstage projects",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": false,
   "publishConfig": {
     "access": "public",

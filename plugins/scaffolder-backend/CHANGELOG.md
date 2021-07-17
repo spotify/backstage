@@ -1,5 +1,14 @@
 # @backstage/plugin-scaffolder-backend
 
+## 0.14.1
+
+### Patch Changes
+
+- 7cea90592: - Move out the `cookiecutter` templating to its own module that is depended on by the `scaffolder-backend` plugin. No breaking change yet, but we will drop first class support for `cookiecutter` in the future and it will become an opt-in feature.
+- eb740ee24: Moved sample software templates to the [backstage/software-templates](https://github.com/backstage/software-templates) repository. If you previously referenced the sample templates straight from `scaffolder-backend` plugin in the main [backstage/backstage](https://github.com/backstage/backstage) repository in your `app-config.yaml`, these references will need to be updated.
+
+  See https://github.com/backstage/software-templates
+
 ## 0.14.0
 
 ### Minor Changes

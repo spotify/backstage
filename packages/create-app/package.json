@@ -1,7 +1,7 @@
 {
   "name": "@backstage/create-app",
   "description": "Create app package for Backstage",
-  "version": "0.3.31",
+  "version": "0.3.32",
   "private": false,
   "publishConfig": {
     "access": "public"

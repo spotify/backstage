@@ -47,8 +47,8 @@
     "react-use": "^17.2.4"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.7.4",
-    "@backstage/core-app-api": "^0.1.4",
+    "@backstage/cli": "^0.7.5",
+    "@backstage/core-app-api": "^0.1.5",
     "@backstage/dev-utils": "^0.2.2",
     "@backstage/test-utils": "^0.1.14",
     "@testing-library/jest-dom": "^5.10.1",

@@ -1,5 +1,11 @@
 # @backstage/cli
 
+## 0.7.5
+
+### Patch Changes
+
+- 9a96b5da7: chore: bump `eslint` to `7.30.0`
+
 ## 0.7.4
 
 ### Patch Changes
