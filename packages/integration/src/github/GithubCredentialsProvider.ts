@@ -67,8 +67,10 @@ class GithubAppManager {
   private readonly appClient: Octokit;
   private readonly baseAuthConfig: { appId: number; privateKey: string };
   private readonly cache = new Cache();
+  private readonly allowedInstallationOwners: string[] | undefined; // undefined allows all installations
 
   constructor(config: GithubAppConfig, baseUrl?: string) {
+    this.allowedInstallationOwners = config.allowedInstallationOwners;
     this.baseAuthConfig = {
       appId: config.appId,
       privateKey: config.privateKey,
@@ -90,6 +92,17 @@ class GithubAppManager {
       suspended,
       repositorySelection,
     } = await this.getInstallationData(owner);
+    if (this.allowedInstallationOwners) {
+      if (!this.allowedInstallationOwners?.includes(owner)) {
+        throw new Error(
+          `The GitHub application for ${[owner, repo]
+            .filter(Boolean)
+            .join(
+              '/',
+            )} is not included in the allowed installation list (${installationId}).`,
+        );
+      }
+    }
     if (suspended) {
       throw new Error(
         `The GitHub application for ${[owner, repo]
