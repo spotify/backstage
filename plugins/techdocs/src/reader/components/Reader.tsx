@@ -19,7 +19,12 @@ import { Progress } from '@backstage/core-components';
 import { useApi } from '@backstage/core-plugin-api';
 import { scmIntegrationsApiRef } from '@backstage/integration-react';
 import { BackstageTheme } from '@backstage/theme';
-import { Button, CircularProgress, useTheme } from '@material-ui/core';
+import {
+  Button,
+  CircularProgress,
+  makeStyles,
+  useTheme,
+} from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -45,10 +50,17 @@ type Props = {
   onReady?: () => void;
 };
 
+const useStyles = makeStyles<BackstageTheme>(() => ({
+  message: {
+    overflowWrap: 'anywhere',
+  },
+}));
+
 export const Reader = ({ entityId, onReady }: Props) => {
   const { kind, namespace, name } = entityId;
   const { '*': path } = useParams();
   const theme = useTheme<BackstageTheme>();
+  const classes = useStyles();
 
   const {
     state,
@@ -369,6 +381,7 @@ export const Reader = ({ entityId, onReady }: Props) => {
           variant="outlined"
           severity="error"
           action={<TechDocsBuildLogs buildLog={buildLog} />}
+          classes={{ message: classes.message }}
         >
           Building a newer version of this documentation failed.{' '}
           {syncErrorMessage}
@@ -381,6 +394,7 @@ export const Reader = ({ entityId, onReady }: Props) => {
               variant="outlined"
               severity="error"
               action={<TechDocsBuildLogs buildLog={buildLog} />}
+              classes={{ message: classes.message }}
             >
               Building a newer version of this documentation failed.{' '}
               {syncErrorMessage}

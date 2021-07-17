@@ -157,6 +157,13 @@ const websiteEntityPage = (
   </EntityLayout>
 );
 
+/**
+ * TODO: For the MUI Grid to work there have to be "xs" set on every GridItem,
+ * such that the seperation of space is clear from the smalles screen size upwards
+ * https://material-ui.com/components/grid/#basic-grid.
+ */
+
+
 const defaultEntityPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">

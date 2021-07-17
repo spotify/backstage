@@ -16,17 +16,20 @@
 
 import { useApi, configApiRef } from '@backstage/core-plugin-api';
 import { BackstageTheme } from '@backstage/theme';
-import { makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { makeStyles, Tooltip, Typography, Grid } from '@material-ui/core';
 import React, { CSSProperties, PropsWithChildren, ReactNode } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from '../../components/Link';
 import { Breadcrumbs } from '../Breadcrumbs';
 
+const minHeaderHeight = 118;
+
 const useStyles = makeStyles<BackstageTheme>(theme => ({
   header: {
     gridArea: 'pageHeader',
     padding: theme.spacing(3),
-    minHeight: 118,
+    height: 'fit-content',
+    minHeight: minHeaderHeight,
     width: '100%',
     boxShadow: '0 0 8px 3px rgba(20, 20, 20, 0.3)',
     position: 'relative',
@@ -34,14 +37,15 @@ const useStyles = makeStyles<BackstageTheme>(theme => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundImage: theme.page.backgroundImage,
     backgroundPosition: 'center',
     backgroundSize: 'cover',
   },
   leftItemsBox: {
+    maxWidth: '100%',
     flex: '1 1 auto',
+    marginBottom: theme.spacing(1),
   },
   rightItemsBox: {
     flex: '0 1 auto',
@@ -49,11 +53,10 @@ const useStyles = makeStyles<BackstageTheme>(theme => ({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    marginRight: theme.spacing(1),
+    width: 'auto',
   },
   title: {
     color: theme.palette.bursts.fontColor,
-    lineHeight: '1.0em',
     wordBreak: 'break-all',
     fontSize: 'calc(24px + 6 * ((100vw - 320px) / 680))',
     marginBottom: theme.spacing(1),
@@ -213,7 +216,14 @@ export const Header = ({
           />
           <SubtitleFragment classes={classes} subtitle={subtitle} />
         </div>
-        <div className={classes.rightItemsBox}>{children}</div>
+        <Grid
+          component="div"
+          container
+          className={classes.rightItemsBox}
+          spacing={4}
+        >
+          {children}
+        </Grid>
       </header>
     </>
   );

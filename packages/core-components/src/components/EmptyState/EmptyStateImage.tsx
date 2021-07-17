@@ -29,7 +29,7 @@ const useStyles = makeStyles({
   generalImg: {
     width: '95%',
     zIndex: 2,
-    position: 'absolute',
+    position: 'relative',
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, 15%)',

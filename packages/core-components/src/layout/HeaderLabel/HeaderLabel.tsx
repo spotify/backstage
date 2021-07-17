@@ -14,29 +14,25 @@
  * limitations under the License.
  */
 
-import { Link, makeStyles, Typography } from '@material-ui/core';
+import { Link, makeStyles, Typography, Grid } from '@material-ui/core';
 import React from 'react';
 
 const useStyles = makeStyles(theme => ({
   root: {
     textAlign: 'left',
-    margin: theme.spacing(2),
-    display: 'inline-block',
   },
   label: {
-    color: '#FFFFFF',
+    color: theme.palette.common.white,
     fontWeight: 'bold',
-    lineHeight: '16px',
     letterSpacing: 0,
-    fontSize: 14,
-    height: '16px',
-    marginBottom: 2,
+    fontSize: theme.typography.fontSize,
+    marginBottom: theme.spacing(1) / 2,
+    lineHeight: 1,
   },
   value: {
     color: 'rgba(255, 255, 255, 0.8)',
-    lineHeight: '16px',
-    fontSize: 14,
-    height: '16px',
+    fontSize: theme.typography.fontSize,
+    lineHeight: 1,
   },
 }));
 
@@ -64,9 +60,11 @@ export const HeaderLabel = ({ label, value, url }: HeaderLabelProps) => {
     />
   );
   return (
-    <span className={classes.root}>
-      <Typography className={classes.label}>{label}</Typography>
-      {url ? <Link href={url}>{content}</Link> : content}
-    </span>
+    <Grid item>
+      <span className={classes.root}>
+        <Typography className={classes.label}>{label}</Typography>
+        {url ? <Link href={url}>{content}</Link> : content}
+      </span>
+    </Grid>
   );
 };

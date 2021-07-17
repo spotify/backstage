@@ -135,6 +135,12 @@ const EntityLayoutWrapper = (props: { children?: ReactNode }) => {
   );
 };
 
+/**
+ * TODO: For the MUI Grid to work there have to be "xs" set on every GridItem,
+ * such that the seperation of space is clear from the smalles screen size upwards
+ * https://material-ui.com/components/grid/#basic-grid.
+ */
+
 export const cicdContent = (
   <EntitySwitch>
     <EntitySwitch.Case if={isJenkinsAvailable}>
@@ -292,10 +298,10 @@ const serviceEntityPage = (
 
     <EntityLayout.Route path="/api" title="API">
       <Grid container spacing={3} alignItems="stretch">
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <EntityProvidedApisCard />
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <EntityConsumedApisCard />
         </Grid>
       </Grid>
@@ -303,10 +309,10 @@ const serviceEntityPage = (
 
     <EntityLayout.Route path="/dependencies" title="Dependencies">
       <Grid container spacing={3} alignItems="stretch">
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <EntityDependsOnComponentsCard variant="gridItem" />
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <EntityDependsOnResourcesCard variant="gridItem" />
         </Grid>
       </Grid>
@@ -431,15 +437,17 @@ const apiPage = (
   <EntityLayoutWrapper>
     <EntityLayout.Route path="/" title="Overview">
       <Grid container spacing={3}>
-        <Grid item md={6}>
+        <Grid item xs={12}>
           <EntityAboutCard />
         </Grid>
-        <Grid container item md={12}>
-          <Grid item md={6}>
-            <EntityProvidingComponentsCard />
-          </Grid>
-          <Grid item md={6}>
-            <EntityConsumingComponentsCard />
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={12} md={6}>
+              <EntityProvidingComponentsCard />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <EntityConsumingComponentsCard />
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
