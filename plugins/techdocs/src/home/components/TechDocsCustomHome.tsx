@@ -125,6 +125,7 @@ export const TechDocsCustomHome = ({
 
   const { value: entities, loading, error } = useAsync(async () => {
     const response = await catalogApi.getEntities({
+      filter: { 'metadata.annotations.backstage.io/techdocs-ref': '' },
       fields: [
         'apiVersion',
         'kind',

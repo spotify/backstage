@@ -61,25 +61,24 @@ export function parseEntityFilterString(
 
   for (const statement of statements) {
     const equalsIndex = statement.indexOf('=');
-    if (equalsIndex < 1) {
-      throw new InputError(
-        `Invalid filter, '${statement}' is not a valid statement (expected a string on the form a=b)`,
-      );
-    }
 
-    const key = statement.substr(0, equalsIndex).trim();
-    const value = statement.substr(equalsIndex + 1).trim();
-    if (!key || !value) {
+    const key =
+      equalsIndex === -1 ? statement : statement.substr(0, equalsIndex).trim();
+    const value =
+      equalsIndex === -1 ? undefined : statement.substr(equalsIndex + 1).trim();
+    if (!key) {
       throw new InputError(
-        `Invalid filter, '${statement}' is not a valid statement (expected a string on the form a=b)`,
+        `Invalid filter, '${statement}' is not a valid statement (expected a string on the form a=b or a= or a)`,
       );
     }
 
     const f =
-      key in filtersByKey
-        ? filtersByKey[key]
-        : (filtersByKey[key] = { key, matchValueIn: [] });
-    f.matchValueIn!.push(value);
+      key in filtersByKey ? filtersByKey[key] : (filtersByKey[key] = { key });
+
+    if (value) {
+      f.matchValueIn = f.matchValueIn || [];
+      f.matchValueIn.push(value);
+    }
   }
 
   return Object.values(filtersByKey);
