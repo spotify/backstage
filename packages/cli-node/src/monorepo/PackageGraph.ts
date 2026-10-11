@@ -190,9 +190,16 @@ export type PackageGraphNode = {
 export class PackageGraph extends Map<string, PackageGraphNode> {
   /**
    * Lists all local packages in a monorepo.
+   *
+   * @remarks
+   *
+   * The packages are those of the Backstage installation, which are listed in
+   * the `workspaces` field of its `package.json`. When the installation is the
+   * root of a pnpm workspace without that field, they are the packages listed
+   * in `pnpm-workspace.yaml`.
    */
   static async listTargetPackages(): Promise<BackstagePackage[]> {
-    const { packages } = await getPackages(targetPaths.dir);
+    const { packages } = await getPackages(targetPaths.installationRootDir);
 
     return packages as BackstagePackage[];
   }
@@ -332,7 +339,7 @@ export class PackageGraph extends Map<string, PackageGraphNode> {
       Array.from(this.values()).map(pkg => [
         // relative from root, convert to posix, and add a / at the end
         path
-          .relative(targetPaths.rootDir, pkg.dir)
+          .relative(targetPaths.workspaceRootDir, pkg.dir)
           .split(path.sep)
           .join(path.posix.sep) + path.posix.sep,
         pkg,
@@ -374,7 +381,7 @@ export class PackageGraph extends Map<string, PackageGraphNode> {
       let otherLockfile: Lockfile;
       try {
         thisLockfile = await Lockfile.load(
-          targetPaths.resolveRoot('yarn.lock'),
+          targetPaths.resolveWorkspaceRoot('yarn.lock'),
         );
         otherLockfile = Lockfile.parse(
           await GitUtils.readFileAtRef('yarn.lock', options.ref),

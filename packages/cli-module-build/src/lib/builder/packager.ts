@@ -90,7 +90,7 @@ async function rollupBuild(config: RollupOptions) {
 export const buildPackage = async (options: BuildOptions) => {
   try {
     const { resolutions } = await fs.readJson(
-      targetPaths.resolveRoot('package.json'),
+      targetPaths.resolveWorkspaceRoot('package.json'),
     );
     if (resolutions?.esbuild) {
       console.warn(

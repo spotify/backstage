@@ -34,7 +34,7 @@ export async function categorizePackageDirs(packageDirs: string[]) {
           }
 
           const pkgJson = await fs
-            .readJson(targetPaths.resolveRoot(dir, 'package.json'))
+            .readJson(targetPaths.resolveWorkspaceRoot(dir, 'package.json'))
             .catch(error => {
               if (error.code === 'ENOENT') {
                 return undefined;
@@ -45,7 +45,11 @@ export async function categorizePackageDirs(packageDirs: string[]) {
           if (!role) {
             return; // Ignore packages without roles
           }
-          if (await fs.pathExists(targetPaths.resolveRoot(dir, 'migrations'))) {
+          if (
+            await fs.pathExists(
+              targetPaths.resolveWorkspaceRoot(dir, 'migrations'),
+            )
+          ) {
             sqlPackageDirs.push(dir);
           }
           // TODO(Rugvip): Inlined packages are ignored because we can't handle @internal exports

@@ -142,7 +142,7 @@ export async function bundleCommand(opts: BundleOptions): Promise<void> {
   await fs.writeFile(joinPath(target, '.bundle-output'), '');
 
   const rootPkg = await fs.readJson(
-    resolvePath(targetPaths.rootDir, 'package.json'),
+    resolvePath(targetPaths.workspaceRootDir, 'package.json'),
   );
 
   // Backend plugins always need embedded packages, lockfile, and node_modules.
@@ -160,7 +160,7 @@ export async function bundleCommand(opts: BundleOptions): Promise<void> {
       // is used for pruning/installing -- lockfile formats differ across
       // major Yarn versions (e.g. ~builtin vs optional!builtin patches).
       const resolved = await runOutput(['yarn', 'config', 'get', 'yarnPath'], {
-        cwd: targetPaths.rootDir,
+        cwd: targetPaths.workspaceRootDir,
       });
       const yarnPathSentinels = new Set(['undefined', 'null']);
       if (resolved && !yarnPathSentinels.has(resolved)) {
@@ -241,7 +241,7 @@ export async function bundleCommand(opts: BundleOptions): Promise<void> {
       await fs.ensureDir(embeddedDir);
 
       for (const dep of targets) {
-        const relDir = relativePath(targetPaths.rootDir, dep.dir);
+        const relDir = relativePath(targetPaths.workspaceRootDir, dep.dir);
         const srcDir = resolvePath(prePackedDir, relDir);
         const destDir = resolvePath(embeddedDir, relDir);
         if (await fs.pathExists(srcDir)) {
@@ -312,7 +312,10 @@ export async function bundleCommand(opts: BundleOptions): Promise<void> {
     }
 
     // ── Step 2: Assemble embedded packages ──────────────────────────────
-    const mainPluginRelDir = relativePath(targetPaths.rootDir, targetPaths.dir);
+    const mainPluginRelDir = relativePath(
+      targetPaths.workspaceRootDir,
+      targetPaths.dir,
+    );
     const mainPluginEmbeddedDir = resolvePath(embeddedDir, mainPluginRelDir);
 
     console.log(
@@ -355,7 +358,7 @@ export async function bundleCommand(opts: BundleOptions): Promise<void> {
     const localDeps = targets.filter(t => t.name !== pkg.name);
 
     for (const dep of localDeps) {
-      const depRelDir = relativePath(targetPaths.rootDir, dep.dir);
+      const depRelDir = relativePath(targetPaths.workspaceRootDir, dep.dir);
       const depEmbeddedDir = resolvePath(embeddedDir, depRelDir);
 
       if (!(await fs.pathExists(depEmbeddedDir))) {
@@ -491,11 +494,15 @@ export async function bundleCommand(opts: BundleOptions): Promise<void> {
   // Runs for backend plugins (always) and frontend plugins with
   // --pre-packed-dir (for SBOM lockfile generation).
   if (needsDependencies) {
-    await seedBundleLockfile(target, targetPaths.dir, targetPaths.rootDir);
+    await seedBundleLockfile(
+      target,
+      targetPaths.dir,
+      targetPaths.workspaceRootDir,
+    );
 
     const sourceCacheFolder = await runOutput(
       ['yarn', 'config', 'get', 'cacheFolder'],
-      { cwd: targetPaths.rootDir },
+      { cwd: targetPaths.workspaceRootDir },
     );
     await pruneBundleLockfile(target, opts.verbose, sourceCacheFolder);
 

@@ -66,13 +66,13 @@ export default async ({ args, info }: CliCommandContext) => {
 
   const targetPackageJson = await readTargetPackage(
     targetPaths.dir,
-    targetPaths.rootDir,
+    targetPaths.installationRootDir,
   );
 
   const outputDir = resolvePath(targetPaths.dir, options.output);
   const manifestPath = resolvePath(outputDir, 'manifest.json');
 
-  const tsconfigPath = targetPaths.resolveRoot('tsconfig.json');
+  const tsconfigPath = targetPaths.resolveInstallationRoot('tsconfig.json');
   if (!(await fs.pathExists(tsconfigPath))) {
     throw new Error(
       `No tsconfig.json found at ${tsconfigPath}. ` +

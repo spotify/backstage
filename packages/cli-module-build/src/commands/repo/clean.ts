@@ -25,9 +25,9 @@ export default async ({ args, info }: CliCommandContext) => {
   cli({ name: info.usage, booleanFlagNegation: true }, undefined, args);
   const packages = await PackageGraph.listTargetPackages();
 
-  await fs.remove(targetPaths.resolveRoot('dist'));
-  await fs.remove(targetPaths.resolveRoot('dist-types'));
-  await fs.remove(targetPaths.resolveRoot('coverage'));
+  await fs.remove(targetPaths.resolveInstallationRoot('dist'));
+  await fs.remove(targetPaths.resolveInstallationRoot('dist-types'));
+  await fs.remove(targetPaths.resolveInstallationRoot('coverage'));
 
   await Promise.all(
     Array.from(Array(10), async () => {

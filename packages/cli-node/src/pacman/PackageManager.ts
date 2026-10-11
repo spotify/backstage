@@ -85,7 +85,7 @@ export interface PackageManager {
  */
 export async function detectPackageManager(): Promise<PackageManager> {
   const hasYarnLockfile = await fileExists(
-    targetPaths.resolveRoot('yarn.lock'),
+    targetPaths.resolveWorkspaceRoot('yarn.lock'),
   );
   if (hasYarnLockfile) {
     return await Yarn.create();
@@ -93,7 +93,7 @@ export async function detectPackageManager(): Promise<PackageManager> {
 
   try {
     const packageJson = await fs.readJson(
-      targetPaths.resolveRoot('package.json'),
+      targetPaths.resolveWorkspaceRoot('package.json'),
     );
     if (packageJson.workspaces) {
       // technically this could be NPM as well

@@ -81,7 +81,7 @@ export default async ({ args, info }: CliCommandContext) => {
 
   // This formatter uses the cwd to format file paths, so let's have that happen from the root instead
   if (format === 'eslint-formatter-friendly') {
-    process.chdir(targetPaths.rootDir);
+    process.chdir(targetPaths.installationRootDir);
   }
 
   const resultText = await formatter.format(results);

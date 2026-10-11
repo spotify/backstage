@@ -15,7 +15,7 @@
  */
 
 import { resolve as resolvePath } from 'node:path';
-import { setTargetPathsOverride } from './paths';
+import { BACKSTAGE_JSON, setTargetPathsOverride } from './paths';
 
 /**
  * Options for {@link overrideTargetPaths}.
@@ -25,8 +25,23 @@ import { setTargetPathsOverride } from './paths';
 export interface OverrideTargetPathsOptions {
   /** The target package directory. */
   dir: string;
-  /** The target monorepo root directory. Defaults to `dir` if not provided. */
+  /**
+   * The target monorepo root directory, used as the default for
+   * `workspaceRootDir`. Defaults to `dir` if not provided.
+   */
   rootDir?: string;
+  /** The workspace root directory. Defaults to `rootDir`. */
+  workspaceRootDir?: string;
+  /**
+   * The Backstage installation root directory. Defaults to
+   * `workspaceRootDir`.
+   */
+  installationRootDir?: string;
+  /**
+   * The path of the `backstage.json` file. Defaults to `backstage.json` in
+   * `installationRootDir`.
+   */
+  backstageJsonPath?: string;
 }
 
 /**
@@ -43,7 +58,7 @@ export interface TargetPathsOverride {
  * Overrides the `targetPaths` singleton to resolve from the given directory
  * instead of `process.cwd()`.
  *
- * When called with a string, that value is used as both `dir` and `rootDir`.
+ * When called with a string, that value is used as `dir` and as both roots.
  * Pass an options object to set them independently.
  *
  * Calling `restore()` on the return value reverts to normal behavior.
@@ -55,19 +70,28 @@ export interface TargetPathsOverride {
 export function overrideTargetPaths(
   dirOrOptions: string | OverrideTargetPathsOptions,
 ): TargetPathsOverride {
-  const { dir, rootDir } =
-    typeof dirOrOptions === 'string'
-      ? { dir: dirOrOptions, rootDir: dirOrOptions }
-      : {
-          dir: dirOrOptions.dir,
-          rootDir: dirOrOptions.rootDir ?? dirOrOptions.dir,
-        };
+  const options =
+    typeof dirOrOptions === 'string' ? { dir: dirOrOptions } : dirOrOptions;
+  const dir = options.dir;
+  const workspaceRootDir = options.workspaceRootDir ?? options.rootDir ?? dir;
+  const installationRootDir = options.installationRootDir ?? workspaceRootDir;
+  const backstageJsonPath =
+    options.backstageJsonPath ??
+    resolvePath(installationRootDir, BACKSTAGE_JSON);
 
   setTargetPathsOverride({
     dir,
-    rootDir,
+    rootDir: workspaceRootDir,
+    workspaceRootDir,
+    installationRootDir,
+    backstageJsonPath,
     resolve: (...paths: string[]) => resolvePath(dir, ...paths),
-    resolveRoot: (...paths: string[]) => resolvePath(rootDir, ...paths),
+    resolveRoot: (...paths: string[]) =>
+      resolvePath(workspaceRootDir, ...paths),
+    resolveWorkspaceRoot: (...paths: string[]) =>
+      resolvePath(workspaceRootDir, ...paths),
+    resolveInstallationRoot: (...paths: string[]) =>
+      resolvePath(installationRootDir, ...paths),
   });
 
   return {

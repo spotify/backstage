@@ -270,7 +270,7 @@ function checkReactVersion() {
   try {
     // Make sure we're looking at the root of the target repo
     const reactPkgPath = require.resolve('react/package.json', {
-      paths: [targetPaths.rootDir],
+      paths: [targetPaths.workspaceRootDir],
     });
     const reactPkg = require(reactPkgPath);
     if (reactPkg.version.startsWith('16.')) {
