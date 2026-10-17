@@ -22,7 +22,7 @@ import { relative as relativePath } from 'node:path';
 import {
   PackageGraph,
   BackstagePackageJson,
-  Lockfile,
+  YarnLockfile,
   runWorkerQueueThreads,
   SuccessCache,
 } from '@backstage/cli-node';
@@ -116,7 +116,7 @@ export default async ({ args, info }: CliCommandContext) => {
   const cacheContext = useSuccessCache
     ? {
         entries: await cache.read(),
-        lockfile: await Lockfile.load(
+        lockfile: await YarnLockfile.load(
           targetPaths.resolveWorkspaceRoot('yarn.lock'),
         ),
       }

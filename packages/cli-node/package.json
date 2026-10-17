@@ -6,9 +6,7 @@
     "role": "node-library"
   },
   "publishConfig": {
-    "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "access": "public"
   },
   "homepage": "https://backstage.io",
   "repository": {
@@ -17,8 +15,25 @@
     "directory": "packages/cli-node"
   },
   "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./alpha": "./src/alpha.ts",
+    "./config/nodeTransform.cjs": "./config/nodeTransform.cjs",
+    "./config/nodeTransformHooks.mjs": "./config/nodeTransformHooks.mjs",
+    "./package.json": "./package.json"
+  },
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "typesVersions": {
+    "*": {
+      "alpha": [
+        "src/alpha.ts"
+      ],
+      "package.json": [
+        "package.json"
+      ]
+    }
+  },
   "files": [
     "dist",
     "config"

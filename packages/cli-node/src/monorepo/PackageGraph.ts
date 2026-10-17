@@ -19,8 +19,13 @@ import { getPackages, Package } from '@manypkg/get-packages';
 import { targetPaths } from '@backstage/cli-common';
 import { PackageRole } from '../roles';
 import { GitUtils } from '../git';
-import { Lockfile } from './Lockfile';
+import { detectPackageManager, Lockfile, LockfileDiff } from '../pacman';
 import { JsonValue } from '@backstage/types';
+
+// The lockfiles of the package managers that the CLI knows about. The package
+// manager is only detected when one of them has changed, since that can spawn
+// a process.
+const LOCKFILE_NAMES = ['yarn.lock', 'pnpm-lock.yaml'];
 
 /**
  * A list of the feature types we want to extract from the project
@@ -375,24 +380,36 @@ export class PackageGraph extends Map<string, PackageGraphNode> {
       }
     }
 
-    if (changedFiles.includes('yarn.lock') && options.analyzeLockfile) {
-      // Load the lockfile in the working tree and the one at the ref and diff them
+    const changedLockfiles = changedFiles.filter(file =>
+      LOCKFILE_NAMES.includes(file),
+    );
+    if (changedLockfiles.length > 0 && options.analyzeLockfile) {
+      // Load the lockfile in the working tree and the one at the ref and diff
+      // them. Anything that prevents an accurate diff means that we can't tell
+      // which packages are affected, so we assume that all of them are.
       let thisLockfile: Lockfile;
       let otherLockfile: Lockfile;
+      let diff: LockfileDiff;
       try {
-        thisLockfile = await Lockfile.load(
-          targetPaths.resolveWorkspaceRoot('yarn.lock'),
+        const packageManager = await detectPackageManager();
+        const lockfileName = packageManager.lockfileName();
+        const otherName = changedLockfiles.find(name => name !== lockfileName);
+        if (otherName) {
+          throw new Error(
+            `${otherName} does not belong to ${packageManager.name()}, which uses ${lockfileName}`,
+          );
+        }
+        thisLockfile = await packageManager.loadLockfile();
+        otherLockfile = await packageManager.parseLockfile(
+          await GitUtils.readFileAtRef(lockfileName, options.ref),
         );
-        otherLockfile = Lockfile.parse(
-          await GitUtils.readFileAtRef('yarn.lock', options.ref),
-        );
+        diff = thisLockfile.diff(otherLockfile);
       } catch (error) {
         console.warn(
-          `Failed to read lockfiles, assuming all packages have changed, ${error}`,
+          `Failed to diff lockfiles, assuming all packages have changed, ${error}`,
         );
         return Array.from(this.values());
       }
-      const diff = thisLockfile.diff(otherLockfile);
 
       // Create a simplified dependency graph only keeps track of package names
       const graph = thisLockfile.createSimplifiedDependencyGraph();

@@ -16,13 +16,29 @@
 
 import { getPackages } from '@manypkg/get-packages';
 import { PackageGraph } from './PackageGraph';
-import { Lockfile } from './Lockfile';
+import { detectPackageManager, PackageManager, YarnLockfile } from '../pacman';
 import { GitUtils } from '../git';
 import { overrideTargetPaths } from '@backstage/cli-common/testUtils';
 import { createMockDirectory } from '@backstage/backend-test-utils';
 
+jest.mock('../pacman', () => ({
+  ...jest.requireActual('../pacman'),
+  detectPackageManager: jest.fn(),
+}));
+
 const mockListChangedFiles = jest.spyOn(GitUtils, 'listChangedFiles');
 const mockReadFileAtRef = jest.spyOn(GitUtils, 'readFileAtRef');
+const mockDetectPackageManager = jest.mocked(detectPackageManager);
+
+// A Yarn package manager whose lockfile in the working tree has the given contents
+function mockYarn(currentLockfile: string) {
+  mockDetectPackageManager.mockResolvedValue({
+    name: () => 'yarn',
+    lockfileName: () => 'yarn.lock',
+    loadLockfile: async () => YarnLockfile.parse(currentLockfile),
+    parseLockfile: async (contents: string) => YarnLockfile.parse(contents),
+  } as Partial<PackageManager> as PackageManager);
+}
 
 overrideTargetPaths('/');
 
@@ -230,8 +246,7 @@ c-dep@^2:
   version: "2.0.0"
   integrity: sha512-xyz
 `);
-    jest.spyOn(Lockfile, 'load').mockResolvedValueOnce(
-      Lockfile.parse(`
+    mockYarn(`
 a@^1:
   version: "1.0.0"
 
@@ -243,8 +258,7 @@ c@^1:
 c-dep@^2:
   version: "2.0.0"
   integrity: sha512-xyz-other
-`),
-    );
+`);
 
     await expect(
       graph
@@ -285,8 +299,7 @@ c@^1:
 `);
 
     // The current lockfile no longer has b-dep at all
-    jest.spyOn(Lockfile, 'load').mockResolvedValueOnce(
-      Lockfile.parse(`
+    mockYarn(`
 a@^1:
   version: "1.0.0"
 
@@ -295,8 +308,7 @@ b@^1:
 
 c@^1:
   version: "1.0.0"
-`),
-    );
+`);
 
     await expect(
       graph
@@ -306,5 +318,58 @@ c@^1:
         })
         .then(pkgs => pkgs.map(pkg => pkg.name)),
     ).resolves.toEqual(['b']);
+  });
+
+  it('assumes that all packages changed when the lockfile cannot be diffed', async () => {
+    const graph = PackageGraph.fromPackages(testPackages);
+    const allPackages = Array.from(graph.values());
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    mockYarn(`
+a@^1:
+  version: "1.0.0"
+`);
+
+    // A lockfile of another package manager can't be diffed with this one
+    mockListChangedFiles.mockResolvedValueOnce([
+      'packages/a/src/foo.ts',
+      'pnpm-lock.yaml',
+    ]);
+    await expect(
+      graph.listChangedPackages({
+        ref: 'origin/master',
+        analyzeLockfile: true,
+      }),
+    ).resolves.toEqual(allPackages);
+    expect(warn).toHaveBeenLastCalledWith(
+      expect.stringContaining(
+        'pnpm-lock.yaml does not belong to yarn, which uses yarn.lock',
+      ),
+    );
+
+    // Nor can a lockfile that doesn't exist at the ref
+    mockListChangedFiles.mockResolvedValueOnce(['yarn.lock']);
+    mockReadFileAtRef.mockRejectedValueOnce(
+      new Error("path 'yarn.lock' does not exist in 'origin/master'"),
+    );
+    await expect(
+      graph.listChangedPackages({
+        ref: 'origin/master',
+        analyzeLockfile: true,
+      }),
+    ).resolves.toEqual(allPackages);
+    expect(warn).toHaveBeenLastCalledWith(
+      expect.stringContaining('does not exist'),
+    );
+
+    // Without lockfile analysis only the changed packages are listed
+    mockListChangedFiles.mockResolvedValueOnce([
+      'packages/a/src/foo.ts',
+      'pnpm-lock.yaml',
+    ]);
+    await expect(
+      graph.listChangedPackages({ ref: 'origin/master' }),
+    ).resolves.toEqual([graph.get('a')]);
+    expect(warn).toHaveBeenCalledTimes(2);
+    warn.mockRestore();
   });
 });

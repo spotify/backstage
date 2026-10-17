@@ -26,7 +26,7 @@ import { resolve as resolvePath } from 'node:path';
 
 import {
   hasBackstageYarnPlugin,
-  Lockfile,
+  YarnLockfile,
   runConcurrentTasks,
 } from '@backstage/cli-node';
 import {
@@ -99,7 +99,7 @@ export default async ({ args, info }: CliCommandContext) => {
   );
 
   const lockfilePath = targetPaths.resolveWorkspaceRoot('yarn.lock');
-  const lockfile = await Lockfile.load(lockfilePath);
+  const lockfile = await YarnLockfile.load(lockfilePath);
   const yarnPluginEnabled = await hasBackstageYarnPlugin();
 
   let pattern = patternFlag;

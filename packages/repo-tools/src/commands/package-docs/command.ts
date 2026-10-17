@@ -22,7 +22,7 @@ import { readFile, rm, writeFile } from 'node:fs/promises';
 import pLimit from 'p-limit';
 import { mkdirp } from 'fs-extra';
 import { PackageDocsCache } from './Cache';
-import { Lockfile } from '@backstage/cli-node';
+import { YarnLockfile } from '@backstage/cli-node';
 import { glob } from 'glob';
 import { existsSync } from 'node:fs';
 
@@ -146,7 +146,7 @@ export default async function packageDocs(paths: string[] = [], opts: any) {
 
   const cache = await PackageDocsCache.loadAsync(
     targetPaths.workspaceRootDir,
-    await Lockfile.load(targetPaths.resolveWorkspaceRoot('yarn.lock')),
+    await YarnLockfile.load(targetPaths.resolveWorkspaceRoot('yarn.lock')),
   );
 
   console.log(`### Generating docs.`);

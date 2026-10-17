@@ -20,7 +20,7 @@ import os from 'node:os';
 import { runOutput, targetPaths, findOwnPaths } from '@backstage/cli-common';
 import {
   BackstagePackageJson,
-  Lockfile,
+  YarnLockfile,
   PackageGraph,
 } from '@backstage/cli-node';
 import { minimatch } from 'minimatch';
@@ -124,7 +124,7 @@ export default async ({ args, info }: CliCommandContext) => {
     };
 
     const lockfilePath = targetPaths.resolveWorkspaceRoot('yarn.lock');
-    const lockfile = await Lockfile.load(lockfilePath);
+    const lockfile = await YarnLockfile.load(lockfilePath);
     const targetPath = targetPaths.installationRootDir;
 
     // Get workspace package names and their versions
