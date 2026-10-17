@@ -50,6 +50,15 @@ fallback will be removed in a future release. To avoid the warning, add
 `@backstage/cli-defaults` as a development dependency in your root `package.json`, or
 install individual `@backstage/cli-module-*` packages.
 
+## Package manager detection
+
+Modules that install dependencies, read the lockfile, or pack packages detect
+the package manager the same way. They use Yarn or pnpm depending on the
+project they run in, with no configuration. The Yarn package manager module is
+the exception. It works with Yarn only. See
+[Package Managers](../package-managers.md) for the detection order and for
+what differs in a pnpm project.
+
 ## Customizing the default modules
 
 ### Overriding a module

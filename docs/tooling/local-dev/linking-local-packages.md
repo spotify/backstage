@@ -49,7 +49,8 @@ If you are encountering errors related to React, it is likely that the versions 
 ## Generating temporary patches
 
 :::info
-This feature is experimental and currently only supports Yarn workspaces.
+This feature is experimental and only supports Yarn workspaces. It does not
+work in pnpm projects. See [Package Managers](../package-managers.md).
 :::
 
 After making local changes to a package in an external workspace you might often want to merge and deploy these changes in your own project. You can use Yarn patches for this purpose, but it can be quite cumbersome to create these patches manually. To make this process easier, you can use `yarn backstage-repo-tools generate-patch` command from the `@backstage/repo-tools` package to generate a patch and resolution entries in the external workspace.

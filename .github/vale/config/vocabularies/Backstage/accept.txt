@@ -323,6 +323,7 @@ navbar
 neuro
 newrelic
 nginx
+node_modules
 nodegit
 nodemailer
 nodejs
@@ -379,6 +380,8 @@ plantuml
 Platformize
 pluggable
 Pluggable
+pnpm
+pnpmfile
 Podman
 posix
 postgres
@@ -487,6 +490,7 @@ sqs
 squidfunk
 src
 statefulsets
+stderr
 stdout
 storable
 storages
