@@ -19,6 +19,7 @@ import { run, runOutput, RunOptions, targetPaths } from '@backstage/cli-common';
 import fs from 'fs-extra';
 import { resolve as resolvePath } from 'node:path';
 import semver from 'semver';
+import { Document, isScalar, parseDocument, Scalar } from 'yaml';
 import {
   PackageInfo,
   PackageManager,
@@ -32,6 +33,9 @@ import { PnpmLockfile } from './PnpmLockfile';
 // links workspace packages into the root node_modules under the hoisted node
 // linker, and 11.28 has the same change.
 const SUPPORTED_PNPM_VERSIONS = '^11.28.0 || >=12.7.0';
+
+// Keeps the formatting that pnpm writes as far as possible
+const STRINGIFY_OPTIONS = { lineWidth: 0, flowCollectionPadding: false };
 
 /**
  * Options for {@link Pnpm.create}.
@@ -254,6 +258,99 @@ export class Pnpm implements PackageManager {
     return false;
   }
 
+  /**
+   * Reads the catalogs from `pnpm-workspace.yaml` in the workspace root. The
+   * `catalog` field is the `default` catalog.
+   */
+  async readCatalogs(): Promise<Record<string, Record<string, string>>> {
+    const { doc } = (await this.readWorkspaceDocument()) ?? {};
+    const data = (doc?.toJS() ?? {}) as {
+      catalog?: Record<string, string>;
+      catalogs?: Record<string, Record<string, string>>;
+    };
+    return {
+      ...(data.catalog ? { default: data.catalog } : {}),
+      ...data.catalogs,
+    };
+  }
+
+  /**
+   * Reads the `overrides` of `pnpm-workspace.yaml` in the workspace root,
+   * which is the only place that pnpm reads them from.
+   */
+  async readOverrides(): Promise<Record<string, string>> {
+    const { doc } = (await this.readWorkspaceDocument()) ?? {};
+    const data = (doc?.toJS() ?? {}) as { overrides?: Record<string, unknown> };
+    return Object.fromEntries(
+      Object.entries(data.overrides ?? {}).filter(
+        (entry): entry is [string, string] => typeof entry[1] === 'string',
+      ),
+    );
+  }
+
+  /**
+   * Sets dependency versions in a catalog in `pnpm-workspace.yaml`. Only the
+   * versions in the file change, so its comments and formatting are kept.
+   */
+  async updateCatalog(
+    name: string,
+    versions: Record<string, string>,
+  ): Promise<void> {
+    const { content, doc } = (await this.readWorkspaceDocument()) ?? {};
+
+    let path: string[] | undefined;
+    if (name === 'default' && doc?.has('catalog')) {
+      path = ['catalog'];
+    } else if (doc?.hasIn(['catalogs', name])) {
+      path = ['catalogs', name];
+    }
+    if (content === undefined || !doc || !path) {
+      throw new Error(
+        `The catalog '${name}' does not exist in pnpm-workspace.yaml`,
+      );
+    }
+
+    // Existing versions are replaced in the text, keeping their quotes, and
+    // from the end of the file so that the earlier offsets stay valid
+    const replacements = new Array<{
+      start: number;
+      end: number;
+      text: string;
+    }>();
+    const added = new Map<string, string>();
+    for (const [dependency, version] of Object.entries(versions)) {
+      const node = doc.getIn([...path, dependency], true);
+      if (isScalar(node) && node.range) {
+        const scalar = new Scalar(version);
+        scalar.type = node.type;
+        replacements.push({
+          start: node.range[0],
+          end: node.range[1],
+          text: new Document(scalar).toString(STRINGIFY_OPTIONS).trimEnd(),
+        });
+      } else {
+        added.set(dependency, version);
+      }
+    }
+    let updated = content;
+    for (const { start, end, text } of replacements.sort(
+      (a, b) => b.start - a.start,
+    )) {
+      updated = updated.slice(0, start) + text + updated.slice(end);
+    }
+
+    // New entries can only be added by writing out the whole document
+    if (added.size > 0) {
+      const updatedDoc = parseDocument(updated);
+      for (const [dependency, version] of added) {
+        updatedDoc.setIn([...path, dependency], version);
+      }
+      updated = updatedDoc.toString(STRINGIFY_OPTIONS);
+    }
+
+    await fs.writeFile(this.workspaceFilePath(), updated);
+  }
+
   /** {@inheritDoc PackageManager.getCommandHint} */
   getCommandHint(args: string[]): string {
     return ['pnpm', ...args].join(' ');
@@ -278,6 +375,29 @@ export class Pnpm implements PackageManager {
         `pnpm ${version} is not supported, use pnpm 11.28 or a later 11.x release, or pnpm 12.7 or later`,
       );
     }
+  }
+
+  private workspaceFilePath() {
+    return resolvePath(this.workspaceRootDir, 'pnpm-workspace.yaml');
+  }
+
+  private async readWorkspaceDocument() {
+    let content: string;
+    try {
+      content = await fs.readFile(this.workspaceFilePath(), 'utf8');
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+        return undefined;
+      }
+      throw error;
+    }
+    const doc = parseDocument(content);
+    if (doc.errors.length > 0) {
+      throw new Error(
+        `Failed to parse pnpm-workspace.yaml, ${doc.errors[0].message}`,
+      );
+    }
+    return { content, doc };
   }
 }
 

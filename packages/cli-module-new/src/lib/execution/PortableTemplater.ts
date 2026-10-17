@@ -55,9 +55,17 @@ export class PortableTemplater {
       /* ignored */
     }
 
+    let defaultCatalog: Record<string, string> | undefined;
+    try {
+      defaultCatalog = (await packageManager.readCatalogs?.())?.default;
+    } catch {
+      /* ignored */
+    }
+
     const versionProvider = createPackageVersionProvider(lockfile, {
       preferBackstageProtocol:
         await packageManager.supportsBackstageVersionProtocol(),
+      defaultCatalog,
     });
 
     const templater = new PortableTemplater(

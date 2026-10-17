@@ -262,6 +262,85 @@ describe('Pnpm', () => {
     );
   });
 
+  it('should read and update catalogs and read overrides in pnpm-workspace.yaml', async () => {
+    const local = await Pnpm.create({ workspaceRootDir: mockDir.path });
+
+    mockDir.setContent({});
+    await expect(local.readCatalogs()).resolves.toEqual({});
+    await expect(local.readOverrides()).resolves.toEqual({});
+    await expect(local.updateCatalog('default', {})).rejects.toThrow(
+      "The catalog 'default' does not exist in pnpm-workspace.yaml",
+    );
+
+    // A layout that differs from what the yaml package writes
+    const workspaceYaml = `packages:
+- packages/*
+- plugins/*   # aligned comment
+
+# @sort The main line
+catalog:
+    '@backstage/core':   ^1.0.0    # keep this
+    "@backstage/theme": "^1.0.0"
+    react: ^18.0.0
+    long-package: https://example.com/a/very/long/path/that/goes/on/for/more/than/eighty/characters.tgz
+
+catalogs:
+  backstage-next: {'@backstage/core': '^1.1.0-next.0'}
+
+overrides:
+  '@backstage/core@^1': 1.0.0
+  lodash: $lodash
+  invalid: { not: a string }
+`;
+    mockDir.setContent({ 'pnpm-workspace.yaml': workspaceYaml });
+    await expect(local.readCatalogs()).resolves.toEqual({
+      default: {
+        '@backstage/core': '^1.0.0',
+        '@backstage/theme': '^1.0.0',
+        react: '^18.0.0',
+        'long-package':
+          'https://example.com/a/very/long/path/that/goes/on/for/more/than/eighty/characters.tgz',
+      },
+      'backstage-next': { '@backstage/core': '^1.1.0-next.0' },
+    });
+    await expect(local.readOverrides()).resolves.toEqual({
+      '@backstage/core@^1': '1.0.0',
+      lodash: '$lodash',
+    });
+
+    await local.updateCatalog('default', {
+      '@backstage/core': '^1.2.0',
+      '@backstage/theme': '^1.3.0',
+    });
+    await local.updateCatalog('backstage-next', {
+      '@backstage/core': '^1.3.0-next.1',
+    });
+    await expect(local.updateCatalog('nope', {})).rejects.toThrow(
+      "The catalog 'nope' does not exist in pnpm-workspace.yaml",
+    );
+
+    // Only the versions change, with their quotes kept
+    const updatedYaml = workspaceYaml
+      .replace("'@backstage/core':   ^1.0.0", "'@backstage/core':   ^1.2.0")
+      .replace('"@backstage/theme": "^1.0.0"', '"@backstage/theme": "^1.3.0"')
+      .replace("'^1.1.0-next.0'", "'^1.3.0-next.1'");
+    expect(mockDir.content()).toEqual({ 'pnpm-workspace.yaml': updatedYaml });
+
+    // A new entry is added through the document, which keeps the comments
+    await local.updateCatalog('default', { lodash: '^4.17.21' });
+    const withNewEntry = mockDir.content()?.['pnpm-workspace.yaml'] as string;
+    expect(withNewEntry).toContain('# @sort The main line\n');
+    expect(withNewEntry).toContain("'@backstage/core': ^1.2.0 # keep this\n");
+    expect(withNewEntry).toContain(
+      'long-package: https://example.com/a/very/long/path/that/goes/on/for/more/than/eighty/characters.tgz\n',
+    );
+    await expect(local.readCatalogs()).resolves.toEqual(
+      expect.objectContaining({
+        default: expect.objectContaining({ lodash: '^4.17.21' }),
+      }),
+    );
+  });
+
   it('should load the lockfile and name workspace packages from the workspace root', async () => {
     mockDir.setContent({
       'pnpm-lock.yaml': mockLockfile,

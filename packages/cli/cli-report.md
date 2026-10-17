@@ -953,6 +953,9 @@ Options:
 Usage: backstage-cli versions:bump [flags...]
 
 Options:
+  --catalog <string>
+  --dry-run
+  --json
   --pattern <string>
   --release <string>
   --skip-install

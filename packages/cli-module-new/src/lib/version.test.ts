@@ -115,6 +115,36 @@ describe('createPackageVersionProvider', () => {
     expect(provider('unknown-package')).toBeUndefined();
   });
 
+  it('should use catalog: for packages in the default catalog', async () => {
+    mockDir.setContent({
+      'yarn.lock': `${HEADER}
+"@internal/library@workspace:packages/internal":
+  version "0.0.0-use.local"
+
+"react@^18.0.0":
+  version "18.0.0"
+`,
+    });
+
+    const lockfile = await YarnLockfile.load(mockDir.resolve('yarn.lock'));
+    const provider = createPackageVersionProvider(lockfile, {
+      defaultCatalog: {
+        '@backstage/core-plugin-api': '^1.0.0',
+        '@internal/library': '^1.0.0',
+        react: '^18.0.0',
+      },
+    });
+
+    expect(provider('@backstage/core-plugin-api')).toBe('catalog:');
+    expect(provider('react', '18.0.0')).toBe('catalog:');
+    // Workspace packages are still linked, and other packages get ranges
+    expect(provider('@internal/library')).toBe('workspace:^');
+    expect(provider('@backstage/frontend-dev-utils')).toBe(
+      `^${packageVersions['@backstage/frontend-dev-utils']}`,
+    );
+    expect(provider('unknown-package')).toBeUndefined();
+  });
+
   describe('with backstage protocol options', () => {
     it('should return backstage:^ for @backstage packages when preferBackstageProtocol is true', async () => {
       mockDir.setContent({

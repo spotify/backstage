@@ -16,6 +16,7 @@
 
 import { minimatch } from 'minimatch';
 import { getPackages } from '@manypkg/get-packages';
+import { isChildPath } from '@backstage/cli-common';
 
 const DEP_TYPES = [
   'dependencies',
@@ -30,18 +31,28 @@ type PkgVersionInfo = {
   location: string;
 };
 
-/** Map all dependencies in the repo as dependency => dependents */
+/**
+ * Map all dependencies in the repo as dependency => dependents. With
+ * `withinDir`, only packages in that directory are included, such as the
+ * packages of one Backstage installation in a larger workspace.
+ */
 export async function mapDependencies(
   targetDir: string,
   pattern: string,
+  options?: { withinDir?: string },
 ): Promise<Map<string, PkgVersionInfo[]>> {
   const { packages, root } = await getPackages(targetDir);
 
   // Include root package.json too
   packages.push(root);
 
+  const withinDir = options?.withinDir;
   const dependencyMap = new Map<string, PkgVersionInfo[]>();
   for (const pkg of packages) {
+    if (withinDir && !isChildPath(withinDir, pkg.dir)) {
+      continue;
+    }
+
     const deps = DEP_TYPES.flatMap(
       t => Object.entries(pkg.packageJson[t] ?? {}) as [string, string][],
     );

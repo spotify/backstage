@@ -78,5 +78,17 @@ describe('mapDependencies', () => {
         ],
       ],
     ]);
+
+    // Only the packages of an installation nested in the workspace
+    const nestedMap = await mapDependencies(mockDir.path, '@backstage/*', {
+      withinDir: mockDir.resolve('pkgs/b'),
+    });
+    expect(Array.from(nestedMap.keys())).toEqual([
+      '@backstage/core',
+      '@backstage/cli',
+    ]);
+    expect(nestedMap.get('@backstage/core')).toEqual([
+      { name: 'b', range: '3', location: mockDir.resolve('pkgs/b') },
+    ]);
   });
 });

@@ -55,6 +55,8 @@ export interface PackageManager {
     contents: string,
     options?: ParseLockfileOptions,
   ): Promise<Lockfile>;
+  readCatalogs?(): Promise<Record<string, Record<string, string>>>;
+  readOverrides?(): Promise<Record<string, string>>;
   run(args: string[], options?: RunOptions): Promise<void>;
   runScript(
     script: string,
@@ -69,6 +71,7 @@ export interface PackageManager {
   ): Promise<void>;
   supportsBackstageVersionProtocol(): Promise<boolean>;
   toString(): string;
+  updateCatalog?(name: string, versions: Record<string, string>): Promise<void>;
   version(): Promise<string>;
 }
 
@@ -106,6 +109,8 @@ export class Pnpm implements PackageManager {
     contents: string,
     options?: ParseLockfileOptions,
   ): Promise<Lockfile>;
+  readCatalogs(): Promise<Record<string, Record<string, string>>>;
+  readOverrides(): Promise<Record<string, string>>;
   run(args: string[], options?: RunOptions): Promise<void>;
   runScript(
     script: string,
@@ -120,6 +125,7 @@ export class Pnpm implements PackageManager {
   ): Promise<void>;
   supportsBackstageVersionProtocol(): Promise<boolean>;
   toString(): string;
+  updateCatalog(name: string, versions: Record<string, string>): Promise<void>;
   version(): Promise<string>;
 }
 
