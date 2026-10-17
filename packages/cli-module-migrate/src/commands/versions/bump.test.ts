@@ -18,7 +18,7 @@ import * as runObj from '@backstage/cli-common';
 import { overrideTargetPaths } from '@backstage/cli-common/testUtils';
 import bump, { bumpBackstageJsonVersion, createVersionFinder } from './bump';
 import { registerMswTestHooks, withLogCollector } from '@backstage/test-utils';
-import { YarnInfoInspectData } from '../../lib/versioning/packages';
+import type { PackageInfo } from '@backstage/cli-node/alpha';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 import { NotFoundError } from '@backstage/errors';
@@ -55,17 +55,25 @@ jest.mock('@backstage/cli-common', () => {
       exitCode: null,
       waitForExit: jest.fn().mockResolvedValue(undefined),
     }),
+    runOutput: jest.fn(),
   };
 });
 
+// Package info is fetched through `yarn npm info`, which ends up here
 const mockFetchPackageInfo = jest.fn();
-jest.mock('../../lib/versioning/packages', () => {
-  const actual = jest.requireActual('../../lib/versioning/packages');
-  return {
-    ...actual,
-    fetchPackageInfo: (name: string) => mockFetchPackageInfo(name),
-  };
-});
+
+// Mocks the output of the Yarn commands that the package manager runs
+function mockYarnOutput() {
+  jest.mocked(runObj.runOutput).mockImplementation(async args => {
+    if (args.join(' ') === 'yarn --version') {
+      return '4.18.0\n';
+    }
+    if (args.join(' ').startsWith('yarn npm info --json ')) {
+      return JSON.stringify(await mockFetchPackageInfo(args[args.length - 1]));
+    }
+    throw new Error(`Unexpected command ${args.join(' ')}`);
+  });
+}
 
 const REGISTRY_VERSIONS: { [name: string]: string } = {
   '@backstage/core': '1.0.6',
@@ -123,6 +131,7 @@ describe('bump', () => {
 
   beforeEach(() => {
     overrideTargetPaths(mockDir.path);
+    mockYarnOutput();
     mockFetchPackageInfo.mockImplementation(async name => ({
       name: name,
       'dist-tags': {
@@ -221,6 +230,62 @@ describe('bump', () => {
         '@backstage/core': '^1.0.6',
         '@backstage/theme': '^2.0.0',
       },
+    });
+  });
+
+  it('should bump without a lockfile and skip the breaking changes report', async () => {
+    mockDir.setContent({
+      'package.json': JSON.stringify({
+        workspaces: ['packages/*'],
+      }),
+      packages: {
+        b: {
+          'package.json': JSON.stringify({
+            name: 'b',
+            dependencies: {
+              '@backstage/theme': '^1.0.0',
+            },
+          }),
+        },
+      },
+    });
+
+    jest.spyOn(runObj, 'run').mockReturnValue({
+      exitCode: null,
+      waitForExit: jest.fn().mockResolvedValue(undefined),
+    } as any);
+    worker.use(
+      http.get('https://versions.backstage.io/v1/tags/main/manifest.json', () =>
+        HttpResponse.json({ packages: [] }),
+      ),
+    );
+    const { log: logs, warn } = await withLogCollector(
+      ['log', 'warn'],
+      async () => {
+        await bump({ args: ['--release', 'main', '--skip-install'], info });
+      },
+    );
+    expect(warn).toEqual([
+      expect.stringContaining(
+        'Failed to read yarn.lock, breaking updates will not be reported',
+      ),
+      'Could not find package.json for @backstage/theme@^2.0.0 in b (dependencies)',
+    ]);
+    expectLogsToMatch(logs, [
+      'Using default pattern glob @backstage/*',
+      'Checking for updates of @backstage/theme',
+      'Some packages are outdated, updating',
+      'bumping @backstage/theme in b to ^2.0.0',
+      'Skipping yarn install',
+      'Checking for moved packages to the @backstage-community namespace...',
+      'Version bump complete!',
+    ]);
+    expect(runObj.run).not.toHaveBeenCalled();
+    await expect(
+      fs.readJson(mockDir.resolve('packages/b/package.json')),
+    ).resolves.toEqual({
+      name: 'b',
+      dependencies: { '@backstage/theme': '^2.0.0' },
     });
   });
 
@@ -484,12 +549,15 @@ describe('bump', () => {
     expect(mockFetchPackageInfo).toHaveBeenCalledWith('@backstage/core');
 
     expect(runObj.run).toHaveBeenCalledTimes(2);
-    expect(runObj.run).toHaveBeenCalledWith([
-      'yarn',
-      'plugin',
-      'import',
-      'https://versions.backstage.io/v1/releases/0.0.1/yarn-plugin',
-    ]);
+    expect(runObj.run).toHaveBeenCalledWith(
+      [
+        'yarn',
+        'plugin',
+        'import',
+        'https://versions.backstage.io/v1/releases/0.0.1/yarn-plugin',
+      ],
+      { cwd: mockDir.path },
+    );
     expect(runObj.run).toHaveBeenCalledWith(
       ['yarn', 'install'],
       expect.any(Object),
@@ -915,7 +983,7 @@ describe('bumpBackstageJsonVersion', () => {
 });
 
 describe('createVersionFinder', () => {
-  async function findVersion(tag: string, data: Partial<YarnInfoInspectData>) {
+  async function findVersion(tag: string, data: Partial<PackageInfo>) {
     const fetcher = () =>
       Promise.resolve({
         name: '@backstage/core',
@@ -1014,6 +1082,7 @@ describe('environment variables', () => {
 
   beforeEach(() => {
     overrideTargetPaths(mockDir.path);
+    mockYarnOutput();
   });
 
   beforeEach(() => {
@@ -1238,12 +1307,15 @@ describe('environment variables', () => {
     ]);
 
     expect(runObj.run).toHaveBeenCalledTimes(2);
-    expect(runObj.run).toHaveBeenCalledWith([
-      'yarn',
-      'plugin',
-      'import',
-      'https://custom.example.com/v1/releases/1.5.0/yarn-plugin',
-    ]);
+    expect(runObj.run).toHaveBeenCalledWith(
+      [
+        'yarn',
+        'plugin',
+        'import',
+        'https://custom.example.com/v1/releases/1.5.0/yarn-plugin',
+      ],
+      { cwd: mockDir.path },
+    );
     expect(runObj.run).toHaveBeenCalledWith(
       ['yarn', 'install'],
       expect.any(Object),

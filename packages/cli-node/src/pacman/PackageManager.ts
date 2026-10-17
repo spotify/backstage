@@ -114,9 +114,10 @@ export interface PackageManager {
 
   /**
    * Executes the package manager's pack command to bundle the package in
-   * `packageDir` into an archive written to `output`.
+   * `packageDir` into an archive written to `output`. Any `options` are
+   * forwarded to the pack process, except that `cwd` is always `packageDir`.
    */
-  pack(output: string, packageDir: string): Promise<void>;
+  pack(output: string, packageDir: string, options?: RunOptions): Promise<void>;
 
   /** Fetches information about the given package, usually from NPM. */
   fetchPackageInfo(name: string): Promise<PackageInfo>;

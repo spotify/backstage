@@ -22,10 +22,10 @@ import { relative as relativePath } from 'node:path';
 import {
   PackageGraph,
   BackstagePackageJson,
-  YarnLockfile,
   runWorkerQueueThreads,
   SuccessCache,
 } from '@backstage/cli-node';
+import { detectPackageManager, Lockfile } from '@backstage/cli-node/alpha';
 import { targetPaths } from '@backstage/cli-common';
 
 import { createScriptOptionsParser } from '../../lib/optionsParser';
@@ -113,14 +113,19 @@ export default async ({ args, info }: CliCommandContext) => {
     name: 'lint',
     basePath: successCacheDir,
   });
-  const cacheContext = useSuccessCache
-    ? {
-        entries: await cache.read(),
-        lockfile: await YarnLockfile.load(
-          targetPaths.resolveWorkspaceRoot('yarn.lock'),
-        ),
-      }
-    : undefined;
+  let cacheContext: { entries: Set<string>; lockfile: Lockfile } | undefined;
+  if (useSuccessCache) {
+    // The cache keys depend on the lockfile, so without one there is no cache
+    const packageManager = await detectPackageManager();
+    try {
+      const lockfile = await packageManager.loadLockfile();
+      cacheContext = { entries: await cache.read(), lockfile };
+    } catch (error) {
+      console.warn(
+        `Failed to read ${packageManager.lockfileName()}, linting without the success cache, ${error}`,
+      );
+    }
+  }
 
   if (since) {
     const graph = PackageGraph.fromPackages(packages);

@@ -42,6 +42,7 @@ import { BuildOptions, Output } from './types';
 import { targetPaths } from '@backstage/cli-common';
 
 import { BackstagePackageJson } from '@backstage/cli-node';
+import { detectPackageManager } from '@backstage/cli-node/alpha';
 import { readEntryPoints } from '../entryPoints';
 
 const SCRIPT_EXTS = ['.js', '.jsx', '.ts', '.tsx'];
@@ -302,9 +303,10 @@ export async function makeRollupConfigs(
       const declarationsExist = await fs.pathExists(path);
       if (!declarationsExist) {
         const declarationPath = relativePath(targetDir, path);
+        const packageManager = await detectPackageManager();
         throw new Error(
           `No declaration files found at ${declarationPath}, be sure to run ${chalk.bgRed.white(
-            'yarn tsc',
+            packageManager.getCommandHint(['tsc']),
           )} to generate .d.ts files before packaging`,
         );
       }

@@ -21,7 +21,8 @@ import yargs from 'yargs';
 // eslint-disable-next-line @backstage/no-undeclared-imports
 import type * as JestCli from 'jest-cli';
 import { relative as relativePath } from 'node:path';
-import { YarnLockfile, PackageGraph, SuccessCache } from '@backstage/cli-node';
+import { PackageGraph, SuccessCache } from '@backstage/cli-node';
+import { detectPackageManager, Lockfile } from '@backstage/cli-node/alpha';
 
 import {
   findOwnPaths,
@@ -361,10 +362,18 @@ export default async ({ args, info }: CliCommandContext) => {
     testGlobal.__backstageCli_jestSuccessCache = {
       // This is called by `config/jest.js` after the project configs have been gathered
       async filterConfigs(projectConfigs, globalRootConfig) {
+        // The cache keys depend on the lockfile, so without one there is no cache
+        const packageManager = await detectPackageManager();
+        let lockfile: Lockfile;
+        try {
+          lockfile = await packageManager.loadLockfile();
+        } catch (error) {
+          console.warn(
+            `Failed to read ${packageManager.lockfileName()}, running all tests without the success cache, ${error}`,
+          );
+          return projectConfigs;
+        }
         const cacheEntries = await cache.read();
-        const lockfile = await YarnLockfile.load(
-          targetPaths.resolveWorkspaceRoot('yarn.lock'),
-        );
         const getPackageTreeHash = await readPackageTreeHashes(graph);
 
         // Base hash shared by all projects

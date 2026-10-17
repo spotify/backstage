@@ -179,10 +179,11 @@ describe('Yarn', () => {
       { cwd: '/pkg' },
     );
 
-    await berry.pack('/out/pkg.tgz', '/pkg');
+    const onStdout = jest.fn();
+    await berry.pack('/out/pkg.tgz', '/pkg', { cwd: '/other', onStdout });
     expect(mockRun).toHaveBeenLastCalledWith(
       ['yarn', 'pack', '--out', '/out/pkg.tgz'],
-      { cwd: '/pkg' },
+      { cwd: '/pkg', onStdout },
     );
   });
 

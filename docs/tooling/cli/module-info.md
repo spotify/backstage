@@ -70,6 +70,7 @@ When using `--format json`, the output is structured as follows:
     "os": "Darwin 23.0.0 - darwin/arm64",
     "node": "v18.17.0",
     "yarn": "3.6.0",
+    "packageManager": { "name": "yarn", "version": "3.6.0" },
     "cli": { "version": "0.27.0", "local": false },
     "backstage": "1.20.0"
   },
@@ -82,3 +83,5 @@ When using `--format json`, the output is structured as follows:
   }
 }
 ```
+
+The `packageManager` field names the package manager of the project and its version. The `yarn` field is only present in Yarn projects, and is kept for existing consumers of the output.
