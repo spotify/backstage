@@ -32,13 +32,13 @@ export default defineConfig({
     ? []
     : [
         {
-          command: 'yarn start app',
+          command: '{{packageManager}} start app',
           url: 'http://localhost:3000',
           reuseExistingServer: true,
           timeout: 120_000,
         },
         {
-          command: 'yarn start backend',
+          command: '{{packageManager}} start backend',
           port: 7007,
           reuseExistingServer: true,
           timeout: 60_000,

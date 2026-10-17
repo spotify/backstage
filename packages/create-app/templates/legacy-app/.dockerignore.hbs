@@ -1,6 +1,8 @@
 .git
+{{#unless pnpm}}
 .yarn/cache
 .yarn/install-state.gz
+{{/unless}}
 node_modules
 packages/*/src
 packages/*/node_modules
