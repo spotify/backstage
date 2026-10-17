@@ -26554,6 +26554,7 @@ __metadata:
     nodemon: "npm:^3.0.1"
     pgtools: "npm:^1.0.0"
     tree-kill: "npm:^1.2.2"
+    yaml: "npm:^2.0.0"
   bin:
     e2e-test: bin/e2e-test
   languageName: unknown

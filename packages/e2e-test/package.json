@@ -42,7 +42,8 @@
     "handlebars": "^4.7.3",
     "mysql2": "^3.0.0",
     "pgtools": "^1.0.0",
-    "tree-kill": "^1.2.2"
+    "tree-kill": "^1.2.2",
+    "yaml": "^2.0.0"
   },
   "devDependencies": {
     "@backstage/cli": "workspace:^",
