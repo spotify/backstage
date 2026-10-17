@@ -19,8 +19,10 @@ export {
   type PackageManager,
   type PackageManagerInstallOptions,
   type PackageInfo,
+  type ParseLockfileOptions,
 } from './PackageManager';
 export type { Lockfile, LockfileEntry } from './Lockfile';
+export { Pnpm, type PnpmCreateOptions } from './pnpm';
 export {
   Yarn,
   type YarnCreateOptions,

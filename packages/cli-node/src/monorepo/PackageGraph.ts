@@ -402,6 +402,21 @@ export class PackageGraph extends Map<string, PackageGraphNode> {
         thisLockfile = await packageManager.loadLockfile();
         otherLockfile = await packageManager.parseLockfile(
           await GitUtils.readFileAtRef(lockfileName, options.ref),
+          {
+            // Workspace packages must be named from the same ref as the lockfile
+            readWorkspacePackageJson: async dir => {
+              try {
+                return JSON.parse(
+                  await GitUtils.readFileAtRef(
+                    path.posix.join(dir, 'package.json'),
+                    options.ref,
+                  ),
+                );
+              } catch {
+                return undefined;
+              }
+            },
+          },
         );
         diff = thisLockfile.diff(otherLockfile);
       } catch (error) {

@@ -20,8 +20,11 @@ export {
   type PackageManager,
   type PackageManagerInstallOptions,
   type PackageInfo,
+  type ParseLockfileOptions,
   type Lockfile,
   type LockfileEntry,
+  Pnpm,
+  type PnpmCreateOptions,
   Yarn,
   type YarnCreateOptions,
 } from './pacman';

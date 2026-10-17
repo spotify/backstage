@@ -15,6 +15,7 @@
  */
 
 import { Yarn } from './yarn';
+import { Pnpm } from './pnpm';
 import { Lockfile } from './Lockfile';
 import { targetPaths } from '@backstage/cli-common';
 import { RunOnOutput, RunOptions } from '@backstage/cli-common';
@@ -57,6 +58,27 @@ export type PackageManagerInstallOptions = {
 
   /** Called with each chunk of output written to stderr by the package manager. */
   onStderr?: RunOnOutput;
+};
+
+/**
+ * Options for {@link PackageManager.parseLockfile}.
+ *
+ * @alpha
+ */
+export type ParseLockfileOptions = {
+  /**
+   * Reads the `package.json` file of a workspace package, given the directory
+   * of the package relative to the workspace root with forward slashes. It must
+   * read from the same source as the lockfile contents, such as the same git
+   * ref, and return `undefined` when the file doesn't exist there.
+   *
+   * Lockfiles that list workspace packages by directory, such as the pnpm
+   * lockfile, use it to name them. Without it those packages can't be named,
+   * and diffing the lockfile fails.
+   */
+  readWorkspacePackageJson?: (
+    dir: string,
+  ) => Promise<{ name?: string; version?: string } | undefined>;
 };
 
 /**
@@ -126,7 +148,10 @@ export interface PackageManager {
   loadLockfile(): Promise<Lockfile>;
 
   /** Parses the given string as a {@link Lockfile}. */
-  parseLockfile(contents: string): Promise<Lockfile>;
+  parseLockfile(
+    contents: string,
+    options?: ParseLockfileOptions,
+  ): Promise<Lockfile>;
 
   /**
    * Whether the package manager supports the 'backstage:^' version protocol.
@@ -164,8 +189,20 @@ const detectedPackageManagers = new Map<string, Promise<PackageManager>>();
  *
  * @remarks
  *
- * Only the workspace root is read, never a directory above or below it.
- * Detection warnings are written to stderr. The result is cached per
+ * The package manager is picked from the workspace root, in this order:
+ *
+ * 1. The `packageManager` field in the root `package.json`, when it names
+ *    `yarn` or `pnpm`.
+ * 2. A `pnpm-lock.yaml` file: pnpm.
+ * 3. A `yarn.lock` file: Yarn.
+ * 4. A `pnpm-workspace.yaml` file: pnpm.
+ * 5. A `workspaces` field in the root `package.json`: Yarn.
+ * 6. Otherwise Yarn, with a warning.
+ *
+ * A `packageManager` field that names another package manager is ignored with
+ * a warning, and detection fails when the project files don't decide it
+ * either. Only the workspace root is read, never a directory above or below
+ * it. Detection warnings are written to stderr. The result is cached per
  * workspace root.
  *
  * @alpha
@@ -202,43 +239,122 @@ async function detectPackageManagerInDir(
   workspaceRootDir: string,
 ): Promise<PackageManager> {
   const createYarn = () => Yarn.create({ workspaceRootDir });
+  const createPnpm = () => Pnpm.create({ workspaceRootDir });
 
+  const packageJson = await readPackageJson(workspaceRootDir);
+  const declared = getDeclaredPackageManager(packageJson);
+  const declaredName = declared?.name;
+
+  const hasPnpmLockfile = await fileExists(
+    resolvePath(workspaceRootDir, 'pnpm-lock.yaml'),
+  );
   const hasYarnLockfile = await fileExists(
     resolvePath(workspaceRootDir, 'yarn.lock'),
   );
-  if (hasYarnLockfile) {
-    return await createYarn();
+  if (hasPnpmLockfile && hasYarnLockfile) {
+    console.warn(
+      'Both pnpm-lock.yaml and yarn.lock exist in the workspace root. Remove the lockfile ' +
+        'of the package manager that the project no longer uses.',
+    );
   }
 
-  try {
-    const packageJson = await fs.readJson(
-      resolvePath(workspaceRootDir, 'package.json'),
+  // A project that names its package manager is taken at its word, so that a
+  // lockfile that another package manager left behind does not decide it
+  if (declaredName === 'yarn') {
+    return createYarn();
+  }
+  if (declaredName === 'pnpm') {
+    return createPnpm();
+  }
+  if (declaredName !== undefined) {
+    console.warn(
+      `Ignoring the ${declared?.field} field in the root package.json, since ${declaredName} is not supported.`,
     );
-    if (packageJson.workspaces) {
-      // technically this could be NPM as well
-      return await createYarn();
-    }
+  }
 
-    const declaredPacman = packageJson.packageManager;
-    if (declaredPacman) {
-      const [name, _version] = declaredPacman.split('@');
-      switch (name) {
-        case 'yarn':
-          return await createYarn();
-        default:
-          console.warn(`Detected unsupported package manager: ${name}.`);
-          return await createYarn();
-      }
+  if (hasPnpmLockfile) {
+    return createPnpm();
+  }
+  if (hasYarnLockfile) {
+    return createYarn();
+  }
+  if (await fileExists(resolvePath(workspaceRootDir, 'pnpm-workspace.yaml'))) {
+    return createPnpm();
+  }
+  if (packageJson?.workspaces) {
+    // technically this could be NPM as well
+    return createYarn();
+  }
+
+  if (declaredName !== undefined) {
+    // Falling back to Yarn here would write a Yarn lockfile into a project
+    // that picked another package manager
+    throw new Error(
+      `The ${declared?.field} field in the root package.json names ${declaredName}, which is not supported. ` +
+        'Use yarn or pnpm, or remove the field so that the package manager is detected from the project files.',
+    );
+  }
+
+  console.warn(
+    'Could not detect the package manager from the project files, using Yarn.',
+  );
+  return createYarn();
+}
+
+const SUPPORTED_PACKAGE_MANAGERS = ['yarn', 'pnpm'];
+
+/**
+ * Reads the package manager that the root package.json names, from the
+ * packageManager field or else from devEngines.packageManager. When
+ * devEngines lists several, the first supported one is used.
+ */
+function getDeclaredPackageManager(
+  packageJson: Record<string, unknown> | undefined,
+): { name: string; field: string } | undefined {
+  const packageManager = packageJson?.packageManager;
+  const fromPackageManager =
+    typeof packageManager === 'string'
+      ? packageManager.split('@')[0]
+      : undefined;
+
+  const devEngines = packageJson?.devEngines as
+    | { packageManager?: unknown }
+    | undefined;
+  const devEngineNames = [devEngines?.packageManager].flat().flatMap(entry => {
+    const name = (entry as { name?: unknown } | undefined)?.name;
+    return typeof name === 'string' ? [name] : [];
+  });
+  const fromDevEngines =
+    devEngineNames.find(name => SUPPORTED_PACKAGE_MANAGERS.includes(name)) ??
+    devEngineNames[0];
+
+  if (fromPackageManager !== undefined) {
+    if (
+      fromDevEngines !== undefined &&
+      fromDevEngines !== fromPackageManager &&
+      SUPPORTED_PACKAGE_MANAGERS.includes(fromDevEngines)
+    ) {
+      console.warn(
+        `The packageManager field in the root package.json names ${fromPackageManager}, but devEngines.packageManager names ${fromDevEngines}. Using ${fromPackageManager}.`,
+      );
     }
+    return { name: fromPackageManager, field: 'packageManager' };
+  }
+  if (fromDevEngines !== undefined) {
+    return { name: fromDevEngines, field: 'devEngines.packageManager' };
+  }
+  return undefined;
+}
+
+async function readPackageJson(
+  workspaceRootDir: string,
+): Promise<Record<string, unknown> | undefined> {
+  try {
+    return await fs.readJson(resolvePath(workspaceRootDir, 'package.json'));
   } catch (error) {
     console.warn(`Error during package manager detection: ${error}`);
+    return undefined;
   }
-
-  // currently yarn is the only package manager supported so just log an error and use it anyway
-  console.warn(
-    'Yarn was not detected, but is the only supported package manager.',
-  );
-  return await createYarn();
 }
 
 async function fileExists(filePath: string): Promise<boolean> {

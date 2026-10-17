@@ -17,7 +17,7 @@
 const fs = require('fs-extra');
 const path = require('node:path');
 const crypto = require('node:crypto');
-const { glob } = require('glob');
+const { getPackages } = require('@manypkg/get-packages');
 const { version } = require('../package.json');
 const { targetPaths } = require('@backstage/cli-common');
 const {
@@ -344,14 +344,16 @@ async function getRootConfig() {
     rejectFrontendNetworkRequests,
   };
 
-  const ws = rootPkgJson.workspaces;
-  const workspacePatterns = Array.isArray(ws) ? ws : ws?.packages;
+  // pnpm declares its workspace packages in pnpm-workspace.yaml rather than in
+  // the workspaces field of the root package.json
+  const isWorkspaceRoot =
+    Boolean(rootPkgJson.workspaces) ||
+    (await fs.pathExists(
+      targetPaths.resolveInstallationRoot('pnpm-workspace.yaml'),
+    ));
 
   // Check if we're running within a specific monorepo package. In that case just get the single project config.
-  if (
-    !workspacePatterns ||
-    targetPaths.installationRootDir !== targetPaths.dir
-  ) {
+  if (!isWorkspaceRoot || targetPaths.installationRootDir !== targetPaths.dir) {
     return getProjectConfig(
       targetPaths.dir,
       {
@@ -375,24 +377,15 @@ async function getRootConfig() {
 
   // If the target package is a workspace root, we find all packages in the
   // workspace and load those in as separate jest projects instead.
-  const projectPaths = await Promise.all(
-    workspacePatterns.map(pattern =>
-      glob(path.join(targetPaths.installationRootDir, pattern), {
-        windowsPathsNoEscape: true,
-      }),
-    ),
-  ).then(_ => _.flat());
+  const { packages: workspacePackages } = await getPackages(
+    targetPaths.installationRootDir,
+  );
 
   let projects = await Promise.all(
-    projectPaths.flat().map(async projectPath => {
-      const packagePath = path.resolve(projectPath, 'package.json');
-      if (!(await fs.pathExists(packagePath))) {
-        return undefined;
-      }
-
+    workspacePackages.map(async ({ dir: projectPath, packageJson }) => {
       // We check for the presence of "backstage-cli test" in the package test
       // script to determine whether a given package should be tested
-      const packageData = await fs.readJson(packagePath);
+      const packageData = packageJson;
       const testScript = packageData.scripts && packageData.scripts.test;
       const isSupportedTestScript =
         testScript?.includes('backstage-cli test') ||

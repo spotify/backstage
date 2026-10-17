@@ -50,6 +50,10 @@ import {
   PackageManager,
 } from '@backstage/cli-node/alpha';
 import { createTypeDistProject } from '../typeDistProject';
+import {
+  preparePnpmDistWorkspace,
+  restorePnpmDependencyRanges,
+} from './pnpmDistWorkspace';
 
 // These packages aren't safe to pack in parallel since the CLI depends on them
 const UNSAFE_PACKAGES = [
@@ -78,7 +82,8 @@ type Options = {
   /**
    * Files to copy into the target workspace.
    *
-   * Defaults to the lockfile of the package manager and 'package.json'.
+   * Defaults to the lockfile of the package manager and 'package.json', along
+   * with 'pnpm-workspace.yaml' for pnpm workspaces.
    */
   files?: FileEntry[];
 
@@ -94,7 +99,9 @@ type Options = {
 
   /**
    * If set, creates a skeleton tarball that contains all package.json files
-   * with the same structure as the workspace dir.
+   * with the same structure as the workspace dir. For pnpm workspaces it also
+   * contains the lockfile, `pnpm-workspace.yaml`, and the patch files and
+   * pnpmfile that the install needs.
    */
   skeleton?: 'skeleton.tar' | 'skeleton.tar.gz';
 
@@ -246,11 +253,13 @@ export async function createDistWorkspace(
     }
   }
 
+  const isPnpm = packageManager.name() === 'pnpm';
   await moveToDistWorkspace(
     targetDir,
     targets,
     Boolean(options.alwaysPack),
     Boolean(options.enableFeatureDetection),
+    isPnpm,
     logger,
   );
 
@@ -266,13 +275,29 @@ export async function createDistWorkspace(
     );
   }
 
+  // With pnpm, the skeleton also gets the lockfile and the files that the
+  // install reads, since the dist workspace has its own version of them
+  const installFiles =
+    isPnpm && !options.files
+      ? await preparePnpmDistWorkspace({
+          workspaceRootDir: targetPaths.workspaceRootDir,
+          targetDir,
+          bundledPackageDirs: targets
+            .filter(target => target.packageJson.bundled)
+            .map(target =>
+              relativePath(targetPaths.workspaceRootDir, target.dir),
+            ),
+        })
+      : [];
+
   if (options.skeleton) {
-    const skeletonFiles = targets
-      .map(target => {
+    const skeletonFiles = [
+      ...targets.map(target => {
         const dir = relativePath(targetPaths.workspaceRootDir, target.dir);
         return joinPath(dir, 'package.json');
-      })
-      .sort();
+      }),
+      ...installFiles,
+    ].sort();
 
     await tar.create(
       {
@@ -295,7 +320,7 @@ export async function createDistWorkspace(
  * a dist workspace do not require one.
  */
 export async function getDefaultWorkspaceFiles(
-  packageManager: Pick<PackageManager, 'lockfileName'>,
+  packageManager: Pick<PackageManager, 'name' | 'lockfileName'>,
   logger: { warn(msg: string): void },
 ): Promise<FileEntry[]> {
   const files: FileEntry[] = ['package.json'];
@@ -306,6 +331,15 @@ export async function getDefaultWorkspaceFiles(
     logger.warn(
       `There is no ${lockfile} in the workspace root, so the dist workspace has no lockfile and cannot be installed from one`,
     );
+  }
+  // pnpm reads the workspace packages and its settings from this file
+  if (
+    packageManager.name() === 'pnpm' &&
+    (await fs.pathExists(
+      targetPaths.resolveWorkspaceRoot('pnpm-workspace.yaml'),
+    ))
+  ) {
+    files.push('pnpm-workspace.yaml');
   }
   return files;
 }
@@ -350,6 +384,7 @@ async function moveToDistWorkspace(
   localPackages: PackageGraphNode[],
   alwaysPack: boolean,
   enableFeatureDetection: boolean,
+  isPnpm: boolean,
   logger: { log(msg: string): void; warn(msg: string): void },
 ): Promise<void> {
   const [fastPackPackages, slowPackPackages] = partition(
@@ -427,6 +462,14 @@ async function moveToDistWorkspace(
         {
           spaces: 2,
         },
+      );
+    } else if (isPnpm) {
+      // pnpm pack replaces workspace and catalog ranges with versions, which
+      // no longer match the lockfile. pnpm would also look the versions of
+      // workspace packages up in the registry instead of linking them.
+      await restorePnpmDependencyRanges(
+        resolvePath(absoluteOutputPath, 'package.json'),
+        target.packageJson,
       );
     }
   }

@@ -21,6 +21,7 @@ import {
   resetDetectedPackageManagers,
 } from './PackageManager';
 import { Yarn } from './yarn';
+import { Pnpm } from './pnpm';
 import { withLogCollector } from '@backstage/test-utils';
 
 const mockDir = createMockDirectory();
@@ -28,12 +29,15 @@ overrideTargetPaths(mockDir.path);
 
 const mockYarnCreate = jest.spyOn(Yarn, 'create');
 const mockYarn = {} as Yarn;
+const mockPnpmCreate = jest.spyOn(Pnpm, 'create');
+const mockPnpm = {} as Pnpm;
 
 describe('PackageManager', () => {
   describe('detectPackageManager', () => {
     beforeEach(() => {
       resetDetectedPackageManagers();
       mockYarnCreate.mockResolvedValue(mockYarn);
+      mockPnpmCreate.mockResolvedValue(mockPnpm);
     });
 
     afterEach(() => {
@@ -85,12 +89,13 @@ describe('PackageManager', () => {
         expect(mockYarnCreate).toHaveBeenCalled();
       });
 
-      it('should fall back to yarn when root package.json packageManager field is unrecognized', async () => {
+      it('should ignore an unsupported packageManager field when there is a yarn.lock', async () => {
         mockDir.setContent({
           'package.json': JSON.stringify({
             name: 'foo',
             packageManager: 'something-else@1.0.0',
           }),
+          'yarn.lock': '',
         });
 
         const { log, warn } = await withLogCollector(async () => {
@@ -100,8 +105,25 @@ describe('PackageManager', () => {
         expect(mockYarnCreate).toHaveBeenCalledTimes(1);
         expect(log).toEqual([]);
         expect(warn).toEqual([
-          'Detected unsupported package manager: something-else.',
+          'Ignoring the packageManager field in the root package.json, since something-else is not supported.',
         ]);
+      });
+
+      it('should fail for an unsupported packageManager field without other signals', async () => {
+        mockDir.setContent({
+          'package.json': JSON.stringify({
+            name: 'foo',
+            packageManager: 'bun@1.0.0',
+          }),
+        });
+
+        await withLogCollector(async () => {
+          await expect(detectPackageManager()).rejects.toThrow(
+            'The packageManager field in the root package.json names bun, which is not supported.',
+          );
+        });
+        expect(mockYarnCreate).not.toHaveBeenCalled();
+        expect(mockPnpmCreate).not.toHaveBeenCalled();
       });
 
       it('should fall back to yarn with available detection methods', async () => {
@@ -131,6 +153,120 @@ describe('PackageManager', () => {
         // extra warning for the error reading package.json
         expect(log).toEqual([]);
         expect(warn).toHaveLength(2);
+      });
+    });
+
+    describe('pnpm', () => {
+      it('should detect via pnpm-lock.yaml', async () => {
+        mockDir.setContent({
+          'package.json': JSON.stringify({ name: 'foo' }),
+          'pnpm-lock.yaml': '',
+        });
+        await expect(detectPackageManager()).resolves.toBe(mockPnpm);
+        expect(mockPnpmCreate).toHaveBeenCalledWith({
+          workspaceRootDir: mockDir.path,
+        });
+      });
+
+      it('should detect via pnpm-workspace.yaml, even with a workspaces field', async () => {
+        mockDir.setContent({
+          'package.json': JSON.stringify({ workspaces: ['packages/*'] }),
+          'pnpm-workspace.yaml': 'packages:\n  - packages/*\n',
+        });
+        await expect(detectPackageManager()).resolves.toBe(mockPnpm);
+        expect(mockYarnCreate).not.toHaveBeenCalled();
+      });
+
+      it('should prefer the packageManager field over a leftover lockfile', async () => {
+        mockDir.setContent({
+          'package.json': JSON.stringify({ packageManager: 'pnpm@12.7.0' }),
+          'yarn.lock': '',
+        });
+        await expect(detectPackageManager()).resolves.toBe(mockPnpm);
+        expect(mockYarnCreate).not.toHaveBeenCalled();
+      });
+
+      it('should read devEngines.packageManager when there is no packageManager field', async () => {
+        // Before the first pnpm install of a migration, only yarn.lock exists
+        mockDir.setContent({
+          'package.json': JSON.stringify({
+            devEngines: {
+              packageManager: { name: 'pnpm', version: '^12.7.0' },
+            },
+          }),
+          'yarn.lock': '',
+        });
+        await expect(detectPackageManager()).resolves.toBe(mockPnpm);
+
+        // The array form uses the first supported entry
+        resetDetectedPackageManagers();
+        mockDir.setContent({
+          'package.json': JSON.stringify({
+            devEngines: {
+              packageManager: [{ name: 'bun' }, { name: 'yarn' }],
+            },
+          }),
+          'pnpm-lock.yaml': '',
+        });
+        await expect(detectPackageManager()).resolves.toBe(mockYarn);
+
+        // An unsupported name is ignored like an unsupported packageManager
+        resetDetectedPackageManagers();
+        mockDir.setContent({
+          'package.json': JSON.stringify({
+            devEngines: { packageManager: { name: 'bun' } },
+          }),
+          'pnpm-lock.yaml': '',
+        });
+        const { warn } = await withLogCollector(async () => {
+          await expect(detectPackageManager()).resolves.toBe(mockPnpm);
+        });
+        expect(warn).toEqual([
+          'Ignoring the devEngines.packageManager field in the root package.json, since bun is not supported.',
+        ]);
+
+        // The packageManager field wins over a conflicting devEngines entry
+        resetDetectedPackageManagers();
+        mockDir.setContent({
+          'package.json': JSON.stringify({
+            packageManager: 'pnpm@12.7.0',
+            devEngines: { packageManager: { name: 'yarn' } },
+          }),
+        });
+        const { warn: warn2 } = await withLogCollector(async () => {
+          await expect(detectPackageManager()).resolves.toBe(mockPnpm);
+        });
+        expect(warn2).toEqual([
+          'The packageManager field in the root package.json names pnpm, but devEngines.packageManager names yarn. Using pnpm.',
+        ]);
+      });
+
+      it('should warn about a second lockfile', async () => {
+        mockDir.setContent({
+          'package.json': JSON.stringify({ name: 'foo' }),
+          'pnpm-lock.yaml': '',
+          'yarn.lock': '',
+        });
+        const { warn } = await withLogCollector(async () => {
+          await expect(detectPackageManager()).resolves.toBe(mockPnpm);
+        });
+        expect(warn).toEqual([
+          expect.stringContaining(
+            'Both pnpm-lock.yaml and yarn.lock exist in the workspace root',
+          ),
+        ]);
+
+        // The packageManager field decides, but the warning stays
+        resetDetectedPackageManagers();
+        mockDir.setContent({
+          'package.json': JSON.stringify({ packageManager: 'yarn@4.18.0' }),
+          'pnpm-lock.yaml': '',
+          'yarn.lock': '',
+        });
+        const { warn: warn2 } = await withLogCollector(async () => {
+          await expect(detectPackageManager()).resolves.toBe(mockYarn);
+        });
+        expect(warn2).toHaveLength(1);
       });
     });
 

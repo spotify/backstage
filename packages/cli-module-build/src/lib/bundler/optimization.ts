@@ -22,6 +22,12 @@ import {
 } from '@rspack/core';
 import { STATIC_ASSET_HASH_LENGTH } from './staticAssetHash';
 
+// Matches the name of the package that a module belongs to, skipping the
+// virtual store of the pnpm isolated linker, where every path starts with
+// node_modules/.pnpm/<name>@<version>/node_modules/<name>
+const PACKAGE_PATH_PATTERN =
+  /[\\/]node_modules[\\/](?:\.pnpm[\\/][^\\/]+[\\/]node_modules[\\/])?(.*?)([\\/]|$)/;
+
 export const optimization = (
   options: BundlingOptions,
 ): RspackOptionsNormalized['optimization'] => {
@@ -82,18 +88,13 @@ export const optimization = (
             packages: {
               chunks: 'initial',
               test(module: any) {
-                return Boolean(
-                  module?.resource?.match(
-                    /[\\/]node_modules[\\/](.*?)([\\/]|$)/,
-                  ),
-                );
+                return Boolean(module?.resource?.match(PACKAGE_PATH_PATTERN));
               },
               name(module: any) {
                 // get the name. E.g. node_modules/packageName/not/this/part.js
                 // or node_modules/packageName
-                const packageName = module.resource.match(
-                  /[\\/]node_modules[\\/](.*?)([\\/]|$)/,
-                )[1];
+                const packageName =
+                  module.resource.match(PACKAGE_PATH_PATTERN)[1];
 
                 // npm package names are URL-safe, but some servers don't like @ symbols
                 return packageName.replace('@', '');

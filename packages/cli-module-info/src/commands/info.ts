@@ -18,7 +18,11 @@ import { cli } from 'cleye';
 import { version as infoModuleVersion } from '../../package.json';
 import os from 'node:os';
 import { targetPaths, findOwnPaths } from '@backstage/cli-common';
-import { BackstagePackageJson, PackageGraph } from '@backstage/cli-node';
+import {
+  BackstagePackage,
+  BackstagePackageJson,
+  PackageGraph,
+} from '@backstage/cli-node';
 import { detectPackageManager, Lockfile } from '@backstage/cli-node/alpha';
 import { minimatch } from 'minimatch';
 import fs from 'fs-extra';
@@ -42,10 +46,18 @@ function tryReadPackageJson(
 }
 
 /**
- * Checks if a package has a backstage field in its package.json
+ * Checks if a package has a backstage field in its package.json. Workspace
+ * packages are read from the workspace, since they are not always linked into
+ * the root node_modules, for example with pnpm.
  */
-function hasBackstageField(packageName: string, targetPath: string): boolean {
-  const pkg = tryReadPackageJson(packageName, targetPath);
+function hasBackstageField(
+  packageName: string,
+  targetPath: string,
+  workspacePackages: Map<string, BackstagePackage>,
+): boolean {
+  const pkg =
+    workspacePackages.get(packageName)?.packageJson ??
+    tryReadPackageJson(packageName, targetPath);
   return pkg?.backstage !== undefined;
 }
 
@@ -141,12 +153,12 @@ export default async ({ args, info }: CliCommandContext) => {
     }
     const targetPath = targetPaths.installationRootDir;
 
-    // Get workspace package names and their versions
-    const workspacePackages = new Map<string, string>();
+    // Get workspace packages by name
+    const workspacePackages = new Map<string, BackstagePackage>();
     try {
       const packages = await PackageGraph.listTargetPackages();
       for (const pkg of packages) {
-        workspacePackages.set(pkg.packageJson.name, pkg.packageJson.version);
+        workspacePackages.set(pkg.packageJson.name, pkg);
       }
     } catch {
       // If we can't list workspace packages, continue without them
@@ -193,10 +205,10 @@ export default async ({ args, info }: CliCommandContext) => {
       }
       if (workspacePackages.has(pkg)) {
         // Check if local package has backstage field
-        if (hasBackstageField(pkg, targetPath)) {
+        if (hasBackstageField(pkg, targetPath, workspacePackages)) {
           localDeps.add(pkg);
         }
-      } else if (hasBackstageField(pkg, targetPath)) {
+      } else if (hasBackstageField(pkg, targetPath, workspacePackages)) {
         installedDeps.add(pkg);
       }
     }
@@ -224,7 +236,12 @@ export default async ({ args, info }: CliCommandContext) => {
         local: Object.fromEntries(
           sortedLocal.map(dep => [
             dep,
-            [{ version: workspacePackages.get(dep) ?? 'unknown' }],
+            [
+              {
+                version:
+                  workspacePackages.get(dep)?.packageJson.version ?? 'unknown',
+              },
+            ],
           ]),
         ),
       };
@@ -264,7 +281,8 @@ export default async ({ args, info }: CliCommandContext) => {
       console.log('Local:');
       const maxLength = Math.max(...sortedLocal.map(d => d.length));
       for (const dep of sortedLocal) {
-        const version = workspacePackages.get(dep) ?? 'unknown';
+        const version =
+          workspacePackages.get(dep)?.packageJson.version ?? 'unknown';
         console.log(`  ${dep.padEnd(maxLength)} ${version}`);
       }
     }

@@ -16,7 +16,71 @@
 
 import { createMockDirectory } from '@backstage/backend-test-utils';
 import { overrideTargetPaths } from '@backstage/cli-common/testUtils';
-import { getDefaultWorkspaceFiles } from './createDistWorkspace';
+import { PackageGraph } from '@backstage/cli-node';
+import {
+  detectPackageManager,
+  PackageManager,
+} from '@backstage/cli-node/alpha';
+import {
+  createDistWorkspace,
+  getDefaultWorkspaceFiles,
+} from './createDistWorkspace';
+
+jest.mock('@backstage/cli-node/alpha', () => ({
+  ...jest.requireActual('@backstage/cli-node/alpha'),
+  detectPackageManager: jest.fn(),
+}));
+
+function mockPackageManager(name: string, lockfileName: string) {
+  jest.mocked(detectPackageManager).mockResolvedValue({
+    name: () => name,
+    lockfileName: () => lockfileName,
+  } as Partial<PackageManager> as PackageManager);
+}
+
+describe('createDistWorkspace', () => {
+  const mockDir = createMockDirectory();
+
+  beforeEach(() => {
+    overrideTargetPaths(mockDir.path);
+    jest.spyOn(PackageGraph, 'listTargetPackages').mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('copies the root files that the package manager needs', async () => {
+    mockDir.setContent({
+      'package.json': '{}',
+      'pnpm-lock.yaml': 'lockfileVersion: 9.0',
+      'pnpm-workspace.yaml': 'packages: [packages/*]',
+      'yarn.lock': '# yarn',
+      dist: {},
+    });
+
+    mockPackageManager('pnpm', 'pnpm-lock.yaml');
+    await createDistWorkspace([], { targetDir: mockDir.resolve('dist') });
+    expect(mockDir.content({ path: 'dist', shouldReadAsText: true })).toEqual({
+      'package.json': '{}',
+      'pnpm-lock.yaml': 'lockfileVersion: 9.0',
+      'pnpm-workspace.yaml': 'packages: [packages/*]',
+    });
+
+    mockDir.setContent({
+      'package.json': '{}',
+      'pnpm-workspace.yaml': 'packages: [packages/*]',
+      'yarn.lock': '# yarn',
+      dist: {},
+    });
+    mockPackageManager('yarn', 'yarn.lock');
+    await createDistWorkspace([], { targetDir: mockDir.resolve('dist') });
+    expect(mockDir.content({ path: 'dist', shouldReadAsText: true })).toEqual({
+      'package.json': '{}',
+      'yarn.lock': '# yarn',
+    });
+  });
+});
 
 describe('getDefaultWorkspaceFiles', () => {
   const mockDir = createMockDirectory();
@@ -27,7 +91,7 @@ describe('getDefaultWorkspaceFiles', () => {
 
   it('copies the lockfile when there is one, and warns when there is not', async () => {
     const logger = { warn: jest.fn() };
-    const yarn = { lockfileName: () => 'yarn.lock' };
+    const yarn = { name: () => 'yarn', lockfileName: () => 'yarn.lock' };
 
     mockDir.setContent({ 'package.json': '{}', 'yarn.lock': '' });
     await expect(getDefaultWorkspaceFiles(yarn, logger)).resolves.toEqual([

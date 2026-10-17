@@ -51,7 +51,10 @@ export interface PackageManager {
   lockfileName(): string;
   name(): string;
   pack(output: string, packageDir: string, options?: RunOptions): Promise<void>;
-  parseLockfile(contents: string): Promise<Lockfile>;
+  parseLockfile(
+    contents: string,
+    options?: ParseLockfileOptions,
+  ): Promise<Lockfile>;
   run(args: string[], options?: RunOptions): Promise<void>;
   runScript(
     script: string,
@@ -76,6 +79,53 @@ export type PackageManagerInstallOptions = {
   env?: Partial<NodeJS.ProcessEnv>;
   onStdout?: RunOnOutput;
   onStderr?: RunOnOutput;
+};
+
+// @alpha
+export type ParseLockfileOptions = {
+  readWorkspacePackageJson?: (dir: string) => Promise<
+    | {
+        name?: string;
+        version?: string;
+      }
+    | undefined
+  >;
+};
+
+// @alpha
+export class Pnpm implements PackageManager {
+  static create(options?: PnpmCreateOptions): Promise<Pnpm>;
+  fetchPackageInfo(name: string): Promise<PackageInfo>;
+  getCommandHint(args: string[]): string;
+  install(options?: PackageManagerInstallOptions): Promise<void>;
+  loadLockfile(): Promise<Lockfile>;
+  lockfileName(): string;
+  name(): string;
+  pack(output: string, packageDir: string, options?: RunOptions): Promise<void>;
+  parseLockfile(
+    contents: string,
+    options?: ParseLockfileOptions,
+  ): Promise<Lockfile>;
+  run(args: string[], options?: RunOptions): Promise<void>;
+  runScript(
+    script: string,
+    args?: string[],
+    options?: RunOptions,
+  ): Promise<void>;
+  runWorkspaceScript(
+    workspace: string,
+    script: string,
+    args?: string[],
+    options?: RunOptions,
+  ): Promise<void>;
+  supportsBackstageVersionProtocol(): Promise<boolean>;
+  toString(): string;
+  version(): Promise<string>;
+}
+
+// @alpha
+export type PnpmCreateOptions = {
+  workspaceRootDir?: string;
 };
 
 // @alpha
