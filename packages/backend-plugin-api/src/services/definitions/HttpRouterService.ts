@@ -15,6 +15,55 @@
  */
 
 import type { Handler } from 'express';
+import type { IncomingMessage } from 'node:http';
+import type { Duplex } from 'node:stream';
+import type { BackstageCredentials } from './AuthService';
+
+/**
+ * Handles an authenticated WebSocket upgrade or forwards it upstream.
+ * The request retains its full URL.
+ *
+ * The handler must take ownership of the socket or close it before resolving.
+ * Express middleware and path-based HTTP auth policies do not apply.
+ *
+ * @public
+ */
+export type HttpRouterServiceWebSocketHandler = (
+  context: HttpRouterServiceWebSocketContext,
+) => void | Promise<void>;
+
+/**
+ * Request, transport, and credentials available to a WebSocket upgrade handler.
+ *
+ * @public
+ */
+export interface HttpRouterServiceWebSocketContext {
+  request: IncomingMessage;
+  socket: Duplex;
+  head: Buffer;
+  credentials: BackstageCredentials;
+  /** The offered protocol value that authenticated the caller, if any. */
+  authProtocol?: string;
+}
+
+/**
+ * Options for {@link HttpRouterService.addWebSocketHandler}.
+ *
+ * @public
+ */
+export interface HttpRouterServiceWebSocketOptions {
+  /** An exact path relative to the plugin base URL. Use `/` for the base URL. */
+  path: string;
+  handler: HttpRouterServiceWebSocketHandler;
+  /**
+   * Defaults to `authenticated`, accepting user and service tokens.
+   * `user` accepts only full user tokens. `user-cookie` also accepts limited
+   * user tokens and the Backstage auth cookie. Cookie requests require an
+   * Origin matching the app URL or configured CORS origins.
+   * `unauthenticated` supplies none credentials without authenticating tokens.
+   */
+  authPolicy?: 'authenticated' | 'user' | 'user-cookie' | 'unauthenticated';
+}
 
 /**
  * Options for {@link HttpRouterService.addAuthPolicy}.
@@ -39,6 +88,19 @@ export interface HttpRouterService {
    * typically makes its base path `/api/<plugin-id>`.
    */
   use(handler: Handler): void;
+
+  /**
+   * Registers a WebSocket upgrade handler at an exact plugin-relative path.
+   * Paths must start with `/`. Matching is case-sensitive, ignores the query
+   * string, and treats a trailing slash as significant. Patterns are not supported.
+   *
+   * The handler receives the raw upgrade request, socket, and buffered data.
+   * The framework authenticates before invoking the handler. The handler owns
+   * the handshake or forwarding, including protocol selection. HTTP middleware
+   * and path-based auth policies do not apply.
+   * The framework destroys upgraded sockets when the backend shuts down.
+   */
+  addWebSocketHandler(options: HttpRouterServiceWebSocketOptions): void;
 
   /**
    * Adds an auth policy to the router. This is used to allow unauthenticated or

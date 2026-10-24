@@ -271,7 +271,14 @@ export async function startTestBackend<TExtensionPoints extends any[]>(
         { logger },
       );
 
-      lifecycle.addShutdownHook(() => server.stop(), { logger });
+      router.attachWebSocketServer(server, logger);
+      lifecycle.addShutdownHook(
+        () => {
+          router.closeWebSockets();
+          return server.stop();
+        },
+        { logger },
+      );
 
       await server.start();
 

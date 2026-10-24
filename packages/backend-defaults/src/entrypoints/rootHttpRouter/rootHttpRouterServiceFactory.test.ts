@@ -19,6 +19,9 @@ import {
   mockServices,
 } from '@backstage/backend-test-utils';
 import { Express } from 'express';
+import { IncomingMessage, Server } from 'node:http';
+import { Socket } from 'node:net';
+import { PassThrough } from 'node:stream';
 import request from 'supertest';
 import { rootHttpRouterServiceFactory } from './rootHttpRouterServiceFactory';
 import {
@@ -54,6 +57,50 @@ async function createExpressApp(...dependencies: ServiceFactory[]) {
 }
 
 describe('rootHttpRouterServiceFactory', () => {
+  it('attaches WebSocket routing and closes upgraded sockets on shutdown', async () => {
+    let server: Server;
+    const lifecycle = new BackendLifecycleImpl(mockServices.rootLogger());
+    const tester = ServiceFactoryTester.from(
+      rootHttpRouterServiceFactory({
+        configure(options) {
+          options.applyDefaults();
+          server = options.server;
+        },
+      }),
+      {
+        dependencies: [
+          mockServices.rootConfig.factory({
+            data: { backend: { listen: { port: 0 } } },
+          }),
+          createServiceFactory({
+            service: coreServices.rootLifecycle,
+            deps: {},
+            factory: () => lifecycle,
+          }),
+        ],
+      },
+    );
+    const router = await tester.getSubject();
+    const handler = jest.fn();
+    router.addWebSocketHandler({ path: '/events', handler: handler });
+    const socket = new PassThrough();
+    const req = new IncomingMessage(new Socket());
+    req.url = '/events';
+    req.headers.upgrade = 'websocket';
+    server!.emit('upgrade', req, socket, Buffer.alloc(0));
+    await Promise.resolve();
+    expect(handler).toHaveBeenCalledWith({
+      request: req,
+      socket,
+      head: Buffer.alloc(0),
+    });
+    expect(socket.destroyed).toBe(false);
+    await lifecycle.startup();
+    await lifecycle.beforeShutdown();
+    await lifecycle.shutdown();
+    expect(socket.destroyed).toBe(true);
+  });
+
   it('should make the health endpoints available', async () => {
     const { app, tester } = await createExpressApp(
       mockServices.rootConfig.factory({

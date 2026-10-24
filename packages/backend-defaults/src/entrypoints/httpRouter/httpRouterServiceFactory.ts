@@ -20,6 +20,7 @@ import {
   coreServices,
   createServiceFactory,
   HttpRouterServiceAuthPolicy,
+  HttpRouterServiceWebSocketOptions,
 } from '@backstage/backend-plugin-api';
 import {
   createAuthIntegrationRouter,
@@ -28,6 +29,7 @@ import {
   createLifecycleMiddleware,
 } from './http';
 import { MiddlewareFactory } from '../rootHttpRouter';
+import { authenticateWebSocket } from './http/authenticateWebSocket';
 import { createRateLimitMiddleware } from './http/createRateLimitMiddleware.ts';
 
 /**
@@ -85,6 +87,42 @@ export const httpRouterServiceFactory = createServiceFactory({
     return {
       use(handler: Handler): void {
         pluginRoutes.use(handler);
+      },
+      addWebSocketHandler({
+        path,
+        handler,
+        authPolicy = 'authenticated',
+      }: HttpRouterServiceWebSocketOptions): void {
+        if (!path.startsWith('/')) {
+          throw new Error('WebSocket path must start with /');
+        }
+        rootHttpRouter.addWebSocketHandler({
+          path: `/api/${plugin.getId()}${path === '/' ? '' : path}`,
+          async handler({ request, socket, head }) {
+            let context;
+            try {
+              context = await authenticateWebSocket({
+                auth,
+                config,
+                request,
+                authPolicy,
+              });
+            } catch (error) {
+              const status =
+                error.name === 'NotAllowedError'
+                  ? '403 Forbidden'
+                  : '401 Unauthorized';
+              socket.end(
+                `HTTP/1.1 ${status}\r\nConnection: close\r\nContent-Length: 0\r\n\r\n`,
+                () => socket.destroy(),
+              );
+              return;
+            }
+            if (!socket.destroyed) {
+              await handler({ request, socket, head, ...context });
+            }
+          },
+        });
       },
       addAuthPolicy(policy: HttpRouterServiceAuthPolicy): void {
         credentialsBarrier.addAuthPolicy(policy);

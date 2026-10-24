@@ -14,29 +14,16 @@
  * limitations under the License.
  */
 
-import express from 'express';
 import http from 'node:http';
-import { PassThrough } from 'node:stream';
+import { once } from 'node:events';
 import request from 'supertest';
 import { WebSocket, WebSocketServer } from 'ws';
-import { createRouter } from './router';
 import {
   mockCredentials,
-  mockErrorHandler,
   mockServices,
+  startTestBackend,
 } from '@backstage/backend-test-utils';
-import { AuthService } from '@backstage/backend-plugin-api';
-
-const eventsServiceMock = mockServices.events.mock();
-const discovery = mockServices.discovery.mock({
-  getBaseUrl: async () => 'http://127.0.0.1/api/signals',
-});
-const userInfo = mockServices.userInfo.mock({
-  getUserInfo: async () => ({
-    userEntityRef: 'user:default/test',
-    ownershipEntityRefs: ['user:default/test'],
-  }),
-});
+import { signalsPlugin } from '../plugin';
 
 async function connectWebSocket(
   server: http.Server,
@@ -84,237 +71,152 @@ async function connectWebSocket(
   });
 }
 
-describe('createRouter', () => {
-  let server: http.Server;
-  const shutdownHooks: Array<() => void | Promise<void>> = [];
-  const lifecycle = mockServices.lifecycle.mock({
-    addShutdownHook: (hook: () => void | Promise<void>) => {
-      shutdownHooks.push(hook);
-    },
-  });
-
-  beforeAll(async () => {
-    const router = await createRouter({
-      logger: mockServices.logger.mock(),
-      events: eventsServiceMock,
-      discovery,
-      userInfo,
-      config: mockServices.rootConfig(),
-      lifecycle,
-      instanceMetadata: mockServices.rootInstanceMetadata.mock(),
-      auth: mockServices.auth(),
-    });
-    const app = express().use('/api/signals', router).use(mockErrorHandler());
-    server = http.createServer(app);
-    await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
-    // Register the upgrade handler via the first HTTP request
-    await request(server).get('/api/signals/health');
-  });
-
-  afterAll(async () => {
-    await Promise.all(shutdownHooks.map(hook => hook()));
-    await new Promise<void>((resolve, reject) =>
-      server.close(err => (err ? reject(err) : resolve())),
-    );
-  });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  describe('GET /health', () => {
-    it('returns ok', async () => {
-      const response = await request(server).get('/api/signals/health');
-
-      expect(response.status).toEqual(200);
-      expect(response.body).toEqual({ status: 'ok' });
-    });
-  });
-
-  describe('WebSocket authentication', () => {
-    it('rejects connections without a token', async () => {
-      const result = await connectWebSocket(server);
-      expect(result.statusCode).toEqual(401);
-      expect(result.ws).toBeUndefined();
-    });
-
-    it('rejects connections with an invalid token', async () => {
-      const result = await connectWebSocket(
-        server,
-        mockCredentials.user.invalidToken(),
-      );
-      expect(result.statusCode).toEqual(401);
-      expect(result.ws).toBeUndefined();
-    });
-
-    it('rejects connections with a service token', async () => {
-      const result = await connectWebSocket(
-        server,
-        mockCredentials.service.token(),
-      );
-      expect(result.statusCode).toEqual(401);
-      expect(result.ws).toBeUndefined();
-    });
-
-    it('accepts connections with a valid user token', async () => {
-      const result = await connectWebSocket(
-        server,
-        mockCredentials.user.token(),
-      );
-      expect(result.ws).toBeDefined();
-      expect(result.ws?.readyState).toEqual(WebSocket.OPEN);
-      expect(result.ws?.protocol).toEqual(mockCredentials.user.token());
-      expect(userInfo.getUserInfo).toHaveBeenCalled();
-      result.ws?.close();
-    });
-
-    it('finds a user token among multiple protocols', async () => {
-      const result = await connectWebSocket(server, [
-        'other-protocol',
-        mockCredentials.service.token(),
-        mockCredentials.user.token(),
-      ]);
-
-      expect(result.ws).toBeDefined();
-      expect(result.ws?.readyState).toEqual(WebSocket.OPEN);
-      expect(result.ws?.protocol).toEqual(mockCredentials.user.token());
-      expect(userInfo.getUserInfo).toHaveBeenCalled();
-      result.ws?.close();
-
-      const rejected = await connectWebSocket(server, [
-        'other-protocol',
-        mockCredentials.service.token(),
-      ]);
-      expect(rejected.statusCode).toEqual(401);
-      expect(rejected.ws).toBeUndefined();
-    });
-  });
-});
-
-describe('handleUpgrade', () => {
-  async function setupServer(
-    authOverride?: Partial<AuthService>,
-  ): Promise<http.Server> {
-    const auth = Object.assign(
-      mockServices.auth(),
-      authOverride,
-    ) as AuthService;
-
-    const router = await createRouter({
-      logger: mockServices.logger.mock(),
-      events: mockServices.events.mock(),
-      discovery: mockServices.discovery.mock({
-        getBaseUrl: async () => '/api/signals',
+describe('signals framework router', () => {
+  it('accepts the first WebSocket connection, authenticates users, and preserves protocol compatibility', async () => {
+    const userInfo = mockServices.userInfo.mock({
+      getUserInfo: async () => ({
+        userEntityRef: 'user:default/test',
+        ownershipEntityRefs: ['user:default/test'],
       }),
-      userInfo: mockServices.userInfo(),
-      config: mockServices.rootConfig(),
-      lifecycle: mockServices.lifecycle.mock(),
-      instanceMetadata: mockServices.rootInstanceMetadata.mock(),
-      auth,
     });
-
-    const app = express().use(router);
-    const server = http.createServer(app);
-    await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
-    const port = (server.address() as { port: number }).port;
-
-    // Register the upgrade handler by sending one request with the
-    // Upgrade header through express. Guard against the listener
-    // already being registered, and clean up the trigger request.
-    if (server.listenerCount('upgrade') === 0) {
-      const trigger = http.get(
-        {
-          hostname: '127.0.0.1',
-          port,
-          path: '/',
-          headers: { Upgrade: 'websocket' },
-        },
-        res => res.resume(),
-      );
-      trigger.on('error', () => {});
-      await new Promise<void>(resolve => {
-        server.on('newListener', event => {
-          if (event === 'upgrade') {
-            trigger.destroy();
-            resolve();
-          }
-        });
-      });
-    }
-
-    return server;
-  }
-
-  function emitUpgrade(server: http.Server, token: string): Promise<string> {
-    const socket = new PassThrough();
-    server.emit(
-      'upgrade',
-      {
-        url: '/api/signals',
-        headers: { 'sec-websocket-protocol': token },
-        socket: { remoteAddress: '127.0.0.1' },
-      },
-      socket,
-      Buffer.alloc(0),
+    const backend = await startTestBackend({
+      features: [
+        signalsPlugin,
+        userInfo.factory,
+        mockServices.httpAuth.factory({
+          defaultCredentials: mockCredentials.none(),
+        }),
+      ],
+    });
+    // No HTTP request is needed before the first upgrade.
+    const first = await connectWebSocket(
+      backend.server,
+      mockCredentials.user.token(),
     );
-    return new Promise(resolve => {
-      const chunks: Buffer[] = [];
-      let resolved = false;
-      const done = () => {
-        if (resolved) return;
-        resolved = true;
-        resolve(Buffer.concat(chunks).toString());
-      };
-      socket.on('data', chunk => chunks.push(chunk));
-      socket.on('end', done);
-      socket.on('close', done);
-    });
-  }
-
-  it('writes 401 response without upgrade headers when auth fails', async () => {
-    const server = await setupServer({
-      authenticate: async () => {
-        throw new Error('Invalid token');
-      },
-    });
-
-    try {
-      const response = await emitUpgrade(server, 'invalid-token');
-
-      expect(response).toBe(
-        'HTTP/1.1 401 Unauthorized\r\n' +
-          'Connection: close\r\n' +
-          'Content-Length: 0\r\n' +
-          '\r\n',
-      );
-    } finally {
-      server.closeAllConnections();
-      await new Promise<void>(resolve => server.close(() => resolve()));
+    expect(first.ws?.readyState).toBe(WebSocket.OPEN);
+    expect(first.ws?.protocol).toBe(mockCredentials.user.token());
+    expect(userInfo.getUserInfo).toHaveBeenCalledWith(mockCredentials.user());
+    first.ws?.close();
+    for (const protocols of [
+      undefined,
+      mockCredentials.user.invalidToken(),
+      mockCredentials.service.token(),
+      'application-protocol',
+    ]) {
+      const result = await connectWebSocket(backend.server, protocols);
+      expect(result.statusCode).toBe(401);
+      expect(result.ws).toBeUndefined();
     }
+    const mixed = await connectWebSocket(backend.server, [
+      'application-protocol',
+      mockCredentials.service.token(),
+      mockCredentials.user.token(),
+    ]);
+    expect(mixed.ws?.readyState).toBe(WebSocket.OPEN);
+    expect(mixed.ws?.protocol).toBe(mockCredentials.user.token());
+    mixed.ws?.close();
+    await request(backend.server)
+      .get('/api/signals/health')
+      .expect(200, { status: 'ok' });
+    await request(backend.server).get('/api/signals/not-public').expect(401);
+    const port = (backend.server.address() as { port: number }).port;
+    const unmatched = new WebSocket(
+      `ws://127.0.0.1:${port}/api/signals/unmatched`,
+      mockCredentials.user.token(),
+    );
+    await expect(once(unmatched, 'open')).rejects.toThrow('404');
   });
 
-  it('writes 500 response without upgrade headers when handleUpgrade throws', async () => {
+  it('delivers signals only to subscribed eligible users and closes connections on shutdown', async () => {
+    const events = mockServices.events();
+    const backend = await startTestBackend({
+      features: [
+        signalsPlugin,
+        mockServices.events.mock({
+          publish: events.publish.bind(events),
+          subscribe: events.subscribe.bind(events),
+        }).factory,
+      ],
+    });
+    const result = await connectWebSocket(
+      backend.server,
+      mockCredentials.user.token(),
+    );
+    const connection = result.ws;
+    if (!connection) {
+      throw new Error('Expected a WebSocket connection');
+    }
+    const port = (backend.server.address() as { port: number }).port;
+    const other = new WebSocket(`ws://127.0.0.1:${port}/api/signals`, {
+      headers: {
+        authorization: mockCredentials.user.header('user:default/other'),
+      },
+    });
+    await once(other, 'open');
+    expect(other.protocol).toBe('');
+    const received: string[] = [];
+    other.on('message', data => received.push(data.toString()));
+    connection.send(JSON.stringify({ action: 'subscribe', channel: 'test' }));
+    other.send(JSON.stringify({ action: 'subscribe', channel: 'test' }));
+    // A pong follows the preceding subscription frames on the same connection.
+    const pong = once(connection, 'pong');
+    connection.ping();
+    await pong;
+    const otherPong = once(other, 'pong');
+    other.ping();
+    await otherPong;
+    const message = once(connection, 'message');
+    await events.publish({
+      topic: 'signals',
+      eventPayload: {
+        channel: 'test',
+        message: { value: 'hello' },
+        recipients: { type: 'user', entityRef: 'user:default/mock' },
+      },
+    });
+    expect(JSON.parse((await message)[0].toString())).toEqual({
+      channel: 'test',
+      message: { value: 'hello' },
+    });
+    const broadcast = once(connection, 'message');
+    const otherBroadcast = once(other, 'message');
+    await events.publish({
+      topic: 'signals',
+      eventPayload: {
+        channel: 'test',
+        message: { value: 'everyone' },
+        recipients: { type: 'broadcast' },
+      },
+    });
+    await broadcast;
+    await otherBroadcast;
+    expect(received.map(value => JSON.parse(value))).toEqual([
+      { channel: 'test', message: { value: 'everyone' } },
+    ]);
+    const closed = once(connection, 'close');
+    const otherClosed = once(other, 'close');
+    await backend.stop();
+    await Promise.all([closed, otherClosed]);
+    expect(connection.readyState).toBe(WebSocket.CLOSED);
+    expect(other.readyState).toBe(WebSocket.CLOSED);
+  });
+
+  it('returns 500 when the WebSocket library fails during the handshake', async () => {
+    const backend = await startTestBackend({ features: [signalsPlugin] });
     const spy = jest
       .spyOn(WebSocketServer.prototype, 'handleUpgrade')
       .mockImplementation(() => {
-        throw new Error('WebSocket upgrade failed');
+        throw new Error('Handshake failed');
       });
-
-    const server = await setupServer();
-
     try {
-      const response = await emitUpgrade(server, 'mock-user-token');
-
-      expect(response).toBe(
-        'HTTP/1.1 500 Internal Server Error\r\n' +
-          'Connection: close\r\n' +
-          'Content-Length: 0\r\n' +
-          '\r\n',
+      const result = await connectWebSocket(
+        backend.server,
+        mockCredentials.user.token(),
       );
+      expect(result.statusCode).toBe(500);
+      expect(result.ws).toBeUndefined();
     } finally {
       spy.mockRestore();
-      server.closeAllConnections();
-      await new Promise<void>(resolve => server.close(() => resolve()));
     }
   });
 });

@@ -429,6 +429,7 @@ export namespace mockServices {
     export const mock = createServiceMock(coreServices.httpRouter, () => ({
       use: jest.fn(),
       addAuthPolicy: jest.fn(),
+      addWebSocketHandler: jest.fn(),
     }));
   }
 
@@ -436,6 +437,7 @@ export namespace mockServices {
     export const factory = () => rootHttpRouterServiceFactory();
     export const mock = createServiceMock(coreServices.rootHttpRouter, () => ({
       use: jest.fn(),
+      addWebSocketHandler: jest.fn(),
     }));
   }
 

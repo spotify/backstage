@@ -15,6 +15,23 @@
  */
 
 import type { Handler } from 'express';
+import type { IncomingMessage } from 'node:http';
+import type { Duplex } from 'node:stream';
+
+/**
+ * Options for root-level WebSocket upgrades. Authentication is the handler's
+ * responsibility. Plugins should use the authenticated plugin router instead.
+ *
+ * @public
+ */
+export interface RootHttpRouterServiceWebSocketOptions {
+  path: string;
+  handler(context: {
+    request: IncomingMessage;
+    socket: Duplex;
+    head: Buffer;
+  }): void | Promise<void>;
+}
 
 /**
  * HTTP route registration for root services.
@@ -29,4 +46,13 @@ export interface RootHttpRouterService {
    * The path is required and may not be empty.
    */
   use(path: string, handler: Handler): void;
+
+  /**
+   * Registers a WebSocket upgrade handler at an exact absolute path. Matching
+   * follows {@link HttpRouterService.addWebSocketHandler}.
+   *
+   * The handler owns authentication, origin checks, and the handshake or
+   * forwarding. HTTP middleware and auth policies do not apply.
+   */
+  addWebSocketHandler(options: RootHttpRouterServiceWebSocketOptions): void;
 }

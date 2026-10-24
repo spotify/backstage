@@ -198,6 +198,8 @@ const rootHttpRouterServiceFactoryWithOptions = (
         },
       });
 
+      router.attachWebSocketServer(server, logger);
+
       if (config.has('backend.lifecycle.serverShutdownDelay')) {
         const serverShutdownDelay = readDurationFromConfig(config, {
           key: 'backend.lifecycle.serverShutdownDelay',
@@ -210,7 +212,10 @@ const rootHttpRouterServiceFactoryWithOptions = (
         });
       }
 
-      lifecycle.addShutdownHook(() => server.stop());
+      lifecycle.addShutdownHook(() => {
+        router.closeWebSockets();
+        return server.stop();
+      });
 
       await server.start();
 
