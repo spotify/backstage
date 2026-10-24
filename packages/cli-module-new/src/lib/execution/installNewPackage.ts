@@ -53,7 +53,7 @@ export async function installNewPackage(input: PortableTemplateInput) {
 }
 
 async function addDependency(input: PortableTemplateInput, path: string) {
-  const pkgJsonPath = targetPaths.resolveRoot(path);
+  const pkgJsonPath = targetPaths.resolveInstallationRoot(path);
 
   const pkgJson = await fs.readJson(pkgJsonPath).catch(error => {
     if (error.code === 'ENOENT') {
@@ -85,7 +85,9 @@ async function tryAddFrontendLegacy(input: PortableTemplateInput) {
     );
   }
 
-  const appDefinitionPath = targetPaths.resolveRoot('packages/app/src/App.tsx');
+  const appDefinitionPath = targetPaths.resolveInstallationRoot(
+    'packages/app/src/App.tsx',
+  );
   if (!(await fs.pathExists(appDefinitionPath))) {
     return;
   }
@@ -121,7 +123,7 @@ async function tryAddFrontendLegacy(input: PortableTemplateInput) {
 }
 
 async function tryAddBackend(input: PortableTemplateInput) {
-  const backendIndexPath = targetPaths.resolveRoot(
+  const backendIndexPath = targetPaths.resolveInstallationRoot(
     'packages/backend/src/index.ts',
   );
   if (!(await fs.pathExists(backendIndexPath))) {

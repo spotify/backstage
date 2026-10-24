@@ -1,0 +1,9 @@
+{
+  "name": "fixture-root",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "is-number": "^7.0.0"
+  },
+  "packageManager": "pnpm@12.4.2"
+}

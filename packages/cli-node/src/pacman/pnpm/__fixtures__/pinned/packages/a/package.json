@@ -1,0 +1,13 @@
+{
+  "name": "@fixture/a",
+  "version": "1.0.0",
+  "dependencies": {
+    "@fixture/b": "workspace:^",
+    "my-alias": "npm:is-odd@^3.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "optionalDependencies": {
+    "kind-of": "^6.0.0"
+  }
+}

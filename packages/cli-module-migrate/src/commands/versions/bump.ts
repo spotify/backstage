@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { BACKSTAGE_JSON, run, targetPaths } from '@backstage/cli-common';
+import { BACKSTAGE_JSON, targetPaths } from '@backstage/cli-common';
 
 import { env } from 'node:process';
 import fs from 'fs-extra';
@@ -24,23 +24,20 @@ import { cli } from 'cleye';
 import { isError, NotFoundError } from '@backstage/errors';
 import { resolve as resolvePath } from 'node:path';
 
+import { runConcurrentTasks } from '@backstage/cli-node';
 import {
-  hasBackstageYarnPlugin,
+  detectPackageManager,
   Lockfile,
-  runConcurrentTasks,
-} from '@backstage/cli-node';
-import {
-  fetchPackageInfo,
-  mapDependencies,
-  YarnInfoInspectData,
-} from '../../lib/versioning/packages';
+  PackageInfo,
+} from '@backstage/cli-node/alpha';
+import { mapDependencies } from '../../lib/versioning/packages';
 import {
   getManifestByReleaseLine,
   getManifestByVersion,
   ReleaseManifest,
 } from '@backstage/release-manifests';
 import { migrateMovedPackages } from './migrate';
-import { runYarnInstall } from '../../lib/utils';
+import { runInstall } from '../../lib/utils';
 import type { CliCommandContext } from '@backstage/cli-node';
 
 const DEP_TYPES = [
@@ -86,7 +83,7 @@ export default async ({ args, info }: CliCommandContext) => {
         },
         skipInstall: {
           type: Boolean,
-          description: 'Skips yarn install step',
+          description: 'Skips the install step',
         },
         skipMigrate: {
           type: Boolean,
@@ -98,9 +95,20 @@ export default async ({ args, info }: CliCommandContext) => {
     args,
   );
 
-  const lockfilePath = targetPaths.resolveRoot('yarn.lock');
-  const lockfile = await Lockfile.load(lockfilePath);
-  const yarnPluginEnabled = await hasBackstageYarnPlugin();
+  const packageManager = await detectPackageManager();
+
+  // The lockfile is only used to report breaking updates, so the bump works
+  // without it, for example when a build system owns the installs.
+  let lockfile: Lockfile | undefined;
+  try {
+    lockfile = await packageManager.loadLockfile();
+  } catch (error) {
+    console.warn(
+      `Failed to read ${packageManager.lockfileName()}, breaking updates will not be reported, ${error}`,
+    );
+  }
+  const yarnPluginEnabled =
+    await packageManager.supportsBackstageVersionProtocol();
 
   let pattern = patternFlag;
 
@@ -150,6 +158,7 @@ export default async ({ args, info }: CliCommandContext) => {
     }
     findTargetVersion = createVersionFinder({
       releaseLine: release,
+      packageInfoFetcher: name => packageManager.fetchPackageInfo(name),
       releaseManifest,
     });
   }
@@ -165,7 +174,7 @@ export default async ({ args, info }: CliCommandContext) => {
       ? `${env.BACKSTAGE_VERSIONS_BASE_URL}/v1/releases/${releaseManifest.releaseVersion}/yarn-plugin`
       : `https://versions.backstage.io/v1/releases/${releaseManifest.releaseVersion}/yarn-plugin`;
 
-    await run(['yarn', 'plugin', 'import', yarnPluginUrl]).waitForExit();
+    await packageManager.run(['plugin', 'import', yarnPluginUrl]);
     console.log();
   }
 
@@ -255,7 +264,7 @@ export default async ({ args, info }: CliCommandContext) => {
 
               // Check if the update was at least a pre-v1 minor or post-v1 major release
               const lockfileEntry = lockfile
-                .get(dep.name)
+                ?.get(dep.name)
                 ?.find(entry => entry.range === oldLockfileRange);
               if (lockfileEntry) {
                 const from = lockfileEntry.version;
@@ -289,11 +298,13 @@ export default async ({ args, info }: CliCommandContext) => {
     }
 
     if (!skipInstall) {
-      await runYarnInstall();
+      await runInstall(packageManager);
     } else {
       console.log();
 
-      console.log(chalk.yellow(`Skipping yarn install`));
+      console.log(
+        chalk.yellow(`Skipping ${packageManager.getCommandHint(['install'])}`),
+      );
     }
 
     if (!skipMigrate) {
@@ -304,7 +315,7 @@ export default async ({ args, info }: CliCommandContext) => {
       });
 
       if (changed && !skipInstall) {
-        await runYarnInstall();
+        await runInstall(packageManager);
       }
     }
 
@@ -382,12 +393,12 @@ export function createStrictVersionFinder(options: {
 
 export function createVersionFinder(options: {
   releaseLine?: string;
-  packageInfoFetcher?: () => Promise<YarnInfoInspectData>;
+  packageInfoFetcher: (name: string) => Promise<PackageInfo>;
   releaseManifest?: ReleaseManifest;
 }) {
   const {
     releaseLine = 'latest',
-    packageInfoFetcher = fetchPackageInfo,
+    packageInfoFetcher,
     releaseManifest,
   } = options;
   // The main release line is just an alias for latest
@@ -447,7 +458,7 @@ export function createVersionFinder(options: {
 }
 
 function getBackstageJsonPath() {
-  return targetPaths.resolveRoot(BACKSTAGE_JSON);
+  return targetPaths.backstageJsonPath;
 }
 
 async function getBackstageJson() {
