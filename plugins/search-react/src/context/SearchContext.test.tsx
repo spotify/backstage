@@ -61,6 +61,28 @@ describe('SearchContext', () => {
     jest.resetAllMocks();
   });
 
+  it('Skips the first query when nothing has been searched for', async () => {
+    searchApiMock.query.mockResolvedValue({ results: [] });
+
+    const { result } = renderHook(() => useSearch(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.result.loading).toBe(false);
+    });
+
+    expect(result.current.result.value).toBeUndefined();
+    expect(searchApiMock.query).not.toHaveBeenCalled();
+
+    await act(async () => {
+      result.current.setTerm('term');
+    });
+
+    await waitFor(() => {
+      expect(result.current.result.value).toEqual({ results: [] });
+    });
+    expect(searchApiMock.query).toHaveBeenCalledTimes(1);
+  });
+
   it('Passes children', async () => {
     const text = 'text';
 

@@ -72,15 +72,13 @@ describe('SearchResult', () => {
       result: { loading: false, error: '', value: undefined },
     });
 
-    const { getByRole } = await renderInTestApp(
+    const { queryByRole } = await renderInTestApp(
       <SearchResult>{() => <></>}</SearchResult>,
     );
 
-    await waitFor(() => {
-      expect(
-        getByRole('heading', { name: 'Sorry, no results were found' }),
-      ).toBeInTheDocument();
-    });
+    expect(
+      queryByRole('heading', { name: 'Sorry, no results were found' }),
+    ).not.toBeInTheDocument();
   });
 
   it('On empty result value state', async () => {

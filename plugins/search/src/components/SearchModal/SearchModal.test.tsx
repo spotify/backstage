@@ -63,6 +63,9 @@ describe('SearchModal', () => {
     );
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(
+      screen.queryByText('Sorry, no results were found'),
+    ).not.toBeInTheDocument();
   });
 
   it('Should use parent search context if defined', async () => {

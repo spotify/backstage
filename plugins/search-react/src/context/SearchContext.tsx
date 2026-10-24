@@ -136,14 +136,11 @@ const useSearchContextValue = (
   const prevFilters = usePrevious(filters);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const result = useAsync(async (): Promise<SearchResultSet> => {
+  const result = useAsync(async (): Promise<SearchResultSet | undefined> => {
     if (isFirstEmptyMount.current) {
       isFirstEmptyMount.current = false;
       if (!term && !types.length && !Object.keys(filters).length) {
-        return {
-          results: [],
-          numberOfResults: 0,
-        };
+        return undefined;
       }
     }
 

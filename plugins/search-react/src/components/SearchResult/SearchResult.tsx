@@ -214,7 +214,11 @@ export const SearchResultComponent = (props: SearchResultProps) => {
           );
         }
 
-        if (!value?.results.length) {
+        if (!value) {
+          return null;
+        }
+
+        if (!value.results.length) {
           return noResultsComponent;
         }
 
