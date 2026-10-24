@@ -116,7 +116,9 @@ export default async ({ args, info }: CliCommandContext) => {
   const cacheContext = useSuccessCache
     ? {
         entries: await cache.read(),
-        lockfile: await Lockfile.load(targetPaths.resolveRoot('yarn.lock')),
+        lockfile: await Lockfile.load(
+          targetPaths.resolveWorkspaceRoot('yarn.lock'),
+        ),
       }
     : undefined;
 
@@ -134,7 +136,7 @@ export default async ({ args, info }: CliCommandContext) => {
 
   // This formatter uses the cwd to format file paths, so let's have that happen from the root instead
   if (format === 'eslint-formatter-friendly') {
-    process.chdir(targetPaths.rootDir);
+    process.chdir(targetPaths.installationRootDir);
   }
 
   // Make sure lint output is colored unless the user explicitly disabled it
@@ -154,7 +156,7 @@ export default async ({ args, info }: CliCommandContext) => {
       const lintOptions = parseLintScript(pkg.packageJson.scripts?.lint);
       const base = {
         fullDir: pkg.dir,
-        relativeDir: relativePath(targetPaths.rootDir, pkg.dir),
+        relativeDir: relativePath(targetPaths.installationRootDir, pkg.dir),
         lintOptions,
         parentHash: undefined,
       };
@@ -190,7 +192,7 @@ export default async ({ args, info }: CliCommandContext) => {
       shouldCache: Boolean(cacheContext),
       maxWarnings: maxWarnings ?? '-1',
       successCache: cacheContext?.entries,
-      rootDir: targetPaths.rootDir,
+      rootDir: targetPaths.installationRootDir,
     },
     workerFactory: async ({
       fix: workerFix,
@@ -340,7 +342,10 @@ export default async ({ args, info }: CliCommandContext) => {
   }
 
   if (outputFile && errorOutput) {
-    await fs.writeFile(targetPaths.resolveRoot(outputFile), errorOutput);
+    await fs.writeFile(
+      targetPaths.resolveInstallationRoot(outputFile),
+      errorOutput,
+    );
   }
 
   if (cacheContext) {

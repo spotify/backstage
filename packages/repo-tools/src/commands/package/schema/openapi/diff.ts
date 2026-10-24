@@ -28,7 +28,7 @@ async function check(opts: OptionValues) {
 
   const resolvedOpenapiPath = await getPathToCurrentOpenApiSpec();
   const relativeSpecPath = relativePath(
-    targetPaths.rootDir,
+    targetPaths.workspaceRootDir,
     resolvedOpenapiPath,
   )
     .split(sep)
@@ -53,7 +53,7 @@ async function check(opts: OptionValues) {
     const { stdout } = await exec(
       'oasdiff',
       [subcommand, baseSpec, relativeSpecPath, ...formatArgs, ...failArgs],
-      { cwd: targetPaths.rootDir },
+      { cwd: targetPaths.workspaceRootDir },
     );
     output = stdout.toString();
   } catch (err) {

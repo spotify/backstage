@@ -83,7 +83,7 @@ export default async ({ args, info }: CliCommandContext) => {
     /* eslint-disable-next-line no-restricted-syntax */
     const isLocal = fs.existsSync(findOwnPaths(__dirname).resolve('./src'));
 
-    const backstageFile = targetPaths.resolveRoot('backstage.json');
+    const backstageFile = targetPaths.backstageJsonPath;
     let backstageVersion = 'N/A';
     if (fs.existsSync(backstageFile)) {
       try {
@@ -123,9 +123,9 @@ export default async ({ args, info }: CliCommandContext) => {
       backstage: backstageVersion,
     };
 
-    const lockfilePath = targetPaths.resolveRoot('yarn.lock');
+    const lockfilePath = targetPaths.resolveWorkspaceRoot('yarn.lock');
     const lockfile = await Lockfile.load(lockfilePath);
-    const targetPath = targetPaths.rootDir;
+    const targetPath = targetPaths.installationRootDir;
 
     // Get workspace package names and their versions
     const workspacePackages = new Map<string, string>();

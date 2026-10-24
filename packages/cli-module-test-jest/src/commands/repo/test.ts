@@ -67,16 +67,20 @@ interface TestGlobal extends Global {
 async function readPackageTreeHashes(graph: PackageGraph) {
   const pkgs = Array.from(graph.values()).map(pkg => ({
     ...pkg,
-    path: relativePath(targetPaths.rootDir, pkg.dir),
+    path: relativePath(targetPaths.installationRootDir, pkg.dir),
   }));
-  const output = await runOutput([
-    'git',
-    'ls-tree',
-    '--format=%(objectname)=%(path)',
-    'HEAD',
-    '--',
-    ...pkgs.map(pkg => pkg.path),
-  ]);
+  // Paths given to and printed by git ls-tree are relative to its working directory
+  const output = await runOutput(
+    [
+      'git',
+      'ls-tree',
+      '--format=%(objectname)=%(path)',
+      'HEAD',
+      '--',
+      ...pkgs.map(pkg => pkg.path),
+    ],
+    { cwd: targetPaths.installationRootDir },
+  );
 
   const map = new Map(
     output
@@ -359,7 +363,7 @@ export default async ({ args, info }: CliCommandContext) => {
       async filterConfigs(projectConfigs, globalRootConfig) {
         const cacheEntries = await cache.read();
         const lockfile = await Lockfile.load(
-          targetPaths.resolveRoot('yarn.lock'),
+          targetPaths.resolveWorkspaceRoot('yarn.lock'),
         );
         const getPackageTreeHash = await readPackageTreeHashes(graph);
 

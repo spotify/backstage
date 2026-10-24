@@ -46,7 +46,7 @@ jest.mock('@backstage/cli-common', () => ({
   ...jest.requireActual('@backstage/cli-common'),
   targetPaths: {
     dir: '',
-    rootDir: '',
+    workspaceRootDir: '',
     resolve: jest.fn(),
   },
   run: (...args: unknown[]) => mockRun(...args),
@@ -352,7 +352,7 @@ describe('bundle command', () => {
       'tmp/.keep': '',
     });
     targetPaths.dir = pluginDir;
-    targetPaths.rootDir = mockDir.path;
+    targetPaths.workspaceRootDir = mockDir.path;
     (targetPaths.resolve as jest.Mock).mockImplementation((...args: string[]) =>
       joinPath(targetPaths.dir, ...args),
     );

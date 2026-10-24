@@ -96,7 +96,7 @@ async function findPackageEntryPoints(packageDirs: string[]): Promise<
   return Promise.all(
     packageDirs.map(async packageDir => {
       const pkg = await fs.readJson(
-        targetPaths.resolveRoot(packageDir, 'package.json'),
+        targetPaths.resolveWorkspaceRoot(packageDir, 'package.json'),
       );
 
       return getPackageExportDetails(pkg).map(details => {
@@ -139,7 +139,11 @@ export async function runApiExtraction({
   // inspected.
   const allDistTypesEntryPointPaths = allEntryPoints.map(
     ({ packageDir, distTypesPath }) => {
-      return targetPaths.resolveRoot('./dist-types', packageDir, distTypesPath);
+      return targetPaths.resolveWorkspaceRoot(
+        './dist-types',
+        packageDir,
+        distTypesPath,
+      );
     },
   );
 
@@ -164,8 +168,11 @@ export async function runApiExtraction({
       ? allowWarnings.some(aw => aw === packageDir || minimatch(packageDir, aw))
       : allowWarnings;
 
-    const projectFolder = targetPaths.resolveRoot(packageDir);
-    const packageFolder = targetPaths.resolveRoot('./dist-types', packageDir);
+    const projectFolder = targetPaths.resolveWorkspaceRoot(packageDir);
+    const packageFolder = targetPaths.resolveWorkspaceRoot(
+      './dist-types',
+      packageDir,
+    );
 
     const remainingReportFiles = new Set(
       fs.readdirSync(projectFolder).filter(
@@ -364,7 +371,10 @@ export async function runApiExtraction({
               });
             const expected = await fs.readFile(conflictingFile, 'utf8');
             logReportDiff(
-              relativePath(targetPaths.rootDir, extractorConfig.reportFilePath),
+              relativePath(
+                targetPaths.workspaceRootDir,
+                extractorConfig.reportFilePath,
+              ),
               existing,
               expected,
             );

@@ -215,7 +215,7 @@ export async function createDistWorkspace(
           packageJson: pkg.packageJson,
           outputs: outputs,
           logPrefix: `${chalk.cyan(
-            relativePath(targetPaths.rootDir, pkg.dir),
+            relativePath(targetPaths.workspaceRootDir, pkg.dir),
           )}: `,
           minify: options.minify,
           workspacePackages: packages,
@@ -252,13 +252,16 @@ export async function createDistWorkspace(
   for (const file of files) {
     const src = typeof file === 'string' ? file : file.src;
     const dest = typeof file === 'string' ? file : file.dest;
-    await fs.copy(targetPaths.resolveRoot(src), resolvePath(targetDir, dest));
+    await fs.copy(
+      targetPaths.resolveWorkspaceRoot(src),
+      resolvePath(targetDir, dest),
+    );
   }
 
   if (options.skeleton) {
     const skeletonFiles = targets
       .map(target => {
-        const dir = relativePath(targetPaths.rootDir, target.dir);
+        const dir = relativePath(targetPaths.workspaceRootDir, target.dir);
         return joinPath(dir, 'package.json');
       })
       .sort();
@@ -344,7 +347,7 @@ async function moveToDistWorkspace(
     fastPackPackages.map(async target => {
       logger.log(`Moving ${target.name} into dist workspace`);
 
-      const outputDir = relativePath(targetPaths.rootDir, target.dir);
+      const outputDir = relativePath(targetPaths.workspaceRootDir, target.dir);
       const absoluteOutputPath = resolvePath(workspaceDir, outputDir);
       await productionPack({
         packageDir: target.dir,
@@ -367,7 +370,7 @@ async function moveToDistWorkspace(
 
     const absoluteOutputPath = resolvePath(
       workspaceDir,
-      relativePath(targetPaths.rootDir, target.dir),
+      relativePath(targetPaths.workspaceRootDir, target.dir),
     );
     await packToDirectory({
       packageDir: target.dir,

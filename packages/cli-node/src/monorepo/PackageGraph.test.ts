@@ -19,6 +19,7 @@ import { PackageGraph } from './PackageGraph';
 import { Lockfile } from './Lockfile';
 import { GitUtils } from '../git';
 import { overrideTargetPaths } from '@backstage/cli-common/testUtils';
+import { createMockDirectory } from '@backstage/backend-test-utils';
 
 const mockListChangedFiles = jest.spyOn(GitUtils, 'listChangedFiles');
 const mockReadFileAtRef = jest.spyOn(GitUtils, 'readFileAtRef');
@@ -63,6 +64,43 @@ describe('PackageGraph', () => {
     const { packages } = await getPackages(__dirname);
     const graph = PackageGraph.fromPackages(packages);
     expect(graph.has('@backstage/cli')).toBe(true);
+  });
+
+  it('lists the packages of the installation', async () => {
+    const mockDir = createMockDirectory();
+    mockDir.setContent({
+      'package.json': JSON.stringify({ name: 'monorepo' }),
+      'pnpm-workspace.yaml':
+        'packages:\n  - apps/backstage\n  - apps/backstage/packages/*\n  - libs/*\n',
+      'apps/backstage/package.json': JSON.stringify({
+        name: 'backstage',
+        workspaces: ['packages/*'],
+      }),
+      'apps/backstage/packages/app/package.json': JSON.stringify({
+        name: 'app',
+      }),
+      'libs/other/package.json': JSON.stringify({ name: 'other' }),
+    });
+    const listNames = async () =>
+      (await PackageGraph.listTargetPackages())
+        .map(pkg => pkg.packageJson.name)
+        .sort();
+
+    try {
+      // A nested installation only has the packages that it lists itself
+      overrideTargetPaths({
+        dir: mockDir.resolve('apps/backstage/packages/app'),
+        workspaceRootDir: mockDir.path,
+        installationRootDir: mockDir.resolve('apps/backstage'),
+      });
+      await expect(listNames()).resolves.toEqual(['app']);
+
+      // At the root of the pnpm workspace, the packages of pnpm-workspace.yaml are listed
+      overrideTargetPaths(mockDir.path);
+      await expect(listNames()).resolves.toEqual(['app', 'backstage', 'other']);
+    } finally {
+      overrideTargetPaths('/');
+    }
   });
 
   it('creates a graph', () => {
