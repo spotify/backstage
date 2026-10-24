@@ -58,15 +58,15 @@ export function useCompletePagination<T extends TableItem, TFilter>(
   const [offset, setOffset] = useState(initialOffset);
   const [pageSize, setPageSize] = useState(defaultPageSize);
 
-  // Sync pageSize when the caller changes paginationOptions.pageSize
-  const previousDefaultPageSize = useRef(defaultPageSize);
-  useEffect(() => {
-    if (previousDefaultPageSize.current !== defaultPageSize) {
-      previousDefaultPageSize.current = defaultPageSize;
-      setPageSize(defaultPageSize);
-      setOffset(0);
-    }
-  }, [defaultPageSize]);
+  // Reset during render, not in an effect: a render with the stale page size
+  // (Infinity after `type: 'none'`) computes a NaN offset that sticks.
+  const [previousDefaultPageSize, setPreviousDefaultPageSize] =
+    useState(defaultPageSize);
+  if (previousDefaultPageSize !== defaultPageSize) {
+    setPreviousDefaultPageSize(defaultPageSize);
+    setPageSize(defaultPageSize);
+    setOffset(0);
+  }
 
   // Load data on mount and when loadCount changes (reload trigger)
   useEffect(() => {

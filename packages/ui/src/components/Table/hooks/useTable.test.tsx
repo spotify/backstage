@@ -140,6 +140,30 @@ describe('useTable', () => {
     expect(result.current.tableProps.pagination).toMatchObject({ offset: 10 });
   });
 
+  it('shows the first page when complete pagination is enabled after mount', () => {
+    const { result, rerender } = renderHook(
+      ({ paginate }: { paginate: boolean }) =>
+        useTable<Item>({
+          mode: 'complete',
+          data: items,
+          paginationOptions: paginate
+            ? { type: 'page', pageSize: 10 }
+            : { type: 'none' },
+        }),
+      { initialProps: { paginate: false } },
+    );
+
+    rerender({ paginate: true });
+
+    expect(result.current.tableProps.pagination).toMatchObject({
+      offset: 0,
+      pageSize: 10,
+    });
+    expect(result.current.tableProps.data?.map(item => item.id)).toEqual([
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+    ]);
+  });
+
   it('navigates to offset zero from an initial offset', async () => {
     const getData = createOffsetGetData(items);
     const { result } = renderHook(() =>
