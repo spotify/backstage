@@ -34,7 +34,7 @@ export default function FieldErrorTemplate<
   const id = errorId<T>(idSchema);
 
   return (
-    <div id={id}>
+    <div id={id} role="alert" aria-live="polite">
       {errors.map((error, i) => (
         <Text key={i} as="div" variant="body-small" color="danger">
           {error}
