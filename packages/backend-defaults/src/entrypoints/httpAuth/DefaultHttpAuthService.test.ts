@@ -16,7 +16,9 @@
 
 import { DefaultHttpAuthService } from './httpAuthServiceFactory';
 import { mockCredentials, mockServices } from '@backstage/backend-test-utils';
+import express from 'express';
 import { createRequest } from 'node-mocks-http';
+import supertest from 'supertest';
 
 describe('DefaultHttpAuthService', () => {
   it('should extract token from custom header', async () => {
@@ -67,5 +69,50 @@ describe('DefaultHttpAuthService', () => {
     );
     await expect(secondService.credentials(request)).rejects.toThrow();
     expect(secondAuthenticate).toHaveBeenCalledTimes(1);
+  });
+
+  it('issues a host-only user cookie and expires any legacy domain cookie', async () => {
+    const httpAuthService = DefaultHttpAuthService.create({
+      discovery: {
+        getBaseUrl: async () => 'http://localhost:7007/api/test',
+        getExternalBaseUrl: async () => 'https://example.com/api/test',
+      },
+      auth: mockServices.auth(),
+      pluginId: 'test',
+    });
+
+    const app = express();
+    app.post('/cookie', async (_req, res) => {
+      await httpAuthService.issueUserCookie(res, {
+        credentials: mockCredentials.user(),
+      });
+      res.end();
+    });
+    app.delete('/cookie', async (_req, res) => {
+      await httpAuthService.issueUserCookie(res, {
+        credentials: mockCredentials.none(),
+      });
+      res.end();
+    });
+
+    const issued = await supertest(app).post('/cookie');
+    expect(issued.status).toBe(200);
+    expect(issued.header['set-cookie']).toEqual([
+      expect.stringMatching(
+        /^backstage-auth=;.*Domain=example\.com;.*Expires=Thu, 01 Jan 1970/,
+      ),
+      expect.stringMatching(/^backstage-auth=mock-limited-user-token/),
+    ]);
+    expect(issued.header['set-cookie'][1]).not.toMatch(/Domain=/);
+
+    const cleared = await supertest(app).delete('/cookie');
+    expect(cleared.status).toBe(200);
+    expect(cleared.header['set-cookie']).toEqual([
+      expect.stringMatching(
+        /^backstage-auth=;.*Domain=example\.com;.*Expires=Thu, 01 Jan 1970/,
+      ),
+      expect.stringMatching(/^backstage-auth=;.*Expires=Thu, 01 Jan 1970/),
+    ]);
+    expect(cleared.header['set-cookie'][1]).not.toMatch(/Domain=/);
   });
 });

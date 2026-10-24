@@ -219,6 +219,7 @@ export class DefaultHttpAuthService implements HttpAuthService {
     let credentials: BackstageCredentials<BackstageUserPrincipal>;
     if (options?.credentials) {
       if (this.#auth.isPrincipal(options.credentials, 'none')) {
+        await this.#clearLegacyDomainCookie(res);
         res.clearCookie(
           BACKSTAGE_AUTH_COOKIE,
           await this.#getCookieOptions(res.req),
@@ -247,6 +248,7 @@ export class DefaultHttpAuthService implements HttpAuthService {
       throw new Error('User credentials is unexpectedly missing token');
     }
 
+    await this.#clearLegacyDomainCookie(res);
     res.cookie(BACKSTAGE_AUTH_COOKIE, token, {
       ...(await this.#getCookieOptions(res.req)),
       expires: expiresAt,
@@ -255,8 +257,20 @@ export class DefaultHttpAuthService implements HttpAuthService {
     return { expiresAt };
   }
 
+  // The cookie used to be issued with an explicit domain, which made browsers
+  // send it to all subdomains as well. The cookie is now host-only, but any
+  // previously issued domain cookie needs to be expired separately.
+  async #clearLegacyDomainCookie(res: Response) {
+    const externalBaseUrl = new URL(
+      await this.#discovery.getExternalBaseUrl(this.#pluginId),
+    );
+    res.clearCookie(BACKSTAGE_AUTH_COOKIE, {
+      ...(await this.#getCookieOptions(res.req)),
+      domain: externalBaseUrl.hostname,
+    });
+  }
+
   async #getCookieOptions(_req: Request): Promise<{
-    domain: string;
     httpOnly: true;
     secure: boolean;
     priority: 'high';
@@ -274,7 +288,6 @@ export class DefaultHttpAuthService implements HttpAuthService {
       externalBaseUrl.hostname === 'localhost';
 
     return {
-      domain: externalBaseUrl.hostname,
       httpOnly: true,
       secure,
       priority: 'high',
