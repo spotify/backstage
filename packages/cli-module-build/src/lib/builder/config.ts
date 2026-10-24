@@ -290,9 +290,9 @@ export async function makeRollupConfigs(
     const input = Object.fromEntries(
       scriptEntryPoints.map(e => [
         e.name,
-        targetPaths.resolveRoot(
+        targetPaths.resolveInstallationRoot(
           'dist-types',
-          relativePath(targetPaths.rootDir, targetDir),
+          relativePath(targetPaths.installationRootDir, targetDir),
           e.path.replace(/\.(?:ts|tsx)$/, '.d.ts'),
         ),
       ]),

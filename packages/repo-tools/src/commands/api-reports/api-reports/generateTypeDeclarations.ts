@@ -29,7 +29,7 @@ import { targetPaths } from '@backstage/cli-common';
  * @returns {Promise<void>} A promise that resolves when the declaration files have been generated.
  */
 export async function generateTypeDeclarations(tsconfigFilePath: string) {
-  await fs.remove(targetPaths.resolveRoot('dist-types'));
+  await fs.remove(targetPaths.resolveWorkspaceRoot('dist-types'));
   try {
     await run(
       [
@@ -43,7 +43,7 @@ export async function generateTypeDeclarations(tsconfigFilePath: string) {
         'false',
       ],
       {
-        cwd: targetPaths.rootDir,
+        cwd: targetPaths.workspaceRootDir,
       },
     ).waitForExit();
   } catch (error) {

@@ -15,7 +15,7 @@
  */
 
 import semver from 'semver';
-import { Lockfile } from '@backstage/cli-node';
+import { YarnLockfile } from '@backstage/cli-node';
 
 /* eslint-disable @backstage/no-relative-monorepo-imports */
 /*
@@ -121,7 +121,7 @@ export const packageVersions: Record<string, string> = {
 };
 
 export function createPackageVersionProvider(
-  lockfile?: Lockfile,
+  lockfile?: YarnLockfile,
   options?: {
     preferBackstageProtocol?: boolean;
   },

@@ -67,7 +67,7 @@ export default async ({ args, info }: CliCommandContext) => {
   );
 
   const options = { input, output };
-  await readTargetPackage(targetPaths.dir, targetPaths.rootDir);
+  await readTargetPackage(targetPaths.dir, targetPaths.installationRootDir);
 
   const inputDir = resolvePath(targetPaths.dir, options.input);
   const manifestPath = resolvePath(inputDir, 'manifest.json');

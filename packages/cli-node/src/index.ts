@@ -27,5 +27,11 @@ export * from './concurrency';
 export * from './git';
 export * from './input';
 export * from './monorepo';
+export {
+  YarnLockfile,
+  type LockfileQueryEntry,
+  type LockfileDiff,
+  type LockfileDiffEntry,
+} from './pacman';
 export * from './roles';
 export * from './yarn';

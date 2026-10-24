@@ -38,7 +38,7 @@ export async function runner(
         }
 
         return {
-          relativeDir: relativePath(targetPaths.rootDir, pkg),
+          relativeDir: relativePath(targetPaths.workspaceRootDir, pkg),
           resultText,
         };
       }),

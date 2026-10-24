@@ -146,7 +146,7 @@ export async function createDetectedModulesEntryPoint(options: {
   // Previous versions of the CLI would write the detected modules file to the
   // root `node_modules`, this makes sure that doesn't exist to minimize risk of conflicts
   const legacyDetectedModulesPath = joinPath(
-    targetPaths.rootDir,
+    targetPaths.workspaceRootDir,
     'node_modules',
     `${DETECTED_MODULES_MODULE_NAME}.js`,
   );

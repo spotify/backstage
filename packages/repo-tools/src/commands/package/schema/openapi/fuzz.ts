@@ -40,7 +40,7 @@ async function fuzz(opts: OptionValues) {
     await fs.readFile(resolvedOpenapiPath, 'utf8'),
   ) as { info: { title: string } };
   const configSource = ConfigSources.default({
-    rootDir: targetPaths.rootDir,
+    rootDir: targetPaths.workspaceRootDir,
   });
   const config = await ConfigSources.toConfig(configSource);
   const pluginId = openapiSpec.info.title;
@@ -48,7 +48,7 @@ async function fuzz(opts: OptionValues) {
   if (opts.debug) {
     args.push(
       '--cassette-path',
-      targetPaths.resolveRoot(join('.cassettes', `${pluginId}.yml`)),
+      targetPaths.resolveWorkspaceRoot(join('.cassettes', `${pluginId}.yml`)),
     );
   }
 

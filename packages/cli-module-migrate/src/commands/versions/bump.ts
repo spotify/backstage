@@ -26,7 +26,7 @@ import { resolve as resolvePath } from 'node:path';
 
 import {
   hasBackstageYarnPlugin,
-  Lockfile,
+  YarnLockfile,
   runConcurrentTasks,
 } from '@backstage/cli-node';
 import {
@@ -98,8 +98,8 @@ export default async ({ args, info }: CliCommandContext) => {
     args,
   );
 
-  const lockfilePath = targetPaths.resolveRoot('yarn.lock');
-  const lockfile = await Lockfile.load(lockfilePath);
+  const lockfilePath = targetPaths.resolveWorkspaceRoot('yarn.lock');
+  const lockfile = await YarnLockfile.load(lockfilePath);
   const yarnPluginEnabled = await hasBackstageYarnPlugin();
 
   let pattern = patternFlag;
@@ -447,7 +447,7 @@ export function createVersionFinder(options: {
 }
 
 function getBackstageJsonPath() {
-  return targetPaths.resolveRoot(BACKSTAGE_JSON);
+  return targetPaths.backstageJsonPath;
 }
 
 async function getBackstageJson() {

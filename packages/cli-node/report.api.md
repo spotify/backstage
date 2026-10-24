@@ -161,18 +161,6 @@ export function hasBackstageYarnPlugin(workspaceDir?: string): Promise<boolean>;
 export function isMonoRepo(): Promise<boolean>;
 
 // @public
-export class Lockfile {
-  createSimplifiedDependencyGraph(): Map<string, Set<string>>;
-  diff(otherLockfile: Lockfile): LockfileDiff;
-  get(name: string): LockfileQueryEntry[] | undefined;
-  getDependencyTreeHash(startName: string): string;
-  keys(): IterableIterator<string>;
-  static load(path: string): Promise<Lockfile>;
-  static parse(content: string): Lockfile;
-  toString(): string;
-}
-
-// @public
 export type LockfileDiff = {
   added: LockfileDiffEntry[];
   changed: LockfileDiffEntry[];
@@ -325,4 +313,16 @@ export type WorkerQueueThreadsOptions<TItem, TResult, TContext> = {
     | Promise<(item: TItem) => Promise<TResult>>;
   context?: TContext;
 };
+
+// @public
+export class YarnLockfile {
+  createSimplifiedDependencyGraph(): Map<string, Set<string>>;
+  diff(otherLockfile: YarnLockfile): LockfileDiff;
+  get(name: string): LockfileQueryEntry[] | undefined;
+  getDependencyTreeHash(startName: string): string;
+  keys(): IterableIterator<string>;
+  static load(path: string): Promise<YarnLockfile>;
+  static parse(content: string): YarnLockfile;
+  toString(): string;
+}
 ```

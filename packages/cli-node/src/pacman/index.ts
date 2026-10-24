@@ -13,12 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export type { PackageManager, PackageInfo } from './PackageManager';
-export type {
-  Lockfile,
-  LockfileEntry,
-  LockfileDiff,
-  LockfileDiffEntry,
-} from './Lockfile';
-
-export { detectPackageManager } from './PackageManager';
+export {
+  detectPackageManager,
+  type DetectPackageManagerOptions,
+  type PackageManager,
+  type PackageManagerInstallOptions,
+  type PackageInfo,
+} from './PackageManager';
+export type { Lockfile, LockfileEntry } from './Lockfile';
+export {
+  Yarn,
+  type YarnCreateOptions,
+  YarnLockfile,
+  type LockfileQueryEntry,
+  type LockfileDiff,
+  type LockfileDiffEntry,
+} from './yarn';

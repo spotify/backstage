@@ -47,14 +47,17 @@ export async function runSqlExtraction(options: SqlExtractionOptions) {
   let dbIndex = 1;
 
   for (const packageDir of options.packageDirs) {
-    const migrationDir = targetPaths.resolveRoot(packageDir, 'migrations');
+    const migrationDir = targetPaths.resolveWorkspaceRoot(
+      packageDir,
+      'migrations',
+    );
     if (!(await fs.pathExists(migrationDir))) {
       console.log(`No SQL migrations found in ${packageDir}`);
       continue;
     }
 
     const { name: pkgName } = await readJson(
-      targetPaths.resolveRoot(packageDir, 'package.json'),
+      targetPaths.resolveWorkspaceRoot(packageDir, 'package.json'),
     );
 
     const migrationFiles = await fs.readdir(migrationDir, {
@@ -99,7 +102,7 @@ async function runSingleSqlExtraction(
   knex: Knex,
   options: SqlExtractionOptions,
 ) {
-  const migrationDir = targetPaths.resolveRoot(
+  const migrationDir = targetPaths.resolveWorkspaceRoot(
     targetDir,
     'migrations',
     migrationTarget,
@@ -156,7 +159,7 @@ async function runSingleSqlExtraction(
       break;
     }
   }
-  const reportPath = targetPaths.resolveRoot(
+  const reportPath = targetPaths.resolveWorkspaceRoot(
     targetDir,
     `report${migrationTarget === '.' ? '' : `-${migrationTarget}`}.sql.md`,
   );
@@ -183,7 +186,7 @@ async function runSingleSqlExtraction(
       logApiReportInstructions();
 
       logReportDiff(
-        relativePath(targetPaths.rootDir, reportPath),
+        relativePath(targetPaths.workspaceRootDir, reportPath),
         existingReport,
         report,
       );

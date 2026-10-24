@@ -26,7 +26,7 @@ export const createTypeDistProject = async (
   packages: Array<{ dir: string; role?: PackageRole }> = [],
 ) => {
   const project = new Project({
-    tsConfigFilePath: targetPaths.resolveRoot('tsconfig.json'),
+    tsConfigFilePath: targetPaths.resolveInstallationRoot('tsconfig.json'),
     skipAddingFilesFromTsConfig: true,
   });
   // Adding source files invalidates the TypeScript program, so load all entry
