@@ -5,8 +5,12 @@
 logs
 *.log
 npm-debug.log*
+{{#if pnpm}}
+pnpm-debug.log*
+{{else}}
 yarn-debug.log*
 yarn-error.log*
+{{/if}}
 
 # Coverage directory generated when running tests with coverage
 coverage
@@ -14,6 +18,7 @@ coverage
 # Dependencies
 node_modules/
 
+{{#unless pnpm}}
 # Yarn files
 .pnp.*
 .yarn/*
@@ -23,6 +28,7 @@ node_modules/
 !.yarn/sdks
 !.yarn/versions
 
+{{/unless}}
 # Node version directives
 .nvmrc
 

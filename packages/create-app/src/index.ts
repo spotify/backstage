@@ -20,7 +20,7 @@
  * @packageDocumentation
  */
 
-import { program } from 'commander';
+import { Option, program } from 'commander';
 import { exitWithError } from './lib/errors';
 // eslint-disable-next-line @backstage/no-relative-monorepo-imports
 import { version } from '../../../package.json';
@@ -43,6 +43,12 @@ const main = (argv: string[]) => {
     .option(
       '--template-path [directory]',
       'Use an external application template instead of the default template',
+    )
+    .addOption(
+      new Option(
+        '--package-manager <name>',
+        'Package manager for the created app. Defaults to pnpm when run through pnpm, otherwise yarn',
+      ).choices(['yarn', 'pnpm']),
     )
     .action(cmd => createApp(cmd));
 

@@ -10,8 +10,11 @@ export function overrideTargetPaths(
 
 // @public
 export interface OverrideTargetPathsOptions {
+  backstageJsonPath?: string;
   dir: string;
+  installationRootDir?: string;
   rootDir?: string;
+  workspaceRootDir?: string;
 }
 
 // @public

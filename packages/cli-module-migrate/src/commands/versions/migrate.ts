@@ -19,8 +19,9 @@ import { resolve as resolvePath, join as joinPath } from 'node:path';
 import { cli } from 'cleye';
 import { readJson, writeJson } from 'fs-extra';
 import { minimatch } from 'minimatch';
-import { runYarnInstall } from '../../lib/utils';
+import { runInstall } from '../../lib/utils';
 import replace from 'replace-in-file';
+import { detectPackageManager } from '@backstage/cli-node/alpha';
 import type { CliCommandContext } from '@backstage/cli-node';
 
 declare module 'replace-in-file' {
@@ -67,7 +68,7 @@ export default async ({ args, info }: CliCommandContext) => {
   });
 
   if (changed) {
-    await runYarnInstall();
+    await runInstall(await detectPackageManager());
   }
 };
 

@@ -80,8 +80,13 @@ export function runOutput(
 export type TargetPaths = {
   dir: string;
   rootDir: string;
+  workspaceRootDir: string;
+  installationRootDir: string;
+  backstageJsonPath: string;
   resolve: ResolveFunc;
   resolveRoot: ResolveFunc;
+  resolveWorkspaceRoot: ResolveFunc;
+  resolveInstallationRoot: ResolveFunc;
 };
 
 // @public

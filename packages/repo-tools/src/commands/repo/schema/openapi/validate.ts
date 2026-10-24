@@ -60,7 +60,7 @@ async function validate(directoryPath: string) {
     throw new Error(`\`${TS_SCHEMA_PATH}\` needs to have a 'spec' export.`);
   }
   if (!isEqual(schema.spec, yaml)) {
-    const path = relativePath(targetPaths.rootDir, directoryPath);
+    const path = relativePath(targetPaths.workspaceRootDir, directoryPath);
     throw new Error(
       `\`${YAML_SCHEMA_PATH}\` and \`${TS_SCHEMA_PATH}\` do not match. Please run \`yarn backstage-repo-tools package schema openapi generate\` from '${path}' to regenerate \`${TS_SCHEMA_PATH}\`.`,
     );

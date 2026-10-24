@@ -323,3 +323,32 @@ describe.each([
     30_000,
   );
 });
+
+describe('optimization', () => {
+  it('names initial package chunks by package, also in the pnpm virtual store', () => {
+    const { splitChunks } = optimization({
+      isDev: false,
+    } as Parameters<typeof optimization>[0]) as {
+      splitChunks: {
+        cacheGroups: { packages: { name(module: unknown): string } };
+      };
+    };
+    const name = (resource: string) =>
+      splitChunks.cacheGroups.packages.name({ resource });
+
+    expect(name('/app/node_modules/react-dom/cjs/index.js')).toBe('react-dom');
+    expect(name('/app/node_modules/@material-ui/core/index.js')).toBe(
+      'material-ui',
+    );
+    expect(
+      name(
+        '/app/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/index.js',
+      ),
+    ).toBe('react-dom');
+    expect(
+      name(
+        'C:\\app\\node_modules\\.pnpm\\@material-ui+core@4.12.4\\node_modules\\@material-ui\\core\\index.js',
+      ),
+    ).toBe('material-ui');
+  });
+});

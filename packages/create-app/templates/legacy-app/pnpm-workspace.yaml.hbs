@@ -1,0 +1,38 @@
+packages:
+  - packages/*
+  - plugins/*
+
+nodeLinker: hoisted
+
+# Only use dependency versions that have been published for at least three
+# days, except for Backstage packages so that updates can be applied right away.
+minimumReleaseAge: 4320
+minimumReleaseAgeExclude:
+  - '@backstage/*'
+
+overrides:
+  # Pinned because a broken release of this package fails installs
+  '@yarnpkg/core': 4.9.1
+  '@types/react': ^18
+  '@types/react-dom': ^18
+
+# pnpm blocks the build scripts of dependencies unless they are listed here.
+# Dependencies with native code are allowed to build, while dependencies whose
+# scripts only print messages or collect telemetry are turned off.
+allowBuilds:
+  '@parcel/watcher': true
+  '@scarf/scarf': false
+  '@swc/core': true
+  '@tree-sitter-grammars/tree-sitter-yaml': true
+  better-sqlite3: true
+  core-js: false
+  core-js-pure: false
+  cpu-features: true
+  esbuild: true
+  keytar: true
+  msw: false
+  protobufjs: false
+  ssh2: true
+  tree-sitter: true
+  tree-sitter-json: true
+  unrs-resolver: true

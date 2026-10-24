@@ -30,7 +30,7 @@ import { pathToFileURL } from 'node:url';
  * imported regardless of where the CLI code itself is located.
  */
 export function discoverCliModules(): string[] {
-  const rootDir = targetPaths.rootDir;
+  const rootDir = targetPaths.installationRootDir;
   const pkgJsonPath = resolvePath(rootDir, 'package.json');
 
   let projectPkg: {

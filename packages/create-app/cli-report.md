@@ -9,6 +9,7 @@ Usage: backstage-create-app [options]
 
 Options:
   --legacy
+  --package-manager <name>
   --path [directory]
   --skip-install
   --template-path [directory]

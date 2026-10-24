@@ -1010,7 +1010,7 @@ describe('backend-dynamic-feature-service', () => {
 
       mockDir.setContent({
         'package.json': fs.readFileSync(
-          targetPaths.resolveRoot('package.json'),
+          targetPaths.resolveWorkspaceRoot('package.json'),
         ),
         'dynamic-plugins-root': {},
         'dynamic-plugins-root/a-dynamic-plugin': ctx =>
@@ -1098,7 +1098,7 @@ describe('backend-dynamic-feature-service', () => {
         otherMockDir.resolve('a-dynamic-plugin'),
       );
       expect(mockedModuleLoader.bootstrap).toHaveBeenCalledWith(
-        targetPaths.rootDir,
+        targetPaths.workspaceRootDir,
         [realPath],
         new Map<string, ScannedPluginManifest>([
           [

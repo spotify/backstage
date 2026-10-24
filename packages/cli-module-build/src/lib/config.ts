@@ -57,14 +57,14 @@ export async function loadCliConfig(options: Options) {
 
   const schema = await loadConfigSchema({
     dependencies: localPackageNames,
-    packagePaths: [targetPaths.resolveRoot('package.json')],
+    packagePaths: [targetPaths.resolveInstallationRoot('package.json')],
     onSchemaError: error => console.warn(error.message),
   });
 
   const source = ConfigSources.default({
     allowMissingDefaultConfig: true,
     watch: Boolean(options.watch),
-    rootDir: targetPaths.rootDir,
+    rootDir: targetPaths.installationRootDir,
     argv: options.args.flatMap(t => ['--config', resolvePath(targetDir, t)]),
   });
 

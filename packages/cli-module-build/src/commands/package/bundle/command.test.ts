@@ -22,6 +22,7 @@ import fs from 'fs-extra';
 import { createRequire } from 'node:module';
 import os from 'node:os';
 import { join as joinPath } from 'node:path';
+import { parse as parseYaml } from 'yaml';
 
 import { targetPaths } from '@backstage/cli-common';
 import {
@@ -29,6 +30,7 @@ import {
   filterBundleConfigSchemas,
   postProcessBundlePackageJson,
 } from './command';
+import { describeMissingFromPnpmCache } from './packageManagerSteps';
 
 const fixturesDir = joinPath(__dirname, '__fixtures__');
 
@@ -39,6 +41,7 @@ const mockRun = jest.fn();
 const mockRunOutput = jest.fn();
 const mockListTargetPackages = jest.fn();
 const mockLoadConfigSchema = jest.fn();
+const mockPackageManagerName = jest.fn(() => 'yarn');
 
 // Mock external dependencies
 
@@ -46,7 +49,7 @@ jest.mock('@backstage/cli-common', () => ({
   ...jest.requireActual('@backstage/cli-common'),
   targetPaths: {
     dir: '',
-    rootDir: '',
+    workspaceRootDir: '',
     resolve: jest.fn(),
   },
   run: (...args: unknown[]) => mockRun(...args),
@@ -73,6 +76,13 @@ jest.mock('@backstage/cli-node', () => {
     }),
   };
 });
+
+// Detected on every call, since tests switch package managers in the same
+// directory
+jest.mock('@backstage/cli-node/alpha', () => ({
+  ...jest.requireActual('@backstage/cli-node/alpha'),
+  detectPackageManager: async () => ({ name: () => mockPackageManagerName() }),
+}));
 
 jest.mock('@backstage/config-loader', () => ({
   loadConfigSchema: (...args: unknown[]) => mockLoadConfigSchema(...args),
@@ -352,7 +362,7 @@ describe('bundle command', () => {
       'tmp/.keep': '',
     });
     targetPaths.dir = pluginDir;
-    targetPaths.rootDir = mockDir.path;
+    targetPaths.workspaceRootDir = mockDir.path;
     (targetPaths.resolve as jest.Mock).mockImplementation((...args: string[]) =>
       joinPath(targetPaths.dir, ...args),
     );
@@ -413,6 +423,7 @@ describe('bundle command', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockPackageManagerName.mockReturnValue('yarn');
     jest.spyOn(os, 'tmpdir').mockReturnValue(joinPath(mockDir.path, 'tmp'));
     mockLoadConfigSchema.mockResolvedValue({
       serialize: () => ({ schemas: [] }),
@@ -753,6 +764,120 @@ describe('bundle command', () => {
         );
         await expect(bundleCommand(defaultOpts)).rejects.toThrow(
           'Backend plugin is not valid for dynamic loading',
+        );
+      });
+    });
+
+    describe('pnpm', () => {
+      const pnpmWorkspace = `packages:
+  - plugins/*
+nodeLinker: isolated
+storeDir: .pnpm-store
+minimumReleaseAge: 4320
+overrides:
+  some-dep: 1.0.0
+patchedDependencies:
+  patched-dep@2.0.0: patches/patched-dep.patch
+catalog:
+  react: ^18.0.0
+customSetting: true
+`;
+
+      beforeEach(() => {
+        mockPackageManagerName.mockReturnValue('pnpm');
+        mockRunOutput.mockImplementation(async (args: string[]) =>
+          args.join(' ') === 'pnpm --version' ? '12.7.0\n' : '/mock-cache',
+        );
+        mockDir.setContent({
+          [joinPath(backendPluginDir, 'package.json')]:
+            JSON.stringify(backendPkg),
+          'package.json': JSON.stringify({
+            name: 'root',
+            packageManager: 'pnpm@12.7.0',
+          }),
+          'pnpm-workspace.yaml': pnpmWorkspace,
+          'pnpm-lock.yaml': '# root pnpm-lock.yaml',
+          'patches/patched-dep.patch': '# patch',
+          'tmp/.keep': '',
+        });
+        setupCreateDistWorkspaceMock(ctx.pluginDir);
+      });
+
+      it('should make the bundle a pnpm project of its own and install it offline', async () => {
+        await bundleCommand(defaultOpts);
+
+        expect(
+          parseYaml(
+            await fs.readFile(
+              joinPath(ctx.targetDir, 'pnpm-workspace.yaml'),
+              'utf8',
+            ),
+          ),
+        ).toEqual({
+          nodeLinker: 'hoisted',
+          storeDir: joinPath(mockDir.path, '.pnpm-store'),
+          minimumReleaseAge: 4320,
+          catalog: { react: '^18.0.0' },
+          patchedDependencies: {
+            'patched-dep@2.0.0': 'patches/patched-dep.patch',
+          },
+          overrides: { 'some-dep': '1.0.0' },
+        });
+        await expectPathExists(
+          [ctx.targetDir, 'patches', 'patched-dep.patch'],
+          true,
+        );
+        await expectPathExists([ctx.targetDir, '.yarnrc.yml'], false);
+        await expect(
+          fs.readFile(joinPath(ctx.targetDir, 'pnpm-lock.yaml'), 'utf8'),
+        ).resolves.toBe('# root pnpm-lock.yaml');
+
+        const pkg = await fs.readJson(joinPath(ctx.targetDir, 'package.json'));
+        expect(pkg.resolutions).toBeUndefined();
+        expect(pkg.packageManager).toBe('pnpm@12.7.0');
+        expect(pkg.bundleDependencies).toBe(true);
+
+        expect(mockRun).toHaveBeenCalledWith(
+          [
+            'pnpm',
+            'install',
+            '--lockfile-only',
+            '--no-frozen-lockfile',
+            '--offline',
+          ],
+          expect.objectContaining({ cwd: ctx.targetDir }),
+        );
+        expect(mockRun).toHaveBeenCalledWith(
+          ['pnpm', 'install', '--frozen-lockfile', '--offline'],
+          expect.objectContaining({ cwd: ctx.targetDir }),
+        );
+        expect(console.warn).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'These pnpm settings of the project are not carried into the bundle: customSetting',
+          ),
+        );
+      });
+
+      it('should fail with the missing package when the pnpm cache lacks it', async () => {
+        mockRun.mockImplementation(
+          (args: string[], opts: { onStderr?: (d: Buffer) => void }) => ({
+            waitForExit: async () => {
+              if (args.includes('--lockfile-only')) {
+                opts.onStderr?.(
+                  Buffer.from(
+                    'Error: ERR_PNPM_NO_OFFLINE_META\n\n  × installing dependencies\n' +
+                      '  ├─▶ Failed to resolve dependency tree: Failed to resolve is-odd@^3.0.0 in\n' +
+                      '  │   package mirror "/cache/v12/metadata/is-odd.jsonl"\n',
+                  ),
+                );
+                throw new Error('Command failed with exit code 1');
+              }
+            },
+          }),
+        );
+
+        await expect(bundleCommand(defaultOpts)).rejects.toThrow(
+          'The offline lockfile prune failed. pnpm has no cached metadata for is-odd@^3.0.0.',
         );
       });
     });
@@ -1134,5 +1259,39 @@ describe('bundle command', () => {
         );
       });
     });
+  });
+});
+
+describe('describeMissingFromPnpmCache', () => {
+  it('describes the package that pnpm could not find offline', () => {
+    expect(
+      describeMissingFromPnpmCache(`Error: ERR_PNPM_NO_OFFLINE_TARBALL
+
+  × installing dependencies
+  ╰─▶ Failed to fetch tarball for is-number@6.0.0 from https://
+      registry.npmjs.org/is-number/-/is-number-6.0.0.tgz in offline mode:
+      snapshot not present in local store
+`),
+    ).toMatch(
+      /^pnpm has no stored copy of is-number@6\.0\.0\. .*storeDir setting/,
+    );
+
+    expect(
+      describeMissingFromPnpmCache(`Error: ERR_PNPM_META_FETCH_FAIL
+
+  × installing dependencies
+  ╰─▶ ERR_PNPM_NO_OFFLINE_META: Failed to resolve is-odd in package mirror /
+      private/tmp/empty-cache/v12/metadata-full/https%3A+registry.npmjs.org/
+      is-odd.jsonl
+`),
+    ).toMatch(
+      /^pnpm has no cached metadata for is-odd\. .*cacheDir, minimumReleaseAge, and resolutionMode/,
+    );
+
+    expect(
+      describeMissingFromPnpmCache(
+        'ERR_PNPM_OUTDATED_LOCKFILE  Cannot install',
+      ),
+    ).toBeUndefined();
   });
 });

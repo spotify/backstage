@@ -57,12 +57,17 @@ export class DynamicPluginManager implements DynamicPluginProvider {
   static async create(
     options: DynamicPluginManagerOptions,
   ): Promise<DynamicPluginManager> {
+    // The dynamic plugins root directory is configured relative to the
+    // Backstage installation, while shared modules are resolved from the
+    // node_modules at the root of the workspace.
     /* eslint-disable-next-line no-restricted-syntax */
-    const backstageRoot = targetPaths.rootDir;
+    const installationRoot = targetPaths.installationRootDir;
+    /* eslint-disable-next-line no-restricted-syntax */
+    const workspaceRoot = targetPaths.workspaceRootDir;
     const scanner = PluginScanner.create({
       config: options.config,
       logger: options.logger,
-      backstageRoot,
+      backstageRoot: installationRoot,
       preferAlpha: options.preferAlpha,
     });
     const scannedPlugins = (await scanner.scanRoot()).packages;
@@ -84,7 +89,7 @@ export class DynamicPluginManager implements DynamicPluginProvider {
     );
 
     await moduleLoader.bootstrap(
-      backstageRoot,
+      workspaceRoot,
       [...scannedPluginManifestsPerRealPath.keys()],
       scannedPluginManifestsPerRealPath,
     );

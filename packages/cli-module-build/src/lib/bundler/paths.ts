@@ -70,10 +70,10 @@ export function resolveBundlingPaths(options: BundlingPathsOptions) {
     targetSrc: resolvePath(targetDir, 'src'),
     targetDev: resolvePath(targetDir, 'dev'),
     targetEntry: resolveTargetModule(entry),
-    targetTsConfig: targetPaths.resolveRoot('tsconfig.json'),
+    targetTsConfig: targetPaths.resolveInstallationRoot('tsconfig.json'),
     targetPackageJson: resolvePath(targetDir, 'package.json'),
-    rootNodeModules: targetPaths.resolveRoot('node_modules'),
-    root: targetPaths.rootDir,
+    rootNodeModules: targetPaths.resolveWorkspaceRoot('node_modules'),
+    root: targetPaths.workspaceRootDir,
   };
 }
 
