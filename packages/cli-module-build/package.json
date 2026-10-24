@@ -1,6 +1,6 @@
 {
   "name": "@backstage/cli-module-build",
-  "version": "0.1.9",
+  "version": "0.1.10-next.0",
   "description": "CLI module for Backstage CLI",
   "backstage": {
     "role": "cli-module"

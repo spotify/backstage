@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-scaffolder-node",
-  "version": "0.13.8",
+  "version": "0.13.9-next.0",
   "description": "The plugin-scaffolder-node module for @backstage/plugin-scaffolder-backend",
   "backstage": {
     "role": "node-library",

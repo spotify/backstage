@@ -1,5 +1,12 @@
 # @backstage/plugin-scaffolder-backend-module-confluence-to-markdown
 
+## 0.3.28-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-scaffolder-node@0.13.9-next.0
+
 ## 0.3.27
 
 ### Patch Changes

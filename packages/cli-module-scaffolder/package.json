@@ -1,6 +1,6 @@
 {
   "name": "@backstage/cli-module-scaffolder",
-  "version": "0.2.0",
+  "version": "0.2.1-next.0",
   "description": "CLI module for listing and executing software templates",
   "backstage": {
     "role": "cli-module"

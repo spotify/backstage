@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-auth-backend-module-github-provider",
-  "version": "0.5.8",
+  "version": "0.5.9-next.0",
   "description": "The github-provider backend module for the auth plugin.",
   "backstage": {
     "role": "backend-plugin-module",

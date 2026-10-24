@@ -1,5 +1,14 @@
 # example-app-legacy
 
+## 0.2.127-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-kubernetes-cluster@0.0.43-next.0
+  - @backstage/cli@0.36.8-next.0
+  - @backstage/plugin-kubernetes@0.12.25-next.0
+
 ## 0.2.126
 
 ### Patch Changes

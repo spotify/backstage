@@ -1,5 +1,13 @@
 # @backstage/cli-module-auth
 
+## 0.1.6-next.0
+
+### Patch Changes
+
+- 4d94005: Fixed `auth logout` so that it revokes the refresh token on the server. Previously the revocation request was rejected because it did not identify the CLI client, which left the session valid until it expired.
+- Updated dependencies
+  - @backstage/cli-node@0.3.6-next.0
+
 ## 0.1.5
 
 ### Patch Changes

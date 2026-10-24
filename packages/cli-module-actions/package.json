@@ -1,6 +1,6 @@
 {
   "name": "@backstage/cli-module-actions",
-  "version": "0.1.4",
+  "version": "0.1.5-next.0",
   "description": "CLI module for executing distributed actions",
   "backstage": {
     "role": "cli-module"

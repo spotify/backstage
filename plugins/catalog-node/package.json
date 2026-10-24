@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-catalog-node",
-  "version": "2.2.6",
+  "version": "2.2.7-next.0",
   "description": "The plugin-catalog-node module for @backstage/plugin-catalog-backend",
   "backstage": {
     "role": "node-library",

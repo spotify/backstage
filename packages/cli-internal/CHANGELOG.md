@@ -1,5 +1,12 @@
 # @internal/cli
 
+## 0.0.7-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/cli-node@0.3.6-next.0
+
 ## 0.0.6
 
 ### Patch Changes

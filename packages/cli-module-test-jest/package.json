@@ -1,6 +1,6 @@
 {
   "name": "@backstage/cli-module-test-jest",
-  "version": "0.1.7",
+  "version": "0.1.8-next.0",
   "description": "CLI module for Backstage CLI",
   "backstage": {
     "role": "cli-module"

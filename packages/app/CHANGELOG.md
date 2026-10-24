@@ -1,5 +1,14 @@
 # example-app
 
+## 0.0.41-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-kubernetes-cluster@0.0.43-next.0
+  - @backstage/cli@0.36.8-next.0
+  - @backstage/plugin-kubernetes@0.12.25-next.0
+
 ## 0.0.40
 
 ### Patch Changes

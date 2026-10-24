@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-auth-backend-module-oidc-provider",
-  "version": "0.4.22",
+  "version": "0.4.23-next.0",
   "description": "The oidc-provider backend module for the auth plugin.",
   "backstage": {
     "role": "backend-plugin-module",

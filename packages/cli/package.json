@@ -1,6 +1,6 @@
 {
   "name": "@backstage/cli",
-  "version": "0.36.7",
+  "version": "0.36.8-next.0",
   "description": "CLI for developing Backstage plugins and apps",
   "backstage": {
     "role": "cli"

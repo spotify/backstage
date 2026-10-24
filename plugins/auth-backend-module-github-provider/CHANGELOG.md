@@ -1,5 +1,12 @@
 # @backstage/plugin-auth-backend-module-github-provider
 
+## 0.5.9-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-catalog-node@2.2.7-next.0
+
 ## 0.5.8
 
 ### Patch Changes

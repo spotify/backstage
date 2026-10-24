@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-scaffolder-backend-module-gerrit",
-  "version": "0.2.26",
+  "version": "0.2.27-next.0",
   "description": "The gerrit module for @backstage/plugin-scaffolder-backend",
   "backstage": {
     "role": "backend-plugin-module",

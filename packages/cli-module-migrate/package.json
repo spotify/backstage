@@ -1,6 +1,6 @@
 {
   "name": "@backstage/cli-module-migrate",
-  "version": "0.2.2",
+  "version": "0.2.3-next.0",
   "description": "CLI module for Backstage CLI",
   "backstage": {
     "role": "cli-module"

@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-scaffolder-backend-module-sentry",
-  "version": "0.4.1",
+  "version": "0.4.2-next.0",
   "backstage": {
     "role": "backend-plugin-module",
     "pluginId": "scaffolder",

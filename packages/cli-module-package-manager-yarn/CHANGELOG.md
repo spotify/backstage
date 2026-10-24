@@ -1,5 +1,19 @@
 # @backstage/cli-module-package-manager-yarn
 
+## 0.1.5-next.0
+
+### Patch Changes
+
+- 1cffd6f: Made `@yarnpkg/cli`, `@yarnpkg/core`, and `@yarnpkg/plugin-patch` optional peer dependencies. `@yarnpkg/core@4.9.2` was published with a dependency on a patch file that only exists in the Yarn repository, which made installation fail for all projects depending on this module. To use the `pm verify-patches` command until this is fixed upstream, add these packages as `devDependencies` in your root `package.json`, together with the resolution `"@yarnpkg/core/got": "npm:^11.8.6"`. They will become regular dependencies again once a fixed version of `@yarnpkg/core` is published.
+- Updated dependencies
+  - @backstage/cli-node@0.3.6-next.0
+
+## 0.1.4
+
+### Patch Changes
+
+- Bumped version to account for a patch release.
+
 ## 0.1.3
 
 ### Patch Changes

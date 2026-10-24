@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-catalog-backend-module-bitbucket-cloud",
-  "version": "0.5.16",
+  "version": "0.5.17-next.0",
   "description": "A Backstage catalog backend module that helps integrate towards Bitbucket Cloud",
   "backstage": {
     "role": "backend-plugin-module",

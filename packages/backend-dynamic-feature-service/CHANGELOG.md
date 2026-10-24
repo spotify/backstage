@@ -1,5 +1,16 @@
 # @backstage/backend-dynamic-feature-service
 
+## 0.8.9-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-catalog-backend@4.0.3-next.0
+  - @backstage/cli-node@0.3.6-next.0
+  - @backstage/plugin-events-backend@0.6.8-next.0
+  - @backstage/backend-defaults@0.18.2-next.0
+  - @backstage/plugin-scaffolder-node@0.13.9-next.0
+
 ## 0.8.8
 
 ### Patch Changes

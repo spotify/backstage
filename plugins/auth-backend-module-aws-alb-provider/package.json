@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-auth-backend-module-aws-alb-provider",
-  "version": "0.4.21",
+  "version": "0.4.22-next.0",
   "description": "The aws-alb provider module for the Backstage auth backend.",
   "backstage": {
     "role": "backend-plugin-module",
