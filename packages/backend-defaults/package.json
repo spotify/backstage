@@ -175,7 +175,7 @@
     "git-url-parse": "^15.0.0",
     "helmet": "^6.0.0",
     "infinispan": "^0.16.0",
-    "iovalkey": "^0.3.3",
+    "iovalkey": "^0.4.0",
     "is-glob": "^4.0.3",
     "jose": "^5.0.0",
     "keyv": "^5.2.1",

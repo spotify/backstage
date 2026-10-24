@@ -1836,7 +1836,7 @@ __metadata:
     helmet: "npm:^6.0.0"
     http-errors: "npm:^2.0.0"
     infinispan: "npm:^0.16.0"
-    iovalkey: "npm:^0.3.3"
+    iovalkey: "npm:^0.4.0"
     is-glob: "npm:^4.0.3"
     jose: "npm:^5.0.0"
     keyv: "npm:^5.2.1"
@@ -30966,6 +30966,23 @@ __metadata:
     redis-parser: "npm:^3.0.0"
     standard-as-callback: "npm:^2.1.0"
   checksum: 10/39368842e6a9dbc85e92dfcd4c1c917a76240bac5c4210e19a0bd3bc7984af9b567dce5de7c560c4517d5d4cb03af229f38582c1dd055c6fd452060774318e8c
+  languageName: node
+  linkType: hard
+
+"iovalkey@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "iovalkey@npm:0.4.0"
+  dependencies:
+    "@iovalkey/commands": "npm:^0.1.0"
+    cluster-key-slot: "npm:^1.1.0"
+    debug: "npm:^4.3.4"
+    denque: "npm:^2.1.0"
+    lodash.defaults: "npm:^4.2.0"
+    lodash.isarguments: "npm:^3.1.0"
+    redis-errors: "npm:^1.2.0"
+    redis-parser: "npm:^3.0.0"
+    standard-as-callback: "npm:^2.1.0"
+  checksum: 10/e4b686a16f36cbd9b26727b7cabb83c0a34682d225887168a3723a2925f62342d2bd308e8670518b9666d8e74154f613cdfcfb5a3c7950447e0c4c27fb235381
   languageName: node
   linkType: hard
 
