@@ -15,6 +15,8 @@
  */
 import { ModuleLoader } from './types';
 import { LoggerService } from '@backstage/backend-plugin-api';
+import { isChildPath } from '@backstage/cli-common';
+import fs from 'node:fs';
 import path from 'node:path';
 import { ScannedPluginManifest } from '../scanner';
 
@@ -48,11 +50,28 @@ export class CommonJSModuleLoader implements ModuleLoader {
     dynamicPluginsPaths: string[],
     scannedPluginManifests: Map<string, ScannedPluginManifest>,
   ): Promise<void> {
-    const backstageRootNodeModulesPath = `${backstageRoot}/node_modules`;
+    const backstageRootNodeModulesPath = path.join(
+      backstageRoot,
+      'node_modules',
+    );
     const dynamicNodeModulesPaths = [
       ...dynamicPluginsPaths.map(p => path.resolve(p, 'node_modules')),
     ];
     const oldNodeModulePaths = this.module._nodeModulePaths;
+    // After the node_modules lookup chain, Node.js searches its global
+    // folders, which start with the NODE_PATH entries. Dynamic plugins outside
+    // of the Backstage root reach the root node_modules through NODE_PATH.
+    const globalPaths: string[] = (this.module.globalPaths ?? []).map(
+      (p: string) => path.resolve(p),
+    );
+    // Some package managers, for example pnpm with the isolated linker, do not
+    // link every package into the root node_modules. The modules that a
+    // dynamic plugin shares with the host are then only visible from the
+    // backend package, or from this package.
+    const hostNodeModulesPaths = getHostNodeModulesPaths(
+      backstageRoot,
+      oldNodeModulePaths,
+    );
     this.module._nodeModulePaths = (from: string): string[] => {
       const result: string[] = oldNodeModulePaths(from);
       if (!dynamicPluginsPaths.some(p => from.startsWith(p))) {
@@ -64,10 +83,20 @@ export class CommonJSModuleLoader implements ModuleLoader {
           dynamicNodeModulesPaths.some(p => nodeModulePath.startsWith(p))
         );
       });
-      this.options.logger.debug(
-        `Overriding node_modules search path for dynamic plugin ${from} to: ${filtered}`,
+      // The host comes after everything that was searched before, so that a
+      // module that was found before is still found in the same place.
+      const searchPaths = Array.from(
+        new Set([
+          ...filtered,
+          ...globalPaths,
+          backstageRootNodeModulesPath,
+          ...hostNodeModulesPaths,
+        ]),
       );
-      return filtered;
+      this.options.logger.debug(
+        `Overriding node_modules search path for dynamic plugin ${from} to: ${searchPaths}`,
+      );
+      return searchPaths;
     };
 
     // The whole piece of code below is a way to accommodate the limitations of
@@ -159,5 +188,58 @@ export class CommonJSModuleLoader implements ModuleLoader {
 
   async load(packagePath: string): Promise<any> {
     return await this.module.prototype.require(packagePath);
+  }
+}
+
+/**
+ * Returns the node_modules directories that the host backend resolves modules
+ * from, limited to those within the Backstage root. These are the lookup
+ * chains of the backend package, found through the entry point of the process
+ * and the working directory, and of this package, which reaches the packages
+ * that a package manager keeps out of the root node_modules.
+ */
+function getHostNodeModulesPaths(
+  backstageRoot: string,
+  nodeModulePaths: (from: string) => string[],
+): string[] {
+  const dirs = new Array<string>();
+  // The main module is not set when the entry point is an ES module, so the
+  // script path is also used
+  for (const startPath of [
+    require.main?.filename,
+    process.argv[1],
+    process.cwd(),
+  ]) {
+    const dir = startPath && getDirectory(path.resolve(startPath));
+    if (dir) {
+      dirs.push(dir);
+    }
+  }
+  const paths = new Set([
+    ...dirs.flatMap(dir => nodeModulePaths(dir)),
+    // The lookup chain of this module
+    ...(module.paths ?? []),
+  ]);
+  return Array.from(paths).filter(p => {
+    // Real paths cannot be resolved for directories that cannot be read
+    try {
+      return isChildPath(backstageRoot, p);
+    } catch {
+      return false;
+    }
+  });
+}
+
+// The given directory, or the directory of the given file. Paths that do not
+// exist or cannot be read are skipped, since the host is only a fallback.
+function getDirectory(p: string): string | undefined {
+  try {
+    const stats = fs.statSync(p, { throwIfNoEntry: false });
+    if (!stats) {
+      return undefined;
+    }
+    return stats.isDirectory() ? p : path.dirname(p);
+  } catch {
+    return undefined;
   }
 }

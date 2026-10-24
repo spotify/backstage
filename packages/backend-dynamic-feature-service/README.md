@@ -35,6 +35,10 @@ The service consists of several key components:
 3. **Loading**: The module loader loads the plugin code
 4. **Integration**: Plugins are registered as Backstage features and made available to the backend
 
+### Module Resolution
+
+A backend dynamic plugin resolves modules from its own `node_modules` first, then from the `node_modules` of the Backstage root, and then from the global folders of Node.js, which start with the directories in `NODE_PATH`. Plugins outside of the Backstage root reach the root `node_modules` through `NODE_PATH`, so for them the order of `NODE_PATH` applies. Modules that are not found in these places are resolved from the host backend, through the `node_modules` directories of the backend package and of this package within the Backstage root. This lets a plugin load the packages it shares with the host when the package manager does not link them into the root `node_modules`, as with the pnpm `isolated` node linker. With the default pnpm hoisting, this includes the packages that pnpm hoists into `node_modules/.pnpm/node_modules`. With `hoist: false`, only the direct dependencies of the backend package and of this package are found.
+
 ## Usage
 
 ### Basic Setup
@@ -109,7 +113,7 @@ mkdir -p /path/to/dynamic-plugins-root/my-backstage-plugin
 tar -xzf package.tgz -C /path/to/dynamic-plugins-root/my-backstage-plugin --strip-components=1
 ```
 
-**Why this works:** The plugin can resolve all its dependencies from the main application's `node_modules`.
+**Why this works:** The plugin can resolve all its dependencies from the main application. See [Module Resolution](#module-resolution).
 
 **Reality:** Most plugins have private dependencies not available in the main application, so this approach has limited applicability.
 

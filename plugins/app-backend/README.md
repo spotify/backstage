@@ -13,6 +13,16 @@ yarn --cwd packages/backend add @backstage/plugin-app-backend app
 
 By adding the app package as a dependency we ensure that it is built as part of the backend, and that it can be resolved at runtime.
 
+The app package is resolved from the location of `@backstage/backend-plugin-api`. If your package manager doesn't hoist workspace packages, for example pnpm with `hoistWorkspacePackages: false`, add the app package to the `dependencies` of the root `package.json` as well. This links it into the root `node_modules`, where it can be found. Use `dependencies` rather than `devDependencies`, so that production installs keep it.
+
+```json title="package.json"
+{
+  "dependencies": {
+    "app": "workspace:*"
+  }
+}
+```
+
 Now add the plugin to your app, creating it for example like this:
 
 ### New Backend
