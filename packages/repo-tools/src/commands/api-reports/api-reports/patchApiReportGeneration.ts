@@ -162,7 +162,7 @@ export function patchApiReportGeneration() {
         parser: 'markdown',
         // We need a real-looking filepath for proper config resolution, not just a directory
         // Ideally, the real filepath would be better, but it would require too much patching, for very little gain.
-        filepath: `${targetPaths.rootDir}/report.api.md`,
+        filepath: `${targetPaths.workspaceRootDir}/report.api.md`,
       });
     };
 }

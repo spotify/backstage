@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Lockfile } from '@backstage/cli-node';
+import { YarnLockfile } from '@backstage/cli-node';
 import { PackageDocsCache } from './Cache';
 import {
   createMockDirectory,
@@ -65,7 +65,7 @@ describe('PackageDocsCache', () => {
     });
     const lockfile = {
       getDependencyTreeHash: () => 'test',
-    } as any as Lockfile;
+    } as any as YarnLockfile;
     const cache = await PackageDocsCache.loadAsync(testDir.path, lockfile);
     expect(await cache.has('test')).toBe(true);
   });
@@ -95,7 +95,7 @@ describe('PackageDocsCache', () => {
     });
     const lockfile = {
       getDependencyTreeHash: () => 'test',
-    } as any as Lockfile;
+    } as any as YarnLockfile;
     const cache = await PackageDocsCache.loadAsync(testDir.path, lockfile);
     await cache.restore('test');
     expect(
@@ -115,7 +115,7 @@ describe('PackageDocsCache', () => {
     });
     const lockfile = {
       getDependencyTreeHash: () => 'test',
-    } as any as Lockfile;
+    } as any as YarnLockfile;
     const cache = await PackageDocsCache.loadAsync(testDir.path, lockfile);
     await cache.write('test', joinPath(testDir.path, 'test'));
     expect(
@@ -173,7 +173,7 @@ describe('PackageDocsCache', () => {
     });
     const lockfile = {
       getDependencyTreeHash: () => 'test',
-    } as any as Lockfile;
+    } as any as YarnLockfile;
     const cache = await PackageDocsCache.loadAsync(testDir.path, lockfile);
     expect(await cache.has('test')).toBe(false);
   });

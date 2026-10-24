@@ -101,9 +101,9 @@ async function handlePackage({
 }: KnipPackageOptions) {
   console.log(`## Processing ${packageDir}`);
 
-  const fullDir = targetPaths.resolveRoot(packageDir);
+  const fullDir = targetPaths.resolveWorkspaceRoot(packageDir);
   const reportPath = resolvePath(fullDir, 'knip-report.md');
-  const run = createBinRunner(targetPaths.rootDir, '');
+  const run = createBinRunner(targetPaths.workspaceRootDir, '');
 
   let report = await run(
     `${knipDir}/knip.js`,
@@ -147,7 +147,7 @@ async function handlePackage({
       logKnipReportInstructions();
 
       logReportDiff(
-        relativePath(targetPaths.rootDir, reportPath),
+        relativePath(targetPaths.workspaceRootDir, reportPath),
         existingReport,
         report,
       );
@@ -162,8 +162,8 @@ export async function runKnipReports({
   packageDirs,
   isLocalBuild,
 }: KnipExtractionOptions) {
-  const knipDir = targetPaths.resolveRoot('./node_modules/knip/bin/');
-  const knipConfigPath = targetPaths.resolveRoot('./knip.json');
+  const knipDir = targetPaths.resolveWorkspaceRoot('./node_modules/knip/bin/');
+  const knipConfigPath = targetPaths.resolveWorkspaceRoot('./knip.json');
   const limiter = pLimit(os.cpus().length);
 
   await generateKnipConfig({ knipConfigPath });

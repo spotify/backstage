@@ -24,7 +24,7 @@ import {
 } from '../types';
 import { installNewPackage } from './installNewPackage';
 import { writeTemplateContents } from './writeTemplateContents';
-import { run } from '@backstage/cli-common';
+import { detectPackageManager } from '@backstage/cli-node/alpha';
 
 type ExecuteNewTemplateOptions = {
   config: PortableTemplateConfig;
@@ -55,18 +55,29 @@ export async function executePortableTemplate(
     }
 
     if (!options.skipInstall) {
-      for (const command of [
-        ['yarn', 'install'],
-        ['yarn', 'lint', '--fix'],
-      ]) {
-        const commandStr = command.join(' ');
-        try {
-          await Task.forItem('executing', commandStr, async () => {
-            await run(command, {
+      const packageManager = await detectPackageManager();
+      const ignoreOutput = () => {};
+      for (const { args, execute } of [
+        {
+          args: ['install'],
+          execute: () =>
+            packageManager.install({
+              onStdout: ignoreOutput,
+              onStderr: ignoreOutput,
+            }),
+        },
+        {
+          args: ['lint', '--fix'],
+          execute: () =>
+            packageManager.runScript('lint', ['--fix'], {
               cwd: targetDir,
               stdio: 'ignore',
-            }).waitForExit();
-          });
+            }),
+        },
+      ]) {
+        const commandStr = packageManager.getCommandHint(args);
+        try {
+          await Task.forItem('executing', commandStr, execute);
         } catch (error) {
           const err = toError(error);
           Task.error(

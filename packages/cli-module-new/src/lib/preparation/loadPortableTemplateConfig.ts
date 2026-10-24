@@ -144,7 +144,7 @@ export async function loadPortableTemplateConfig(
 ): Promise<PortableTemplateConfig> {
   const { overrides = {} } = options;
   const pkgPath =
-    options.packagePath ?? targetPaths.resolveRoot('package.json');
+    options.packagePath ?? targetPaths.resolveInstallationRoot('package.json');
   const pkgJson = await fs.readJson(pkgPath);
 
   const parsed = pkgJsonWithNewConfigSchema.safeParse(pkgJson);

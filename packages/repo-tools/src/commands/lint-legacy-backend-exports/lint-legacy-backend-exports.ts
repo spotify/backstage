@@ -20,7 +20,7 @@ import { targetPaths } from '@backstage/cli-common';
 import path from 'node:path';
 
 const project = new Project({
-  tsConfigFilePath: targetPaths.resolveRoot('tsconfig.json'),
+  tsConfigFilePath: targetPaths.resolveWorkspaceRoot('tsconfig.json'),
 });
 
 function readPackageJson(pkg: string) {

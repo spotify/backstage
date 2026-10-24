@@ -55,7 +55,8 @@
     "express-promise-router": "^4.1.0",
     "fs-extra": "^11.0.0",
     "lodash": "^4.17.21",
-    "ping": "^0.4.1"
+    "ping": "^0.4.1",
+    "yaml": "^2.0.0"
   },
   "devDependencies": {
     "@backstage/backend-defaults": "workspace:^",

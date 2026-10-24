@@ -23,5 +23,7 @@ Usage: e2e-test run [options]
 
 Options:
   --keep
+  --node-linker <name>
+  --package-manager <name>
   -h, --help
 ```

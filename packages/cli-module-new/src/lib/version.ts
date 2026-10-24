@@ -15,7 +15,7 @@
  */
 
 import semver from 'semver';
-import { Lockfile } from '@backstage/cli-node';
+import type { Lockfile } from '@backstage/cli-node/alpha';
 
 /* eslint-disable @backstage/no-relative-monorepo-imports */
 /*
@@ -124,6 +124,8 @@ export function createPackageVersionProvider(
   lockfile?: Lockfile,
   options?: {
     preferBackstageProtocol?: boolean;
+    /** The entries of the default pnpm catalog, which `catalog:` refers to */
+    defaultCatalog?: Record<string, string>;
   },
 ) {
   return (name: string, versionHint?: string): string | undefined => {
@@ -143,7 +145,16 @@ export function createPackageVersionProvider(
       return 'backstage:^';
     }
 
-    // 3) fallback to current npm resolution
+    // 3) catalog: when the default catalog has the package, which workspaces
+    // that enforce catalogs require
+    if (
+      options?.defaultCatalog &&
+      Object.hasOwn(options.defaultCatalog, name)
+    ) {
+      return 'catalog:';
+    }
+
+    // 4) fallback to current npm resolution
     const targetVersion = versionHint || packageVersion;
     if (!targetVersion) {
       return undefined;

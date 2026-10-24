@@ -54,7 +54,7 @@ export default async ({ args, info }: CliCommandContext) => {
         },
         skipInstall: {
           type: Boolean,
-          description: `Skips running 'yarn install' and 'yarn lint --fix'`,
+          description: `Skips installing dependencies and running 'lint --fix'`,
         },
         scope: {
           type: String,

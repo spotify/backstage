@@ -44,7 +44,7 @@ export default async ({ args, info }: CliCommandContext) => {
         alwaysPack: {
           type: Boolean,
           description:
-            'Force workspace output to be a result of running `yarn pack` on each package (warning: very slow)',
+            'Force workspace output to be a result of running the pack command of the package manager on each package (warning: very slow)',
         },
       },
     },
