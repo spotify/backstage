@@ -16,7 +16,7 @@
     "@types/react-dom": "19.2.3"
   },
   "dependencies": {
-    "@base-ui-components/react": "^1.0.0-beta.4",
+    "@base-ui/react": "^1.0.0-beta.4",
     "@codemirror/lang-sass": "^6.0.2",
     "@codemirror/view": "^6.34.4",
     "@lezer/highlight": "^1.2.1",
