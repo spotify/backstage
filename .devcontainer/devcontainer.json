@@ -3,7 +3,7 @@
   "forwardPorts": [3000, 7007],
   "build": { "dockerfile": "Dockerfile" },
   "features": {
-    "ghcr.io/devcontainers/features/common-utils:2.7.0": {},
+    "ghcr.io/devcontainers/features/common-utils:2.7.1": {},
     "ghcr.io/devcontainers-extra/features/mkdocs:2": {}
   },
   "postCreateCommand": "bash .devcontainer/setup.sh",
