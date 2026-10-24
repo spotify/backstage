@@ -551,6 +551,11 @@ repoUrl:
 
 The input props that can be specified under `ui:options` for the `RepoBranchPicker` field extension.
 
+GitLab branch autocompletion requires the GitLab Scaffolder backend module and
+`requestUserCredentials`. The repository must be selected in a field named
+`repoUrl`. Nested GitLab namespaces are supported. Manual branch entry remains
+available when autocompletion is unavailable.
+
 ### `requestUserCredentials`
 
 If defined will request user credentials to auth against the given SCM platform.

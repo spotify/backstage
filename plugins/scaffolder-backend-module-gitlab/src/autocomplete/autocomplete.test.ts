@@ -27,6 +27,7 @@ jest.mock('../util', () => ({
 describe('handleAutocompleteRequest', () => {
   const mockIntegrations = {} as ScmIntegrationRegistry;
   const mockClient = {
+    Branches: { all: jest.fn() },
     Groups: {
       all: jest.fn(),
       allProjects: jest.fn(),
@@ -120,6 +121,78 @@ describe('handleAutocompleteRequest', () => {
         { title: 'Repo 2', id: 'repo-2' },
       ],
     });
+  });
+
+  it('returns branches for a nested namespace using the supplied credentials', async () => {
+    const handle = createHandleAutocompleteRequest({
+      integrations: mockIntegrations,
+    });
+    mockClient.Branches.all.mockResolvedValue([
+      { name: 'main' },
+      { name: 'feature/example' },
+    ]);
+    await expect(
+      handle({
+        resource: 'branches',
+        token: 'user-token',
+        context: {
+          host: 'gitlab.example.com',
+          owner: 'group/subgroup',
+          repository: 'repo',
+        },
+      }),
+    ).resolves.toEqual({
+      results: [
+        { title: 'main', id: 'main' },
+        { title: 'feature/example', id: 'feature/example' },
+      ],
+    });
+    expect(mockGetClient).toHaveBeenCalledWith({
+      host: 'gitlab.example.com',
+      integrations: mockIntegrations,
+      token: 'user-token',
+    });
+    expect(mockClient.Branches.all).toHaveBeenCalledWith('group/subgroup/repo');
+    mockClient.Branches.all.mockResolvedValue([]);
+    await expect(
+      handle({
+        resource: 'branches',
+        token: 'user-token',
+        context: { owner: 'group', repository: 'empty' },
+      }),
+    ).resolves.toEqual({ results: [] });
+    mockClient.Branches.all.mockRejectedValue(new Error('Forbidden'));
+    await expect(
+      handle({
+        resource: 'branches',
+        token: 'user-token',
+        context: { owner: 'group', repository: 'private' },
+      }),
+    ).rejects.toThrow('Forbidden');
+  });
+
+  it('rejects missing branch context and credentials without listing branches', async () => {
+    const handle = createHandleAutocompleteRequest({
+      integrations: mockIntegrations,
+    });
+    const missingContexts: Record<string, string>[] = [
+      {},
+      { owner: 'group' },
+      { repository: 'repo' },
+    ];
+    for (const context of missingContexts) {
+      await expect(
+        handle({ resource: 'branches', token: 'user-token', context }),
+      ).rejects.toThrow(InputError);
+    }
+    await expect(
+      handle({
+        resource: 'branches',
+        token: '',
+        context: { owner: 'group', repository: 'repo' },
+      }),
+    ).rejects.toThrow('Missing user credentials');
+    expect(mockClient.Branches.all).not.toHaveBeenCalled();
   });
 
   it('should throw an error for invalid resource', async () => {

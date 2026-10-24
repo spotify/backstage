@@ -31,6 +31,7 @@ import { RepoBranchPickerState } from './types';
 import { BitbucketRepoBranchPicker } from './BitbucketRepoBranchPicker';
 import { DefaultRepoBranchPicker } from './DefaultRepoBranchPicker';
 import { GitHubRepoBranchPicker } from './GitHubRepoBranchPicker';
+import { GitLabRepoBranchPicker } from './GitLabRepoBranchPicker';
 import { MarkdownContent } from '@backstage/core-components';
 import { useScaffolderTheme } from '@backstage/plugin-scaffolder-react/alpha';
 import { Flex, Text } from '@backstage/ui';
@@ -148,6 +149,17 @@ export const RepoBranchPicker = (props: RepoBranchPickerProps) => {
       case 'github':
         return (
           <GitHubRepoBranchPicker
+            onChange={updateLocalState}
+            state={state}
+            rawErrors={rawErrors}
+            accessToken={accessToken}
+            isDisabled={isDisabled}
+            required={required}
+          />
+        );
+      case 'gitlab':
+        return (
+          <GitLabRepoBranchPicker
             onChange={updateLocalState}
             state={state}
             rawErrors={rawErrors}

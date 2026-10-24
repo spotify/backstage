@@ -81,6 +81,27 @@ export function createHandleAutocompleteRequest(options: {
 
         return result;
       }
+      case 'branches': {
+        if (!context.owner || !context.repository) {
+          throw new InputError('Missing owner or repository context parameter');
+        }
+        if (!token) {
+          throw new InputError(
+            'Missing user credentials for branch autocomplete',
+          );
+        }
+
+        const branches = await client.Branches.all(
+          `${context.owner}/${context.repository}`,
+        );
+
+        return {
+          results: branches.map(branch => ({
+            title: branch.name,
+            id: branch.name,
+          })),
+        };
+      }
       case 'repositories': {
         if (!context.id)
           throw new InputError('Missing groupId and userId context parameter');
