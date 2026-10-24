@@ -104,6 +104,8 @@ To create the application:
    npx @backstage/create-app@latest
    ```
 
+   By default, the app uses Yarn. To use pnpm instead, add `--package-manager pnpm` to the command. pnpm support is experimental. See [Package Managers](../tooling/package-managers.md).
+
 2. If this is the first time that you are installing a Backstage application on this device, the following question is displayed. Enter `y` and select `Enter` to proceed with the installation.
 
    ```text

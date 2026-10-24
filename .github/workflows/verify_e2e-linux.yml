@@ -101,3 +101,83 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_HOST: localhost
           POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+
+  build-pnpm:
+    permissions:
+      contents: read
+
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14@sha256:ceef4a62198b562d6fe3e51be67362f72a0abf0aaa255f54f0c0e55be9768ed2
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432/tcp
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # The lowest supported versions, in the 11.x line and from 12.7 on
+        pnpm-version: [11.28.0, 12.7.0]
+        # The template uses hoisted, isolated is what many pnpm monorepos use
+        node-linker: [hoisted, isolated]
+
+    env:
+      CI: true
+      NODE_OPTIONS: --max-old-space-size=8192 --no-node-snapshot --experimental-vm-modules
+
+    name: E2E Linux pnpm ${{ matrix.pnpm-version }} ${{ matrix.node-linker }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Configure Git
+        run: |
+          git config --global user.email noreply@backstage.io
+          git config --global user.name 'GitHub e2e user'
+
+      - name: use node.js 24.x
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: 24.19.0
+          registry-url: https://registry.npmjs.org/ # Needed for auth
+
+      # The pnpm version is set explicitly since the root package.json of this
+      # repository pins Yarn.
+      - name: install pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          version: ${{ matrix.pnpm-version }}
+
+      - name: yarn install
+        uses: backstage/actions/yarn-install@a9e1b58ad52aaf319264e18c3ff6887a4c824b52 # v0.7.13
+        with:
+          cache-prefix: ${{ runner.os }}-v24.x
+
+      - run: yarn tsc
+
+      - run: yarn backstage-cli repo build
+
+      - name: run E2E test
+        run: |
+          sudo sysctl fs.inotify.max_user_watches=524288
+          yarn e2e-test run --package-manager pnpm --node-linker "$NODE_LINKER"
+        env:
+          NODE_LINKER: ${{ matrix.node-linker }}
+          BACKSTAGE_TEST_DISABLE_DOCKER: 1
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}

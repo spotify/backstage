@@ -121,15 +121,17 @@ without a deprecation period. It is hidden from the main `--help` output.
 
 Bundle a plugin for dynamic loading. This creates a self-contained plugin
 package that can be deployed independently and loaded dynamically by a Backstage
-application. Supports both backend and frontend plugins.
+application. Supports both backend and frontend plugins, in Yarn and pnpm
+projects.
 
 Unlike regular builds, the bundle command:
 
 - Creates a fully self-contained plugin deliverable
 
 - Produces module federation assets (frontend) or includes plugin dependencies
-  in the plugin's private `node_modules`, building and packing (with
-  `yarn pack`) the local `workspace:^` dependencies first (backend).
+  in the plugin's private `node_modules`, building and packing (with the
+  pack command of the package manager) the local `workspace:^` dependencies
+  first (backend).
 - Generates a config schema from plugin-related packages only.
 - Validates that the plugin exports valid dynamic loading entry points (backend
   only)
@@ -188,8 +190,23 @@ Options:
   --pre-packed-dir <dir>      Path to a pre-built dist workspace (from
                               build-workspace --alwaysPack). Skips local dependency
                               packing and uses pre-packed packages directly. For frontend
-                              plugins, this also enables yarn.lock generation for SBOM.
+                              plugins, this also enables lockfile generation for SBOM.
 ```
+
+### Lockfile and installation
+
+The bundle is a project of its own. The command seeds its lockfile from the plugin directory when a lockfile exists there, and from the monorepo root otherwise. It then prunes the lockfile down to what the bundle needs and, for backend plugins, installs the private `node_modules` from it. The prune step runs offline against the cache of the package manager, which the install in the source project has already filled. In pnpm projects the install step runs offline as well.
+
+In Yarn projects, the bundle gets a `.yarnrc.yml` and a `yarn.lock`. The `resolutions` of the root `package.json` are merged into the bundle `package.json`.
+
+In pnpm projects, the bundle gets a `pnpm-workspace.yaml` and a `pnpm-lock.yaml`. The workspace file sets `nodeLinker: hoisted` and carries the `overrides` of the root `pnpm-workspace.yaml`, since pnpm ignores the `resolutions` field. It also copies two groups of settings from the root workspace file:
+
+- `storeDir`, `cacheDir`, `minimumReleaseAge`, `minimumReleaseAgeExclude`, `resolutionMode`, and `allowBuilds`, so that the offline steps read the same store and metadata cache as the source project, and native dependencies are built the same way.
+- `packageExtensions`, `patchedDependencies`, `peerDependencyRules`, `ignoredOptionalDependencies`, `supportedArchitectures`, `autoInstallPeers`, `excludeLinksFromLockfile`, `dedupePeerDependents`, `catalog`, and `catalogs`, which change what the lockfile resolves to. Patch files are copied into the bundle.
+
+Other settings of the root workspace file that could affect the result are named in a warning. When the root `package.json` pins a pnpm version in `packageManager`, the bundle `package.json` gets the same pin, so that the bundle uses that pnpm version even when it is written outside the source project.
+
+Offline steps stay offline. When the pnpm cache lacks the metadata or the tarball of a package, the command fails and names the package and the settings that decide where pnpm looks for it, rather than reaching for the network.
 
 ### Output contract
 
@@ -278,15 +295,17 @@ Restores the changes made by the prepack command
 ## build-workspace
 
 Builds a mirror of the workspace using the packaged production version of each
-package. This essentially calls `yarn pack` in each included package and unpacks
-the resulting archive in the target `workspace-dir`.
+package. This essentially calls the pack command of the package manager, such as
+`yarn pack`, in each included package and unpacks the resulting archive in the
+target `workspace-dir`.
 
 ```text
 Usage: backstage-cli build-workspace [options] <workspace-dir> [packages...]
 
 Options:
-  --alwaysPack  Force workspace output to be a result of running `yarn pack` on
-                each package (warning: very slow)
+  --alwaysPack  Force workspace output to be a result of running the pack
+                command of the package manager on each package (warning: very
+                slow)
 ```
 
 When `--alwaysPack` is used, the output directory can be passed to

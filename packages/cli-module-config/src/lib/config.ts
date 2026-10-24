@@ -62,7 +62,7 @@ export async function loadCliConfig(options: Options) {
   const schema = await loadConfigSchema({
     dependencies: localPackageNames,
     // Include the package.json in the project root if it exists
-    packagePaths: [targetPaths.resolveRoot('package.json')],
+    packagePaths: [targetPaths.resolveInstallationRoot('package.json')],
     noUndeclaredProperties: options.strict,
     onSchemaError: options.strict
       ? undefined
@@ -74,7 +74,7 @@ export async function loadCliConfig(options: Options) {
     substitutionFunc: options.mockEnv
       ? async name => process.env[name] || 'x'
       : undefined,
-    rootDir: targetPaths.rootDir,
+    rootDir: targetPaths.installationRootDir,
     argv: options.args.flatMap(t => ['--config', resolvePath(targetDir, t)]),
   });
 

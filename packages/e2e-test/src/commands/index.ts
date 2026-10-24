@@ -14,13 +14,27 @@
  * limitations under the License.
  */
 
-import { Command } from 'commander';
+import { Command, Option } from 'commander';
 import { runCommand } from './runCommand';
 
 export function registerCommands(program: Command) {
   program
     .command('run')
     .option('--keep', 'Do not remove the temporary dir after tests complete')
+    .addOption(
+      new Option(
+        '--package-manager <name>',
+        'Package manager to use for the created app',
+      )
+        .choices(['yarn', 'pnpm'])
+        .default('yarn'),
+    )
+    .addOption(
+      new Option(
+        '--node-linker <name>',
+        'Node linker to switch a pnpm app to, instead of the hoisted linker that the template uses',
+      ).choices(['hoisted', 'isolated']),
+    )
     .description('Run e2e tests')
     .action(runCommand);
 }

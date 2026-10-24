@@ -126,7 +126,9 @@ export default async ({ args, info }: CliCommandContext) => {
       targetDir: pkg.dir,
       packageJson: pkg.packageJson,
       outputs,
-      logPrefix: `${chalk.cyan(relativePath(targetPaths.rootDir, pkg.dir))}: `,
+      logPrefix: `${chalk.cyan(
+        relativePath(targetPaths.installationRootDir, pkg.dir),
+      )}: `,
       workspacePackages: packages,
       minify: minify ?? Boolean(buildOptions.minify),
     };

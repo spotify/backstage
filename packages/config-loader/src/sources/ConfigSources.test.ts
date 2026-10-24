@@ -16,6 +16,7 @@
 
 import fs from 'fs-extra';
 import { resolve as resolvePath } from 'node:path';
+import { createMockDirectory } from '@backstage/backend-test-utils';
 import { ConfigSources } from './ConfigSources';
 import { ConfigSource } from './types';
 import { MutableConfigSource } from './MutableConfigSource';
@@ -314,6 +315,59 @@ describe('ConfigSources', () => {
     ]);
 
     fsSpy.mockRestore();
+  });
+
+  it('should read the default files from the Backstage installation', () => {
+    const workspaceDir = createMockDirectory({
+      content: {
+        'package.json': '{}',
+        'pnpm-workspace.yaml': 'packages:\n  - apps/**\n',
+        'app-config.yaml': '',
+        'apps/backstage/package.json': JSON.stringify({
+          workspaces: ['packages/*'],
+        }),
+        'apps/backstage/app-config.yaml': '',
+        'apps/backstage/app-config.local.yaml': '',
+        'apps/backstage/packages/backend/package.json': '{}',
+      },
+    });
+    const standaloneDir = createMockDirectory({
+      content: { 'package.json': '{}', 'app-config.yaml': '' },
+    });
+    const workspaceRoot = fs.realpathSync(workspaceDir.path);
+    const standaloneRoot = fs.realpathSync(standaloneDir.path);
+    const cwdSpy = jest.spyOn(process, 'cwd');
+
+    // A nested installation in a pnpm workspace has its own config files
+    cwdSpy.mockReturnValue(
+      resolvePath(workspaceRoot, 'apps/backstage/packages/backend'),
+    );
+    expect(mergeSources(ConfigSources.default({ env: {} }))).toEqual([
+      {
+        name: 'FileConfigSource',
+        path: resolvePath(workspaceRoot, 'apps/backstage/app-config.yaml'),
+      },
+      {
+        name: 'FileConfigSource',
+        path: resolvePath(
+          workspaceRoot,
+          'apps/backstage/app-config.local.yaml',
+        ),
+      },
+      { name: 'EnvConfigSource', env: {} },
+    ]);
+
+    // Without a workspace, the files are read from the working directory
+    cwdSpy.mockReturnValue(standaloneRoot);
+    expect(mergeSources(ConfigSources.default({ env: {} }))).toEqual([
+      {
+        name: 'FileConfigSource',
+        path: resolvePath(standaloneRoot, 'app-config.yaml'),
+      },
+      { name: 'EnvConfigSource', env: {} },
+    ]);
+
+    cwdSpy.mockRestore();
   });
 
   it('should merge sources', () => {

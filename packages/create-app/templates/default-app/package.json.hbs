@@ -7,9 +7,17 @@
   },
   "scripts": {
     "start": "backstage-cli repo start",
+{{#if pnpm}}
+    "build:backend": "pnpm --filter backend build",
+{{else}}
     "build:backend": "yarn workspace backend build",
+{{/if}}
     "build:all": "backstage-cli repo build --all",
+{{#if pnpm}}
+    "build-image": "pnpm --filter backend build-image",
+{{else}}
     "build-image": "yarn workspace backend build-image",
+{{/if}}
     "tsc": "tsc",
     "tsc:full": "tsc --skipLibCheck false --incremental false",
     "clean": "backstage-cli repo clean",
@@ -31,10 +39,12 @@
       }
     }
   },
+{{#unless pnpm}}
   "workspaces": [
     "packages/*",
     "plugins/*"
   ],
+{{/unless}}
   "devDependencies": {
     "@backstage/cli": "^{{version '@backstage/cli'}}",
     "@backstage/cli-defaults": "^{{version '@backstage/cli-defaults'}}",
@@ -42,17 +52,24 @@
     "@jest/environment-jsdom-abstract": "^30.5.0",
     "@playwright/test": "^1.32.3",
     "@types/jest": "^30.0.0",
+{{#if pnpm}}
+    "@types/node": "^22.13.14",
+    "@types/react": "^18.0.0",
+    "@types/webpack-env": "^1.15.2",
+{{/if}}
     "jest": "^30.5.0",
     "jsdom": "^27.1.0",
     "node-gyp": "^10.0.0",
     "prettier": "^2.3.2",
     "typescript": "~5.8.0"
   },
+{{#unless pnpm}}
   "resolutions": {
     "@yarnpkg/core": "4.9.1",
     "@types/react": "^18",
     "@types/react-dom": "^18"
   },
+{{/unless}}
   "prettier": "@backstage/cli/config/prettier",
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [
@@ -63,5 +80,9 @@
       "prettier --write"
     ]
   },
+{{#if pnpm}}
+  "packageManager": "pnpm@{{pnpmVersion}}"
+{{else}}
   "packageManager": "yarn@4.13.0"
+{{/if}}
 }

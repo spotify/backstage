@@ -1,0 +1,6 @@
+{
+  "name": "@internal/a",
+  "backstage": {
+    "role": "frontend-plugin"
+  }
+}

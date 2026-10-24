@@ -24,7 +24,7 @@ import type { CliCommandContext } from '@backstage/cli-node';
 
 export default async ({ args, info }: CliCommandContext) => {
   cli({ name: info.usage, booleanFlagNegation: true }, undefined, args);
-  const { packages } = await getPackages(targetPaths.dir);
+  const { packages } = await getPackages(targetPaths.installationRootDir);
 
   await Promise.all(
     packages.map(async ({ dir, packageJson: pkg }) => {

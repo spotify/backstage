@@ -16,9 +16,7 @@
 
 import { minimatch } from 'minimatch';
 import { getPackages } from '@manypkg/get-packages';
-import { detectYarnVersion } from './yarn';
-import { runOutput } from '@backstage/cli-common';
-import { NotFoundError } from '@backstage/errors';
+import { isChildPath } from '@backstage/cli-common';
 
 const DEP_TYPES = [
   'dependencies',
@@ -27,83 +25,34 @@ const DEP_TYPES = [
   'optionalDependencies',
 ] as const;
 
-// Package data as returned by `yarn info`
-export type YarnInfoInspectData = {
-  name: string;
-  'dist-tags': Record<string, string>;
-  versions: string[];
-  time: { [version: string]: string };
-};
-
-// Possible `yarn info` output
-type YarnInfo = {
-  type: 'inspect';
-  data: YarnInfoInspectData | { type: string; data: unknown };
-};
-
 type PkgVersionInfo = {
   range: string;
   name: string;
   location: string;
 };
 
-export async function fetchPackageInfo(
-  name: string,
-): Promise<YarnInfoInspectData> {
-  const yarnVersion = await detectYarnVersion();
-
-  const cmd = yarnVersion === 'classic' ? ['info'] : ['npm', 'info'];
-  try {
-    const output = await runOutput(['yarn', ...cmd, '--json', name]);
-
-    if (!output) {
-      throw new NotFoundError(
-        `No package information found for package ${name}`,
-      );
-    }
-
-    if (yarnVersion === 'berry') {
-      return JSON.parse(output) as YarnInfoInspectData;
-    }
-
-    const info = JSON.parse(output) as YarnInfo;
-    if (info.type !== 'inspect') {
-      throw new Error(`Received unknown yarn info for ${name}, ${output}`);
-    }
-
-    return info.data as YarnInfoInspectData;
-  } catch (error) {
-    if (yarnVersion === 'classic') {
-      throw error;
-    }
-
-    if (
-      error instanceof Error &&
-      'stdout' in error &&
-      typeof error.stdout === 'string' &&
-      error.stdout.includes('Response Code: 404')
-    ) {
-      throw new NotFoundError(
-        `No package information found for package ${name}`,
-      );
-    }
-
-    throw error;
-  }
-}
-
-/** Map all dependencies in the repo as dependency => dependents */
+/**
+ * Map all dependencies in the repo as dependency => dependents. With
+ * `withinDir`, only packages in that directory are included, such as the
+ * packages of one Backstage installation in a larger workspace.
+ */
 export async function mapDependencies(
   targetDir: string,
   pattern: string,
+  options?: { withinDir?: string },
 ): Promise<Map<string, PkgVersionInfo[]>> {
   const { packages, root } = await getPackages(targetDir);
 
   // Include root package.json too
   packages.push(root);
 
+  const withinDir = options?.withinDir;
   const dependencyMap = new Map<string, PkgVersionInfo[]>();
   for (const pkg of packages) {
+    if (withinDir && !isChildPath(withinDir, pkg.dir)) {
+      continue;
+    }
+
     const deps = DEP_TYPES.flatMap(
       t => Object.entries(pkg.packageJson[t] ?? {}) as [string, string][],
     );

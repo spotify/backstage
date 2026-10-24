@@ -15,7 +15,7 @@
  */
 
 import { BackstagePackageJson, PackageGraph } from '@backstage/cli-node';
-import { run, runOutput } from '@backstage/cli-common';
+import { detectPackageManager } from '@backstage/cli-node/alpha';
 import chalk from 'chalk';
 import { cli } from 'cleye';
 import fs from 'fs-extra';
@@ -36,6 +36,8 @@ import {
   resolveLocalDependencies,
 } from '../../../lib/packager';
 import type { CliCommandContext } from '@backstage/cli-node';
+import { getBundlePackageManagerSteps } from './packageManagerSteps';
+import { createStepLogger, showLogOnError } from './stepLogger';
 
 interface BundleOptions {
   build: boolean;
@@ -142,46 +144,26 @@ export async function bundleCommand(opts: BundleOptions): Promise<void> {
   await fs.writeFile(joinPath(target, '.bundle-output'), '');
 
   const rootPkg = await fs.readJson(
-    resolvePath(targetPaths.rootDir, 'package.json'),
+    resolvePath(targetPaths.workspaceRootDir, 'package.json'),
   );
 
   // Backend plugins always need embedded packages, lockfile, and node_modules.
   // Frontend plugins need them only when --pre-packed-dir is provided.
   const needsDependencies = pluginType === 'backend' || !!opts.prePackedDir;
 
-  // Establish the bundle directory as its own Yarn project root so that
-  // the seeded yarn.lock is the one Yarn reads/writes, even when the
-  // output directory is inside another monorepo.
+  // The lockfile and install steps depend on the package manager
+  const steps = getBundlePackageManagerSteps(await detectPackageManager());
+
+  // Establish the bundle directory as its own project root so that the
+  // seeded lockfile is the one the package manager reads and writes, even
+  // when the output directory is inside another monorepo.
   // Only needed when lockfile/install operations will run.
   if (needsDependencies) {
-    const yarnrcLines = ['nodeLinker: node-modules'];
-    try {
-      // Include yarnPath so the same Yarn version that created the lockfile
-      // is used for pruning/installing -- lockfile formats differ across
-      // major Yarn versions (e.g. ~builtin vs optional!builtin patches).
-      const resolved = await runOutput(['yarn', 'config', 'get', 'yarnPath'], {
-        cwd: targetPaths.rootDir,
-      });
-      const yarnPathSentinels = new Set(['undefined', 'null']);
-      if (resolved && !yarnPathSentinels.has(resolved)) {
-        yarnrcLines.push(`yarnPath: ${resolved}`);
-      }
-    } catch {
-      // yarnPath not configured — check if corepack manages the version instead
-      if (!rootPkg.packageManager) {
-        console.warn(
-          chalk.yellow(
-            'No yarnPath configured and no packageManager field found. ' +
-              'The Yarn version in PATH will be used for lockfile operations.',
-          ),
-        );
-      }
-    }
-
-    await fs.writeFile(
-      joinPath(target, '.yarnrc.yml'),
-      `${yarnrcLines.join('\n')}\n`,
-    );
+    await steps.prepareBundleDir({
+      targetDir: target,
+      rootDir: targetPaths.workspaceRootDir,
+      rootPkg,
+    });
   }
 
   // ── Step 0 (frontend only): Module federation build ─────────────────
@@ -241,7 +223,7 @@ export async function bundleCommand(opts: BundleOptions): Promise<void> {
       await fs.ensureDir(embeddedDir);
 
       for (const dep of targets) {
-        const relDir = relativePath(targetPaths.rootDir, dep.dir);
+        const relDir = relativePath(targetPaths.workspaceRootDir, dep.dir);
         const srcDir = resolvePath(prePackedDir, relDir);
         const destDir = resolvePath(embeddedDir, relDir);
         if (await fs.pathExists(srcDir)) {
@@ -312,7 +294,10 @@ export async function bundleCommand(opts: BundleOptions): Promise<void> {
     }
 
     // ── Step 2: Assemble embedded packages ──────────────────────────────
-    const mainPluginRelDir = relativePath(targetPaths.rootDir, targetPaths.dir);
+    const mainPluginRelDir = relativePath(
+      targetPaths.workspaceRootDir,
+      targetPaths.dir,
+    );
     const mainPluginEmbeddedDir = resolvePath(embeddedDir, mainPluginRelDir);
 
     console.log(
@@ -355,7 +340,7 @@ export async function bundleCommand(opts: BundleOptions): Promise<void> {
     const localDeps = targets.filter(t => t.name !== pkg.name);
 
     for (const dep of localDeps) {
-      const depRelDir = relativePath(targetPaths.rootDir, dep.dir);
+      const depRelDir = relativePath(targetPaths.workspaceRootDir, dep.dir);
       const depEmbeddedDir = resolvePath(embeddedDir, depRelDir);
 
       if (!(await fs.pathExists(depEmbeddedDir))) {
@@ -476,7 +461,12 @@ export async function bundleCommand(opts: BundleOptions): Promise<void> {
     targetPkg,
     target,
     pluginType,
-    needsDependencies ? rootPkg?.resolutions : undefined,
+    needsDependencies
+      ? await steps.readRootOverrides({
+          rootDir: targetPaths.workspaceRootDir,
+          rootPkg,
+        })
+      : undefined,
     embeddedResolutions,
     needsDependencies,
   );
@@ -485,29 +475,49 @@ export async function bundleCommand(opts: BundleOptions): Promise<void> {
     targetPkg.configSchema = 'dist/.config-schema.json';
   }
 
+  if (needsDependencies) {
+    await steps.writeOverrides({
+      targetDir: target,
+      rootDir: targetPaths.workspaceRootDir,
+      rootPkg,
+      targetPkg,
+    });
+  }
+
   await fs.writeJson(targetPkgPath, targetPkg, { spaces: 2 });
 
   // ── Step 5: Seed lockfile, prune, & install ──────────────────────────
   // Runs for backend plugins (always) and frontend plugins with
   // --pre-packed-dir (for SBOM lockfile generation).
   if (needsDependencies) {
-    await seedBundleLockfile(target, targetPaths.dir, targetPaths.rootDir);
-
-    const sourceCacheFolder = await runOutput(
-      ['yarn', 'config', 'get', 'cacheFolder'],
-      { cwd: targetPaths.rootDir },
+    await seedBundleLockfile(
+      target,
+      targetPaths.dir,
+      targetPaths.workspaceRootDir,
+      steps.lockfileName,
     );
-    await pruneBundleLockfile(target, opts.verbose, sourceCacheFolder);
+
+    console.log(
+      chalk.blue(
+        `Pruning bundle ${chalk.cyan(
+          steps.lockfileName,
+        )} to remove unused dependencies...`,
+      ),
+    );
+    await steps.pruneLockfile({
+      targetDir: target,
+      rootDir: targetPaths.workspaceRootDir,
+      verbose: opts.verbose,
+    });
 
     if (pluginType === 'backend') {
       if (opts.install) {
-        await installBundleDependencies(target, opts.verbose);
-
-        // Clean up .yarn directory created during install
-        const yarnDir = joinPath(target, '.yarn');
-        if (await fs.pathExists(yarnDir)) {
-          await fs.remove(yarnDir);
-        }
+        console.log(chalk.blue('Installing private dependencies...'));
+        await steps.installDependencies({
+          targetDir: target,
+          verbose: opts.verbose,
+        });
+        await steps.cleanupAfterInstall(target);
 
         console.log(chalk.blue('Validating plugin entry points...'));
 
@@ -630,118 +640,44 @@ export function postProcessBundlePackageJson(
 }
 
 /**
- * Seeds the bundle's yarn.lock from the source plugin or monorepo lockfile.
- * Looks first for a local yarn.lock in the plugin directory, then falls back
+ * Seeds the bundle lockfile from the source plugin or monorepo lockfile.
+ * Looks first for a local lockfile in the plugin directory, then falls back
  * to the monorepo root.
  */
 async function seedBundleLockfile(
   targetDir: string,
   pluginDir: string,
   monorepoRoot: string,
+  lockfileName: string,
 ): Promise<void> {
-  let sourceYarnLock: string | undefined;
-  if (await fs.pathExists(joinPath(pluginDir, 'yarn.lock'))) {
-    sourceYarnLock = joinPath(pluginDir, 'yarn.lock');
-  } else if (await fs.pathExists(joinPath(monorepoRoot, 'yarn.lock'))) {
-    sourceYarnLock = joinPath(monorepoRoot, 'yarn.lock');
+  let sourceLockfile: string | undefined;
+  if (await fs.pathExists(joinPath(pluginDir, lockfileName))) {
+    sourceLockfile = joinPath(pluginDir, lockfileName);
+  } else if (await fs.pathExists(joinPath(monorepoRoot, lockfileName))) {
+    sourceLockfile = joinPath(monorepoRoot, lockfileName);
   }
 
-  if (!sourceYarnLock) {
+  if (!sourceLockfile) {
     throw new Error(
       `Could not find a ${chalk.cyan(
-        'yarn.lock',
+        lockfileName,
       )} file in either the plugin directory or the monorepo root (${chalk.cyan(
         monorepoRoot,
       )})`,
     );
   }
 
-  const isMonorepoLock = sourceYarnLock === joinPath(monorepoRoot, 'yarn.lock');
+  const isMonorepoLock =
+    sourceLockfile === joinPath(monorepoRoot, lockfileName);
   console.log(
     chalk.blue(
-      `Seeding bundle ${chalk.cyan('yarn.lock')} from source plugin${
+      `Seeding bundle ${chalk.cyan(lockfileName)} from source plugin${
         isMonorepoLock ? ' monorepo' : ''
       } lockfile...`,
     ),
   );
 
-  await fs.copyFile(sourceYarnLock, resolvePath(targetDir, 'yarn.lock'));
-}
-
-/**
- * Prunes the bundle's yarn.lock to remove entries not required by the
- * bundle's package.json. Runs offline to avoid network access.
- */
-async function pruneBundleLockfile(
-  targetDir: string,
-  verbose: boolean,
-  sourceCacheFolder: string,
-): Promise<void> {
-  console.log(
-    chalk.blue(
-      `Pruning bundle ${chalk.cyan(
-        'yarn.lock',
-      )} to remove unused dependencies...`,
-    ),
-  );
-
-  const pruneLog = createStepLogger(
-    joinPath(targetDir, 'lockfile-prune.log'),
-    verbose,
-    '[lockfile-prune] ',
-  );
-  try {
-    await run(
-      ['yarn', 'install', '--no-immutable', '--mode', 'update-lockfile'],
-      {
-        cwd: targetDir,
-        env: {
-          YARN_ENABLE_GLOBAL_CACHE: 'false',
-          YARN_ENABLE_NETWORK: '0',
-          YARN_ENABLE_MIRROR: 'false',
-          YARN_CACHE_FOLDER: sourceCacheFolder,
-        },
-        onStdout: pruneLog.logRunOutput('out'),
-        onStderr: pruneLog.logRunOutput('err'),
-      },
-    ).waitForExit();
-  } catch (err) {
-    await pruneLog.close();
-    await showLogOnError(pruneLog.path, verbose);
-    throw err;
-  }
-  await pruneLog.close();
-  await fs.remove(pruneLog.path);
-}
-
-/**
- * Installs the bundle's dependencies using an immutable lockfile.
- * This creates the node_modules directory needed for backend plugin runtime.
- */
-async function installBundleDependencies(
-  targetDir: string,
-  verbose: boolean,
-): Promise<void> {
-  console.log(chalk.blue('Installing private dependencies...'));
-
-  const installLog = createStepLogger(
-    joinPath(targetDir, 'yarn-install.log'),
-    verbose,
-    '[yarn-install] ',
-  );
-  try {
-    await run(['yarn', 'install', '--immutable'], {
-      cwd: targetDir,
-      onStdout: installLog.logRunOutput('out'),
-      onStderr: installLog.logRunOutput('err'),
-    }).waitForExit();
-  } catch (err) {
-    await installLog.close();
-    await showLogOnError(installLog.path, verbose);
-    throw err;
-  }
-  await installLog.close();
-  await fs.remove(installLog.path);
+  await fs.copyFile(sourceLockfile, resolvePath(targetDir, lockfileName));
 }
 
 /**
@@ -828,84 +764,6 @@ export function filterBundleConfigSchemas(
   return schemas.filter(s => allowed.has(s.packageName));
 }
 
-const ansiPattern =
-  // eslint-disable-next-line no-control-regex
-  /[\x1b\x9b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><~]|\x1b]8;;[^\x07\x1b]*(?:\x07|\x1b\\)/g;
-function stripAnsi(str: string): string {
-  return str.replace(ansiPattern, '');
-}
-
-function createStepLogger(
-  logFilePath: string,
-  verbose: boolean,
-  prefix?: string,
-) {
-  const logStream = fs.createWriteStream(logFilePath);
-
-  const writeLine = (line: string, stream: 'out' | 'err') => {
-    const prefixed = prefix ? `${prefix}${line}` : line;
-    logStream.write(
-      `${stream === 'err' ? '[WARN] ' : ''}${stripAnsi(prefixed)}\n`,
-    );
-    if (verbose) {
-      const writer = stream === 'err' ? console.warn : console.log;
-      writer(chalk.dim(prefixed));
-    }
-  };
-
-  const logger = {
-    log(msg: string) {
-      writeLine(msg, 'out');
-    },
-    warn(msg: string) {
-      writeLine(msg, 'err');
-    },
-  };
-
-  const logRunOutput = (stream: 'out' | 'err') => (data: Buffer) => {
-    if (prefix) {
-      for (const line of data.toString('utf8').split(/\r?\n/)) {
-        if (line) writeLine(line, stream);
-      }
-    } else {
-      logStream.write(
-        `${stream === 'err' ? '[WARN] ' : ''}${stripAnsi(
-          data.toString('utf8'),
-        )}`,
-      );
-      if (verbose) {
-        const writer = stream === 'err' ? console.warn : console.log;
-        writer(chalk.dim(data.toString('utf8')));
-      }
-    }
-  };
-
-  const close = () => new Promise<void>(r => logStream.end(r));
-
-  return { logger, logRunOutput, close, path: logFilePath };
-}
-
-async function showLogOnError(
-  logFilePath: string,
-  verbose: boolean,
-): Promise<void> {
-  console.error(
-    chalk.red(`\nFull log available at: ${chalk.cyan(logFilePath)}`),
-  );
-  if (!verbose) {
-    try {
-      const content = await fs.readFile(logFilePath, 'utf8');
-      const tail = content.split('\n').slice(-20).join('\n');
-      if (tail) {
-        console.error(chalk.dim('\n--- last 20 lines ---'));
-        console.error(tail);
-      }
-    } catch {
-      /* log file may not exist yet */
-    }
-  }
-}
-
 export default async ({ args, info }: CliCommandContext) => {
   const {
     flags: {
@@ -960,7 +818,7 @@ export default async ({ args, info }: CliCommandContext) => {
           description:
             'Path to a pre-built dist workspace (from build-workspace --alwaysPack). ' +
             'Skips local dependency packing and uses pre-packed packages directly. ' +
-            'For frontend plugins, this also enables yarn.lock generation for SBOM.',
+            'For frontend plugins, this also enables lockfile generation for SBOM.',
         },
       },
     },

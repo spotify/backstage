@@ -22,10 +22,10 @@ import { relative as relativePath } from 'node:path';
 import {
   PackageGraph,
   BackstagePackageJson,
-  Lockfile,
   runWorkerQueueThreads,
   SuccessCache,
 } from '@backstage/cli-node';
+import { detectPackageManager, Lockfile } from '@backstage/cli-node/alpha';
 import { targetPaths } from '@backstage/cli-common';
 
 import { createScriptOptionsParser } from '../../lib/optionsParser';
@@ -113,12 +113,19 @@ export default async ({ args, info }: CliCommandContext) => {
     name: 'lint',
     basePath: successCacheDir,
   });
-  const cacheContext = useSuccessCache
-    ? {
-        entries: await cache.read(),
-        lockfile: await Lockfile.load(targetPaths.resolveRoot('yarn.lock')),
-      }
-    : undefined;
+  let cacheContext: { entries: Set<string>; lockfile: Lockfile } | undefined;
+  if (useSuccessCache) {
+    // The cache keys depend on the lockfile, so without one there is no cache
+    const packageManager = await detectPackageManager();
+    try {
+      const lockfile = await packageManager.loadLockfile();
+      cacheContext = { entries: await cache.read(), lockfile };
+    } catch (error) {
+      console.warn(
+        `Failed to read ${packageManager.lockfileName()}, linting without the success cache, ${error}`,
+      );
+    }
+  }
 
   if (since) {
     const graph = PackageGraph.fromPackages(packages);
@@ -134,7 +141,7 @@ export default async ({ args, info }: CliCommandContext) => {
 
   // This formatter uses the cwd to format file paths, so let's have that happen from the root instead
   if (format === 'eslint-formatter-friendly') {
-    process.chdir(targetPaths.rootDir);
+    process.chdir(targetPaths.installationRootDir);
   }
 
   // Make sure lint output is colored unless the user explicitly disabled it
@@ -154,7 +161,7 @@ export default async ({ args, info }: CliCommandContext) => {
       const lintOptions = parseLintScript(pkg.packageJson.scripts?.lint);
       const base = {
         fullDir: pkg.dir,
-        relativeDir: relativePath(targetPaths.rootDir, pkg.dir),
+        relativeDir: relativePath(targetPaths.installationRootDir, pkg.dir),
         lintOptions,
         parentHash: undefined,
       };
@@ -190,7 +197,7 @@ export default async ({ args, info }: CliCommandContext) => {
       shouldCache: Boolean(cacheContext),
       maxWarnings: maxWarnings ?? '-1',
       successCache: cacheContext?.entries,
-      rootDir: targetPaths.rootDir,
+      rootDir: targetPaths.installationRootDir,
     },
     workerFactory: async ({
       fix: workerFix,
@@ -340,7 +347,10 @@ export default async ({ args, info }: CliCommandContext) => {
   }
 
   if (outputFile && errorOutput) {
-    await fs.writeFile(targetPaths.resolveRoot(outputFile), errorOutput);
+    await fs.writeFile(
+      targetPaths.resolveInstallationRoot(outputFile),
+      errorOutput,
+    );
   }
 
   if (cacheContext) {

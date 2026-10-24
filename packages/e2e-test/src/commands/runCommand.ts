@@ -16,12 +16,15 @@
 
 import os from 'node:os';
 import fs from 'fs-extra';
+import { rm } from 'node:fs/promises';
 import handlebars from 'handlebars';
 import killTree from 'tree-kill';
 import { resolve as resolvePath, join as joinPath } from 'node:path';
 import path from 'node:path';
+import { parseDocument } from 'yaml';
 
 import { waitFor, print } from '../lib/helpers';
+import { getPackageManager, PackageManager } from '../lib/packageManager';
 
 import mysql from 'mysql2/promise';
 import pgtools from 'pgtools';
@@ -44,6 +47,13 @@ export async function runCommand(opts: OptionValues) {
   const rootDir = await fs.mkdtemp(resolvePath(os.tmpdir(), 'backstage-e2e-'));
   print(`CLI E2E test root: ${rootDir}\n`);
 
+  // The package manager used for the created app, the dist workspace is
+  // always built and installed with Yarn since it is part of this repo
+  const pm = getPackageManager(opts.packageManager);
+  if (opts.nodeLinker && pm.name !== 'pnpm') {
+    throw new Error('The --node-linker option is only supported for pnpm');
+  }
+
   print('Building dist workspace');
   const workspaceDir = await buildDistWorkspace('workspace', rootDir);
 
@@ -51,17 +61,26 @@ export async function runCommand(opts: OptionValues) {
   process.env.YARN_ENABLE_IMMUTABLE_INSTALLS = 'false';
 
   print('Creating a Backstage App');
-  const appDir = await createApp('test-app', workspaceDir, rootDir);
+  const appDir = await createApp(
+    'test-app',
+    workspaceDir,
+    rootDir,
+    pm,
+    opts.nodeLinker,
+  );
 
   print('Creating a Backstage Plugin');
   const pluginId = 'test';
-  await createPlugin({ appDir, pluginId, select: 'frontend-plugin' });
+  await createPlugin({ appDir, pluginId, select: 'frontend-plugin', pm });
 
   print('Creating a Backstage Backend Plugin');
-  await createPlugin({ appDir, pluginId, select: 'backend-plugin' });
+  await createPlugin({ appDir, pluginId, select: 'backend-plugin', pm });
 
-  print(`Running 'yarn test:e2e' in newly created app with new plugin`);
-  await runOutput(['yarn', 'test:e2e'], {
+  const testE2eCmd = pm.run('test:e2e');
+  print(
+    `Running '${testE2eCmd.join(' ')}' in newly created app with new plugin`,
+  );
+  await runOutput(testE2eCmd, {
     cwd: appDir,
     env: { ...process.env, CI: undefined },
   });
@@ -76,6 +95,7 @@ export async function runCommand(opts: OptionValues) {
     const productionConfig = path.resolve(appDir, 'app-config.production.yaml');
     await testBackendStart(
       appDir,
+      pm,
       '--config',
       appConfig,
       '--config',
@@ -85,7 +105,7 @@ export async function runCommand(opts: OptionValues) {
     await new Promise(resolve => setTimeout(resolve, 3000));
   }
   print('Testing the Database backend startup');
-  await testBackendStart(appDir);
+  await testBackendStart(appDir, pm);
 
   if (process.env.CI) {
     // Cleanup actually takes significant time, so skip it in CI since the
@@ -96,7 +116,8 @@ export async function runCommand(opts: OptionValues) {
       print(`All tests successful, app dir available at ${appDir}`);
     } else {
       print('All tests successful, removing test dir');
-      await fs.remove(rootDir);
+      // pnpm can still be writing its run state for the stopped backend
+      await rm(rootDir, { recursive: true, force: true, maxRetries: 5 });
     }
   }
 
@@ -245,12 +266,15 @@ async function createApp(
   appName: string,
   workspaceDir: string,
   rootDir: string,
+  pm: PackageManager,
+  nodeLinker?: string,
 ) {
   const child = run(
     [
       'node',
       resolvePath(workspaceDir, 'packages/create-app/bin/backstage-create-app'),
       '--skip-install',
+      ...pm.createAppArgs(),
     ],
     {
       cwd: rootDir,
@@ -272,11 +296,13 @@ async function createApp(
 
     const appDir = resolvePath(rootDir, appName);
 
-    print('Overriding yarn.lock with seed file from the create-app package');
-    overrideYarnLockSeed(appDir);
+    if (pm.name === 'yarn') {
+      print('Overriding yarn.lock with seed file from the create-app package');
+      await overrideYarnLockSeed(appDir);
+    }
 
     print('Rewriting module resolutions of app to use workspace packages');
-    await overrideModuleResolutions(appDir, workspaceDir);
+    await overrideModuleResolutions(appDir, workspaceDir, pm);
 
     // Yarn does not clean up node_module folders in the linked in dependencies by itself
     print('Cleaning up node_modules in workspace');
@@ -290,8 +316,20 @@ async function createApp(
       }
     }
 
-    print('Pinning yarn version and registry in app');
-    await pinYarnVersion(appDir);
+    if (pm.name === 'yarn') {
+      print('Pinning yarn version and registry in app');
+      await pinYarnVersion(appDir);
+    } else {
+      print(
+        'Pinning pnpm version, relaxing install checks and pinning registry in app',
+      );
+      await pinPnpmVersion(appDir);
+      await relaxPnpmInstallChecks(appDir);
+      if (nodeLinker) {
+        print(`Switching the app to the ${nodeLinker} node linker`);
+        await setPnpmNodeLinker(appDir, nodeLinker);
+      }
+    }
     await fs.writeFile(
       resolvePath(appDir, '.npmrc'),
       'registry=https://registry.npmjs.org/\n',
@@ -300,15 +338,17 @@ async function createApp(
     print('Test app created');
 
     for (const cmd of [
-      'install',
-      'tsc:full',
-      'build:all',
-      'lint:all',
-      'prettier:check',
-      'test:all',
+      pm.install(),
+      ...[
+        'tsc:full',
+        'build:all',
+        'lint:all',
+        'prettier:check',
+        'test:all',
+      ].map(script => pm.run(script)),
     ]) {
-      print(`Running 'yarn ${cmd}' in newly created app`);
-      await runOutput(['yarn', cmd], { cwd: appDir });
+      print(`Running '${cmd.join(' ')}' in newly created app`);
+      await runOutput(cmd, { cwd: appDir });
     }
 
     return appDir;
@@ -334,14 +374,52 @@ async function overrideYarnLockSeed(appDir: string) {
 }
 
 /**
- * This points dependency resolutions into the workspace for each package that is present there
+ * Pins the app to the pnpm version that runs the test, rather than the one the
+ * template pins. pnpm would otherwise switch to the pinned version, and CI
+ * would never test the lowest supported version.
  */
-async function overrideModuleResolutions(appDir: string, workspaceDir: string) {
+async function pinPnpmVersion(appDir: string) {
+  // pnpm refuses to run in this repository, since its package.json pins Yarn
+  const version = (
+    await runOutput(['pnpm', '--version'], { cwd: os.tmpdir() })
+  ).trim();
+  const pkgJsonPath = resolvePath(appDir, 'package.json');
+  const pkgJson = await fs.readJson(pkgJsonPath);
+  pkgJson.packageManager = `pnpm@${version}`;
+  await fs.writeJson(pkgJsonPath, pkgJson, { spaces: 2 });
+}
+
+/**
+ * Switches the node linker of a pnpm app, so that the app can be tested with
+ * the isolated layout as well as the hoisted one that the template uses.
+ */
+async function setPnpmNodeLinker(appDir: string, nodeLinker: string) {
+  const workspaceYamlPath = resolvePath(appDir, 'pnpm-workspace.yaml');
+  const doc = parseDocument(await fs.readFile(workspaceYamlPath, 'utf8'));
+  doc.set('nodeLinker', nodeLinker);
+  await fs.writeFile(workspaceYamlPath, doc.toString({ singleQuote: true }));
+}
+
+/**
+ * This points dependency resolutions into the workspace for each package that is present there
+ *
+ * For Yarn this is done through the `resolutions` field in package.json, while
+ * pnpm reads the equivalent `overrides` from pnpm-workspace.yaml.
+ */
+async function overrideModuleResolutions(
+  appDir: string,
+  workspaceDir: string,
+  pm: PackageManager,
+) {
   const pkgJsonPath = resolvePath(appDir, 'package.json');
   const pkgJson = await fs.readJson(pkgJsonPath);
 
-  pkgJson.resolutions = pkgJson.resolutions || {};
+  if (pm.name === 'yarn') {
+    pkgJson.resolutions = pkgJson.resolutions || {};
+  }
   pkgJson.dependencies = pkgJson.dependencies || {};
+
+  const overrides = new Map<string, string>();
 
   for (const dir of ['packages', 'plugins']) {
     const packageNames = await fs.readdir(resolvePath(workspaceDir, dir));
@@ -352,13 +430,71 @@ async function overrideModuleResolutions(appDir: string, workspaceDir: string) {
       );
 
       pkgJson.dependencies[name] = `file:${pkgPath}`;
-      pkgJson.resolutions[name] = `file:${pkgPath}`;
+      overrides.set(name, `file:${pkgPath}`);
+      if (pm.name === 'yarn') {
+        pkgJson.resolutions[name] = `file:${pkgPath}`;
+      }
       if (pkgJson.devDependencies) {
         delete pkgJson.devDependencies[name];
       }
     }
   }
-  fs.writeJson(pkgJsonPath, pkgJson, { spaces: 2 });
+  await fs.writeJson(pkgJsonPath, pkgJson, { spaces: 2 });
+
+  if (pm.name === 'pnpm') {
+    // Every workspace package is a root dependency here, which pulls their
+    // peer dependencies into the root as well. Some accept React 17, and the
+    // hoisted linker of pnpm 11 then puts React 17 in the root node_modules,
+    // where the app build picks it up. A generated app has no such root
+    // dependencies, so the root gets the React version of the app.
+    const appPkgJson = await fs.readJson(
+      resolvePath(appDir, 'packages/app/package.json'),
+    );
+    for (const name of ['react', 'react-dom']) {
+      const range = appPkgJson.dependencies?.[name];
+      if (range) {
+        pkgJson.dependencies[name] = range;
+      }
+    }
+    await fs.writeJson(pkgJsonPath, pkgJson, { spaces: 2 });
+
+    const workspaceYamlPath = resolvePath(appDir, 'pnpm-workspace.yaml');
+    const doc = parseDocument(await fs.readFile(workspaceYamlPath, 'utf8'));
+    for (const [name, target] of overrides) {
+      doc.setIn(['overrides', name], target);
+    }
+    // Single quotes match the template and the prettier config of the app
+    await fs.writeFile(workspaceYamlPath, doc.toString({ singleQuote: true }));
+  }
+}
+
+/**
+ * Relaxes two pnpm install checks in the created app.
+ *
+ * The template sets `minimumReleaseAge`, which would block e2e runs from
+ * validating freshly-published dependency bumps and ecosystem-fix releases.
+ * This is the pnpm equivalent of the `npmMinimalAgeGate: 0` setting used for
+ * Yarn apps.
+ *
+ * Frozen installs are turned off, since pnpm enables them by default when the
+ * CI environment variable is set and a lockfile exists. The first install
+ * creates the lockfile, but the installs that `backstage-cli new` runs after
+ * adding a plugin need to update it. This is the pnpm equivalent of the
+ * YARN_ENABLE_IMMUTABLE_INSTALLS=false setting used for Yarn apps, but is
+ * written to pnpm-workspace.yaml so that it applies regardless of how pnpm is
+ * invoked.
+ */
+async function relaxPnpmInstallChecks(appDir: string) {
+  const workspaceYamlPath = resolvePath(appDir, 'pnpm-workspace.yaml');
+  const doc = parseDocument(await fs.readFile(workspaceYamlPath, 'utf8'));
+  doc.set('minimumReleaseAge', 0);
+  const pair = doc.createPair('frozenLockfile', false);
+  pair.key.commentBefore =
+    ' Added by the e2e test, lets the installs that run after new plugins are\n' +
+    ' created update the lockfile even though CI is set.';
+  pair.key.spaceBefore = true;
+  doc.add(pair);
+  await fs.writeFile(workspaceYamlPath, doc.toString({ singleQuote: true }));
 }
 
 /**
@@ -368,10 +504,11 @@ async function createPlugin(options: {
   appDir: string;
   pluginId: string;
   select: string;
+  pm: PackageManager;
 }) {
-  const { appDir, pluginId, select } = options;
+  const { appDir, pluginId, select, pm } = options;
   const child = run(
-    ['yarn', 'new', '--select', select, '--option', `pluginId=${pluginId}`],
+    pm.newPackage('--select', select, '--option', `pluginId=${pluginId}`),
     {
       cwd: appDir,
       stdio: ['pipe', 'pipe', 'pipe'],
@@ -397,12 +534,13 @@ async function createPlugin(options: {
       select === 'backend-plugin' ? `${pluginId}-backend` : pluginId,
     );
 
-    print(`Running 'yarn tsc' in root for newly created plugin`);
-    await runOutput(['yarn', 'tsc'], { cwd: appDir });
+    const tscCmd = pm.run('tsc');
+    print(`Running '${tscCmd.join(' ')}' in root for newly created plugin`);
+    await runOutput(tscCmd, { cwd: appDir });
 
-    for (const cmd of [['lint'], ['test', '--no-watch']]) {
-      print(`Running 'yarn ${cmd.join(' ')}' in newly created plugin`);
-      await runOutput(['yarn', ...cmd], { cwd: pluginDir });
+    for (const cmd of [pm.run('lint'), pm.run('test', '--no-watch')]) {
+      print(`Running '${cmd.join(' ')}' in newly created plugin`);
+      await runOutput(cmd, { cwd: pluginDir });
     }
   } finally {
     child.kill();
@@ -459,8 +597,12 @@ async function dropClientDatabases(client: string) {
 /**
  * Start serving the newly created backend and make sure that all db migrations works correctly
  */
-async function testBackendStart(appDir: string, ...args: string[]) {
-  const child = run(['yarn', 'workspace', 'backend', 'start', ...args], {
+async function testBackendStart(
+  appDir: string,
+  pm: PackageManager,
+  ...args: string[]
+) {
+  const child = run(pm.workspaceRun('backend', 'start', ...args), {
     cwd: appDir,
     // Windows does not like piping stdin here, the child process will hang when requiring the 'process' module
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -502,7 +644,8 @@ async function testBackendStart(appDir: string, ...args: string[]) {
           'DeprecationWarning: The `punycode` module is deprecated.', // Node 22
         ) &&
         !l.includes('node --trace-warnings ...') &&
-        !l.includes('node --trace-deprecation ...'),
+        !l.includes('node --trace-deprecation ...') &&
+        !pm.stderrNoisePatterns.some(pattern => pattern.test(l)),
     );
   };
 

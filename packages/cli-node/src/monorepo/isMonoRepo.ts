@@ -20,13 +20,20 @@ import fs from 'fs-extra';
 /**
  * Returns true if the current project is a monorepo.
  *
- * Uses a simple presence check on the `workspaces` field. Empty or invalid
- * workspace config is treated as a monorepo; we do not validate patterns.
+ * Uses a simple presence check on a `pnpm-workspace.yaml` file or the
+ * `workspaces` field in the root `package.json`. Empty or invalid workspace
+ * config is treated as a monorepo; we do not validate patterns.
  *
  * @public
  */
 export async function isMonoRepo(): Promise<boolean> {
-  const rootPackageJsonPath = targetPaths.resolveRoot('package.json');
+  // pnpm declares workspace packages in pnpm-workspace.yaml rather than package.json
+  if (
+    await fs.pathExists(targetPaths.resolveWorkspaceRoot('pnpm-workspace.yaml'))
+  ) {
+    return true;
+  }
+  const rootPackageJsonPath = targetPaths.resolveWorkspaceRoot('package.json');
   try {
     const pkg = await fs.readJson(rootPackageJsonPath);
     return Boolean(pkg?.workspaces);

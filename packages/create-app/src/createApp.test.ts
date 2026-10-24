@@ -43,12 +43,16 @@ const tryInitGitRepositoryMock = jest.spyOn(tasks, 'tryInitGitRepository');
 const readGitConfig = jest.spyOn(tasks, 'readGitConfig');
 const moveAppMock = jest.spyOn(tasks, 'moveAppTask');
 const buildAppMock = jest.spyOn(tasks, 'buildAppTask');
+const fetchYarnLockSeedMock = jest.spyOn(tasks, 'fetchYarnLockSeedTask');
 const tryCommandForVersionMock = jest.spyOn(tasks, 'tryCommandForVersion');
 
 describe('command entrypoint', () => {
   const mockDir = createMockDirectory({ mockOsTmpDir: true });
+  const originalUserAgent = process.env.npm_config_user_agent;
 
   beforeEach(() => {
+    // Make the default package manager independent of how the tests are run
+    delete process.env.npm_config_user_agent;
     promptMock.mockResolvedValueOnce({
       name: 'MyApp',
       dbType: 'PostgreSQL',
@@ -63,6 +67,11 @@ describe('command entrypoint', () => {
   });
 
   afterEach(() => {
+    if (originalUserAgent === undefined) {
+      delete process.env.npm_config_user_agent;
+    } else {
+      process.env.npm_config_user_agent = originalUserAgent;
+    }
     mockDir.clear();
     jest.resetAllMocks();
   });
@@ -155,6 +164,139 @@ describe('command entrypoint', () => {
     readGitConfig.mockResolvedValue(undefined);
     await createApp(cmd);
     expect(tryInitGitRepositoryMock).not.toHaveBeenCalled();
+  });
+
+  it('should create a Yarn app by default and leave out the pnpm files', async () => {
+    const cmd = {} as unknown as Command;
+    await createApp(cmd);
+    expect(tryCommandForVersionMock).toHaveBeenCalledWith('yarn -v', undefined);
+    expect(tryCommandForVersionMock).not.toHaveBeenCalledWith(
+      'pnpm -v',
+      expect.anything(),
+    );
+    expect(templatingMock.mock.lastCall?.[2]).toEqual(
+      expect.objectContaining({ packageManager: 'yarn', pnpm: false }),
+    );
+    const exclude = templatingMock.mock.lastCall?.[3]?.exclude!;
+    expect(exclude('pnpm-workspace.yaml.hbs')).toBe(true);
+    expect(exclude('.yarnrc.yml.hbs')).toBe(false);
+    expect(exclude('.yarn/releases/yarn-4.13.0.cjs')).toBe(false);
+    expect(exclude('yarn.lock')).toBe(false);
+    expect(exclude('package.json.hbs')).toBe(false);
+    expect(fetchYarnLockSeedMock).toHaveBeenCalled();
+    expect(buildAppMock).toHaveBeenCalledWith(expect.any(String), 'yarn');
+  });
+
+  it('should create a pnpm app when `--package-manager pnpm` is supplied', async () => {
+    tryCommandForVersionMock.mockImplementation(async (command: string) => {
+      if (command === 'pnpm -v') {
+        return { version: '12.7.0', error: undefined };
+      }
+      return { version: '3.12.4', error: undefined };
+    });
+    const cmd = { packageManager: 'pnpm' } as unknown as Command;
+    await createApp(cmd);
+    expect(tryCommandForVersionMock).toHaveBeenCalledWith('pnpm -v', {
+      cwd: tmpdir(),
+    });
+    expect(tryCommandForVersionMock).not.toHaveBeenCalledWith(
+      'yarn -v',
+      expect.anything(),
+    );
+    expect(templatingMock.mock.lastCall?.[2]).toEqual(
+      expect.objectContaining({ packageManager: 'pnpm', pnpm: true }),
+    );
+    const exclude = templatingMock.mock.lastCall?.[3]?.exclude!;
+    expect(exclude('.yarnrc.yml.hbs')).toBe(true);
+    expect(exclude('.yarn/releases/yarn-4.13.0.cjs')).toBe(true);
+    expect(exclude('yarn.lock')).toBe(true);
+    expect(exclude('pnpm-workspace.yaml.hbs')).toBe(false);
+    expect(exclude('package.json.hbs')).toBe(false);
+    expect(fetchYarnLockSeedMock).not.toHaveBeenCalled();
+    expect(buildAppMock).toHaveBeenCalledWith(expect.any(String), 'pnpm');
+  });
+
+  it('should pick the package manager from the npm user agent unless an option is supplied', async () => {
+    promptMock.mockResolvedValue({ name: 'MyApp' });
+    tryCommandForVersionMock.mockResolvedValue({
+      version: '12.7.0',
+      error: undefined,
+    });
+    process.env.npm_config_user_agent =
+      'pnpm/12.7.0 npm/? node/v24.11.0 linux x64';
+    await createApp({} as unknown as Command);
+    expect(templatingMock.mock.lastCall?.[2]).toEqual(
+      expect.objectContaining({ packageManager: 'pnpm' }),
+    );
+    expect(buildAppMock).toHaveBeenLastCalledWith(expect.any(String), 'pnpm');
+
+    await createApp({ packageManager: 'yarn' } as unknown as Command);
+    expect(templatingMock.mock.lastCall?.[2]).toEqual(
+      expect.objectContaining({ packageManager: 'yarn' }),
+    );
+    expect(buildAppMock).toHaveBeenLastCalledWith(expect.any(String), 'yarn');
+
+    process.env.npm_config_user_agent =
+      'yarn/4.13.0 npm/? node/v22.12.0 linux x64';
+    await createApp({} as unknown as Command);
+    expect(templatingMock.mock.lastCall?.[2]).toEqual(
+      expect.objectContaining({ packageManager: 'yarn' }),
+    );
+  });
+
+  it('should reject an unsupported package manager', async () => {
+    const cmd = { packageManager: 'npm' } as unknown as Command;
+    await expect(createApp(cmd)).rejects.toThrow(
+      "Unsupported package manager 'npm', expected 'yarn' or 'pnpm'",
+    );
+    expect(templatingMock).not.toHaveBeenCalled();
+  });
+
+  it('should exit when pnpm is not available or too old', async () => {
+    const errorMock = jest.spyOn(tasks.Task, 'error');
+    const exitMock = jest.spyOn(tasks.Task, 'exit').mockImplementation(() => {
+      throw new Error('exit');
+    });
+    const cmd = { packageManager: 'pnpm' } as unknown as Command;
+
+    tryCommandForVersionMock.mockImplementation(async (command: string) => {
+      if (command === 'pnpm -v') {
+        return { version: 'N/A', error: 'Command not found: pnpm' };
+      }
+      return { version: '3.12.4', error: undefined };
+    });
+    await expect(createApp(cmd)).rejects.toThrow('exit');
+    expect(errorMock).toHaveBeenCalledWith(
+      'pnpm is not available. Please install pnpm 11.28 or a later 11.x release, or pnpm 12.7 or later before creating a Backstage app.',
+    );
+
+    for (const version of ['12.6.0', '11.27.1', '10.30.0']) {
+      tryCommandForVersionMock.mockImplementation(async (command: string) => {
+        if (command === 'pnpm -v') {
+          return { version, error: undefined };
+        }
+        return { version: '3.12.4', error: undefined };
+      });
+      await expect(createApp(cmd)).rejects.toThrow('exit');
+      expect(errorMock).toHaveBeenCalledWith(
+        `pnpm 11.28 or a later 11.x release, or pnpm 12.7 or later is required, found ${version}. Please upgrade pnpm before creating a Backstage app.`,
+      );
+    }
+    expect(templatingMock).not.toHaveBeenCalled();
+
+    exitMock.mockImplementation(() => undefined);
+    promptMock.mockResolvedValue({ name: 'MyApp' });
+    for (const version of ['11.28.0', '12.7.0', '13.0.0']) {
+      templatingMock.mockClear();
+      tryCommandForVersionMock.mockImplementation(async (command: string) => {
+        if (command === 'pnpm -v') {
+          return { version, error: undefined };
+        }
+        return { version: '3.12.4', error: undefined };
+      });
+      await createApp(cmd);
+      expect(templatingMock).toHaveBeenCalled();
+    }
   });
 
   it('should exit when yarn is not available', async () => {
