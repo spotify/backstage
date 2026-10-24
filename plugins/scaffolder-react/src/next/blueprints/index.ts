@@ -18,3 +18,5 @@ export * from './FormDecoratorBlueprint';
 export * from './scaffolderTaskOutputsBlueprint';
 export * from './FormFieldBlueprint';
 export * from './types';
+
+export * from './ScaffolderTaskStatusBlueprint';

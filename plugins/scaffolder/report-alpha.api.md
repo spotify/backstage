@@ -34,6 +34,7 @@ import { RouteRef } from '@backstage/core-plugin-api';
 import { RouteRef as RouteRef_2 } from '@backstage/frontend-plugin-api';
 import { ScaffolderFormDecorator } from '@backstage/plugin-scaffolder-react/alpha';
 import { ScaffolderFormFieldsApi } from '@backstage/plugin-scaffolder-react/alpha';
+import { ScaffolderTaskStatusComponent } from '@backstage/plugin-scaffolder-react/alpha';
 import { ScaffolderTemplateOutputsComponent } from '@backstage/plugin-scaffolder-react/alpha';
 import { SubRouteRef } from '@backstage/core-plugin-api';
 import { TemplateEntityV1beta3 } from '@backstage/plugin-scaffolder-common';
@@ -532,6 +533,18 @@ const _default: OverridableFrontendPlugin<
             }
           >;
       inputs: {
+        taskStatus: ExtensionInput<
+          ConfigurableExtensionDataRef<
+            ScaffolderTaskStatusComponent,
+            'scaffolder.task-status.component',
+            {}
+          >,
+          {
+            singleton: true;
+            optional: true;
+            internal: false;
+          }
+        >;
         templateOutputsComponents: ExtensionInput<
           | ConfigurableExtensionDataRef<
               ScaffolderTemplateOutputsComponent,

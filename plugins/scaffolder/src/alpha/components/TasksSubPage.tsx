@@ -19,7 +19,10 @@ import { Content } from '@backstage/core-components';
 import { BreadcrumbEntry } from '@backstage/frontend-plugin-api';
 import { OngoingTaskBody } from '../../components/OngoingTask';
 import { ListTaskPageContent } from '../../components/ListTasksPage';
-import { ScaffolderTemplateOutputsComponent } from '@backstage/plugin-scaffolder-react/alpha';
+import {
+  ScaffolderTaskStatusComponent,
+  ScaffolderTemplateOutputsComponent,
+} from '@backstage/plugin-scaffolder-react/alpha';
 import { useTaskEventStream } from '@backstage/plugin-scaffolder-react';
 
 type TemplateOutputsRegistration = {
@@ -57,6 +60,7 @@ function TaskDetailWithBreadcrumb(props: {
  */
 export function TasksSubPage(props: {
   templateOutputsComponents?: TemplateOutputsRegistration[];
+  TaskStatusComponent?: ScaffolderTaskStatusComponent;
 }) {
   return (
     <Routes>
@@ -64,7 +68,9 @@ export function TasksSubPage(props: {
         index
         element={
           <Content>
-            <ListTaskPageContent />
+            <ListTaskPageContent
+              TaskStatusComponent={props.TaskStatusComponent}
+            />
           </Content>
         }
       />

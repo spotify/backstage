@@ -29,6 +29,7 @@ import { ReactNode } from 'react';
 import { ReviewStepProps } from '@backstage/plugin-scaffolder-react';
 import { ScaffolderRJSFFormProps } from '@backstage/plugin-scaffolder-react';
 import { ScaffolderStep } from '@backstage/plugin-scaffolder-react';
+import { ScaffolderTask } from '@backstage/plugin-scaffolder-common';
 import { ScaffolderTaskOutput } from '@backstage/plugin-scaffolder-react';
 import { ScaffolderTaskOutput as ScaffolderTaskOutput_2 } from '@backstage/plugin-scaffolder-common';
 import { SetStateAction } from 'react';
@@ -335,6 +336,35 @@ export const scaffolderReactTranslationRef: TranslationRef<
     readonly 'templateOutputs.title': 'Text Output';
   }
 >;
+
+// @alpha
+export const ScaffolderTaskStatusBlueprint: ExtensionBlueprint<{
+  kind: 'scaffolder-task-status';
+  params: {
+    component: ScaffolderTaskStatusComponent;
+  };
+  output: ExtensionDataRef<
+    ScaffolderTaskStatusComponent,
+    'scaffolder.task-status.component',
+    {}
+  >;
+  inputs: {};
+  config: {};
+  configInput: {};
+  dataRefs: {
+    component: ConfigurableExtensionDataRef<
+      ScaffolderTaskStatusComponent,
+      'scaffolder.task-status.component',
+      {}
+    >;
+  };
+}>;
+
+// @alpha
+export type ScaffolderTaskStatusComponent = ComponentType<{
+  task: ScaffolderTask;
+  children: ReactNode;
+}>;
 
 // @alpha (undocumented)
 export const scaffolderTemplateOutputsBlueprint: ExtensionBlueprint<{

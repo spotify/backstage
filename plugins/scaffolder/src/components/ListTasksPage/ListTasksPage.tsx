@@ -44,12 +44,16 @@ import {
   rootRouteRef,
   templatingExtensionsRouteRef,
 } from '../../routes';
-import { ScaffolderPageContextMenu } from '@backstage/plugin-scaffolder-react/alpha';
+import {
+  ScaffolderTaskStatusComponent,
+  ScaffolderPageContextMenu,
+} from '@backstage/plugin-scaffolder-react/alpha';
 import { useNavigate } from 'react-router-dom';
 import { useTranslationRef } from '@backstage/core-plugin-api/alpha';
 import { scaffolderTranslationRef } from '../../translation';
 
 export interface MyTaskPageProps {
+  TaskStatusComponent?: ScaffolderTaskStatusComponent;
   initiallySelectedFilter?: 'owned' | 'all';
   contextMenu?: {
     editor?: boolean;
@@ -60,7 +64,7 @@ export interface MyTaskPageProps {
 }
 
 export const ListTaskPageContent = (props: MyTaskPageProps) => {
-  const { initiallySelectedFilter = 'owned' } = props;
+  const { initiallySelectedFilter = 'owned', TaskStatusComponent } = props;
   const { t } = useTranslationRef(scaffolderTranslationRef);
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(0);
@@ -163,7 +167,14 @@ export const ListTaskPageContent = (props: MyTaskPageProps) => {
             {
               title: t('listTaskPage.content.tableCell.status'),
               field: 'status',
-              render: row => <TaskStatusColumn status={row.status} />,
+              render: row =>
+                TaskStatusComponent ? (
+                  <TaskStatusComponent task={row}>
+                    <TaskStatusColumn status={row.status} />
+                  </TaskStatusComponent>
+                ) : (
+                  <TaskStatusColumn status={row.status} />
+                ),
             },
           ]}
         />

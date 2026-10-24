@@ -31,6 +31,7 @@ import {
 import { rootRouteRef } from '../routes';
 import CreateComponentIcon from '@material-ui/icons/AddCircleOutline';
 import {
+  ScaffolderTaskStatusBlueprint,
   FormFieldBlueprint,
   formFieldsApiRef,
   scaffolderTemplateOutputsComponentRef,
@@ -112,6 +113,10 @@ export const scaffolderTemplatesSubPage = SubPageBlueprint.makeWithOverrides({
 export const scaffolderTasksSubPage = SubPageBlueprint.makeWithOverrides({
   name: 'tasks',
   inputs: {
+    taskStatus: createExtensionInput(
+      [ScaffolderTaskStatusBlueprint.dataRefs.component],
+      { singleton: true, optional: true },
+    ),
     templateOutputsComponents: createExtensionInput(
       [
         scaffolderTemplateOutputsComponentRef,
@@ -134,6 +139,9 @@ export const scaffolderTasksSubPage = SubPageBlueprint.makeWithOverrides({
         return import('./components/TasksSubPage').then(m => (
           <m.TasksSubPage
             templateOutputsComponents={templateOutputsComponents}
+            TaskStatusComponent={inputs.taskStatus?.get(
+              ScaffolderTaskStatusBlueprint.dataRefs.component,
+            )}
           />
         ));
       },
