@@ -18,6 +18,13 @@ import fs from 'node:fs';
 import { dirname, resolve as resolvePath } from 'node:path';
 
 /**
+ * The name of the backstage's config file
+ *
+ * @public
+ */
+export const BACKSTAGE_JSON = 'backstage.json';
+
+/**
  * A function that takes a set of path fragments and resolves them into a
  * single complete path, relative to some root.
  *
@@ -36,14 +43,68 @@ export type TargetPaths = {
   /** The target package directory. */
   dir: string;
 
-  /** The target monorepo root directory. */
+  /**
+   * The target monorepo root directory. This is the same directory as
+   * {@link TargetPaths.workspaceRootDir}.
+   *
+   * @deprecated Use {@link TargetPaths.workspaceRootDir} or
+   * {@link TargetPaths.installationRootDir}, depending on which root is needed.
+   */
   rootDir: string;
+
+  /**
+   * The root directory of the package manager workspace that contains the
+   * target directory. This is the nearest directory with a
+   * `pnpm-workspace.yaml` file, or with a `package.json` that has a
+   * `workspaces` field. pnpm ignores the `workspaces` field, so within a pnpm
+   * workspace it only starts a workspace of its own for a Yarn project, which
+   * has a `yarn.lock` or `.yarnrc.yml` file. The lockfile and the package
+   * manager configuration live here, and installs act on everything inside
+   * it.
+   *
+   * Falls back to the target directory when it is not inside a workspace.
+   */
+  workspaceRootDir: string;
+
+  /**
+   * The root directory of the Backstage installation that contains the target
+   * directory. This is the nearest directory with a `package.json` that has a
+   * `workspaces` field, up to and including the workspace root. In a Yarn
+   * workspace this is the workspace root. In a pnpm workspace, a `workspaces`
+   * field marks a Backstage installation in a subdirectory of a larger
+   * workspace.
+   *
+   * Falls back to the workspace root when there is no such `package.json`.
+   */
+  installationRootDir: string;
+
+  /**
+   * The `backstage.json` file of the Backstage installation. This is the
+   * nearest `backstage.json` file from the installation root up to and
+   * including the workspace root, so that several installations in a
+   * workspace can share one.
+   *
+   * Points into the installation root when there is no such file.
+   */
+  backstageJsonPath: string;
 
   /** Resolve a path relative to the target package directory. */
   resolve: ResolveFunc;
 
-  /** Resolve a path relative to the target repo root. */
+  /**
+   * Resolve a path relative to the target repo root.
+   *
+   * @deprecated Use {@link TargetPaths.resolveWorkspaceRoot} or
+   * {@link TargetPaths.resolveInstallationRoot}, depending on which root is
+   * needed.
+   */
   resolveRoot: ResolveFunc;
+
+  /** Resolve a path relative to the workspace root. */
+  resolveWorkspaceRoot: ResolveFunc;
+
+  /** Resolve a path relative to the Backstage installation root. */
+  resolveInstallationRoot: ResolveFunc;
 };
 
 /**
@@ -223,10 +284,79 @@ export function setTargetPathsOverride(override: TargetPaths | undefined) {
   targetPathsOverride = override;
 }
 
+function hasWorkspacesField(dir: string): boolean {
+  const pkgJsonPath = resolvePath(dir, 'package.json');
+  if (!fs.existsSync(pkgJsonPath)) {
+    return false;
+  }
+  try {
+    const content = fs.readFileSync(pkgJsonPath, 'utf8');
+    const data = JSON.parse(content);
+    return Boolean(data.workspaces);
+  } catch (error) {
+    throw new Error(
+      `Failed to parse package.json file while searching for root, ${error}`,
+    );
+  }
+}
+
+function hasPnpmWorkspaceFile(dir: string): boolean {
+  return fs.existsSync(resolvePath(dir, 'pnpm-workspace.yaml'));
+}
+
+function isYarnProject(dir: string): boolean {
+  return (
+    fs.existsSync(resolvePath(dir, 'yarn.lock')) ||
+    fs.existsSync(resolvePath(dir, '.yarnrc.yml'))
+  );
+}
+
+/**
+ * Returns the nearest directory from `dir` up to and including `stopDir`, or
+ * up to the file system root, that matches the predicate.
+ */
+function findAncestorDir(
+  dir: string,
+  predicate: (path: string) => boolean,
+  stopDir?: string,
+): string | undefined {
+  let path = dir;
+  for (let i = 0; i < 1000; i++) {
+    if (predicate(path)) {
+      return path;
+    }
+    const newPath = dirname(path);
+    if (path === stopDir || newPath === path) {
+      return undefined;
+    }
+    path = newPath;
+  }
+  throw new Error(`Iteration limit reached when searching from ${dir}`);
+}
+
+/**
+ * Finds the root of the Yarn, npm, or pnpm workspace that contains `dir`.
+ * pnpm reads its workspace packages from `pnpm-workspace.yaml` and ignores
+ * the `workspaces` field, so within a pnpm workspace that field only counts
+ * for a Yarn project of its own.
+ */
+function findWorkspaceRootDir(dir: string): string | undefined {
+  const inPnpmWorkspace =
+    findAncestorDir(dir, hasPnpmWorkspaceFile) !== undefined;
+  return findAncestorDir(
+    dir,
+    path =>
+      hasPnpmWorkspaceFile(path) ||
+      (hasWorkspacesField(path) && (!inPnpmWorkspace || isYarnProject(path))),
+  );
+}
+
 class TargetPathsImpl implements TargetPaths {
   #cwd: string | undefined;
   #dir: string | undefined;
-  #rootDir: string | undefined;
+  #workspaceRootDir: string | undefined;
+  #installationRootDir: string | undefined;
+  #backstageJsonPath: string | undefined;
 
   get dir(): string {
     if (targetPathsOverride) {
@@ -237,7 +367,9 @@ class TargetPathsImpl implements TargetPaths {
       return this.#dir;
     }
     this.#cwd = cwd;
-    this.#rootDir = undefined;
+    this.#workspaceRootDir = undefined;
+    this.#installationRootDir = undefined;
+    this.#backstageJsonPath = undefined;
     // Drive letter can end up being lowercased here on Windows, bring back to uppercase for consistency
     this.#dir = fs
       .realpathSync(cwd)
@@ -246,28 +378,56 @@ class TargetPathsImpl implements TargetPaths {
   }
 
   get rootDir(): string {
+    return this.workspaceRootDir;
+  }
+
+  get workspaceRootDir(): string {
     if (targetPathsOverride) {
-      return targetPathsOverride.rootDir;
+      return targetPathsOverride.workspaceRootDir;
     }
-    // Access dir first to ensure cwd is fresh, which also invalidates rootDir on cwd change
+    // Access dir first to ensure cwd is fresh, which also invalidates the roots on cwd change
     const dir = this.dir;
-    if (this.#rootDir !== undefined) {
-      return this.#rootDir;
+    if (this.#workspaceRootDir !== undefined) {
+      return this.#workspaceRootDir;
     }
     // Lazy init to only crash commands that require a monorepo when we're not in one
-    this.#rootDir =
-      findRootPath(dir, path => {
-        try {
-          const content = fs.readFileSync(path, 'utf8');
-          const data = JSON.parse(content);
-          return Boolean(data.workspaces);
-        } catch (error) {
-          throw new Error(
-            `Failed to parse package.json file while searching for root, ${error}`,
-          );
-        }
-      }) ?? dir;
-    return this.#rootDir;
+    this.#workspaceRootDir = findWorkspaceRootDir(dir) ?? dir;
+    return this.#workspaceRootDir;
+  }
+
+  get installationRootDir(): string {
+    if (targetPathsOverride) {
+      return targetPathsOverride.installationRootDir;
+    }
+    const dir = this.dir;
+    if (this.#installationRootDir !== undefined) {
+      return this.#installationRootDir;
+    }
+    const workspaceRootDir = this.workspaceRootDir;
+    this.#installationRootDir =
+      findAncestorDir(dir, hasWorkspacesField, workspaceRootDir) ??
+      workspaceRootDir;
+    return this.#installationRootDir;
+  }
+
+  get backstageJsonPath(): string {
+    if (targetPathsOverride) {
+      return targetPathsOverride.backstageJsonPath;
+    }
+    // Resolving the installation root first also makes sure that the working
+    // directory is fresh, which invalidates this path on change
+    const installationRootDir = this.installationRootDir;
+    if (this.#backstageJsonPath !== undefined) {
+      return this.#backstageJsonPath;
+    }
+    const backstageJsonDir =
+      findAncestorDir(
+        installationRootDir,
+        path => fs.existsSync(resolvePath(path, BACKSTAGE_JSON)),
+        this.workspaceRootDir,
+      ) ?? installationRootDir;
+    this.#backstageJsonPath = resolvePath(backstageJsonDir, BACKSTAGE_JSON);
+    return this.#backstageJsonPath;
   }
 
   resolve = (...paths: string[]): string => {
@@ -278,10 +438,21 @@ class TargetPathsImpl implements TargetPaths {
   };
 
   resolveRoot = (...paths: string[]): string => {
+    return this.resolveWorkspaceRoot(...paths);
+  };
+
+  resolveWorkspaceRoot = (...paths: string[]): string => {
     if (targetPathsOverride) {
-      return targetPathsOverride.resolveRoot(...paths);
+      return targetPathsOverride.resolveWorkspaceRoot(...paths);
     }
-    return resolvePath(this.rootDir, ...paths);
+    return resolvePath(this.workspaceRootDir, ...paths);
+  };
+
+  resolveInstallationRoot = (...paths: string[]): string => {
+    if (targetPathsOverride) {
+      return targetPathsOverride.resolveInstallationRoot(...paths);
+    }
+    return resolvePath(this.installationRootDir, ...paths);
   };
 }
 
@@ -330,18 +501,11 @@ export function findPaths(searchDir: string): Paths {
       return targetPaths.dir;
     },
     get targetRoot() {
-      return targetPaths.rootDir;
+      return targetPaths.workspaceRootDir;
     },
     resolveOwn: own.resolve,
     resolveOwnRoot: own.resolveRoot,
     resolveTarget: targetPaths.resolve,
-    resolveTargetRoot: targetPaths.resolveRoot,
+    resolveTargetRoot: targetPaths.resolveWorkspaceRoot,
   };
 }
-
-/**
- * The name of the backstage's config file
- *
- * @public
- */
-export const BACKSTAGE_JSON = 'backstage.json';

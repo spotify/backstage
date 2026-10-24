@@ -17,7 +17,7 @@ import { readFile, writeFile, cp } from 'node:fs/promises';
 import globby from 'globby';
 import { dirname, join as joinPath, relative } from 'node:path';
 import crypto from 'node:crypto';
-import { Lockfile } from '@backstage/cli-node';
+import { YarnLockfile } from '@backstage/cli-node';
 import { exists, rm, mkdirp } from 'fs-extra';
 import { z } from 'zod/v3';
 import { CACHE_DIR, CACHE_FILE } from './constants';
@@ -41,13 +41,13 @@ const cacheEntrySchema = z.object({
 export class PackageDocsCache {
   // A map of package directory to package hash.
   private keyCache: Map<string, string>;
-  private readonly lockfile: Lockfile;
+  private readonly lockfile: YarnLockfile;
   // A map of package directory to cache entry.
   private readonly cache: Map<string, CacheEntry>;
   private readonly baseDirectory: string;
 
   constructor(
-    lockfile: Lockfile,
+    lockfile: YarnLockfile,
     cache: Map<string, CacheEntry>,
     baseDirectory: string,
   ) {
@@ -56,7 +56,7 @@ export class PackageDocsCache {
     this.baseDirectory = baseDirectory;
     this.keyCache = new Map();
   }
-  static async loadAsync(baseDirectory: string, lockfile: Lockfile) {
+  static async loadAsync(baseDirectory: string, lockfile: YarnLockfile) {
     const cacheDir = joinPath(baseDirectory, CACHE_DIR);
     await mkdirp(cacheDir);
     const cacheFiles = await globby(`**/${CACHE_FILE}`, {

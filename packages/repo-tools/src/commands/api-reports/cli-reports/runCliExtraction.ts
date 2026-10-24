@@ -136,7 +136,7 @@ export async function runCliExtraction({
   await Promise.all(
     packageDirs.map(async packageDir => {
       console.log(`## Processing ${packageDir}`);
-      const fullDir = targetPaths.resolveRoot(packageDir);
+      const fullDir = targetPaths.resolveWorkspaceRoot(packageDir);
       const pkgJson = await fs.readJson(resolvePath(fullDir, 'package.json'));
 
       if (!pkgJson.bin) {
@@ -185,7 +185,7 @@ export async function runCliExtraction({
             logApiReportInstructions();
 
             logReportDiff(
-              relativePath(targetPaths.rootDir, reportPath),
+              relativePath(targetPaths.workspaceRootDir, reportPath),
               existingReport,
               report,
             );

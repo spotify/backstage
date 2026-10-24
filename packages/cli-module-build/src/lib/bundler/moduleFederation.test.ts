@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { prepareRuntimeSharedDependenciesScript } from './moduleFederation';
+import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  prepareRuntimeSharedDependenciesScript,
+  resolveSharedDependencyVersions,
+} from './moduleFederation';
 import { BACKSTAGE_RUNTIME_SHARED_DEPENDENCIES_GLOBAL } from '@backstage/module-federation-common';
 
 const GLOBAL = BACKSTAGE_RUNTIME_SHARED_DEPENDENCIES_GLOBAL;
@@ -154,5 +158,34 @@ describe('prepareRuntimeSharedDependenciesScript', () => {
         },
       }),
     ).toThrow("Version is required for shared dependency 'react'");
+  });
+});
+
+describe('resolveSharedDependencyVersions', () => {
+  const mockDir = createMockDirectory();
+
+  it('only shares packages that are installed where the app can import them', () => {
+    mockDir.setContent({
+      'node_modules/react/package.json': JSON.stringify({ version: '18.3.1' }),
+      'packages/app/package.json': '{}',
+      // Not in the lookup chain of the app, like packages that only pnpm's
+      // hidden hoisting directory holds
+      'other/node_modules/@emotion/react/package.json': JSON.stringify({
+        version: '11.0.0',
+      }),
+    });
+    const sharedDep = { singleton: true, requiredVersion: '*', eager: false };
+
+    const log = jest.spyOn(console, 'log').mockImplementation();
+    expect(
+      resolveSharedDependencyVersions(mockDir.resolve('packages/app'), {
+        react: sharedDep,
+        '@emotion/react': sharedDep,
+      }),
+    ).toEqual({ react: { ...sharedDep, version: '18.3.1' } });
+    expect(log).toHaveBeenCalledWith(
+      "Skipping module federation shared dependency '@emotion/react' because the app does not depend on it.",
+    );
+    log.mockRestore();
   });
 });

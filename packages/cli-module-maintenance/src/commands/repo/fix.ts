@@ -30,6 +30,7 @@ import {
   extname,
 } from 'node:path';
 import { targetPaths } from '@backstage/cli-common';
+import { detectPackageManager } from '@backstage/cli-node/alpha';
 import {
   knownBackendPluginPackageNameByPluginId,
   knownFrontendPluginPackageNameByPluginId,
@@ -49,16 +50,21 @@ export async function readFixablePackages(): Promise<FixablePackage[]> {
   return packages.map(pkg => ({ ...pkg, changed: false }));
 }
 
-export function printPackageFixHint(packages: FixablePackage[]) {
+export async function printPackageFixHint(packages: FixablePackage[]) {
   const changed = packages.filter(pkg => pkg.changed);
   if (changed.length > 0) {
-    const rootPkg = require(targetPaths.resolveRoot('package.json'));
+    const rootPkg = require(targetPaths.resolveInstallationRoot(
+      'package.json',
+    ));
     const fixCmd =
       rootPkg.scripts?.fix === 'backstage-cli repo fix'
-        ? 'fix'
-        : 'backstage-cli repo fix';
+        ? ['fix']
+        : ['backstage-cli', 'repo', 'fix'];
+    const packageManager = await detectPackageManager();
     console.log(
-      `The following packages are out of sync, run 'yarn ${fixCmd}' to fix them:`,
+      `The following packages are out of sync, run '${packageManager.getCommandHint(
+        fixCmd,
+      )}' to fix them:`,
     );
     for (const pkg of changed) {
       console.log(`  ${pkg.packageJson.name}`);
@@ -219,7 +225,7 @@ export function fixSideEffects(pkg: FixablePackage) {
 }
 
 export function createRepositoryFieldFixer() {
-  const rootPkg = require(targetPaths.resolveRoot('package.json'));
+  const rootPkg = require(targetPaths.resolveInstallationRoot('package.json'));
   const rootRepoField = rootPkg.repository;
   if (!rootRepoField) {
     return () => {};
@@ -232,7 +238,7 @@ export function createRepositoryFieldFixer() {
   return (pkg: FixablePackage) => {
     const expectedPath = posix.join(
       rootDir,
-      relativePath(targetPaths.rootDir, pkg.dir),
+      relativePath(targetPaths.installationRootDir, pkg.dir),
     );
     const repoField = pkg.packageJson.repository;
 
@@ -326,7 +332,7 @@ export function fixPluginId(pkg: FixablePackage) {
       role === 'backend-plugin-module')
   ) {
     const path = relativePath(
-      targetPaths.rootDir,
+      targetPaths.installationRootDir,
       resolvePath(pkg.dir, 'package.json'),
     );
     const msg = `Failed to guess plugin ID for "${pkg.packageJson.name}", please set the 'backstage.pluginId' field manually in "${path}"`;
@@ -413,7 +419,7 @@ export function fixPluginPackages(
         return;
       }
       const path = relativePath(
-        targetPaths.rootDir,
+        targetPaths.installationRootDir,
         resolvePath(pkg.dir, 'package.json'),
       );
       const suggestedRole =
@@ -462,7 +468,7 @@ export function fixPeerModules(pkg: FixablePackage) {
   }
 
   const packagePath = relativePath(
-    targetPaths.rootDir,
+    targetPaths.installationRootDir,
     resolvePath(pkg.dir, 'package.json'),
   );
 
@@ -540,7 +546,7 @@ export default async ({
   }
 
   if (check) {
-    if (printPackageFixHint(packages)) {
+    if (await printPackageFixHint(packages)) {
       process.exit(1);
     }
   } else {

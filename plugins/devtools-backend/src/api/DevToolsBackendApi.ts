@@ -25,12 +25,13 @@ import {
   PackageDependency,
 } from '@backstage/plugin-devtools-common';
 import { JsonObject } from '@backstage/types';
-import { findPaths } from '@backstage/cli-common';
+import { targetPaths } from '@backstage/cli-common';
 import { getPackages } from '@manypkg/get-packages';
 import ping from 'ping';
 import os from 'node:os';
 import fs from 'fs-extra';
 import { Lockfile } from '../util/Lockfile';
+import { PnpmLockfile } from '../util/PnpmLockfile';
 import { memoize } from 'lodash';
 import { toError } from '@backstage/errors';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -148,10 +149,7 @@ export class DevToolsBackendApi {
   }
 
   public async listConfig(): Promise<ConfigInfo> {
-    /* eslint-disable-next-line no-restricted-syntax */
-    const paths = findPaths(__dirname);
-
-    const { packages } = await getPackages(paths.targetDir);
+    const { packages } = await getPackages(targetPaths.dir);
     const schemaFunc = async () => {
       return await loadConfigSchema({
         dependencies: packages.map(p => p.packageJson.name),
@@ -217,17 +215,14 @@ export class DevToolsBackendApi {
       .join('/')}`;
     const nodeJsVersion = process.version;
 
-    /* eslint-disable-next-line no-restricted-syntax */
-    const paths = findPaths(__dirname);
-    const backstageFile = paths.resolveTargetRoot('backstage.json');
+    const backstageFile = targetPaths.backstageJsonPath;
     let backstageJson = undefined;
     if (fs.existsSync(backstageFile)) {
       const buffer = await fs.readFile(backstageFile);
       backstageJson = JSON.parse(buffer.toString());
     }
 
-    const lockfilePath = paths.resolveTargetRoot('yarn.lock');
-    const lockfile = await Lockfile.load(lockfilePath);
+    const lockfile = await loadLockfile();
 
     const prefixes = ['@backstage', '@internal'].concat(
       this.config.getOptionalStringArray('devTools.info.packagePrefixes') ?? [],
@@ -257,4 +252,34 @@ export class DevToolsBackendApi {
 
     return info;
   }
+}
+
+// Picks the lockfile the same way as the Backstage CLI as far as needed here:
+// the packageManager field of the root package.json, or else its
+// devEngines.packageManager field, first, then whether there is a pnpm
+// lockfile, and otherwise Yarn.
+async function loadLockfile(): Promise<{
+  keys(): IterableIterator<string>;
+  get(name: string): Array<{ version: string }> | undefined;
+}> {
+  const packageJson = await fs
+    .readJson(targetPaths.resolveWorkspaceRoot('package.json'))
+    .catch(() => undefined);
+  const declared = packageJson?.packageManager;
+  const devEngineNames: unknown[] = [packageJson?.devEngines?.packageManager]
+    .flat()
+    .map(entry => entry?.name);
+  const declaredName =
+    typeof declared === 'string'
+      ? declared.split('@')[0]
+      : devEngineNames.find(name => name === 'yarn' || name === 'pnpm');
+
+  const pnpmLockfilePath = targetPaths.resolveWorkspaceRoot('pnpm-lock.yaml');
+  const usePnpm =
+    declaredName === 'pnpm' ||
+    (declaredName !== 'yarn' && (await fs.pathExists(pnpmLockfilePath)));
+
+  return usePnpm
+    ? PnpmLockfile.load(pnpmLockfilePath)
+    : Lockfile.load(targetPaths.resolveWorkspaceRoot('yarn.lock'));
 }

@@ -22,7 +22,7 @@ import { readFile, rm, writeFile } from 'node:fs/promises';
 import pLimit from 'p-limit';
 import { mkdirp } from 'fs-extra';
 import { PackageDocsCache } from './Cache';
-import { Lockfile } from '@backstage/cli-node';
+import { YarnLockfile } from '@backstage/cli-node';
 import { glob } from 'glob';
 import { existsSync } from 'node:fs';
 
@@ -75,7 +75,10 @@ async function generateDocJson(pkg: string) {
   const temporaryTsConfigPath: string = await createTemporaryTsConfig(pkg);
 
   const packageJson = JSON.parse(
-    await readFile(targetPaths.resolveRoot(pkg, 'package.json'), 'utf-8'),
+    await readFile(
+      targetPaths.resolveWorkspaceRoot(pkg, 'package.json'),
+      'utf-8',
+    ),
   );
 
   const exports = getExports(packageJson);
@@ -86,17 +89,17 @@ async function generateDocJson(pkg: string) {
     return false;
   }
 
-  await mkdirp(targetPaths.resolveRoot(`dist-types`, pkg));
+  await mkdirp(targetPaths.resolveWorkspaceRoot(`dist-types`, pkg));
 
   const { stdout, stderr } = await execAsync(
     [
-      targetPaths.resolveRoot('node_modules/.bin/typedoc'),
+      targetPaths.resolveWorkspaceRoot('node_modules/.bin/typedoc'),
       '--json',
-      targetPaths.resolveRoot(`dist-types`, pkg, 'docs.json'),
+      targetPaths.resolveWorkspaceRoot(`dist-types`, pkg, 'docs.json'),
       '--tsconfig',
       temporaryTsConfigPath,
       '--basePath',
-      targetPaths.rootDir,
+      targetPaths.workspaceRootDir,
       '--skipErrorChecking',
       ...(getExports(packageJson).flatMap(e => [
         '--entryPoints',
@@ -118,7 +121,7 @@ export default async function packageDocs(paths: string[] = [], opts: any) {
   console.warn('!!! This is an experimental command !!!');
 
   const existingDocsJsonPaths = glob.sync(
-    targetPaths.resolveRoot('dist-types/**/docs.json'),
+    targetPaths.resolveWorkspaceRoot('dist-types/**/docs.json'),
     { windowsPathsNoEscape: true },
   );
   if (existingDocsJsonPaths.length > 0) {
@@ -131,7 +134,7 @@ export default async function packageDocs(paths: string[] = [], opts: any) {
     }
   }
   console.warn('!!! Deleting existing docs output !!!');
-  await rm(targetPaths.resolveRoot('type-docs'), {
+  await rm(targetPaths.resolveWorkspaceRoot('type-docs'), {
     recursive: true,
     force: true,
   });
@@ -142,8 +145,8 @@ export default async function packageDocs(paths: string[] = [], opts: any) {
   });
 
   const cache = await PackageDocsCache.loadAsync(
-    targetPaths.rootDir,
-    await Lockfile.load(targetPaths.resolveRoot('yarn.lock')),
+    targetPaths.workspaceRootDir,
+    await YarnLockfile.load(targetPaths.resolveWorkspaceRoot('yarn.lock')),
   );
 
   console.log(`### Generating docs.`);
@@ -151,7 +154,10 @@ export default async function packageDocs(paths: string[] = [], opts: any) {
     selectedPackageDirs.map(pkg =>
       limit(async () => {
         const pkgJson = JSON.parse(
-          await readFile(targetPaths.resolveRoot(pkg, 'package.json'), 'utf-8'),
+          await readFile(
+            targetPaths.resolveWorkspaceRoot(pkg, 'package.json'),
+            'utf-8',
+          ),
         );
         if (EXCLUDE.includes(pkg) || pkgJson.name.startsWith('@internal/')) {
           return;
@@ -170,7 +176,10 @@ export default async function packageDocs(paths: string[] = [], opts: any) {
           console.log(`### Processing ${pkg}`);
           const success = await generateDocJson(pkg);
           if (success) {
-            await cache.write(pkg, targetPaths.resolveRoot(`dist-types`, pkg));
+            await cache.write(
+              pkg,
+              targetPaths.resolveWorkspaceRoot(`dist-types`, pkg),
+            );
           }
         } catch (e) {
           console.error('Failed to generate docs for', pkg);
@@ -183,7 +192,7 @@ export default async function packageDocs(paths: string[] = [], opts: any) {
   const generatedPackageDirs = [];
   for (const pkg of selectedPackageDirs) {
     try {
-      const docsJsonPath = targetPaths.resolveRoot(
+      const docsJsonPath = targetPaths.resolveWorkspaceRoot(
         `dist-types/${pkg}/docs.json`,
       );
       const docsJson = JSON.parse(await readFile(docsJsonPath, 'utf-8'));
@@ -207,7 +216,7 @@ export default async function packageDocs(paths: string[] = [], opts: any) {
 
   const { stdout, stderr } = await execAsync(
     [
-      targetPaths.resolveRoot('node_modules/.bin/typedoc'),
+      targetPaths.resolveWorkspaceRoot('node_modules/.bin/typedoc'),
       '--entryPointStrategy',
       'merge',
       ...generatedPackageDirs.flatMap(pkg => [
@@ -216,13 +225,13 @@ export default async function packageDocs(paths: string[] = [], opts: any) {
       ]),
       ...HIGHLIGHT_LANGUAGES.flatMap(e => ['--highlightLanguages', e]),
       '--out',
-      targetPaths.resolveRoot('type-docs'),
-      ...(existsSync(targetPaths.resolveRoot('typedoc.json'))
-        ? ['--options', targetPaths.resolveRoot('typedoc.json')]
+      targetPaths.resolveWorkspaceRoot('type-docs'),
+      ...(existsSync(targetPaths.resolveWorkspaceRoot('typedoc.json'))
+        ? ['--options', targetPaths.resolveWorkspaceRoot('typedoc.json')]
         : []),
     ].join(' '),
     {
-      cwd: targetPaths.rootDir,
+      cwd: targetPaths.workspaceRootDir,
     },
   );
 

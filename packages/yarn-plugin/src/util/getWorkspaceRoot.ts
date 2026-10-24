@@ -18,5 +18,5 @@ import { npath } from '@yarnpkg/fslib';
 import { targetPaths } from '@backstage/cli-common';
 
 export const getWorkspaceRoot = () => {
-  return npath.toPortablePath(targetPaths.rootDir);
+  return npath.toPortablePath(targetPaths.workspaceRootDir);
 };

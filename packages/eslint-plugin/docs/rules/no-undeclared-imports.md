@@ -82,3 +82,7 @@ Inside `src/my-plugin.test.ts` (a test file):
 // Declared as a dev dependency inside a test file
 import { useApi } from '@backstage/core-plugin-api';
 ```
+
+## Fixes
+
+The fix adds missing dependencies by running the `add` command of the package manager in the package directory. It uses pnpm when the `packageManager` field in the root `package.json` names pnpm, or when there is a `pnpm-lock.yaml` file in the workspace root, and Yarn otherwise. With pnpm, workspace packages are added with a `workspace:^` range unless another range is already used in the repository.

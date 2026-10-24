@@ -206,7 +206,7 @@ async function readDatabaseConfig(
     }
   | undefined
 > {
-  const rootDir = targetPaths.rootDir;
+  const rootDir = targetPaths.installationRootDir;
   const configBaseDir = targetDir ?? rootDir;
   const source = ConfigSources.default({
     rootDir,

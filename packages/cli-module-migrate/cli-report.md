@@ -87,6 +87,9 @@ Options:
 Usage: @backstage/cli-module-migrate versions:bump [flags...]
 
 Options:
+  --catalog <string>
+  --dry-run
+  --json
   --pattern <string>
   --release <string>
   --skip-install

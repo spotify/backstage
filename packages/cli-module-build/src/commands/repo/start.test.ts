@@ -15,8 +15,17 @@
  */
 
 import { PackageGraph } from '@backstage/cli-node';
+import { PackageManager } from '@backstage/cli-node/alpha';
 import { findTargetPackages } from './start';
 import { overrideTargetPaths } from '@backstage/cli-common/testUtils';
+
+jest.mock('@backstage/cli-node/alpha', () => ({
+  ...jest.requireActual('@backstage/cli-node/alpha'),
+  detectPackageManager: async () =>
+    ({
+      getCommandHint: (args: string[]) => ['yarn', ...args].join(' '),
+    } as Partial<PackageManager> as PackageManager),
+}));
 
 overrideTargetPaths('/root');
 

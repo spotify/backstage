@@ -21,7 +21,22 @@ Options:
   -h, --help        display help for command
   --pattern <glob>  Override glob for matching packages to upgrade
   --release <version|next|main> Bump to a specific Backstage release line or version (default: "main")
+  --skip-install    Skips the install step
+  --skip-migrate    Skips migration of any moved packages
+  --catalog <name>  Only bump the entries of this pnpm catalog, instead of version ranges and the default catalog
+  --dry-run         Show the version bumps without changing any files
+  --json            Print the resolved versions as JSON, only together with --dry-run
 ```
+
+Each new version is written where the dependency is declared. A version range is updated in the `package.json` file that declares it. In pnpm workspaces, a `catalog:` reference is updated in the default catalog of `pnpm-workspace.yaml` instead. References to named catalogs are left alone, unless the catalog is passed with `--catalog`, in which case only that catalog is updated. This is useful when you deliberately keep a second release line, such as a `backstage-next` catalog during a migration:
+
+```bash
+backstage-cli versions:bump --catalog backstage-next --release next
+```
+
+`--dry-run --json` prints the resolved version of each package as JSON and changes no files, which lets other tools reuse the version resolution.
+
+In pnpm workspaces, `overrides` in `pnpm-workspace.yaml` take precedence over both version ranges and catalogs. The command warns about overrides that pin the packages it bumps, since those packages keep the versions from the overrides until you update or remove them.
 
 ## versions\:migrate
 
@@ -31,7 +46,7 @@ have a `backstage.moved` field in their `package.json`, updates the dependency
 names in `package.json` files, and optionally rewrites import paths in source
 files.
 
-After making changes the command runs `yarn install` to update the lockfile.
+After making changes the command installs dependencies with the package manager of the project, such as `yarn install`, to update the lockfile.
 
 ```text
 Usage: backstage-cli versions:migrate [options]

@@ -18,7 +18,7 @@ import * as runObj from '@backstage/cli-common';
 import { overrideTargetPaths } from '@backstage/cli-common/testUtils';
 import bump, { bumpBackstageJsonVersion, createVersionFinder } from './bump';
 import { registerMswTestHooks, withLogCollector } from '@backstage/test-utils';
-import { YarnInfoInspectData } from '../../lib/versioning/packages';
+import type { PackageInfo } from '@backstage/cli-node/alpha';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 import { NotFoundError } from '@backstage/errors';
@@ -55,17 +55,33 @@ jest.mock('@backstage/cli-common', () => {
       exitCode: null,
       waitForExit: jest.fn().mockResolvedValue(undefined),
     }),
+    runOutput: jest.fn(),
   };
 });
 
+// Package info is fetched through `yarn npm info`, which ends up here
 const mockFetchPackageInfo = jest.fn();
-jest.mock('../../lib/versioning/packages', () => {
-  const actual = jest.requireActual('../../lib/versioning/packages');
-  return {
-    ...actual,
-    fetchPackageInfo: (name: string) => mockFetchPackageInfo(name),
-  };
-});
+
+// Mocks the output of the Yarn commands that the package manager runs
+function mockYarnOutput() {
+  jest.mocked(runObj.runOutput).mockImplementation(async args => {
+    const command = args.join(' ');
+    if (command === 'yarn --version') {
+      return '4.18.0\n';
+    }
+    if (command === 'pnpm --version') {
+      return '12.7.0\n';
+    }
+    if (
+      command.startsWith('yarn npm info --json ') ||
+      (command.startsWith('pnpm view ') && command.endsWith(' --json'))
+    ) {
+      const name = args[0] === 'pnpm' ? args[2] : args[args.length - 1];
+      return JSON.stringify(await mockFetchPackageInfo(name));
+    }
+    throw new Error(`Unexpected command ${command}`);
+  });
+}
 
 const REGISTRY_VERSIONS: { [name: string]: string } = {
   '@backstage/core': '1.0.6',
@@ -123,6 +139,7 @@ describe('bump', () => {
 
   beforeEach(() => {
     overrideTargetPaths(mockDir.path);
+    mockYarnOutput();
     mockFetchPackageInfo.mockImplementation(async name => ({
       name: name,
       'dist-tags': {
@@ -222,6 +239,72 @@ describe('bump', () => {
         '@backstage/theme': '^2.0.0',
       },
     });
+  });
+
+  it('should bump without a lockfile and skip the breaking changes report', async () => {
+    mockDir.setContent({
+      'package.json': JSON.stringify({
+        workspaces: ['packages/*'],
+      }),
+      packages: {
+        b: {
+          'package.json': JSON.stringify({
+            name: 'b',
+            dependencies: {
+              '@backstage/theme': '^1.0.0',
+            },
+          }),
+        },
+      },
+    });
+
+    jest.spyOn(runObj, 'run').mockReturnValue({
+      exitCode: null,
+      waitForExit: jest.fn().mockResolvedValue(undefined),
+    } as any);
+    worker.use(
+      http.get('https://versions.backstage.io/v1/tags/main/manifest.json', () =>
+        HttpResponse.json({ packages: [] }),
+      ),
+    );
+    const { log: logs, warn } = await withLogCollector(
+      ['log', 'warn'],
+      async () => {
+        await bump({ args: ['--release', 'main', '--skip-install'], info });
+      },
+    );
+    expect(warn).toEqual([
+      expect.stringContaining(
+        'Failed to read yarn.lock, breaking updates will not be reported',
+      ),
+      'Could not find package.json for @backstage/theme@^2.0.0 in b (dependencies)',
+    ]);
+    expectLogsToMatch(logs, [
+      'Using default pattern glob @backstage/*',
+      'Checking for updates of @backstage/theme',
+      'Some packages are outdated, updating',
+      'bumping @backstage/theme in b to ^2.0.0',
+      'Skipping yarn install',
+      'Checking for moved packages to the @backstage-community namespace...',
+      'Version bump complete!',
+    ]);
+    expect(runObj.run).not.toHaveBeenCalled();
+    await expect(
+      fs.readJson(mockDir.resolve('packages/b/package.json')),
+    ).resolves.toEqual({
+      name: 'b',
+      dependencies: { '@backstage/theme': '^2.0.0' },
+    });
+  });
+
+  it('should reject --catalog with Yarn', async () => {
+    mockDir.setContent({
+      'package.json': JSON.stringify({ workspaces: ['packages/*'] }),
+      'yarn.lock': lockfileMock,
+    });
+    await expect(
+      bump({ args: ['--catalog', 'backstage-next'], info }),
+    ).rejects.toThrow('The --catalog flag is not supported with yarn');
   });
 
   it('should bump backstage dependencies but not install them', async () => {
@@ -484,12 +567,15 @@ describe('bump', () => {
     expect(mockFetchPackageInfo).toHaveBeenCalledWith('@backstage/core');
 
     expect(runObj.run).toHaveBeenCalledTimes(2);
-    expect(runObj.run).toHaveBeenCalledWith([
-      'yarn',
-      'plugin',
-      'import',
-      'https://versions.backstage.io/v1/releases/0.0.1/yarn-plugin',
-    ]);
+    expect(runObj.run).toHaveBeenCalledWith(
+      [
+        'yarn',
+        'plugin',
+        'import',
+        'https://versions.backstage.io/v1/releases/0.0.1/yarn-plugin',
+      ],
+      { cwd: mockDir.path },
+    );
     expect(runObj.run).toHaveBeenCalledWith(
       ['yarn', 'install'],
       expect.any(Object),
@@ -915,7 +1001,7 @@ describe('bumpBackstageJsonVersion', () => {
 });
 
 describe('createVersionFinder', () => {
-  async function findVersion(tag: string, data: Partial<YarnInfoInspectData>) {
+  async function findVersion(tag: string, data: Partial<PackageInfo>) {
     const fetcher = () =>
       Promise.resolve({
         name: '@backstage/core',
@@ -1006,6 +1092,252 @@ describe('createVersionFinder', () => {
   });
 });
 
+describe('bump with pnpm', () => {
+  const mockDir = createMockDirectory();
+
+  const worker = setupServer();
+  registerMswTestHooks(worker);
+
+  const workspaceYaml = `packages:
+  - packages/*
+
+# Versions shared by all packages
+catalog:
+  '@backstage/core': ^1.0.5
+  lodash: ^4.0.0
+
+catalogs:
+  backstage-next:
+    '@backstage/theme': ^1.0.0
+`;
+
+  beforeEach(() => {
+    overrideTargetPaths(mockDir.path);
+    mockYarnOutput();
+    mockFetchPackageInfo.mockImplementation(async name => ({
+      name: name,
+      'dist-tags': {
+        latest: REGISTRY_VERSIONS[name],
+      },
+    }));
+    jest.spyOn(runObj, 'run').mockReturnValue({
+      exitCode: null,
+      waitForExit: jest.fn().mockResolvedValue(undefined),
+    } as any);
+    worker.use(
+      http.get('https://versions.backstage.io/v1/tags/main/manifest.json', () =>
+        HttpResponse.json({ releaseVersion: '1.0.1', packages: [] }),
+      ),
+    );
+    mockDir.setContent({
+      'package.json': JSON.stringify({
+        name: 'root',
+        packageManager: 'pnpm@12.7.0',
+      }),
+      'pnpm-workspace.yaml': workspaceYaml,
+      'backstage.json': JSON.stringify({ version: '1.0.0' }),
+      packages: {
+        a: {
+          'package.json': JSON.stringify({
+            name: 'a',
+            dependencies: {
+              '@backstage/core': 'catalog:',
+              '@backstage/theme': 'catalog:backstage-next',
+            },
+          }),
+        },
+        b: {
+          'package.json': JSON.stringify({
+            name: 'b',
+            dependencies: {
+              '@backstage/theme': '^1.0.0',
+            },
+          }),
+        },
+      },
+    });
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  const readPackage = (name: string) =>
+    fs.readJson(mockDir.resolve(`packages/${name}/package.json`));
+
+  it('should bump version ranges and the default catalog', async () => {
+    const { log: logs } = await withLogCollector(['log', 'warn'], async () => {
+      await bump({ args: ['--skip-migrate'], info });
+    });
+    expect(logs).toEqual(
+      expect.arrayContaining([
+        'bumping @backstage/theme in b to ^2.0.0',
+        'bumping @backstage/core in the default catalog to ^1.0.6',
+        'Running pnpm install to install new versions',
+      ]),
+    );
+
+    // The named catalog and the references to it are left alone
+    await expect(readPackage('a')).resolves.toEqual({
+      name: 'a',
+      dependencies: {
+        '@backstage/core': 'catalog:',
+        '@backstage/theme': 'catalog:backstage-next',
+      },
+    });
+    await expect(readPackage('b')).resolves.toEqual({
+      name: 'b',
+      dependencies: { '@backstage/theme': '^2.0.0' },
+    });
+    expect(await fs.readFile(mockDir.resolve('pnpm-workspace.yaml'), 'utf8'))
+      .toBe(`packages:
+  - packages/*
+
+# Versions shared by all packages
+catalog:
+  '@backstage/core': ^1.0.6
+  lodash: ^4.0.0
+
+catalogs:
+  backstage-next:
+    '@backstage/theme': ^1.0.0
+`);
+    await expect(
+      fs.readJson(mockDir.resolve('backstage.json')),
+    ).resolves.toEqual({ version: '1.0.1' });
+    expect(runObj.run).toHaveBeenCalledWith(
+      ['pnpm', 'install'],
+      expect.objectContaining({ cwd: mockDir.path }),
+    );
+  });
+
+  it('should only bump the named catalog with --catalog', async () => {
+    const { log: logs } = await withLogCollector(['log', 'warn'], async () => {
+      await bump({
+        args: [
+          '--catalog',
+          'backstage-next',
+          '--skip-install',
+          '--skip-migrate',
+        ],
+        info,
+      });
+    });
+    expect(logs).toEqual(
+      expect.arrayContaining([
+        'bumping @backstage/theme in the backstage-next catalog to ^2.0.0',
+        'Skipping backstage.json update as the backstage-next catalog is bumped',
+      ]),
+    );
+    expect(logs.join('\n')).not.toContain(' in b ');
+
+    await expect(readPackage('b')).resolves.toEqual({
+      name: 'b',
+      dependencies: { '@backstage/theme': '^1.0.0' },
+    });
+    expect(
+      await fs.readFile(mockDir.resolve('pnpm-workspace.yaml'), 'utf8'),
+    ).toBe(
+      workspaceYaml.replace(
+        "'@backstage/theme': ^1.0.0",
+        "'@backstage/theme': ^2.0.0",
+      ),
+    );
+    await expect(
+      fs.readJson(mockDir.resolve('backstage.json')),
+    ).resolves.toEqual({ version: '1.0.0' });
+  });
+
+  it('should warn about overrides that pin the bumped packages', async () => {
+    await fs.writeFile(
+      mockDir.resolve('pnpm-workspace.yaml'),
+      `${workspaceYaml}
+overrides:
+  '@backstage/core': 1.0.5
+  a>@backstage/theme@^1: 1.0.0
+  '@backstage/theme@1>lodash': 4.0.0
+  '@backstage/theme': $@backstage/theme
+  '@backstage/plugin-x': 'catalog:'
+  '@backstage/plugin-y': '-'
+`,
+    );
+    const { warn: warnings } = await withLogCollector(
+      ['log', 'warn'],
+      async () => {
+        await bump({ args: ['--dry-run'], info });
+      },
+    );
+    expect(
+      warnings.filter(warning => warning.startsWith('The workspace overrides')),
+    ).toEqual([
+      'The workspace overrides @backstage/core, a>@backstage/theme@^1. Overrides take precedence over package.json and the catalogs, so these packages keep the versions that the overrides set. Update or remove the overrides to bump them.',
+    ]);
+  });
+
+  it('should reject a catalog that does not exist before doing anything', async () => {
+    await expect(
+      bump({ args: ['--catalog', 'backstage-nxet'], info }),
+    ).rejects.toThrow(
+      "There is no catalog named 'backstage-nxet' in the workspace",
+    );
+    expect(mockFetchPackageInfo).not.toHaveBeenCalled();
+  });
+
+  it('should print the resolved versions without changing anything with --dry-run --json', async () => {
+    await expect(bump({ args: ['--json'], info })).rejects.toThrow(
+      'The --json flag can only be used together with --dry-run',
+    );
+
+    const stdout = jest
+      .spyOn(process.stdout, 'write')
+      .mockImplementation(() => true);
+    const { log: logs, error: progress } = await withLogCollector(
+      ['log', 'warn', 'error'],
+      async () => {
+        await bump({ args: ['--dry-run', '--json'], info });
+      },
+    );
+
+    // Nothing but the JSON is written to stdout, progress goes to stderr
+    expect(logs).toEqual([]);
+    expect(progress).toEqual(
+      expect.arrayContaining(['Checking for updates of @backstage/core']),
+    );
+    expect(stdout).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(String(stdout.mock.calls[0][0]))).toEqual({
+      releaseVersion: '1.0.1',
+      versions: {
+        '@backstage/core': '1.0.6',
+        '@backstage/theme': '2.0.0',
+      },
+    });
+
+    // A dry run without --json lists the bumps instead
+    const { log: dryRunLogs } = await withLogCollector(['log'], async () => {
+      await bump({ args: ['--dry-run'], info });
+    });
+    expect(dryRunLogs).toEqual(
+      expect.arrayContaining([
+        'bumping @backstage/theme in b to ^2.0.0',
+        'bumping @backstage/core in the default catalog to ^1.0.6',
+        'Dry run complete, no files were changed.',
+      ]),
+    );
+
+    expect(runObj.run).not.toHaveBeenCalled();
+    await expect(readPackage('b')).resolves.toEqual({
+      name: 'b',
+      dependencies: { '@backstage/theme': '^1.0.0' },
+    });
+    expect(
+      await fs.readFile(mockDir.resolve('pnpm-workspace.yaml'), 'utf8'),
+    ).toBe(workspaceYaml);
+    await expect(
+      fs.readJson(mockDir.resolve('backstage.json')),
+    ).resolves.toEqual({ version: '1.0.0' });
+  });
+});
+
 describe('environment variables', () => {
   const mockDir = createMockDirectory();
 
@@ -1014,6 +1346,7 @@ describe('environment variables', () => {
 
   beforeEach(() => {
     overrideTargetPaths(mockDir.path);
+    mockYarnOutput();
   });
 
   beforeEach(() => {
@@ -1238,12 +1571,15 @@ describe('environment variables', () => {
     ]);
 
     expect(runObj.run).toHaveBeenCalledTimes(2);
-    expect(runObj.run).toHaveBeenCalledWith([
-      'yarn',
-      'plugin',
-      'import',
-      'https://custom.example.com/v1/releases/1.5.0/yarn-plugin',
-    ]);
+    expect(runObj.run).toHaveBeenCalledWith(
+      [
+        'yarn',
+        'plugin',
+        'import',
+        'https://custom.example.com/v1/releases/1.5.0/yarn-plugin',
+      ],
+      { cwd: mockDir.path },
+    );
     expect(runObj.run).toHaveBeenCalledWith(
       ['yarn', 'install'],
       expect.any(Object),

@@ -77,7 +77,7 @@ export default async ({ args, info }: CliCommandContext) => {
 
   const fileName = `github-app-${slug}-credentials.yaml`;
   const content = `# Name: ${name}\n${stringifyYaml(config)}`;
-  await fs.writeFile(targetPaths.resolveRoot(fileName), content);
+  await fs.writeFile(targetPaths.resolveInstallationRoot(fileName), content);
   console.log(`GitHub App configuration written to ${chalk.cyan(fileName)}`);
   console.log(
     chalk.yellow(

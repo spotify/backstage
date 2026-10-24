@@ -278,15 +278,17 @@ Restores the changes made by the prepack command
 ## build-workspace
 
 Builds a mirror of the workspace using the packaged production version of each
-package. This essentially calls `yarn pack` in each included package and unpacks
-the resulting archive in the target `workspace-dir`.
+package. This essentially calls the pack command of the package manager, such as
+`yarn pack`, in each included package and unpacks the resulting archive in the
+target `workspace-dir`.
 
 ```text
 Usage: backstage-cli build-workspace [options] <workspace-dir> [packages...]
 
 Options:
-  --alwaysPack  Force workspace output to be a result of running `yarn pack` on
-                each package (warning: very slow)
+  --alwaysPack  Force workspace output to be a result of running the pack
+                command of the package manager on each package (warning: very
+                slow)
 ```
 
 When `--alwaysPack` is used, the output directory can be passed to
