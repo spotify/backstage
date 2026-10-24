@@ -19,6 +19,8 @@ export type {
   ActionsRegistryActionOptions,
   ActionsRegistryActionContext,
   ActionsRegistryActionExample,
+  ActionUi,
+  ActionUiMetadata,
 } from './ActionsRegistryService';
 
 export type { ActionsService, ActionsServiceAction } from './ActionsService';

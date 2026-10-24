@@ -20,11 +20,17 @@ import { ctrlc } from 'ctrlc-windows';
 import { IpcServer, ServerDataStore } from '../ipc';
 import debounce from 'lodash/debounce';
 import { fileURLToPath } from 'node:url';
-import { isAbsolute as isAbsolutePath } from 'node:path';
+import {
+  isAbsolute as isAbsolutePath,
+  resolve as resolvePath,
+} from 'node:path';
 import { targetPaths } from '@backstage/cli-common';
+import { PackageGraph } from '@backstage/cli-node';
+import fs from 'fs-extra';
 
 import spawn from 'cross-spawn';
 import { startEmbeddedDb } from './startEmbeddedDb';
+import { watchBackendBrowserAssets } from '../backendBrowserAssets';
 
 const loaderArgs = [
   '--enable-source-maps',
@@ -61,6 +67,37 @@ export async function runBackend(options: RunBackendOptions) {
   ServerDataStore.bind(server);
 
   const extraEnv: Record<string, string> = {};
+  const browserAssetsTargetDir = options.targetDir ?? targetPaths.dir;
+  let browserAssetsTargetDirs = [browserAssetsTargetDir];
+  const targetPackage = fs.existsSync(
+    resolvePath(browserAssetsTargetDir, 'package.json'),
+  )
+    ? fs.readJsonSync(resolvePath(browserAssetsTargetDir, 'package.json'))
+    : undefined;
+  if (targetPackage?.backstage?.role === 'backend') {
+    const packages = await PackageGraph.listTargetPackages();
+    const graph = PackageGraph.fromPackages(packages);
+    const targetNode = graph.get(targetPackage.name);
+    if (!targetNode) {
+      throw new Error(
+        `Backend package '${targetPackage.name}' was not found in the workspace`,
+      );
+    }
+    const dependencyNames = graph.collectPackageNames([targetNode.name], node =>
+      node.allLocalDependencies.keys(),
+    );
+    browserAssetsTargetDirs = Array.from(dependencyNames).flatMap(name => {
+      const node = graph.get(name);
+      const role = node?.packageJson.backstage?.role;
+      return node &&
+        (role === 'backend-plugin' || role === 'backend-plugin-module')
+        ? [node.dir]
+        : [];
+    });
+  }
+  const stopBrowserAssetsWatcher = await watchBackendBrowserAssets({
+    targetDirs: browserAssetsTargetDirs,
+  });
 
   const embeddedDb = await startEmbeddedDb({
     configPaths: options.configPaths,
@@ -197,6 +234,7 @@ export async function runBackend(options: RunBackendOptions) {
       }
 
       await embeddedDb?.close();
+      await stopBrowserAssetsWatcher();
       resolveExitPromise();
     }
 

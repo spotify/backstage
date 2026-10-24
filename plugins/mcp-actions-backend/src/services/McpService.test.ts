@@ -25,11 +25,16 @@ import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import {
   CallToolResultSchema,
+  ListResourcesResultSchema,
   ListToolsResultSchema,
+  ReadResourceResultSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { InputError, NotFoundError } from '@backstage/errors';
 import { McpServerConfig, parseFilterRules } from '../config';
-import { ActionsService } from '@backstage/backend-plugin-api/alpha';
+import {
+  ActionsService,
+  ActionsServiceAction,
+} from '@backstage/backend-plugin-api/alpha';
 import { ConfigReader } from '@backstage/config';
 
 describe('McpService', () => {
@@ -120,6 +125,82 @@ describe('McpService', () => {
     const auditorEvent = await mockAuditor.createEvent.mock.results[0]?.value;
     expect(auditorEvent.success).toHaveBeenCalled();
     expect(auditorEvent.fail).not.toHaveBeenCalled();
+  });
+
+  it('advertises action UIs without relying on retained client capabilities', async () => {
+    const action: ActionsServiceAction = {
+      id: 'test:with-ui',
+      pluginId: 'test',
+      name: 'with-ui',
+      title: 'With UI',
+      description: 'Action with a UI.',
+      ui: {
+        hasResource: true,
+      },
+      schema: {
+        input: { type: 'object', properties: {} },
+        output: { type: 'object', properties: {} },
+      },
+      attributes: {
+        destructive: false,
+        idempotent: false,
+        readOnly: true,
+      },
+    };
+    const actions: ActionsService = {
+      list: jest.fn(async () => ({ actions: [action] })),
+      invoke: jest.fn(async () => ({ output: {} })),
+      readUi: jest.fn(async () => ({ html: '<main>Action UI</main>' })),
+    };
+    const mcpService = await McpService.create({
+      actions,
+      metrics: metricsServiceMock.mock(),
+      tracingService: tracingServiceMock.mock(),
+      auditor: mockServices.auditor.mock(),
+    });
+    const server = mcpService.getServer({
+      credentials: mockCredentials.user(),
+    });
+    const client = new Client({ name: 'stateless client', version: '1.0' });
+    const [clientTransport, serverTransport] =
+      InMemoryTransport.createLinkedPair();
+    await Promise.all([
+      client.connect(clientTransport),
+      server.connect(serverTransport),
+    ]);
+
+    const tools = await client.request(
+      { method: 'tools/list' },
+      ListToolsResultSchema,
+    );
+    const resources = await client.request(
+      { method: 'resources/list' },
+      ListResourcesResultSchema,
+    );
+    const resource = await client.request(
+      {
+        method: 'resources/read',
+        params: { uri: 'ui://test/with-ui.html' },
+      },
+      ReadResourceResultSchema,
+    );
+
+    expect(tools.tools[0]._meta).toEqual({
+      ui: { resourceUri: 'ui://test/with-ui.html' },
+      'ui/resourceUri': 'ui://test/with-ui.html',
+    });
+    expect(resources.resources).toEqual([
+      expect.objectContaining({
+        uri: 'ui://test/with-ui.html',
+        mimeType: 'text/html;profile=mcp-app',
+      }),
+    ]);
+    expect(resource.contents).toEqual([
+      expect.objectContaining({
+        uri: 'ui://test/with-ui.html',
+        text: '<main>Action UI</main>',
+      }),
+    ]);
   });
 
   it('should record metrics with error.type when tools/list fails', async () => {

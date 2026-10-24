@@ -96,6 +96,7 @@ export class DefaultActionsService implements ActionsService {
     input?: JsonObject;
     secrets?: JsonObject;
     credentials: BackstageCredentials;
+    signal?: AbortSignal;
   }) {
     const pluginId = this.pluginIdFromActionId(opts.id);
     // Deprecated: remove v1 fallback once all registries support v2
@@ -114,6 +115,7 @@ export class DefaultActionsService implements ActionsService {
       options: {
         method: 'POST',
         body,
+        signal: opts.signal,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -126,6 +128,32 @@ export class DefaultActionsService implements ActionsService {
 
     const { output } = await response.json();
     return { output };
+  }
+
+  async readUi(opts: { id: string; credentials: BackstageCredentials }) {
+    const response = await this.makeRequest({
+      path: `/.backstage/actions/v1/actions/${encodeURIComponent(opts.id)}/ui`,
+      pluginId: this.pluginIdFromActionId(opts.id),
+      credentials: opts.credentials,
+    });
+    if (!response.ok) {
+      throw await ResponseError.fromResponse(response);
+    }
+    const result = await response.json();
+    if (!result || typeof result !== 'object' || !('html' in result)) {
+      throw new Error(`Action ${opts.id} returned an invalid UI`);
+    }
+    const { html, csp, permissions } = result as {
+      html: unknown;
+      csp?: unknown;
+      permissions?: unknown;
+    };
+    if (typeof html !== 'string') {
+      throw new Error(`Action ${opts.id} returned an invalid UI`);
+    }
+    return { html, csp, permissions } as Awaited<
+      ReturnType<NonNullable<ActionsService['readUi']>>
+    >;
   }
 
   private async makeRequest(opts: {

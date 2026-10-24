@@ -639,6 +639,39 @@ describe('actionsServiceFactory', () => {
       });
     });
 
+    describe('readUi', () => {
+      it('reads an action UI from the owning plugin', async () => {
+        const endpoint = jest.fn(() =>
+          HttpResponse.json({
+            html: '<main>Example</main>',
+            csp: { connectDomains: ['https://example.com'] },
+            permissions: { clipboardWrite: {} },
+          }),
+        );
+        server.use(
+          http.get(
+            'http://localhost:0/api/my-plugin/.backstage/actions/v1/actions/my-plugin%3Atest/ui',
+            endpoint,
+          ),
+        );
+        const subject = await ServiceFactoryTester.from(actionsServiceFactory, {
+          dependencies: defaultServices,
+        }).getSubject();
+
+        await expect(
+          subject.readUi?.({
+            id: 'my-plugin:test',
+            credentials: mockCredentials.service('user:default/mock'),
+          }),
+        ).resolves.toEqual({
+          html: '<main>Example</main>',
+          csp: { connectDomains: ['https://example.com'] },
+          permissions: { clipboardWrite: {} },
+        });
+        expect(endpoint).toHaveBeenCalledTimes(1);
+      });
+    });
+
     describe('integration', () => {
       beforeAll(() => {
         // disable the msw server for this test.

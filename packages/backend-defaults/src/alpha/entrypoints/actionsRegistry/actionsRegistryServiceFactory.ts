@@ -35,6 +35,7 @@ export const actionsRegistryServiceFactory = createServiceFactory({
     config: coreServices.rootConfig,
     permissions: coreServices.permissions,
     permissionsRegistry: coreServices.permissionsRegistry,
+    discovery: coreServices.discovery,
   },
   factory: ({
     metadata,
@@ -45,6 +46,7 @@ export const actionsRegistryServiceFactory = createServiceFactory({
     config,
     permissions,
     permissionsRegistry,
+    discovery,
   }) => {
     const actionsRegistryService = DefaultActionsRegistryService.create({
       httpAuth,
@@ -54,6 +56,7 @@ export const actionsRegistryServiceFactory = createServiceFactory({
       metadata,
       permissions,
       permissionsRegistry,
+      discovery,
     });
 
     httpRouter.use(actionsRegistryService.createRouter());

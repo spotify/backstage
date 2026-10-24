@@ -25,6 +25,8 @@ import {
   CallToolRequestSchema,
   Tool,
   ToolSchema,
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { JsonObject } from '@backstage/types';
 import {
@@ -41,6 +43,38 @@ import { performance } from 'node:perf_hooks';
 import { handleErrors } from './handleErrors';
 import { bucketBoundaries, McpServerOperationAttributes } from '../metrics';
 import { FilterRule, McpServerConfig } from '../config';
+
+const actionUiMimeType = 'text/html;profile=mcp-app';
+const legacyResourceUriKey = 'ui/resourceUri';
+const actionIdPattern = /^[a-z0-9._-]+[:.][a-z0-9._-]+$/;
+
+function normalizeActionId(actionId: string): string | undefined {
+  const normalized = actionId.trim().toLowerCase();
+  if (!actionIdPattern.test(normalized)) {
+    return undefined;
+  }
+  if (normalized.includes(':')) {
+    return normalized;
+  }
+  const separator = normalized.indexOf('.');
+  return `${normalized.slice(0, separator)}:${normalized.slice(separator + 1)}`;
+}
+
+function getUiResourceUri(actionId: string): string | undefined {
+  const normalized = normalizeActionId(actionId);
+  if (!normalized) {
+    return undefined;
+  }
+  const separator = normalized.indexOf(':');
+  const plugin = normalized.slice(0, separator);
+  const action = normalized.slice(separator + 1);
+  return `ui://${plugin}/${action}.html`;
+}
+
+function getActionIdFromResourceUri(uri: string): string | undefined {
+  const match = uri.match(/^ui:\/\/([a-z0-9._-]+)\/([a-z0-9._-]+)\.html$/);
+  return match ? `${match[1]}:${match[2]}` : undefined;
+}
 
 function safeStringify(value: unknown): string {
   try {
@@ -163,7 +197,7 @@ export class McpService {
         }),
       },
       {
-        capabilities: { tools: {} },
+        capabilities: { tools: {}, resources: {} },
         ...(serverConfig?.instructions && {
           instructions: serverConfig.instructions,
         }),
@@ -189,6 +223,9 @@ export class McpService {
 
         const tools: Tool[] = [];
         for (const action of actions) {
+          const resourceUri = action.ui?.hasResource
+            ? getUiResourceUri(action.id)
+            : undefined;
           const tool = {
             inputSchema: action.schema.input,
             name: this.getToolName(action),
@@ -200,6 +237,19 @@ export class McpService {
               readOnlyHint: action.attributes.readOnly,
               openWorldHint: false,
             },
+            ...(action.ui && {
+              _meta: {
+                ui: {
+                  ...(action.ui.visibility && {
+                    visibility: action.ui.visibility,
+                  }),
+                  ...(resourceUri && { resourceUri }),
+                },
+                ...(resourceUri && {
+                  [legacyResourceUriKey]: resourceUri,
+                }),
+              },
+            }),
           };
 
           // Validate each tool against the MCP Tool schema so that a single
@@ -238,129 +288,192 @@ export class McpService {
       }
     });
 
-    server.setRequestHandler(CallToolRequestSchema, async ({ params }) => {
-      const startTime = performance.now();
-      let errorType: string | undefined;
-      let isError = false;
+    server.setRequestHandler(ListResourcesRequestSchema, async () => {
+      const { actions: allActions } = await this.actions.list({ credentials });
+      const actions = serverConfig
+        ? this.filterActions(allActions, serverConfig)
+        : allActions;
+      return {
+        resources: actions.flatMap(action => {
+          const uri = action.ui?.hasResource
+            ? getUiResourceUri(action.id)
+            : undefined;
+          return uri
+            ? [
+                {
+                  uri,
+                  name: action.id,
+                  title: action.title,
+                  description: action.description,
+                  mimeType: actionUiMimeType,
+                  _meta: { ui: { prefersBorder: false } },
+                },
+              ]
+            : [];
+        }),
+      };
+    });
 
-      const auditorEvent = await this.auditor.createEvent({
-        eventId: 'tool-execution',
-        severityLevel: 'medium',
-        ...(req && { request: req }),
-        meta: { toolName: params.name },
-      });
-
-      try {
-        return await this.tracingService.startActiveSpan(
-          `tools/call ${params.name}`,
+    server.setRequestHandler(ReadResourceRequestSchema, async ({ params }) => {
+      const actionId = getActionIdFromResourceUri(params.uri);
+      const { actions: allActions } = await this.actions.list({ credentials });
+      const actions = serverConfig
+        ? this.filterActions(allActions, serverConfig)
+        : allActions;
+      const action = actionId
+        ? actions.find(
+            candidate => normalizeActionId(candidate.id) === actionId,
+          )
+        : undefined;
+      if (!action?.ui?.hasResource || !this.actions.readUi) {
+        throw new NotFoundError(`Resource "${params.uri}" not found`);
+      }
+      const ui = await this.actions.readUi({ id: action.id, credentials });
+      return {
+        contents: [
           {
-            kind: 'server',
-            credentials,
-            attributes: {
-              ...baggageAttributes(this.tracingService),
-              'mcp.method.name': 'tools/call',
-              'gen_ai.tool.name': params.name,
-              'gen_ai.operation.name': 'execute_tool',
-              ...(this.captureToolPayloads && {
-                'gen_ai.tool.call.arguments': safeStringify(params.arguments),
-              }),
+            uri: params.uri,
+            mimeType: actionUiMimeType,
+            text: ui.html,
+            _meta: {
+              ui: {
+                prefersBorder: false,
+                ...(ui.csp && { csp: ui.csp }),
+                ...(ui.permissions && { permissions: ui.permissions }),
+              },
             },
           },
-          async span => {
-            const result = await handleErrors(async () => {
-              const { actions: allActions } = await this.actions.list({
-                credentials,
-              });
-              const actions = serverConfig
-                ? this.filterActions(allActions, serverConfig)
-                : allActions;
+        ],
+      };
+    });
 
-              const action = actions.find(
-                a => this.getToolName(a) === params.name,
-              );
+    server.setRequestHandler(
+      CallToolRequestSchema,
+      async ({ params }, extra) => {
+        const startTime = performance.now();
+        let errorType: string | undefined;
+        let isError = false;
 
-              if (!action) {
-                throw new NotFoundError(`Action "${params.name}" not found`);
-              }
+        const auditorEvent = await this.auditor.createEvent({
+          eventId: 'tool-execution',
+          severityLevel: 'medium',
+          ...(req && { request: req }),
+          meta: { toolName: params.name },
+        });
 
-              // Re-attribute the span to the plugin that owns the action.
-              // This runs after the span has started, so head-based samplers
-              // still see the default `mcp-actions` value when deciding
-              // whether to record the span. The pluginId is only known after
-              // resolving the action via `actions.list`, so the reattribution
-              // is unavoidable.
-              span.setAttribute('backstage.plugin.id', action.pluginId);
+        try {
+          return await this.tracingService.startActiveSpan(
+            `tools/call ${params.name}`,
+            {
+              kind: 'server',
+              credentials,
+              attributes: {
+                ...baggageAttributes(this.tracingService),
+                'mcp.method.name': 'tools/call',
+                'gen_ai.tool.name': params.name,
+                'gen_ai.operation.name': 'execute_tool',
+                ...(this.captureToolPayloads && {
+                  'gen_ai.tool.call.arguments': safeStringify(params.arguments),
+                }),
+              },
+            },
+            async span => {
+              const result = await handleErrors(async () => {
+                const { actions: allActions } = await this.actions.list({
+                  credentials,
+                });
+                const actions = serverConfig
+                  ? this.filterActions(allActions, serverConfig)
+                  : allActions;
 
-              const { output } = await this.actions.invoke({
-                id: action.id,
-                input: params.arguments as JsonObject,
-                credentials,
-              });
-
-              if (this.captureToolPayloads) {
-                span.setAttribute(
-                  'gen_ai.tool.call.result',
-                  safeStringify(output),
+                const action = actions.find(
+                  a => this.getToolName(a) === params.name,
                 );
+
+                if (!action) {
+                  throw new NotFoundError(`Action "${params.name}" not found`);
+                }
+
+                // Re-attribute the span to the plugin that owns the action.
+                // This runs after the span has started, so head-based samplers
+                // still see the default `mcp-actions` value when deciding
+                // whether to record the span. The pluginId is only known after
+                // resolving the action via `actions.list`, so the reattribution
+                // is unavoidable.
+                span.setAttribute('backstage.plugin.id', action.pluginId);
+
+                const { output } = await this.actions.invoke({
+                  id: action.id,
+                  input: params.arguments as JsonObject,
+                  credentials,
+                  signal: extra.signal,
+                });
+
+                if (this.captureToolPayloads) {
+                  span.setAttribute(
+                    'gen_ai.tool.call.result',
+                    safeStringify(output),
+                  );
+                }
+
+                return {
+                  content: [
+                    {
+                      type: 'text',
+                      text: safeStringify(output),
+                    },
+                  ],
+                  structuredContent: output,
+                };
+              });
+
+              isError = !!(result as { isError?: boolean })?.isError;
+
+              if (isError) {
+                span.setAttribute('error.type', 'tool_error');
+                span.setStatus({ code: 'error', message: 'tool_error' });
+                const errorDescription =
+                  (result as { errorDescription?: string })?.errorDescription ??
+                  `Tool "${params.name}" reported isError=true`;
+
+                await auditorEvent.fail({
+                  error: new Error(errorDescription),
+                });
+              } else {
+                await auditorEvent.success();
               }
 
-              return {
-                content: [
-                  {
-                    type: 'text',
-                    text: safeStringify(output),
-                  },
-                ],
-                structuredContent: output,
-              };
+              return result;
+            },
+          );
+        } catch (err) {
+          errorType = err instanceof Error ? err.name : 'Error';
+          if (!isError) {
+            await auditorEvent.fail({
+              error: toError(err),
             });
+          }
+          throw err;
+        } finally {
+          const durationSeconds = (performance.now() - startTime) / 1000;
 
-            isError = !!(result as { isError?: boolean })?.isError;
+          // Determine error.type per OTel MCP spec:
+          // - Thrown exceptions use the error name
+          // - CallToolResult with isError=true uses 'tool_error'
+          let errorAttribute: string | undefined = errorType;
+          if (!errorAttribute && isError) {
+            errorAttribute = 'tool_error';
+          }
 
-            if (isError) {
-              span.setAttribute('error.type', 'tool_error');
-              span.setStatus({ code: 'error', message: 'tool_error' });
-              const errorDescription =
-                (result as { errorDescription?: string })?.errorDescription ??
-                `Tool "${params.name}" reported isError=true`;
-
-              await auditorEvent.fail({
-                error: new Error(errorDescription),
-              });
-            } else {
-              await auditorEvent.success();
-            }
-
-            return result;
-          },
-        );
-      } catch (err) {
-        errorType = err instanceof Error ? err.name : 'Error';
-        if (!isError) {
-          await auditorEvent.fail({
-            error: toError(err),
+          this.operationDuration.record(durationSeconds, {
+            'mcp.method.name': 'tools/call',
+            'gen_ai.tool.name': params.name,
+            'gen_ai.operation.name': 'execute_tool',
+            ...(errorAttribute && { 'error.type': errorAttribute }),
           });
         }
-        throw err;
-      } finally {
-        const durationSeconds = (performance.now() - startTime) / 1000;
-
-        // Determine error.type per OTel MCP spec:
-        // - Thrown exceptions use the error name
-        // - CallToolResult with isError=true uses 'tool_error'
-        let errorAttribute: string | undefined = errorType;
-        if (!errorAttribute && isError) {
-          errorAttribute = 'tool_error';
-        }
-
-        this.operationDuration.record(durationSeconds, {
-          'mcp.method.name': 'tools/call',
-          'gen_ai.tool.name': params.name,
-          'gen_ai.operation.name': 'execute_tool',
-          ...(errorAttribute && { 'error.type': errorAttribute }),
-        });
-      }
-    });
+      },
+    );
 
     return server;
   }

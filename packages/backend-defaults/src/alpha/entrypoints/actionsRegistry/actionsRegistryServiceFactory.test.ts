@@ -863,6 +863,7 @@ describe('actionsRegistryServiceFactory', () => {
         input: {
           name: 'test',
         },
+        secrets: undefined,
         credentials: expect.objectContaining({
           $$type: '@backstage/BackstageCredentials',
           version: 'v1',
@@ -872,6 +873,7 @@ describe('actionsRegistryServiceFactory', () => {
           },
         }),
         logger: expect.anything(),
+        signal: expect.any(AbortSignal),
       });
     });
 

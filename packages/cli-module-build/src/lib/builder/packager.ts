@@ -23,6 +23,7 @@ import { targetPaths } from '@backstage/cli-common';
 import { makeRollupConfigs } from './config';
 import { BuildOptions, Output } from './types';
 import { PackageRoles, runConcurrentTasks } from '@backstage/cli-node';
+import { buildBackendBrowserAssets } from '../backendBrowserAssets';
 
 export function formatErrorMessage(error: any) {
   let msg = '';
@@ -113,6 +114,7 @@ export const buildPackage = async (options: BuildOptions) => {
   const buildTasks = rollupConfigs.map(rollupBuild);
 
   await Promise.all(buildTasks);
+  await buildBackendBrowserAssets({ targetDir });
 };
 
 export const buildPackages = async (options: BuildOptions[]) => {
@@ -131,6 +133,12 @@ export const buildPackages = async (options: BuildOptions[]) => {
     items: buildTasks,
     worker: async task => task(),
   });
+
+  await Promise.all(
+    options.map(({ targetDir }) =>
+      buildBackendBrowserAssets({ targetDir: targetDir! }),
+    ),
+  );
 };
 
 export function getOutputsForRole(role: string): Set<Output> {

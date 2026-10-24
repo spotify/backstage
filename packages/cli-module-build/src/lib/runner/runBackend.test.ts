@@ -50,6 +50,14 @@ jest.mock('ctrlc-windows', () => ({
 }));
 
 const mockStartEmbeddedDb = jest.fn();
+const mockWatchBackendBrowserAssets = jest.fn(
+  async (_options: { targetDirs: string[] }) => jest.fn(),
+);
+
+jest.mock('../backendBrowserAssets', () => ({
+  watchBackendBrowserAssets: (options: { targetDirs: string[] }) =>
+    mockWatchBackendBrowserAssets(options),
+}));
 
 jest.mock('./startEmbeddedDb', () => ({
   startEmbeddedDb: (...args: any[]) => mockStartEmbeddedDb(...args),

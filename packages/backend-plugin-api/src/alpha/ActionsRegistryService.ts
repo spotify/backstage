@@ -33,6 +33,44 @@ export type ActionsRegistryActionContext<
     : undefined;
   logger: LoggerService;
   credentials: BackstageCredentials;
+  /** Signal that is aborted when the caller cancels the action invocation. */
+  signal?: AbortSignal;
+};
+
+/**
+ * Browser security and client visibility metadata for an action UI.
+ *
+ * @alpha
+ */
+export type ActionUiMetadata = {
+  csp?: {
+    connectDomains?: string[];
+    resourceDomains?: string[];
+    frameDomains?: string[];
+    baseUriDomains?: string[];
+  };
+  permissions?: {
+    camera?: Record<string, never>;
+    microphone?: Record<string, never>;
+    geolocation?: Record<string, never>;
+    clipboardWrite?: Record<string, never>;
+  };
+  visibility?: Array<'model' | 'app'>;
+};
+
+/**
+ * Declares a React UI that accompanies an action.
+ *
+ * The component loader is discovered and bundled by Backstage build tooling.
+ * Declare it inline on an action with a literal name using
+ * `() => import('./module').then(module => module.Component)`. The build fails
+ * when the declaration cannot be statically resolved. Its resource identity is
+ * derived from the registered action name.
+ *
+ * @alpha
+ */
+export type ActionUi = ActionUiMetadata & {
+  component?: () => Promise<unknown>;
 };
 
 /**
@@ -70,6 +108,7 @@ export type ActionsRegistryActionOptions<
   };
   examples?: Array<ActionsRegistryActionExample<TInputSchema, TOutputSchema>>;
   visibilityPermission?: BasicPermission;
+  ui?: ActionUi;
   attributes?: {
     /**
      * Whether the action may perform destructive updates. Defaults to `false`

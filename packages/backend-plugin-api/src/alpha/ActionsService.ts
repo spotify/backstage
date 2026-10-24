@@ -16,6 +16,7 @@
 import { JsonObject, JsonValue } from '@backstage/types';
 import type { JSONSchema7 } from 'json-schema';
 import { BackstageCredentials } from '@backstage/backend-plugin-api';
+import type { ActionUiMetadata } from './ActionsRegistryService';
 
 /**
  * @alpha
@@ -42,6 +43,9 @@ export type ActionsServiceAction = {
     destructive: boolean;
     idempotent: boolean;
   };
+  ui?: ActionUiMetadata & {
+    hasResource: boolean;
+  };
 };
 
 /**
@@ -56,5 +60,14 @@ export interface ActionsService {
     input?: JsonObject;
     secrets?: JsonObject;
     credentials: BackstageCredentials;
+    signal?: AbortSignal;
   }): Promise<{ output: JsonValue }>;
+  readUi?: (opts: {
+    id: string;
+    credentials: BackstageCredentials;
+  }) => Promise<{
+    html: string;
+    csp?: ActionUiMetadata['csp'];
+    permissions?: ActionUiMetadata['permissions'];
+  }>;
 }

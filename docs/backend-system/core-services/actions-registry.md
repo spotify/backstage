@@ -27,6 +27,7 @@ Each action registered with the service must conform to the `ActionsRegistryActi
 ### Optional Properties
 
 - **`visibilityPermission`:** A `BasicPermission` that controls visibility and access to the action through the permissions framework. See [Permissions](#permissions) below.
+- **`ui`:** A React component and optional browser security metadata that clients can use to render an interactive interface for the action. See [Action UIs](#action-uis) below.
 - **`attributes`:** Object containing behavioral flags:
   - **`destructive`:** Boolean indicating if the action modifies or deletes data
   - **`idempotent`:** Boolean indicating if running the action multiple times produces the same result
@@ -40,6 +41,44 @@ When an action is executed, it receives a context object (`ActionsRegistryAction
 - **`secrets`:** The validated secrets data matching the defined secrets schema, or `undefined` if no secrets schema is declared
 - **`logger`:** A LoggerService instance for logging within the action
 - **`credentials`:** BackstageCredentials for authentication and authorization
+- **`signal`:** An optional abort signal that is triggered when the caller cancels the action invocation
+
+## Action UIs
+
+Backend plugins can attach a React UI to an action. Hosts that support action
+UIs can render the component while the action runs, while other callers keep
+using the same input, output, and handler without rendering anything.
+
+Declare the component with a literal dynamic import so the package build can
+discover it and produce a self-contained browser resource:
+
+```tsx
+actionsRegistry.register({
+  name: 'show-example',
+  title: 'Show example',
+  description: 'Returns an example result',
+  schema: {
+    input: z => z.object({}),
+    output: z => z.object({ value: z.string() }),
+  },
+  ui: {
+    component: () => import('./ExampleUi').then(module => module.ExampleUi),
+    permissions: { clipboardWrite: {} },
+  },
+  action: async () => ({ output: { value: 'example' } }),
+});
+```
+
+The component is built automatically for packages with the
+`backend-plugin` or `backend-plugin-module` role. The loader must use the form
+shown above so the build can resolve it statically. The component runs in the
+host's sandboxed browser environment and should use the host integration API
+provided by that environment rather than backend-only APIs.
+
+The optional `csp` and `permissions` fields declare the browser capabilities
+the UI needs. The owning plugin's external origin is added automatically to
+the UI's allowed connection domains. The optional `visibility` field controls
+whether an action is advertised to models, apps, or both.
 
 ## Using the Service
 
