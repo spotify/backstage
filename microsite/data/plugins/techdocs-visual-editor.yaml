@@ -1,0 +1,11 @@
+---
+title: TechDocs Visual Editor
+author: Edtroleis
+authorUrl: https://github.com/edtroleis
+category: Documentation
+description: Visual editor for TechDocs pages for non-technical writers. Lint while typing, checks from any CI in plain language, publish through GitHub pull requests.
+documentation: https://github.com/edtroleis/backstage-plugin-techdocs-editor/blob/main/plugins/techdocs-editor/README.md
+iconUrl: https://raw.githubusercontent.com/edtroleis/backstage-plugin-techdocs-editor/main/docs/media/icon.svg
+npmPackageName: '@edtroleis/plugin-techdocs-editor'
+addedDate: '2026-10-23'
+status: active
