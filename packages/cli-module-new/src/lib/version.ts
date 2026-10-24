@@ -15,7 +15,7 @@
  */
 
 import semver from 'semver';
-import { Lockfile } from '@backstage/cli-node';
+import type { Lockfile } from '@backstage/cli-node/alpha';
 
 /* eslint-disable @backstage/no-relative-monorepo-imports */
 /*

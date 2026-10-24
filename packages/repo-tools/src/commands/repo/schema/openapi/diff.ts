@@ -80,10 +80,13 @@ export async function command(opts: OptionValues) {
 
   for (const pkg of packagesWithSpecs) {
     const specPath = join(pkg.dir, YAML_SCHEMA_PATH);
-    const relativeSpecPath = relativePath(targetPaths.rootDir, specPath)
+    const relativeSpecPath = relativePath(
+      targetPaths.workspaceRootDir,
+      specPath,
+    )
       .split(sep)
       .join(posix.sep);
-    const pkgName = relativePath(targetPaths.rootDir, pkg.dir)
+    const pkgName = relativePath(targetPaths.workspaceRootDir, pkg.dir)
       .split(sep)
       .join(posix.sep);
     const baseRef = since || DEFAULT_BASE_REF;
@@ -101,7 +104,7 @@ export async function command(opts: OptionValues) {
           '--template',
           templatePath,
         ],
-        { cwd: targetPaths.rootDir },
+        { cwd: targetPaths.workspaceRootDir },
       );
       const output = stdout.toString().trim();
       if (output) {

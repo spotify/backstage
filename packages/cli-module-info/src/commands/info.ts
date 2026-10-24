@@ -17,12 +17,9 @@
 import { cli } from 'cleye';
 import { version as infoModuleVersion } from '../../package.json';
 import os from 'node:os';
-import { runOutput, targetPaths, findOwnPaths } from '@backstage/cli-common';
-import {
-  BackstagePackageJson,
-  Lockfile,
-  PackageGraph,
-} from '@backstage/cli-node';
+import { targetPaths, findOwnPaths } from '@backstage/cli-common';
+import { BackstagePackageJson, PackageGraph } from '@backstage/cli-node';
+import { detectPackageManager, Lockfile } from '@backstage/cli-node/alpha';
 import { minimatch } from 'minimatch';
 import fs from 'fs-extra';
 import type { CliCommandContext } from '@backstage/cli-node';
@@ -79,11 +76,11 @@ export default async ({ args, info }: CliCommandContext) => {
   const options = { include, format: format as 'text' | 'json' };
 
   await new Promise(async () => {
-    const yarnVersion = await runOutput(['yarn', '--version']);
+    const packageManager = await detectPackageManager();
     /* eslint-disable-next-line no-restricted-syntax */
     const isLocal = fs.existsSync(findOwnPaths(__dirname).resolve('./src'));
 
-    const backstageFile = targetPaths.resolveRoot('backstage.json');
+    const backstageFile = targetPaths.backstageJsonPath;
     let backstageVersion = 'N/A';
     if (fs.existsSync(backstageFile)) {
       try {
@@ -112,10 +109,18 @@ export default async ({ args, info }: CliCommandContext) => {
       /* not available */
     }
 
+    const packageManagerVersion = await packageManager.version();
     const systemInfo = {
       os: `${os.type} ${os.release} - ${os.platform}/${os.arch}`,
       node: process.version,
-      yarn: yarnVersion,
+      // The yarn field is kept for existing consumers of the JSON output
+      ...(packageManager.name() === 'yarn'
+        ? { yarn: packageManagerVersion }
+        : undefined),
+      packageManager: {
+        name: packageManager.name(),
+        version: packageManagerVersion,
+      },
       ...(cliVersion
         ? { cli: { version: cliVersion, local: isLocal } }
         : undefined),
@@ -123,9 +128,18 @@ export default async ({ args, info }: CliCommandContext) => {
       backstage: backstageVersion,
     };
 
-    const lockfilePath = targetPaths.resolveRoot('yarn.lock');
-    const lockfile = await Lockfile.load(lockfilePath);
-    const targetPath = targetPaths.rootDir;
+    // A missing or unreadable lockfile only means that the versions of
+    // installed packages are unknown, for example when a build system owns
+    // the installs.
+    let lockfile: Lockfile | undefined;
+    try {
+      lockfile = await packageManager.loadLockfile();
+    } catch (error) {
+      console.warn(
+        `Failed to read ${packageManager.lockfileName()}, installed package versions are not listed, ${error}`,
+      );
+    }
+    const targetPath = targetPaths.installationRootDir;
 
     // Get workspace package names and their versions
     const workspacePackages = new Map<string, string>();
@@ -139,7 +153,7 @@ export default async ({ args, info }: CliCommandContext) => {
     }
 
     // Collect all package names from lockfile
-    const allPackages = [...lockfile.keys()];
+    const allPackages = lockfile ? [...lockfile.keys()] : [];
     const includePatterns = options.include || [];
 
     // Collect installed (non-local) packages
@@ -189,7 +203,7 @@ export default async ({ args, info }: CliCommandContext) => {
 
     // Helper to get versions for a package as an array of objects
     const getVersions = (dep: string): Array<{ version: string }> => {
-      const entries = lockfile.get(dep);
+      const entries = lockfile?.get(dep);
       if (!entries) {
         return [{ version: 'unknown' }];
       }
@@ -222,7 +236,7 @@ export default async ({ args, info }: CliCommandContext) => {
     // Print to console
     console.log(`OS:   ${systemInfo.os}`);
     console.log(`node: ${systemInfo.node}`);
-    console.log(`yarn: ${systemInfo.yarn}`);
+    console.log(`${packageManager.name()}: ${packageManagerVersion}`);
     if (cliVersion) {
       console.log(`cli:  ${cliVersion} (${isLocal ? 'local' : 'installed'})`);
     }

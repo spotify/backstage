@@ -16,32 +16,24 @@
 
 import ora from 'ora';
 import chalk from 'chalk';
-import { run } from '@backstage/cli-common';
+import type { PackageManager } from '@backstage/cli-node/alpha';
 
-export async function runYarnInstall() {
+export async function runInstall(packageManager: PackageManager) {
   const spinner = ora({
-    prefixText: `Running ${chalk.blue('yarn install')} to install new versions`,
+    prefixText: `Running ${chalk.blue(
+      packageManager.getCommandHint(['install']),
+    )} to install new versions`,
     spinner: 'arc',
     color: 'green',
   }).start();
 
   const installOutput = new Array<Buffer>();
   try {
-    await run(['yarn', 'install'], {
-      env: {
-        FORCE_COLOR: 'true',
-        // We filter out all of the npm_* environment variables that are added when
-        // executing through yarn. This works around an issue where these variables
-        // incorrectly override local yarn or npm config in the project directory.
-        ...Object.fromEntries(
-          Object.entries(process.env).map(([name, value]) =>
-            name.startsWith('npm_') ? [name, undefined] : [name, value],
-          ),
-        ),
-      },
+    await packageManager.install({
+      env: { FORCE_COLOR: 'true' },
       onStdout: data => installOutput.push(data),
       onStderr: data => installOutput.push(data),
-    }).waitForExit();
+    });
     spinner.succeed();
   } catch (error) {
     spinner.fail();

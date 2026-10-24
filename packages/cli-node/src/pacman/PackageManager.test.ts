@@ -16,7 +16,10 @@
 
 import { createMockDirectory } from '@backstage/backend-test-utils';
 import { overrideTargetPaths } from '@backstage/cli-common/testUtils';
-import { detectPackageManager } from './PackageManager';
+import {
+  detectPackageManager,
+  resetDetectedPackageManagers,
+} from './PackageManager';
 import { Yarn } from './yarn';
 import { withLogCollector } from '@backstage/test-utils';
 
@@ -24,20 +27,28 @@ const mockDir = createMockDirectory();
 overrideTargetPaths(mockDir.path);
 
 const mockYarnCreate = jest.spyOn(Yarn, 'create');
+const mockYarn = {} as Yarn;
 
 describe('PackageManager', () => {
   describe('detectPackageManager', () => {
-    describe('yarn', () => {
-      afterEach(() => {
-        jest.resetAllMocks();
-      });
+    beforeEach(() => {
+      resetDetectedPackageManagers();
+      mockYarnCreate.mockResolvedValue(mockYarn);
+    });
 
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    describe('yarn', () => {
       it('should detect via yarn.lock', async () => {
         mockDir.setContent({
           'yarn.lock': 'just needs to exist',
         });
-        await detectPackageManager();
-        expect(mockYarnCreate).toHaveBeenCalled();
+        await expect(detectPackageManager()).resolves.toBe(mockYarn);
+        expect(mockYarnCreate).toHaveBeenCalledWith({
+          workspaceRootDir: mockDir.path,
+        });
       });
 
       it('should detect via root package.json workspaces', async () => {
@@ -82,12 +93,15 @@ describe('PackageManager', () => {
           }),
         });
 
-        const { log } = await withLogCollector(async () => {
+        const { log, warn } = await withLogCollector(async () => {
           await detectPackageManager();
         });
 
         expect(mockYarnCreate).toHaveBeenCalledTimes(1);
-        expect(log).toHaveLength(1);
+        expect(log).toEqual([]);
+        expect(warn).toEqual([
+          'Detected unsupported package manager: something-else.',
+        ]);
       });
 
       it('should fall back to yarn with available detection methods', async () => {
@@ -97,25 +111,59 @@ describe('PackageManager', () => {
           }),
         });
 
-        const { log } = await withLogCollector(async () => {
+        const { log, warn } = await withLogCollector(async () => {
           await detectPackageManager();
         });
 
         expect(mockYarnCreate).toHaveBeenCalledTimes(1);
-        expect(log).toHaveLength(1);
+        expect(log).toEqual([]);
+        expect(warn).toHaveLength(1);
       });
 
       it('should fall back to yarn with no package.json at all', async () => {
         mockDir.setContent({});
 
-        const { log } = await withLogCollector(async () => {
+        const { log, warn } = await withLogCollector(async () => {
           await detectPackageManager();
         });
 
         expect(mockYarnCreate).toHaveBeenCalledTimes(1);
-        // extra log for the error reading package.json
-        expect(log).toHaveLength(2);
+        // extra warning for the error reading package.json
+        expect(log).toEqual([]);
+        expect(warn).toHaveLength(2);
       });
+    });
+
+    it('should only read the given workspace root and cache the result per root', async () => {
+      mockDir.setContent({
+        'yarn.lock': '',
+        nested: {
+          'package.json': JSON.stringify({ workspaces: ['packages/*'] }),
+        },
+      });
+
+      await expect(detectPackageManager()).resolves.toBe(mockYarn);
+      await expect(detectPackageManager()).resolves.toBe(mockYarn);
+      await expect(
+        detectPackageManager({ workspaceRootDir: mockDir.resolve('nested') }),
+      ).resolves.toBe(mockYarn);
+
+      expect(mockYarnCreate).toHaveBeenCalledTimes(2);
+      expect(mockYarnCreate).toHaveBeenNthCalledWith(1, {
+        workspaceRootDir: mockDir.path,
+      });
+      expect(mockYarnCreate).toHaveBeenNthCalledWith(2, {
+        workspaceRootDir: mockDir.resolve('nested'),
+      });
+    });
+
+    it('should not cache a failed detection', async () => {
+      mockDir.setContent({ 'yarn.lock': '' });
+
+      mockYarnCreate.mockRejectedValueOnce(new Error('yarn not found'));
+      await expect(detectPackageManager()).rejects.toThrow('yarn not found');
+      await expect(detectPackageManager()).resolves.toBe(mockYarn);
+      expect(mockYarnCreate).toHaveBeenCalledTimes(2);
     });
   });
 });

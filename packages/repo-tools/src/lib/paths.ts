@@ -38,8 +38,9 @@ export async function resolvePackagePaths(
     for (const path of providedPaths) {
       const matches = packages.some(
         ({ dir }) =>
-          new Minimatch(path).match(relativePath(targetPaths.rootDir, dir)) ||
-          isChildPath(dir, path),
+          new Minimatch(path).match(
+            relativePath(targetPaths.workspaceRootDir, dir),
+          ) || isChildPath(dir, path),
       );
       if (!matches) {
         invalidPaths.push(path);
@@ -54,8 +55,9 @@ export async function resolvePackagePaths(
     packages = packages.filter(({ dir }) =>
       providedPaths.some(
         path =>
-          new Minimatch(path).match(relativePath(targetPaths.rootDir, dir)) ||
-          isChildPath(dir, path),
+          new Minimatch(path).match(
+            relativePath(targetPaths.workspaceRootDir, dir),
+          ) || isChildPath(dir, path),
       ),
     );
   }
@@ -64,7 +66,7 @@ export async function resolvePackagePaths(
     packages = packages.filter(pkg =>
       include.some(pattern =>
         new Minimatch(pattern).match(
-          relativePath(targetPaths.rootDir, pkg.dir),
+          relativePath(targetPaths.workspaceRootDir, pkg.dir),
         ),
       ),
     );
@@ -75,13 +77,15 @@ export async function resolvePackagePaths(
       exclude.some(
         pattern =>
           !new Minimatch(pattern).match(
-            relativePath(targetPaths.rootDir, pkg.dir),
+            relativePath(targetPaths.workspaceRootDir, pkg.dir),
           ),
       ),
     );
   }
 
-  return packages.map(pkg => relativePath(targetPaths.rootDir, pkg.dir));
+  return packages.map(pkg =>
+    relativePath(targetPaths.workspaceRootDir, pkg.dir),
+  );
 }
 
 /** @internal */

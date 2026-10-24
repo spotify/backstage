@@ -24,7 +24,7 @@ import { runOutput } from '@backstage/cli-common';
 export async function runGit(...args: string[]) {
   try {
     const stdout = await runOutput(['git', ...args], {
-      cwd: targetPaths.rootDir,
+      cwd: targetPaths.workspaceRootDir,
     });
     return stdout.trim().split(/\r\n|\r|\n/);
   } catch (error) {
@@ -85,7 +85,7 @@ export class GitUtils {
     }
 
     const stdout = await runOutput(['git', 'show', `${showRef}:${path}`], {
-      cwd: targetPaths.rootDir,
+      cwd: targetPaths.workspaceRootDir,
     });
     return stdout;
   }

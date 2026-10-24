@@ -47,7 +47,7 @@ export async function loadPortableTemplate(
     throw new Error('Remote templates are not supported yet');
   }
   const templateContent = await fs
-    .readFile(targetPaths.resolveRoot(pointer.target), 'utf-8')
+    .readFile(targetPaths.resolveInstallationRoot(pointer.target), 'utf-8')
     .catch(error => {
       throw new ForwardedError(
         `Failed to load template definition from '${pointer.target}'`,

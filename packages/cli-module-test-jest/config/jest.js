@@ -19,7 +19,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { glob } = require('glob');
 const { version } = require('../package.json');
-const paths = require('@backstage/cli-common').findPaths(process.cwd());
+const { targetPaths } = require('@backstage/cli-common');
 const {
   getJestEnvironment,
   getJestMajorVersion,
@@ -51,7 +51,7 @@ const envOptions = {
 
 try {
   require.resolve('react-dom/client', {
-    paths: [paths.targetRoot],
+    paths: [targetPaths.installationRootDir],
   });
   process.env.HAS_REACT_DOM_CLIENT = true;
 } catch {
@@ -311,7 +311,12 @@ async function getProjectConfig(targetPath, extraConfig, extraOptions) {
       .createHash('sha256')
       .update(version)
       .update(Buffer.alloc(1))
-      .update(JSON.stringify(config.transform).replaceAll(paths.targetRoot, ''))
+      .update(
+        JSON.stringify(config.transform).replaceAll(
+          targetPaths.workspaceRootDir,
+          '',
+        ),
+      )
       .digest('hex');
     config.id = `backstage_cli_${configHash}`;
   }
@@ -324,11 +329,11 @@ async function getProjectConfig(targetPath, extraConfig, extraOptions) {
 // the target workspace packages
 async function getRootConfig() {
   const rootPkgJson = await fs.readJson(
-    paths.resolveTargetRoot('package.json'),
+    targetPaths.resolveInstallationRoot('package.json'),
   );
 
   const baseCoverageConfig = {
-    coverageDirectory: paths.resolveTarget('coverage'),
+    coverageDirectory: targetPaths.resolve('coverage'),
     coverageProvider: envOptions.oldTests ? 'v8' : 'babel',
     collectCoverageFrom: ['**/*.{js,jsx,ts,tsx,mjs,cjs}', '!**/*.d.ts'],
   };
@@ -343,9 +348,12 @@ async function getRootConfig() {
   const workspacePatterns = Array.isArray(ws) ? ws : ws?.packages;
 
   // Check if we're running within a specific monorepo package. In that case just get the single project config.
-  if (!workspacePatterns || paths.targetRoot !== paths.targetDir) {
+  if (
+    !workspacePatterns ||
+    targetPaths.installationRootDir !== targetPaths.dir
+  ) {
     return getProjectConfig(
-      paths.targetDir,
+      targetPaths.dir,
       {
         ...baseCoverageConfig,
         ...rootOptions,
@@ -369,7 +377,7 @@ async function getRootConfig() {
   // workspace and load those in as separate jest projects instead.
   const projectPaths = await Promise.all(
     workspacePatterns.map(pattern =>
-      glob(path.join(paths.targetRoot, pattern), {
+      glob(path.join(targetPaths.installationRootDir, pattern), {
         windowsPathsNoEscape: true,
       }),
     ),
@@ -414,7 +422,7 @@ async function getRootConfig() {
   }
 
   return {
-    rootDir: paths.targetRoot,
+    rootDir: targetPaths.installationRootDir,
     projects,
     testResultsProcessor: cache
       ? require.resolve('./jestCacheResultProcessor.cjs')

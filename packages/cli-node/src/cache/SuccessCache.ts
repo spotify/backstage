@@ -37,7 +37,7 @@ export class SuccessCache {
    * location.
    */
   static trimPaths(input: string) {
-    return input.replaceAll(targetPaths.rootDir, '');
+    return input.replaceAll(targetPaths.workspaceRootDir, '');
   }
 
   static create(options: { name: string; basePath?: string }): SuccessCache {

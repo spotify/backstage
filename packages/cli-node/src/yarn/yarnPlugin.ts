@@ -41,7 +41,7 @@ export async function hasBackstageYarnPlugin(
   workspaceDir?: string,
 ): Promise<boolean> {
   const yarnRcPath = resolvePath(
-    workspaceDir ?? targetPaths.rootDir,
+    workspaceDir ?? targetPaths.workspaceRootDir,
     '.yarnrc.yml',
   );
   const yarnRcContent = await fs.readFile(yarnRcPath, 'utf-8').catch(e => {

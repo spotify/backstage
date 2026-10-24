@@ -25,7 +25,7 @@ import { tmpdir } from 'node:os';
 import * as tar from 'tar';
 import partition from 'lodash/partition';
 
-import { run, targetPaths } from '@backstage/cli-common';
+import { targetPaths } from '@backstage/cli-common';
 import { computeTopologicalLayers } from './computeTopologicalLayers';
 import {
   dependencies as cliDependencies,
@@ -45,6 +45,10 @@ import {
   PackageGraphNode,
   runConcurrentTasks,
 } from '@backstage/cli-node';
+import {
+  detectPackageManager,
+  PackageManager,
+} from '@backstage/cli-node/alpha';
 import { createTypeDistProject } from '../typeDistProject';
 
 // These packages aren't safe to pack in parallel since the CLI depends on them
@@ -74,7 +78,7 @@ type Options = {
   /**
    * Files to copy into the target workspace.
    *
-   * Defaults to ['yarn.lock', 'package.json'].
+   * Defaults to the lockfile of the package manager and 'package.json'.
    */
   files?: FileEntry[];
 
@@ -95,9 +99,9 @@ type Options = {
   skeleton?: 'skeleton.tar' | 'skeleton.tar.gz';
 
   /**
-   * If set to true, `yarn pack` is always preferred when creating the dist
-   * workspace. This ensures correct workspace output at significant cost to
-   * command performance.
+   * If set to true, the pack command of the package manager is always
+   * preferred when creating the dist workspace. This ensures correct workspace
+   * output at significant cost to command performance.
    */
   alwaysPack?: boolean;
 
@@ -131,18 +135,21 @@ function prefixLogFunc(prefix: string, logFn: (msg: string) => void) {
 }
 
 /**
- * Uses `yarn pack` to package local packages and unpacks them into a dist workspace.
+ * Uses the pack command of the package manager to package local packages and
+ * unpacks them into a dist workspace.
  * The target workspace will end up containing dist version of each package and
  * will be suitable for packaging e.g. into a docker image.
  *
  * This creates a structure that is functionally similar to if the packages were
- * installed from npm, but uses Yarn workspaces to link to them at runtime.
+ * installed from npm, but uses the package manager workspaces to link to them
+ * at runtime.
  */
 export async function createDistWorkspace(
   packageNames: string[],
   options: Options = {},
 ) {
   const logger = options.logger ?? { log: console.log, warn: console.warn };
+  const packageManager = await detectPackageManager();
 
   const targetDir =
     options.targetDir ??
@@ -215,7 +222,7 @@ export async function createDistWorkspace(
           packageJson: pkg.packageJson,
           outputs: outputs,
           logPrefix: `${chalk.cyan(
-            relativePath(targetPaths.rootDir, pkg.dir),
+            relativePath(targetPaths.workspaceRootDir, pkg.dir),
           )}: `,
           minify: options.minify,
           workspacePackages: packages,
@@ -229,11 +236,11 @@ export async function createDistWorkspace(
       await runConcurrentTasks({
         items: customBuild,
         worker: async ({ name, dir, args }) => {
-          await run(['yarn', 'run', 'build', ...(args || [])], {
+          await packageManager.runScript('build', args, {
             cwd: dir,
             onStdout: prefixLogFunc(`${name}: `, logger.log),
             onStderr: prefixLogFunc(`${name}: `, logger.warn),
-          }).waitForExit();
+          });
         },
       });
     }
@@ -247,18 +254,22 @@ export async function createDistWorkspace(
     logger,
   );
 
-  const files: FileEntry[] = options.files ?? ['yarn.lock', 'package.json'];
+  const files: FileEntry[] =
+    options.files ?? (await getDefaultWorkspaceFiles(packageManager, logger));
 
   for (const file of files) {
     const src = typeof file === 'string' ? file : file.src;
     const dest = typeof file === 'string' ? file : file.dest;
-    await fs.copy(targetPaths.resolveRoot(src), resolvePath(targetDir, dest));
+    await fs.copy(
+      targetPaths.resolveWorkspaceRoot(src),
+      resolvePath(targetDir, dest),
+    );
   }
 
   if (options.skeleton) {
     const skeletonFiles = targets
       .map(target => {
-        const dir = relativePath(targetPaths.rootDir, target.dir);
+        const dir = relativePath(targetPaths.workspaceRootDir, target.dir);
         return joinPath(dir, 'package.json');
       })
       .sort();
@@ -278,6 +289,27 @@ export async function createDistWorkspace(
   return { targetDir, targets };
 }
 
+/**
+ * The files that are copied into the dist workspace when none are given. A
+ * missing lockfile is skipped with a warning, since the commands that create
+ * a dist workspace do not require one.
+ */
+export async function getDefaultWorkspaceFiles(
+  packageManager: Pick<PackageManager, 'lockfileName'>,
+  logger: { warn(msg: string): void },
+): Promise<FileEntry[]> {
+  const files: FileEntry[] = ['package.json'];
+  const lockfile = packageManager.lockfileName();
+  if (await fs.pathExists(targetPaths.resolveWorkspaceRoot(lockfile))) {
+    files.unshift(lockfile);
+  } else {
+    logger.warn(
+      `There is no ${lockfile} in the workspace root, so the dist workspace has no lockfile and cannot be installed from one`,
+    );
+  }
+  return files;
+}
+
 const FAST_PACK_SCRIPTS = [
   undefined,
   'backstage-cli prepack',
@@ -285,9 +317,10 @@ const FAST_PACK_SCRIPTS = [
 ];
 
 /**
- * Runs `yarn pack` on a single package and extracts the resulting tarball
- * into `targetDir`. This resolves `workspace:^` and `backstage:^` dependency
- * specs to concrete versions via yarn's `beforeWorkspacePacking` hook.
+ * Runs the pack command of the package manager on a single package and
+ * extracts the resulting tarball into `targetDir`. This resolves `workspace:^`
+ * and `backstage:^` dependency specs to concrete versions, which Yarn does
+ * through its `beforeWorkspacePacking` hook.
  */
 export async function packToDirectory(options: {
   packageDir: string;
@@ -302,11 +335,11 @@ export async function packToDirectory(options: {
   const prefix = `${packageName} [pack]: `;
 
   await fs.ensureDir(targetDir);
-  await run(['yarn', 'pack', '--filename', archivePath], {
-    cwd: packageDir,
+  const packageManager = await detectPackageManager();
+  await packageManager.pack(archivePath, packageDir, {
     onStdout: prefixLogFunc(prefix, logger.log),
     onStderr: prefixLogFunc(prefix, logger.warn),
-  }).waitForExit();
+  });
 
   await tar.extract({ file: archivePath, cwd: targetDir, strip: 1 });
   await fs.remove(archivePath);
@@ -339,12 +372,12 @@ async function moveToDistWorkspace(
         )
       : undefined;
 
-  // New an improved flow where we avoid calling `yarn pack`
+  // New an improved flow where we avoid calling the pack command
   await Promise.all(
     fastPackPackages.map(async target => {
       logger.log(`Moving ${target.name} into dist workspace`);
 
-      const outputDir = relativePath(targetPaths.rootDir, target.dir);
+      const outputDir = relativePath(targetPaths.workspaceRootDir, target.dir);
       const absoluteOutputPath = resolvePath(workspaceDir, outputDir);
       await productionPack({
         packageDir: target.dir,
@@ -355,7 +388,7 @@ async function moveToDistWorkspace(
     }),
   );
 
-  // Old flow is below, which calls `yarn pack` and extracts the tarball
+  // Old flow is below, which calls the pack command and extracts the tarball
 
   let archiveIndex = 0;
 
@@ -367,7 +400,7 @@ async function moveToDistWorkspace(
 
     const absoluteOutputPath = resolvePath(
       workspaceDir,
-      relativePath(targetPaths.rootDir, target.dir),
+      relativePath(targetPaths.workspaceRootDir, target.dir),
     );
     await packToDirectory({
       packageDir: target.dir,
