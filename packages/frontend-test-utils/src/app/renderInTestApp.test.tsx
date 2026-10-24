@@ -24,11 +24,48 @@ import {
   useRouteRef,
   identityApiRef,
   useApi,
+  ApiBlueprint,
+  createFrontendPlugin,
+  discoveryApiRef,
 } from '@backstage/frontend-plugin-api';
 import { Routes, Route } from 'react-router-dom';
 import { renderInTestApp } from './renderInTestApp';
 
 describe('renderInTestApp', () => {
+  it('should throw for app errors that would show the error page', () => {
+    const conflictingPlugin = createFrontendPlugin({
+      pluginId: 'conflict',
+      extensions: [
+        ApiBlueprint.make({
+          name: 'discovery',
+          params: defineParams =>
+            defineParams({
+              api: discoveryApiRef,
+              deps: {},
+              factory: () => ({ getBaseUrl: async () => '' }),
+            }),
+        }),
+      ],
+    });
+
+    expect(() =>
+      renderInTestApp(<div />, { features: [conflictingPlugin] }),
+    ).toThrow(/API_FACTORY_CONFLICT: API 'core.discovery'/);
+  });
+
+  it('should not throw for app warnings', () => {
+    const pluginWithInvalidFlag = createFrontendPlugin({
+      pluginId: 'flags',
+      featureFlags: [{ name: 'Invalid_Flag' }],
+    });
+
+    renderInTestApp(<div>rendered</div>, {
+      features: [pluginWithInvalidFlag],
+    });
+
+    expect(screen.getByText('rendered')).toBeInTheDocument();
+  });
+
   it('should render the given component in a page', async () => {
     const IndexPage = () => <div>Index Page</div>;
     renderInTestApp(<IndexPage />);

@@ -15,12 +15,9 @@
  */
 
 import {
-  ApiBlueprint,
   AppRootElementBlueprint,
-  createExtensionInput,
   createFrontendModule,
   createSwappableComponent,
-  swappableComponentsApiRef,
 } from '@backstage/frontend-plugin-api';
 import { SwappableComponentBlueprint } from '@backstage/plugin-app-react';
 import { DefaultSwappableComponentsApi } from './DefaultSwappableComponentsApi';
@@ -64,29 +61,6 @@ describe('DefaultSwappableComponentsApi', () => {
   });
 
   describe('integration tests', () => {
-    const api = ApiBlueprint.makeWithOverrides({
-      name: 'swappable-components',
-      inputs: {
-        components: createExtensionInput([
-          SwappableComponentBlueprint.dataRefs.component,
-        ]),
-      },
-      factory: (originalFactory, { inputs }) => {
-        return originalFactory(defineParams =>
-          defineParams({
-            api: swappableComponentsApiRef,
-            deps: {},
-            factory: () =>
-              DefaultSwappableComponentsApi.fromComponents(
-                inputs.components.map(i =>
-                  i.get(SwappableComponentBlueprint.dataRefs.component),
-                ),
-              ),
-          }),
-        );
-      },
-    });
-
     describe('no api provided', () => {
       it('should render the fallback if no other component is provided', async () => {
         const MockComponent = createSwappableComponent({
@@ -159,7 +133,6 @@ describe('DefaultSwappableComponentsApi', () => {
                   element: <MockComponent />,
                 }),
             }),
-            api,
           ],
         });
 
@@ -183,7 +156,6 @@ describe('DefaultSwappableComponentsApi', () => {
                   element: <MockComponent />,
                 }),
             }),
-            api,
           ],
         });
 
@@ -207,7 +179,6 @@ describe('DefaultSwappableComponentsApi', () => {
                   element: <MockComponent />,
                 }),
             }),
-            api,
           ],
         });
 
@@ -239,7 +210,6 @@ describe('DefaultSwappableComponentsApi', () => {
                   element: <MockComponent />,
                 }),
             }),
-            api,
           ],
           features: [
             createFrontendModule({
@@ -277,7 +247,6 @@ describe('DefaultSwappableComponentsApi', () => {
                   element: <MockComponent />,
                 }),
             }),
-            api,
           ],
           features: [
             createFrontendModule({
@@ -319,7 +288,6 @@ describe('DefaultSwappableComponentsApi', () => {
                   element: <MockComponent external="test" />,
                 }),
             }),
-            api,
           ],
           features: [
             createFrontendModule({
