@@ -145,6 +145,7 @@ function isBlank(str: string) {
 }
 
 const DEFAULT_INDEXER_BATCH_SIZE = 1000;
+const DEFAULT_INDEXER_BATCH_DELAY = 0;
 
 /**
  * @public
@@ -159,6 +160,7 @@ export class ElasticSearchSearchEngine implements SearchEngine {
   private readonly indexPrefix: string;
   private readonly logger: LoggerService;
   private readonly batchSize: number;
+  private readonly batchDelay: number;
   private readonly batchKeyField?: string;
 
   constructor(
@@ -170,12 +172,14 @@ export class ElasticSearchSearchEngine implements SearchEngine {
     batchKeyField?: string,
     highlightOptions?: ElasticSearchHighlightOptions,
     queryOptions?: ElasticSearchQueryConfig,
+    batchDelay: number = DEFAULT_INDEXER_BATCH_DELAY,
   ) {
     this.elasticSearchClientOptions = elasticSearchClientOptions;
     this.aliasPostfix = aliasPostfix;
     this.indexPrefix = indexPrefix;
     this.logger = logger;
     this.batchSize = batchSize;
+    this.batchDelay = batchDelay;
     this.batchKeyField = batchKeyField;
     this.elasticSearchClientWrapper =
       ElasticSearchClientWrapper.fromClientOptions(elasticSearchClientOptions);
@@ -234,6 +238,8 @@ export class ElasticSearchSearchEngine implements SearchEngine {
       config.getOptional<ElasticSearchQueryConfig>(
         'search.elasticsearch.queryOptions',
       ),
+      config.getOptionalNumber('search.elasticsearch.batchDelay') ??
+        DEFAULT_INDEXER_BATCH_DELAY,
     );
 
     for (const indexTemplate of this.readIndexTemplateConfig(
@@ -384,6 +390,7 @@ export class ElasticSearchSearchEngine implements SearchEngine {
       elasticSearchClientWrapper: this.elasticSearchClientWrapper,
       logger: indexerLogger,
       batchSize: this.batchSize,
+      batchDelay: this.batchDelay,
       batchKeyField: this.batchKeyField,
       skipRefresh:
         (

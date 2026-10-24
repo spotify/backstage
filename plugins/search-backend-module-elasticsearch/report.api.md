@@ -356,6 +356,7 @@ export class ElasticSearchSearchEngine implements SearchEngine {
     batchKeyField?: string,
     highlightOptions?: ElasticSearchHighlightOptions,
     queryOptions?: ElasticSearchQueryConfig,
+    batchDelay?: number,
   );
   // (undocumented)
   static fromConfig(
@@ -399,6 +400,7 @@ export type ElasticSearchSearchEngineIndexerOptions = {
   logger: LoggerService;
   elasticSearchClientWrapper: ElasticSearchClientWrapper;
   batchSize: number;
+  batchDelay?: number;
   batchKeyField?: string;
   skipRefresh?: boolean;
 };

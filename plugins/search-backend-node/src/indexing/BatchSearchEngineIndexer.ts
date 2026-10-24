@@ -17,6 +17,7 @@
 import { toError } from '@backstage/errors';
 import { IndexableDocument } from '@backstage/plugin-search-common';
 import { Writable } from 'node:stream';
+import { scheduler } from 'node:timers/promises';
 
 /**
  * Options for {@link BatchSearchEngineIndexer}
@@ -24,6 +25,13 @@ import { Writable } from 'node:stream';
  */
 export type BatchSearchEngineOptions = {
   batchSize: number;
+  /**
+   * Time to wait, in milliseconds, after a batch has been indexed and before
+   * the next batch is accepted. Spacing batches out lowers the peak CPU usage
+   * of collation at the cost of a longer total indexing time. Defaults to no
+   * delay.
+   */
+  batchDelay?: number;
 };
 
 /**
@@ -33,11 +41,13 @@ export type BatchSearchEngineOptions = {
  */
 export abstract class BatchSearchEngineIndexer extends Writable {
   private batchSize: number;
+  private batchDelay: number;
   private currentBatch: IndexableDocument[] = [];
 
   constructor(options: BatchSearchEngineOptions) {
     super({ objectMode: true });
     this.batchSize = options.batchSize;
+    this.batchDelay = options.batchDelay ?? 0;
   }
 
   /**
@@ -88,6 +98,9 @@ export abstract class BatchSearchEngineIndexer extends Writable {
     try {
       await this.index(this.currentBatch);
       this.currentBatch = [];
+      if (this.batchDelay > 0) {
+        await scheduler.wait(this.batchDelay);
+      }
       done();
     } catch (e) {
       done(toError(e));

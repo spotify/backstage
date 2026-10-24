@@ -32,6 +32,7 @@ export type ElasticSearchSearchEngineIndexerOptions = {
   logger: LoggerService;
   elasticSearchClientWrapper: ElasticSearchClientWrapper;
   batchSize: number;
+  batchDelay?: number;
   batchKeyField?: string;
   skipRefresh?: boolean;
 };
@@ -65,7 +66,7 @@ export class ElasticSearchSearchEngineIndexer extends BatchSearchEngineIndexer {
   private bulkClientError?: Error;
 
   constructor(options: ElasticSearchSearchEngineIndexerOptions) {
-    super({ batchSize: options.batchSize });
+    super({ batchSize: options.batchSize, batchDelay: options.batchDelay });
     this.configuredBatchSize = options.batchSize;
     this.logger = options.logger.child({ documentType: options.type });
     this.startTimestamp = process.hrtime();

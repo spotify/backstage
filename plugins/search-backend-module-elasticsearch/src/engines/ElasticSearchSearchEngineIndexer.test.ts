@@ -255,6 +255,34 @@ describe('ElasticSearchSearchEngineIndexer', () => {
     );
   });
 
+  it('waits batchDelay between batches', async () => {
+    const batchDelay = 50;
+    const delayedIndexer = new ElasticSearchSearchEngineIndexer({
+      type: 'some-type',
+      indexPrefix: '',
+      indexSeparator: '-index__',
+      alias: 'some-type-index__search',
+      logger: mockServices.logger.mock(),
+      elasticSearchClientWrapper: clientWrapper,
+      batchSize: 1,
+      batchDelay,
+      skipRefresh: false,
+    });
+
+    const documents = range(2).map(i => ({
+      title: `Some Document ${i}`,
+      text: 'Some document text.',
+      location: '/some/location',
+    }));
+
+    const start = Date.now();
+    await TestPipeline.fromIndexer(delayedIndexer)
+      .withDocuments(documents)
+      .execute();
+
+    expect(Date.now() - start).toBeGreaterThanOrEqual(batchDelay - 5);
+  });
+
   it('handles bulk and batching during indexing', async () => {
     const documents = range(550).map(i => ({
       title: `Hello World ${i}`,

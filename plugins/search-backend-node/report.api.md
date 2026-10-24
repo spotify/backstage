@@ -32,6 +32,7 @@ export abstract class BatchSearchEngineIndexer extends Writable {
 // @public
 export type BatchSearchEngineOptions = {
   batchSize: number;
+  batchDelay?: number;
 };
 
 // @public

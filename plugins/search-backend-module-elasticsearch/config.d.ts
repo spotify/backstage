@@ -30,6 +30,14 @@ export interface Config {
        */
       batchSize?: number;
       /**
+       * Time to wait, in milliseconds, after each batch has been indexed and
+       * before the next batch is accepted. Spacing batches out lowers the peak
+       * CPU usage of collation at the cost of a longer total indexing time.
+       *
+       * Defaults to 0 (no delay).
+       */
+      batchDelay?: number;
+      /**
        * Defines the name of the field in each document that will be used to identify documents during a batch upload.
        * If not provided, a custom ID will be generated for each document.
        */

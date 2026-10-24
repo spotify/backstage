@@ -153,4 +153,33 @@ describe('BatchSearchEngineIndexer', () => {
       indexer.end();
     });
   });
+
+  it('should wait batchDelay between batches', async () => {
+    const batchDelay = 50;
+    const indexTimestamps: number[] = [];
+
+    class TimestampingBatchIndexer extends BatchSearchEngineIndexer {
+      async index(documents: IndexableDocument[]): Promise<void> {
+        indexTimestamps.push(Date.now());
+        return indexSpy(documents);
+      }
+      async initialize(): Promise<void> {
+        return initializeSpy();
+      }
+      async finalize(): Promise<void> {
+        return finalizeSpy();
+      }
+    }
+
+    const indexer = new TimestampingBatchIndexer({ batchSize: 2, batchDelay });
+    await TestPipeline.fromIndexer(indexer)
+      .withDocuments([document, document, document, document])
+      .execute();
+
+    expect(indexSpy).toHaveBeenCalledTimes(2);
+    expect(indexTimestamps).toHaveLength(2);
+    expect(indexTimestamps[1] - indexTimestamps[0]).toBeGreaterThanOrEqual(
+      batchDelay - 5,
+    );
+  });
 });
