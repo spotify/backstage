@@ -28,7 +28,12 @@ import {
   HostSharedDependencies,
   RuntimeSharedDependenciesGlobal,
 } from '@backstage/module-federation-common';
-import { dirname, join as joinPath, resolve as resolvePath } from 'node:path';
+import {
+  basename,
+  dirname,
+  join as joinPath,
+  resolve as resolvePath,
+} from 'node:path';
 import fs from 'fs-extra';
 import chokidar from 'chokidar';
 import PQueue from 'p-queue';
@@ -146,7 +151,30 @@ async function writeRuntimeSharedDependenciesModule(
   });
 }
 
-function resolveSharedDependencyVersions(
+/**
+ * Whether a package is installed in the node_modules lookup chain of a
+ * directory. This is where the bundler resolves the imports of the app from,
+ * unlike `require.resolve`, which also searches NODE_PATH and the global
+ * folders.
+ */
+function isInstalledFrom(dir: string, packageName: string): boolean {
+  for (let current = resolvePath(dir); ; current = dirname(current)) {
+    if (
+      basename(current) !== 'node_modules' &&
+      fs.pathExistsSync(
+        joinPath(current, 'node_modules', packageName, 'package.json'),
+      )
+    ) {
+      return true;
+    }
+    if (dirname(current) === current) {
+      return false;
+    }
+  }
+}
+
+/** @internal */
+export function resolveSharedDependencyVersions(
   targetPath: string,
   hostSharedDependencies: HostSharedDependencies,
 ): HostSharedDependencies {
@@ -158,6 +186,15 @@ function resolveSharedDependencyVersions(
         const moduleName = importPath.startsWith('@')
           ? importPath.split('/').slice(0, 2).join('/')
           : importPath.split('/')[0];
+
+        // pnpm bin shims put the packages that pnpm hoists on NODE_PATH, so
+        // a package that the app can't import could otherwise be found here
+        if (!isInstalledFrom(targetPath, moduleName)) {
+          console.log(
+            `Skipping module federation shared dependency '${importPath}' because the app does not depend on it.`,
+          );
+          return [];
+        }
 
         let version: string;
         try {

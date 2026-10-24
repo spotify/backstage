@@ -1,0 +1,9 @@
+{
+  "name": "root",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^12.7.0"
+    }
+  }
+}

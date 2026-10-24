@@ -19,7 +19,7 @@ import { join } from 'node:path';
 import { targetPaths } from '@backstage/cli-common';
 
 export async function createTemporaryTsConfig(includedPackageDirs: string[]) {
-  const path = targetPaths.resolveRoot('tsconfig.tmp.json');
+  const path = targetPaths.resolveWorkspaceRoot('tsconfig.tmp.json');
 
   process.once('exit', () => {
     fs.removeSync(path);

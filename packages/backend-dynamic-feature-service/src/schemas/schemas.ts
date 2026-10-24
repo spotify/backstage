@@ -100,7 +100,7 @@ const dynamicPluginsSchemasServiceFactoryWithOptions = (
               config,
               logger,
               // eslint-disable-next-line no-restricted-syntax
-              backstageRoot: targetPaths.rootDir,
+              backstageRoot: targetPaths.installationRootDir,
               preferAlpha: true,
             });
 

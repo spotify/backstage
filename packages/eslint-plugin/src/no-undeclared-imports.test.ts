@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { RuleTester } from 'eslint';
+import { Linter, RuleTester } from 'eslint';
+import fs from 'node:fs';
 import { join as joinPath } from 'node:path';
+import { execFileSync } from 'node:child_process';
 import rule from '../rules/no-undeclared-imports';
 
 jest.mock('child_process', () => ({
@@ -341,4 +343,149 @@ ruleTester.run(RULE, rule, {
       errors: [ERR_SWITCH_BACK()],
     },
   ],
+});
+
+describe('fixer package manager', () => {
+  const config: Linter.Config = {
+    parserOptions: { sourceType: 'module', ecmaVersion: 2021 },
+    rules: { [RULE]: 'error' },
+  };
+  const barDir = joinPath(FIXTURE, 'packages/bar');
+  const barFile = joinPath(barDir, 'src/index.ts');
+  const execOptions = { cwd: barDir, stdio: 'inherit' };
+
+  function lint(code: string) {
+    const linter = new Linter();
+    linter.defineRule(RULE, rule);
+    return linter.verify(code, config, { filename: barFile });
+  }
+
+  beforeEach(() => {
+    jest.mocked(execFileSync).mockClear();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('uses yarn when there is no pnpm lockfile', () => {
+    const messages = lint(`import 'lodash'`);
+    expect(messages.map(m => m.message)).toEqual([
+      `lodash must be declared in dependencies of ${joinPath(
+        'packages/bar/package.json',
+      )}, run 'yarn --cwd ${joinPath(
+        'packages/bar',
+      )} add lodash' from the project root.`,
+    ]);
+
+    lint(`import 'directive:add-import:dependencies:lodash'`);
+    lint(`import 'directive:add-import:devDependencies:lodash'`);
+    lint(`import 'directive:add-import:peerDependencies:react'`);
+    expect(jest.mocked(execFileSync).mock.calls).toEqual([
+      ['yarn', ['add', expect.stringMatching(/^lodash/)], execOptions],
+      ['yarn', ['add', '--dev', expect.stringMatching(/^lodash/)], execOptions],
+      ['yarn', ['add', '--peer', expect.stringMatching(/^react/)], execOptions],
+    ]);
+  });
+
+  it('uses pnpm when the root package.json names it', () => {
+    const pnpmFixture = joinPath(__dirname, '__fixtures__/monorepo-pnpm');
+    const aDir = joinPath(pnpmFixture, 'packages/a');
+    process.chdir(pnpmFixture);
+    try {
+      const linter = new Linter();
+      linter.defineRule(RULE, rule);
+      const lintA = (code: string) =>
+        linter.verify(code, config, {
+          filename: joinPath(aDir, 'src/index.ts'),
+        });
+
+      expect(lintA(`import 'lodash'`).map(m => m.message)).toEqual([
+        `lodash must be declared in dependencies of ${joinPath(
+          'packages/a/package.json',
+        )}, run 'pnpm --dir ${joinPath(
+          'packages/a',
+        )} add lodash' from the project root.`,
+      ]);
+
+      lintA(`import 'directive:add-import:dependencies:@internal/b'`);
+      expect(jest.mocked(execFileSync).mock.calls).toEqual([
+        // pnpm only links workspace packages through the workspace protocol
+        [
+          'pnpm',
+          ['add', '@internal/b@workspace:^'],
+          { cwd: aDir, stdio: 'inherit' },
+        ],
+      ]);
+    } finally {
+      process.chdir(FIXTURE);
+    }
+  });
+
+  it('uses pnpm when the root package.json names it in devEngines', () => {
+    const pnpmFixture = joinPath(
+      __dirname,
+      '__fixtures__/monorepo-pnpm-dev-engines',
+    );
+    const aDir = joinPath(pnpmFixture, 'packages/a');
+    process.chdir(pnpmFixture);
+    try {
+      const linter = new Linter();
+      linter.defineRule(RULE, rule);
+      const lintA = (code: string) =>
+        linter.verify(code, config, {
+          filename: joinPath(aDir, 'src/index.ts'),
+        });
+
+      expect(lintA(`import 'lodash'`).map(m => m.message)).toEqual([
+        `lodash must be declared in dependencies of ${joinPath(
+          'packages/a/package.json',
+        )}, run 'pnpm --dir ${joinPath(
+          'packages/a',
+        )} add lodash' from the project root.`,
+      ]);
+
+      lintA(`import 'directive:add-import:dependencies:lodash'`);
+      expect(jest.mocked(execFileSync).mock.calls).toEqual([
+        ['pnpm', ['add', 'lodash'], { cwd: aDir, stdio: 'inherit' }],
+      ]);
+    } finally {
+      process.chdir(FIXTURE);
+    }
+  });
+
+  it('uses pnpm when there is a pnpm lockfile in the project root', () => {
+    const existsSync = fs.existsSync;
+    jest
+      .spyOn(fs, 'existsSync')
+      .mockImplementation(
+        p => p === joinPath(FIXTURE, 'pnpm-lock.yaml') || existsSync(p),
+      );
+
+    const messages = lint(`import 'lodash'`);
+    expect(messages.map(m => m.message)).toEqual([
+      `lodash must be declared in dependencies of ${joinPath(
+        'packages/bar/package.json',
+      )}, run 'pnpm --dir ${joinPath(
+        'packages/bar',
+      )} add lodash' from the project root.`,
+    ]);
+
+    lint(`import 'directive:add-import:dependencies:lodash'`);
+    lint(`import 'directive:add-import:devDependencies:lodash'`);
+    lint(`import 'directive:add-import:peerDependencies:react'`);
+    expect(jest.mocked(execFileSync).mock.calls).toEqual([
+      ['pnpm', ['add', expect.stringMatching(/^lodash/)], execOptions],
+      [
+        'pnpm',
+        ['add', '--save-dev', expect.stringMatching(/^lodash/)],
+        execOptions,
+      ],
+      [
+        'pnpm',
+        ['add', '--save-peer', expect.stringMatching(/^react/)],
+        execOptions,
+      ],
+    ]);
+  });
 });
