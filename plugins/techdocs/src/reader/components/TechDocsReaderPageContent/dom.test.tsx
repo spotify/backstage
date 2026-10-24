@@ -19,7 +19,7 @@ import { render } from '@testing-library/react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 // Import the module from which the hook is defined
-import { useInitialRedirect } from './dom';
+import { getSecondarySidebarRightOffset, useInitialRedirect } from './dom';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -68,5 +68,31 @@ describe('useInitialRedirect', () => {
     (useParams as jest.Mock).mockReturnValue({ '*': 'existing-path' });
     render(<TestComponent defaultPath={undefined} />);
     expect(mockNavigate).not.toHaveBeenCalled();
+  });
+});
+
+describe('getSecondarySidebarRightOffset', () => {
+  const createContainer = (right: number) => {
+    const container = document.createElement('div');
+    container.getBoundingClientRect = () => ({ right } as DOMRect);
+    return container;
+  };
+
+  beforeEach(() => {
+    jest
+      .spyOn(document.documentElement, 'clientWidth', 'get')
+      .mockReturnValue(2400);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should keep the minimum offset when the container fills the viewport', () => {
+    expect(getSecondarySidebarRightOffset(createContainer(2380), 24)).toBe(24);
+  });
+
+  it('should align with the container when it is narrower than the viewport', () => {
+    expect(getSecondarySidebarRightOffset(createContainer(2252), 24)).toBe(148);
   });
 });
