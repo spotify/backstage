@@ -112,4 +112,53 @@ describe('DryRunResultsView', () => {
       expect(screen.getByText('Foo Link')).toBeInTheDocument();
     });
   });
+
+  it('decodes non-ASCII file contents as UTF-8', async () => {
+    // 4-, 3- and 2-byte UTF-8 sequences
+    const content = '### 🔦 Context — ä ö ü';
+    const base64Content = Buffer.from(content, 'utf8').toString('base64');
+
+    await renderInTestApp(
+      <TestApiProvider
+        apis={[
+          [
+            scaffolderApiRef,
+            {
+              dryRun: async () => ({
+                directoryContents: [
+                  { path: 'foo.md', base64Content, executable: false },
+                ],
+                log: [],
+                output: {},
+                steps: [],
+              }),
+            },
+          ],
+          [
+            formDecoratorsApiRef,
+            {
+              getFormDecorators: async () => [],
+            },
+          ],
+        ]}
+      >
+        <SecretsContextProvider>
+          <DryRunProvider>
+            <DryRunResultsView />
+            <DryRunRemote />
+          </DryRunProvider>
+        </SecretsContextProvider>
+      </TestApiProvider>,
+      {
+        mountedRoutes: {
+          '/catalog/:kind/:namespace/:name': entityRouteRef,
+        },
+      },
+    );
+
+    expect(await screen.findByText('foo.md')).toBeInTheDocument();
+
+    // atob alone would render these as garbled single-byte characters
+    expect(await screen.findByText(content)).toBeInTheDocument();
+  });
 });

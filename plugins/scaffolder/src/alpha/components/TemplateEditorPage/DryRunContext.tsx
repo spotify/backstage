@@ -66,20 +66,18 @@ export function base64EncodeContent(content: string): string {
     return window.btoa('<file too large>');
   }
 
-  try {
-    return window.btoa(content);
-  } catch {
-    const decoder = new TextEncoder();
-    const buffer = decoder.encode(content);
+  // Always encode as UTF-8. btoa on its own succeeds for characters in
+  // U+0080-U+00FF and emits them as single Latin-1 bytes, which are not valid
+  // UTF-8 once the result is decoded again.
+  const buffer = new TextEncoder().encode(content);
 
-    const chunks = new Array<string>();
-    for (let offset = 0; offset < buffer.length; offset += CHUNK_SIZE) {
-      chunks.push(
-        String.fromCharCode(...buffer.slice(offset, offset + CHUNK_SIZE)),
-      );
-    }
-    return window.btoa(chunks.join(''));
+  const chunks = new Array<string>();
+  for (let offset = 0; offset < buffer.length; offset += CHUNK_SIZE) {
+    chunks.push(
+      String.fromCharCode(...buffer.slice(offset, offset + CHUNK_SIZE)),
+    );
   }
+  return window.btoa(chunks.join(''));
 }
 
 export function DryRunProvider(props: DryRunProviderProps) {

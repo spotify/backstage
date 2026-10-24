@@ -126,11 +126,10 @@ async function downloadDirectoryContents(
   const zip = new JSZip();
 
   for (const d of directoryContents) {
-    // Decode text content from base64 to ascii
-    const converted = atob(d.base64Content);
-
-    // add folder/file to zip
-    await zip.file(d.path, converted);
+    // Hand the base64 straight to JSZip, which decodes it to bytes itself.
+    // Decoding with atob first yields a binary string, which JSZip then
+    // re-encodes as UTF-8, doubling every byte above 0x7F.
+    zip.file(d.path, d.base64Content, { base64: true });
   }
 
   const blob = await zip.generateAsync({ type: 'blob' });

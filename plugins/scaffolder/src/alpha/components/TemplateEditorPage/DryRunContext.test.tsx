@@ -54,6 +54,12 @@ describe('base64EncodeContent', () => {
       window.btoa('<file too large>'),
     );
   });
+
+  it('encodes characters that btoa would emit as single bytes', () => {
+    // btoa succeeds for U+0080-U+00FF and would emit one Latin-1 byte each,
+    // which is not valid UTF-8 when the content is decoded again
+    expect(base64EncodeContent('ä')).toBe('w6Q=');
+  });
 });
 
 describe('DryRunProvider', () => {

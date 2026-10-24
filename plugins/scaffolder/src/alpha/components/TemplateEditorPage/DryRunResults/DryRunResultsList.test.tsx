@@ -15,7 +15,7 @@
  */
 
 import { renderInTestApp, TestApiProvider } from '@backstage/test-utils';
-import { act, screen } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useEffect } from 'react';
 import {
@@ -24,7 +24,16 @@ import {
 } from '@backstage/plugin-scaffolder-react';
 import { DryRunProvider, useDryRun } from '../DryRunContext';
 import { DryRunResultsList } from './DryRunResultsList';
+import { downloadBlob } from '../../../../lib/download';
 import { formDecoratorsApiRef } from '../../../api';
+
+jest.mock('../../../../lib/download', () => ({
+  downloadBlob: jest.fn(),
+}));
+
+const mockDownloadBlob = downloadBlob as jest.MockedFunction<
+  typeof downloadBlob
+>;
 
 function DryRunRemote({ execute }: { execute?: number }) {
   const dryRun = useDryRun();
@@ -64,6 +73,10 @@ const mockApis = [
 ] as const;
 
 describe('DryRunResultsList', () => {
+  beforeEach(() => {
+    mockDownloadBlob.mockClear();
+  });
+
   it('renders without exploding', async () => {
     const rendered = await renderInTestApp(
       <TestApiProvider apis={mockApis}>
@@ -112,5 +125,59 @@ describe('DryRunResultsList', () => {
 
     expect(screen.queryByText('Result 1')).not.toBeInTheDocument();
     expect(screen.getByText('Result 2')).toBeInTheDocument();
+  });
+
+  it('keeps multi-byte file contents intact in the downloaded zip', async () => {
+    const content = '### 🔦 Context — ä';
+    const apis = [
+      [
+        scaffolderApiRef,
+        {
+          dryRun: async () => ({
+            directoryContents: [
+              {
+                path: 'foo.md',
+                base64Content: Buffer.from(content, 'utf8').toString('base64'),
+                executable: false,
+              },
+            ],
+            log: [],
+            output: {},
+            steps: [],
+          }),
+        },
+      ],
+      [
+        formDecoratorsApiRef,
+        {
+          getFormDecorators: async () => [],
+        },
+      ],
+    ] as const;
+
+    await renderInTestApp(
+      <TestApiProvider apis={apis}>
+        <SecretsContextProvider>
+          <DryRunProvider>
+            <DryRunRemote execute={1} />
+            <DryRunResultsList />
+          </DryRunProvider>
+        </SecretsContextProvider>
+      </TestApiProvider>,
+    );
+
+    await userEvent.click(await screen.findByLabelText('download'));
+
+    // the click handler is not awaited by the component, and there is no DOM
+    // change to find once it settles, so the mock call is the only signal
+    await waitFor(() => {
+      expect(mockDownloadBlob).toHaveBeenCalled();
+    });
+
+    const [blob] = mockDownloadBlob.mock.calls[0];
+    const { default: JSZip } = await import('jszip');
+    const zip = await JSZip.loadAsync(blob);
+
+    await expect(zip.file('foo.md')!.async('string')).resolves.toBe(content);
   });
 });
