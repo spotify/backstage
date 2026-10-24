@@ -487,6 +487,11 @@ describe('GithubEntityProvider', () => {
       'catalog-custom.yaml',
       expect.any(Object),
       'backstage',
+      expect.objectContaining({
+        allowArchived: false,
+        startCursor: undefined,
+        chunkSize: undefined,
+      }),
     );
 
     const url = `https://github.com/test-org/another-repo/blob/backstage/catalog-custom.yaml`;
@@ -625,6 +630,120 @@ describe('GithubEntityProvider', () => {
     expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
       type: 'full',
       entities: expectedEntities,
+    });
+  });
+
+  it('chunks repository fetching when queryLimits.repositoryChunkSize is set', async () => {
+    const config = createSingleProviderConfig({
+      providerConfig: {
+        catalogPath: 'custom/path/catalog-custom.yaml',
+        filters: {
+          branch: 'main',
+        },
+        queryLimits: {
+          repositoryChunkSize: 1,
+        },
+      },
+    });
+    const schedule = new PersistingTaskRunner();
+    const entityProviderConnection: EntityProviderConnection = {
+      applyMutation: jest.fn(),
+      refresh: jest.fn(),
+    };
+
+    const provider = GithubEntityProvider.fromConfig(config, {
+      logger,
+      schedule,
+    })[0];
+
+    const mockGetOrganizationRepositories = jest.spyOn(
+      helpers,
+      'getOrganizationRepositories',
+    );
+
+    mockGetOrganizationRepositories
+      .mockResolvedValueOnce({
+        repositories: [
+          {
+            name: 'test-repo',
+            url: 'https://github.com/test-org/test-repo',
+            repositoryTopics: { nodes: [] },
+            isArchived: false,
+            isFork: false,
+            defaultBranchRef: { name: 'main' },
+            catalogInfoFile: {
+              __typename: 'Blob',
+              id: 'abc123',
+              text: 'some yaml',
+            },
+            visibility: 'public',
+          },
+        ],
+        nextCursor: 'cursor-1',
+      })
+      .mockResolvedValueOnce({
+        repositories: [
+          {
+            name: 'test-repo-2',
+            url: 'https://github.com/test-org/test-repo-2',
+            repositoryTopics: { nodes: [] },
+            isArchived: false,
+            isFork: false,
+            defaultBranchRef: { name: 'main' },
+            catalogInfoFile: {
+              __typename: 'Blob',
+              id: 'def456',
+              text: 'some yaml',
+            },
+            visibility: 'public',
+          },
+        ],
+        nextCursor: undefined,
+      });
+
+    await provider.connect(entityProviderConnection);
+
+    const taskDef = schedule.getTasks()[0];
+    await (taskDef.fn as () => Promise<void>)();
+
+    expect(mockGetOrganizationRepositories).toHaveBeenCalledTimes(2);
+    expect(mockGetOrganizationRepositories).toHaveBeenNthCalledWith(
+      1,
+      expect.anything(),
+      'test-org',
+      'custom/path/catalog-custom.yaml',
+      expect.any(Object),
+      'main',
+      expect.objectContaining({
+        allowArchived: false,
+        startCursor: undefined,
+        chunkSize: 1,
+      }),
+    );
+    expect(mockGetOrganizationRepositories).toHaveBeenNthCalledWith(
+      2,
+      expect.anything(),
+      'test-org',
+      'custom/path/catalog-custom.yaml',
+      expect.any(Object),
+      'main',
+      expect.objectContaining({
+        allowArchived: false,
+        startCursor: 'cursor-1',
+        chunkSize: 1,
+      }),
+    );
+    expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+      type: 'full',
+      entities: expect.arrayContaining([
+        expect.objectContaining({
+          entity: expect.objectContaining({
+            spec: expect.objectContaining({
+              target: expect.stringContaining('test-repo'),
+            }),
+          }),
+        }),
+      ]),
     });
   });
 

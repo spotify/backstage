@@ -972,6 +972,7 @@ describe('github', () => {
             visibility: 'private',
           },
         ],
+        nextCursor: undefined,
       };
 
       server.use(
@@ -1021,6 +1022,58 @@ describe('github', () => {
         undefined,
         'develop',
       );
+    });
+
+    it('passes startCursor and returns nextCursor when chunkSize is reached', async () => {
+      server.use(
+        graphqlMsw.query('repositories', ({ variables }) => {
+          if (variables.cursor === 'start-cursor') {
+            return HttpResponse.json({
+              data: {
+                repositoryOwner: {
+                  repositories: {
+                    pageInfo: { hasNextPage: true, endCursor: 'end-cursor' },
+                    nodes: [
+                      {
+                        name: 'repo1',
+                        url: 'https://github.com/my-org/repo1',
+                        isArchived: false,
+                        isFork: false,
+                        visibility: 'public',
+                        defaultBranchRef: { name: 'main' },
+                        catalogInfoFile: null,
+                        repositoryTopics: { nodes: [] },
+                      },
+                    ],
+                  },
+                },
+              },
+            });
+          }
+          return HttpResponse.json({
+            data: {
+              repositoryOwner: {
+                repositories: {
+                  pageInfo: { hasNextPage: false, endCursor: null },
+                  nodes: [],
+                },
+              },
+            },
+          });
+        }),
+      );
+
+      const { repositories, nextCursor } = await getOrganizationRepositories(
+        graphql as any,
+        'my-org',
+        '/catalog-info.yaml',
+        undefined,
+        undefined,
+        { startCursor: 'start-cursor', chunkSize: 1 },
+      );
+
+      expect(repositories).toHaveLength(1);
+      expect(nextCursor).toBe('end-cursor');
     });
   });
 
@@ -1783,17 +1836,28 @@ describe('github', () => {
         }),
       );
 
-      await getOrganizationRepositories(
-        graphql as any,
-        org,
-        '/catalog-info.yaml',
-        {
+      await expect(
+        getOrganizationRepositories(graphql as any, org, '/catalog-info.yaml', {
           teams: 10,
           teamMembers: 20,
           organizationMembers: 30,
           repositories: 15,
-        },
-      );
+        }),
+      ).resolves.toEqual({
+        repositories: [
+          {
+            name: 'repo1',
+            url: 'https://github.com/my-org/repo1',
+            isArchived: false,
+            isFork: false,
+            visibility: 'public',
+            defaultBranchRef: { name: 'main' },
+            catalogInfoFile: null,
+            repositoryTopics: { nodes: [] },
+          },
+        ],
+        nextCursor: undefined,
+      });
     });
 
     it('uses default page sizes when not specified', async () => {

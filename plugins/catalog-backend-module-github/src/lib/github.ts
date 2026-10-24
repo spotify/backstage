@@ -67,6 +67,20 @@ export type GithubPageSizes = {
 };
 
 /**
+ * Configuration for GitHub GraphQL API
+ *
+ * @public
+ */
+export type GithubQueryLimits = {
+  /**
+   * Number of repositories to fetch per chunk in a GraphQL client session.
+   * Helps avoiding token expiration and 502 errors during long-running fetches.
+   * Default: undefined (no chunking, fetch all repositories in one session)
+   */
+  repositoryChunkSize?: number;
+};
+
+/**
  * Default page sizes for GitHub GraphQL API queries.
  * These values are reduced to prevent RESOURCE_LIMITS_EXCEEDED errors with large organizations.
  *
@@ -79,12 +93,21 @@ export const DEFAULT_PAGE_SIZES: GithubPageSizes = {
   repositories: 25,
 };
 
+export const DEFAULT_QUERY_LIMITS: GithubQueryLimits = {
+  repositoryChunkSize: undefined,
+};
+
 // Graphql types
 
 export type QueryResponse = {
   organization?: OrganizationResponse;
   repositoryOwner?: RepositoryOwnerResponse;
   user?: UserResponse;
+  rateLimit?: {
+    cost?: number;
+    remaining?: number;
+    resetAt?: string;
+  };
 };
 
 type RepositoryOwnerResponse = {
@@ -239,7 +262,7 @@ export async function getOrganizationUsers(
   // There is no user -> teams edge, so we leave the memberships empty for
   // now and let the team iteration handle it instead
 
-  const users = await queryWithPaging({
+  const { result: users } = await queryWithPaging({
     client,
     query,
     org,
@@ -339,7 +362,7 @@ export async function getOrganizationTeams(
     return await teamTransformer(team, ctx);
   };
 
-  const teams = await queryWithPaging({
+  const { result: teams } = await queryWithPaging({
     client,
     query,
     org,
@@ -434,7 +457,7 @@ export async function getOrganizationTeamsFromUsers(
     return await teamTransformer(team, ctx);
   };
 
-  const teams = await queryWithPaging({
+  const { result: teams } = await queryWithPaging({
     client,
     query,
     org,
@@ -493,7 +516,7 @@ export async function getOrganizationTeamsForUser(
     return await teamTransformer(team, ctx);
   };
 
-  const teams = await queryWithPaging({
+  const { result: teams } = await queryWithPaging({
     client,
     query,
     org,
@@ -521,7 +544,7 @@ export async function getOrganizationsFromUser(
     }
   }`;
 
-  const orgs = await queryWithPaging({
+  const { result: orgs } = await queryWithPaging({
     client,
     query,
     org: '',
@@ -620,7 +643,12 @@ export async function getOrganizationRepositories(
   catalogPath: string,
   pageSizes: GithubPageSizes = DEFAULT_PAGE_SIZES,
   branch?: string,
-): Promise<{ repositories: RepositoryResponse[] }> {
+  options?: {
+    allowArchived?: boolean;
+    startCursor?: string;
+    chunkSize?: number;
+  },
+): Promise<{ repositories: RepositoryResponse[]; nextCursor?: string }> {
   let relativeCatalogPathRef: string;
   // We must strip the leading slash or the query for objects does not work
   if (catalogPath.startsWith('/')) {
@@ -630,11 +658,19 @@ export async function getOrganizationRepositories(
   }
   const branchRef = branch ?? 'HEAD';
   const catalogPathRef = `${branchRef}:${relativeCatalogPathRef}`;
+  const allowArchived = options?.allowArchived ?? true;
+  const archivedFilter = allowArchived ? '' : ', isArchived: false';
+  const chunkSize = options?.chunkSize;
   const query = `
     query repositories($org: String!, $catalogPathRef: String!, $cursor: String, $repositoriesPageSize: Int!) {
+      rateLimit {
+        cost
+        remaining
+        resetAt
+      }
       repositoryOwner(login: $org) {
         login
-        repositories(first: $repositoriesPageSize, after: $cursor) {
+        repositories(first: $repositoriesPageSize, after: $cursor${archivedFilter}) {
           nodes {
             name
             catalogInfoFile: object(expression: $catalogPathRef) {
@@ -669,20 +705,24 @@ export async function getOrganizationRepositories(
       }
     }`;
 
-  const repositories = await queryWithPaging({
+  const { result: repositories, nextCursor } = await queryWithPaging({
     client,
     query,
     org,
-    connection: r => r.repositoryOwner?.repositories,
+    connection: r => r?.repositoryOwner?.repositories,
     transformer: async x => x,
     variables: {
       org,
       catalogPathRef,
-      repositoriesPageSize: pageSizes.repositories,
+      repositoriesPageSize: chunkSize
+        ? Math.min(pageSizes.repositories, chunkSize)
+        : pageSizes.repositories,
     },
+    startCursor: options?.startCursor,
+    chunkSize,
   });
 
-  return { repositories };
+  return { repositories, nextCursor };
 }
 
 export async function getOrganizationRepository(
@@ -770,7 +810,7 @@ export async function getTeamMembers(
       }
     }`;
 
-  const members = await queryWithPaging({
+  const { result: members } = await queryWithPaging({
     client,
     query,
     org,
@@ -818,13 +858,24 @@ export async function queryWithPaging<
   ) => Promise<OutputType | undefined>;
   variables: Variables;
   filter?: (item: GraphqlType) => Promise<boolean> | boolean;
-}): Promise<OutputType[]> {
-  const { client, query, org, connection, transformer, variables, filter } =
-    params;
+  startCursor?: string;
+  chunkSize?: number;
+}): Promise<{ result: OutputType[]; nextCursor?: string }> {
+  const {
+    client,
+    query,
+    org,
+    connection,
+    transformer,
+    variables,
+    startCursor,
+    chunkSize,
+    filter,
+  } = params;
   const result: OutputType[] = [];
   const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-  let cursor: string | undefined = undefined;
+  let cursor: string | undefined = startCursor;
   for (let j = 0; j < 1000 /* just for sanity */; ++j) {
     const response: Response = await client(query, {
       ...variables,
@@ -852,13 +903,19 @@ export async function queryWithPaging<
 
     if (!conn.pageInfo.hasNextPage) {
       break;
-    } else {
-      await sleep(1000);
-      cursor = conn.pageInfo.endCursor;
     }
+
+    // check if we reached the chunk size limit,
+    // then we return next cursor to know where to start in next chunk
+    if (chunkSize && result.length >= chunkSize) {
+      return { result, nextCursor: conn.pageInfo.endCursor };
+    }
+
+    await sleep(1000);
+    cursor = conn.pageInfo.endCursor;
   }
 
-  return result;
+  return { result, nextCursor: undefined };
 }
 
 export type DeferredEntitiesBuilder = (

@@ -254,6 +254,8 @@ catalog:
           repository: '.*' # optional Regex
         pageSizes:
           repositories: 25
+        queryLimits:
+          repositoryChunkSize: 5000
       wildcardProviderId:
         organization: 'new-org' # string
         catalogPath: '/groups/**/*.yaml' # this will search all folders for files that end in .yaml
@@ -356,6 +358,9 @@ If you do so, `default` will be used as provider ID.
   Configure page sizes for GitHub GraphQL API queries. This can help prevent `RESOURCE_LIMITS_EXCEEDED` errors.
   - **`repositories`** _(optional)_:
     Number of repositories to fetch per page. Defaults to `25`. Reduce this value if hitting API resource limits.
+- **`queryLimits`** _(optional)_: Configure limits for GitHub GraphQL API queries to make sure catalog jobs do not time out. This can happen if you have large organization and too many GraphQL request are executed in one session. Request headers timeout is 60 minutes, check if your jobs are reaching this limit.
+  - **`repositoryChunkSize`**: Number of repositories to fetch per chunk in a GraphQL client session. Set this if you are getting 502 errors. It probably means you have more repositories than you are able to fetch in one session.
+    (default: undefined - no chunking, fetch all repositories in one session)
 
 ## GitHub API Rate Limits
 

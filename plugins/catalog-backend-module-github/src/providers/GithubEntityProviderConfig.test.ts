@@ -111,6 +111,12 @@ describe('readProviderConfigs', () => {
                 },
               },
             },
+            providerWithQueryLimits: {
+              organization: 'test-org1',
+              queryLimits: {
+                repositoryChunkSize: 100,
+              },
+            },
             providerAppOnly: {
               app: '1234',
             },
@@ -124,7 +130,7 @@ describe('readProviderConfigs', () => {
     });
     const providerConfigs = readProviderConfigs(config);
 
-    expect(providerConfigs).toHaveLength(12);
+    expect(providerConfigs).toHaveLength(13);
     expect(providerConfigs[0]).toEqual({
       id: 'providerOrganizationOnly',
       organization: 'test-org1',
@@ -143,6 +149,7 @@ describe('readProviderConfigs', () => {
       },
       schedule: DEFAULT_GITHUB_ENTITY_PROVIDER_CONFIG_SCHEDULE,
       validateLocationsExist: false,
+      queryLimits: undefined,
     });
     expect(providerConfigs[1]).toEqual({
       id: 'providerCustomCatalogPath',
@@ -162,6 +169,7 @@ describe('readProviderConfigs', () => {
       },
       schedule: DEFAULT_GITHUB_ENTITY_PROVIDER_CONFIG_SCHEDULE,
       validateLocationsExist: false,
+      queryLimits: undefined,
     });
     expect(providerConfigs[2]).toEqual({
       id: 'providerWithRepositoryFilter',
@@ -181,6 +189,7 @@ describe('readProviderConfigs', () => {
       },
       schedule: DEFAULT_GITHUB_ENTITY_PROVIDER_CONFIG_SCHEDULE,
       validateLocationsExist: false,
+      queryLimits: undefined,
     });
     expect(providerConfigs[3]).toEqual({
       id: 'providerWithBranchFilter',
@@ -200,6 +209,7 @@ describe('readProviderConfigs', () => {
       },
       schedule: DEFAULT_GITHUB_ENTITY_PROVIDER_CONFIG_SCHEDULE,
       validateLocationsExist: false,
+      queryLimits: undefined,
     });
     expect(providerConfigs[4]).toEqual({
       id: 'providerWithTopicFilter',
@@ -219,6 +229,7 @@ describe('readProviderConfigs', () => {
       },
       schedule: DEFAULT_GITHUB_ENTITY_PROVIDER_CONFIG_SCHEDULE,
       validateLocationsExist: false,
+      queryLimits: undefined,
     });
     expect(providerConfigs[5]).toEqual({
       id: 'providerWithForkFilter',
@@ -238,6 +249,7 @@ describe('readProviderConfigs', () => {
       },
       schedule: DEFAULT_GITHUB_ENTITY_PROVIDER_CONFIG_SCHEDULE,
       validateLocationsExist: false,
+      queryLimits: undefined,
     });
     expect(providerConfigs[6]).toEqual({
       id: 'providerWithVisibilityFilter',
@@ -257,6 +269,7 @@ describe('readProviderConfigs', () => {
       },
       schedule: DEFAULT_GITHUB_ENTITY_PROVIDER_CONFIG_SCHEDULE,
       validateLocationsExist: false,
+      queryLimits: undefined,
     });
     expect(providerConfigs[7]).toEqual({
       id: 'providerWithArchiveFilter',
@@ -295,6 +308,7 @@ describe('readProviderConfigs', () => {
       },
       validateLocationsExist: false,
       schedule: DEFAULT_GITHUB_ENTITY_PROVIDER_CONFIG_SCHEDULE,
+      queryLimits: undefined,
     });
     expect(providerConfigs[9]).toEqual({
       id: 'providerWithSchedule',
@@ -319,8 +333,31 @@ describe('readProviderConfigs', () => {
         },
       },
       validateLocationsExist: false,
+      queryLimits: undefined,
     });
     expect(providerConfigs[10]).toEqual({
+      id: 'providerWithQueryLimits',
+      organization: 'test-org1',
+      catalogPath: '/catalog-info.yaml',
+      host: 'github.com',
+      filters: {
+        repository: undefined,
+        branch: undefined,
+        allowForks: true,
+        topic: {
+          include: undefined,
+          exclude: undefined,
+        },
+        visibility: undefined,
+        allowArchived: false,
+      },
+      schedule: DEFAULT_GITHUB_ENTITY_PROVIDER_CONFIG_SCHEDULE,
+      validateLocationsExist: false,
+      queryLimits: {
+        repositoryChunkSize: 100,
+      },
+    });
+    expect(providerConfigs[11]).toEqual({
       id: 'providerAppOnly',
       app: 1234,
       catalogPath: '/catalog-info.yaml',
@@ -338,8 +375,9 @@ describe('readProviderConfigs', () => {
       },
       schedule: DEFAULT_GITHUB_ENTITY_PROVIDER_CONFIG_SCHEDULE,
       validateLocationsExist: false,
+      queryLimits: undefined,
     });
-    expect(providerConfigs[11]).toEqual({
+    expect(providerConfigs[12]).toEqual({
       id: 'providerAppAndOrganization',
       app: 1234,
       organization: 'test-org1',
@@ -488,5 +526,42 @@ describe('readProviderConfigs', () => {
       repositories: 15,
     });
     expect(providerConfigs[1].pageSizes).toBeUndefined();
+  });
+
+  it('reads query limits configuration', () => {
+    const config = new ConfigReader({
+      catalog: {
+        providers: {
+          github: {
+            organization: 'test-org',
+            queryLimits: {
+              repositoryChunkSize: 50,
+            },
+          },
+        },
+      },
+    });
+    const providerConfigs = readProviderConfigs(config);
+
+    expect(providerConfigs).toHaveLength(1);
+    expect(providerConfigs[0].queryLimits).toEqual({
+      repositoryChunkSize: 50,
+    });
+  });
+
+  it('handles missing query limits configuration', () => {
+    const config = new ConfigReader({
+      catalog: {
+        providers: {
+          github: {
+            organization: 'test-org',
+          },
+        },
+      },
+    });
+    const providerConfigs = readProviderConfigs(config);
+
+    expect(providerConfigs).toHaveLength(1);
+    expect(providerConfigs[0].queryLimits).toBeUndefined();
   });
 });

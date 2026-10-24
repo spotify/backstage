@@ -143,6 +143,16 @@ export interface Config {
                */
               repositories?: number;
             };
+
+            queryLimits?: {
+              /**
+               * Number of repositories to fetch per chunk in a GraphQL client session.
+               * Set this if you are getting 502 errors.
+               * It probably means you have more repositories than you are able to fetch in one session.
+               * Default: `undefined` - no chunking, fetch all repositories in one session.
+               */
+              repositoryChunkSize?: number;
+            };
           }
         | {
             [name: string]: {

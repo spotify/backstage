@@ -51,6 +51,9 @@ export type GithubEntityProviderConfig = {
   pageSizes?: {
     repositories?: number;
   };
+  queryLimits?: {
+    repositoryChunkSize?: number;
+  };
 };
 
 export type GithubTopicFilters = {
@@ -137,6 +140,14 @@ function readProviderConfig(
       }
     : undefined;
 
+  const queryLimits = config.has('queryLimits')
+    ? {
+        repositoryChunkSize: config.getOptionalNumber(
+          'queryLimits.repositoryChunkSize',
+        ),
+      }
+    : undefined;
+
   return {
     id,
     catalogPath,
@@ -159,6 +170,7 @@ function readProviderConfig(
     schedule,
     validateLocationsExist,
     pageSizes,
+    queryLimits,
   };
 }
 

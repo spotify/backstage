@@ -260,29 +260,41 @@ export class GithubEntityProvider implements EntityProvider, EventSubscriber {
   private async findCatalogFiles(): Promise<Repository[]> {
     const organizations = await this.getOrganizations();
     const catalogPath = this.config.catalogPath;
+    const chunkSize = this.config.queryLimits?.repositoryChunkSize;
 
     let repositories: Repository[] = [];
     for (const organization of organizations) {
-      const client = await this.createGraphqlClient(organization);
-
       const pageSizes: GithubPageSizes = {
         ...DEFAULT_PAGE_SIZES,
         ...this.config.pageSizes,
       };
 
-      const { repositories: repositoriesFromGithub } =
-        await getOrganizationRepositories(
-          client,
-          organization,
-          catalogPath,
-          pageSizes,
-          this.config.filters.branch,
+      let startCursor: string | undefined = undefined;
+
+      do {
+        const client = await this.createGraphqlClient(organization);
+
+        const { repositories: repositoriesFromGithub, nextCursor } =
+          await getOrganizationRepositories(
+            client,
+            organization,
+            catalogPath,
+            pageSizes,
+            this.config.filters.branch,
+            {
+              allowArchived: this.config.filters.allowArchived,
+              startCursor,
+              chunkSize,
+            },
+          );
+        repositories = repositories.concat(
+          repositoriesFromGithub.map(r =>
+            this.createRepoFromGithubResponse(r, organization),
+          ),
         );
-      repositories = repositories.concat(
-        repositoriesFromGithub.map(r =>
-          this.createRepoFromGithubResponse(r, organization),
-        ),
-      );
+
+        startCursor = nextCursor;
+      } while (startCursor);
     }
 
     if (this.config.validateLocationsExist) {
