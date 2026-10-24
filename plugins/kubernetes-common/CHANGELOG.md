@@ -1,5 +1,11 @@
 # @backstage/plugin-kubernetes-common
 
+## 0.9.15-next.0
+
+### Patch Changes
+
+- ca14116: Moved `kubernetes-models` and `@kubernetes-models/apimachinery` to dev dependencies, since they are only used for types. Backends no longer install `kubernetes-models` through `@backstage/plugin-kubernetes-common`.
+
 ## 0.9.14
 
 ### Patch Changes

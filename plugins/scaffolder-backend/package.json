@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-scaffolder-backend",
-  "version": "4.2.1",
+  "version": "4.2.2-next.0",
   "description": "The Backstage backend plugin that helps you create new things",
   "backstage": {
     "role": "backend-plugin",

@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-catalog-backend-module-azure",
-  "version": "0.3.23",
+  "version": "0.3.24-next.0",
   "description": "A Backstage catalog backend module that helps integrate towards Azure",
   "backstage": {
     "role": "backend-plugin-module",

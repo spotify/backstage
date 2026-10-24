@@ -1,5 +1,14 @@
 # @backstage/plugin-catalog-backend-module-gitlab
 
+## 0.8.10-next.0
+
+### Patch Changes
+
+- ca14116: Moved `@gitbeaker/rest` to dev dependencies, since it is only used for types.
+- Updated dependencies
+  - @backstage/backend-defaults@0.18.2-next.0
+  - @backstage/plugin-catalog-node@2.2.7-next.0
+
 ## 0.8.9
 
 ### Patch Changes

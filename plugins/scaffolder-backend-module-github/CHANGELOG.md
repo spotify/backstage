@@ -1,5 +1,13 @@
 # @backstage/plugin-scaffolder-backend-module-github
 
+## 0.10.2-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-catalog-node@2.2.7-next.0
+  - @backstage/plugin-scaffolder-node@0.13.9-next.0
+
 ## 0.10.1
 
 ### Patch Changes

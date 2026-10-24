@@ -1,5 +1,14 @@
 # @backstage/plugin-scaffolder-backend
 
+## 4.2.2-next.0
+
+### Patch Changes
+
+- 62eaba9: Fixed custom task permission rules registered by backend modules being ignored when authorizing task access and filtering task lists.
+- Updated dependencies
+  - @backstage/plugin-catalog-node@2.2.7-next.0
+  - @backstage/plugin-scaffolder-node@0.13.9-next.0
+
 ## 4.2.1
 
 ### Patch Changes

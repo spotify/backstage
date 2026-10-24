@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-scaffolder-backend-module-notifications",
-  "version": "0.1.27",
+  "version": "0.1.28-next.0",
   "description": "The notifications backend module for the scaffolder plugin.",
   "backstage": {
     "role": "backend-plugin-module",

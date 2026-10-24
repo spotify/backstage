@@ -1,6 +1,6 @@
 {
   "name": "@backstage/cli-module-auth",
-  "version": "0.1.5",
+  "version": "0.1.6-next.0",
   "description": "CLI module for Backstage CLI",
   "backstage": {
     "role": "cli-module"

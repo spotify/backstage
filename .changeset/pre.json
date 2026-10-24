@@ -234,7 +234,28 @@
     "@backstage/plugin-techdocs-react": "1.4.0",
     "@backstage/plugin-user-settings": "0.9.8",
     "@backstage/plugin-user-settings-backend": "0.4.8",
-    "@backstage/plugin-user-settings-common": "0.1.0"
+    "@backstage/plugin-user-settings-common": "0.1.0",
+    "@backstage/plugin-techdocs-backend-module-zensical": "0.0.0",
+    "@internal/techdocs-zensical": "0.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "brave-subjects-canonical",
+    "calm-catalog-placeholders",
+    "calm-cli-logout",
+    "catalog-rules-url-canonical-matching",
+    "cli-node-preserve-exit-code",
+    "events-backend-listener-root-context",
+    "few-planets-init-begin",
+    "quiet-owls-revoke",
+    "quiet-themes-paint",
+    "scaffolder-task-registry-rules",
+    "techdocs-backend-mkdocs-config-docs",
+    "techdocs-cli-zensical",
+    "techdocs-node-generator-exports",
+    "techdocs-zensical-module",
+    "type-only-deps-gitlab",
+    "type-only-deps-kubernetes",
+    "unprocessed-entities-missing-ids",
+    "yarn-module-optional-yarnpkg-core"
+  ]
 }

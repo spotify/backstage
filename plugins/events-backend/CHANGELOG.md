@@ -1,5 +1,11 @@
 # @backstage/plugin-events-backend
 
+## 0.6.8-next.0
+
+### Patch Changes
+
+- a1ca033: Fixed the database event bus listener connection inheriting the trace context of the request that first opened it. Its keepalive queries are now recorded as separate root spans instead of being attached to that request's trace for as long as the connection stays open.
+
 ## 0.6.7
 
 ### Patch Changes

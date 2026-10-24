@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-kubernetes-react",
-  "version": "0.6.1",
+  "version": "0.6.2-next.0",
   "description": "Web library for the kubernetes-react plugin",
   "backstage": {
     "role": "web-library",

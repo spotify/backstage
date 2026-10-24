@@ -1,6 +1,6 @@
 {
   "name": "@backstage/cli-defaults",
-  "version": "0.1.7",
+  "version": "0.1.8-next.0",
   "description": "Default set of CLI modules for the Backstage CLI",
   "backstage": {
     "role": "cli-module"

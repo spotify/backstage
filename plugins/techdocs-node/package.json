@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-techdocs-node",
-  "version": "2.1.0",
+  "version": "2.2.0-next.0",
   "description": "Common node.js functionalities for TechDocs, to be shared between techdocs-backend plugin and techdocs-cli",
   "backstage": {
     "role": "node-library",

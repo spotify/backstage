@@ -1,5 +1,11 @@
 # @backstage/cli-node
 
+## 0.3.6-next.0
+
+### Patch Changes
+
+- 4294614: Commands run through `runCli` now exit with the exit code they set, instead of always exiting with `0` on completion. For example, `catalog validate` and `template dry-run` now exit with a non-zero code when the input is invalid.
+
 ## 0.3.5
 
 ### Patch Changes

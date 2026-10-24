@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-catalog-backend-module-msgraph-incremental",
-  "version": "0.1.5",
+  "version": "0.1.6-next.0",
   "description": "A Backstage catalog backend module that incrementally ingests users and groups from Microsoft Graph",
   "backstage": {
     "role": "backend-plugin-module",

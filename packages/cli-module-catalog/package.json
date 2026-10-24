@@ -1,6 +1,6 @@
 {
   "name": "@backstage/cli-module-catalog",
-  "version": "0.2.0",
+  "version": "0.2.1-next.0",
   "description": "CLI module for querying and managing the Backstage software catalog",
   "backstage": {
     "role": "cli-module"

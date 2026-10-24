@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-catalog-backend-module-gitlab",
-  "version": "0.8.9",
+  "version": "0.8.10-next.0",
   "description": "A Backstage catalog backend module that helps integrate towards GitLab",
   "backstage": {
     "role": "backend-plugin-module",

@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-catalog-backend-module-gerrit",
-  "version": "0.3.19",
+  "version": "0.3.20-next.0",
   "backstage": {
     "role": "backend-plugin-module",
     "pluginId": "catalog",

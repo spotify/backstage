@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-scaffolder-backend-module-yeoman",
-  "version": "0.4.27",
+  "version": "0.4.28-next.0",
   "backstage": {
     "role": "backend-plugin-module",
     "pluginId": "scaffolder",

@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-catalog-backend-module-gcp",
-  "version": "0.3.24",
+  "version": "0.3.25-next.0",
   "description": "A Backstage catalog backend module that helps integrate towards GCP",
   "backstage": {
     "role": "backend-plugin-module",

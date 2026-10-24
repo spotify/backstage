@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-scaffolder-backend-module-workspace-database",
-  "version": "0.1.1",
+  "version": "0.1.2-next.0",
   "description": "Database workspace provider module for @backstage/plugin-scaffolder-backend (development use only)",
   "backstage": {
     "role": "backend-plugin-module",

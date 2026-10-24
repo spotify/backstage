@@ -1,6 +1,6 @@
 {
   "name": "@backstage/cli-module-package-manager-yarn",
-  "version": "0.1.3",
+  "version": "0.1.5-next.0",
   "description": "CLI module for Yarn package manager commands",
   "backstage": {
     "role": "cli-module"

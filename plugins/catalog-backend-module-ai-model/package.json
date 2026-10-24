@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-catalog-backend-module-ai-model",
-  "version": "0.1.5",
+  "version": "0.1.6-next.0",
   "description": "Adds support for the AiResource entity kind to the catalog backend plugin.",
   "backstage": {
     "role": "backend-plugin-module",

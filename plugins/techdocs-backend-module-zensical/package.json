@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-techdocs-backend-module-zensical",
-  "version": "0.0.0",
+  "version": "0.1.0-next.0",
   "description": "A module for the TechDocs backend that adds Zensical as a documentation engine",
   "backstage": {
     "role": "backend-plugin-module",

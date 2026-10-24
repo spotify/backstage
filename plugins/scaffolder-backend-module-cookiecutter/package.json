@@ -1,6 +1,6 @@
 {
   "name": "@backstage/plugin-scaffolder-backend-module-cookiecutter",
-  "version": "0.3.28",
+  "version": "0.3.29-next.0",
   "description": "A module for the scaffolder backend that lets you template projects using cookiecutter",
   "backstage": {
     "role": "backend-plugin-module",
